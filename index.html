@@ -119,14 +119,14 @@ var reposList    = document.getElementById('repos-list'),
 			html += '<li>'
 				+ '<a href="' + r.html_url + '">'
 				+ fork
-				+ '<span class="info"><b class="language">' + (r.language || '') + '</b> <b><i class="icon-star"></i> ' + watchers + '</b> <b><i class="icon-code-fork"></i> ' + forks + '</b></span>'
+				+ '<span class="info"><b class="language">' + (r.language || '') + '</b> <b><i class="icon-star"></i> ' + watchers + '</b>  <b><i class="icon-code-fork"></i> ' + forks + '</b></span>'
 				+ '<b>' + r.name + '</b> '
 				+ '<span class="desc">' + r.description + '</span>'
 				+ '</a>';
 		}
 		reposList.innerHTML = html;
 		projectCount.innerHTML = l + ' repositories; ' + lp + ' public, ' + lf + ' forks';
-		projectInfo.innerHTML = '<b><i class="icon-star"></i> ' + w + '</b> <b><i class="icon-code-fork"></i> ' + f + '</b>';
+		projectInfo.innerHTML = '<b><i class="icon-star"></i> ' + w + '</b>  <b><i class="icon-code-fork"></i> ' + f + '</b>';
 	};
 </script>
 <script src="https://api.github.com/users/rcarmo/repos?callback=load&per_page=100"></script>
