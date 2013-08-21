@@ -3,7 +3,7 @@ html {
   height: 100%;
 }
 body {
-  font-family: Helvetica, sans-serif;
+  font-family: "Helvetica Neue", Helvetica, Roboto, sans-serif;
   font-size: 13px;
   background: #ddd;
   margin: 0;
@@ -11,7 +11,7 @@ body {
   height: 100%;
 }
 textarea {
-  font-family: "andale mono", "lucida console", monospace;
+  font-family: Menlo, Monaco, "Andale Mono", "Lucida Console", "Droid Mono", monospace;
   font-size: 12px;
   display: block;
   resize: none;
