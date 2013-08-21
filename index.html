@@ -6,7 +6,11 @@ All credit for the original design and the way the Github API is invoked goes to
 
 This is a _lot_ more practical than the standard Github dashboard when you're on an iPad, and I only had to do some minor tweaks.
 -->
-<meta name="viewport" content="width=device-width; initial-scale=1">
+<meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
+<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
+<!--[if IE 7]>
+	<link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome-ie7.min.css" rel="stylesheet">
+<![endif]-->
 <style>
 body {
 	color: #666;
@@ -70,17 +74,6 @@ a:hover{
 	color: #fff;
 	background-color: #666;
 }
-#repos-list li.fork a:before{
-	color: #999;
-	content: '\2646';
-	position: absolute;
-	left: 5px;
-	-webkit-transform: rotate(90deg);
-	-moz-transform: rotate(90deg);
-	-ms-transform: rotate(90deg);
-	-o-transform: rotate(90deg);
-	transform: rotate(90deg);
-}
 #repos-list li a .desc{
 	color: #ccc;
 	display: inline-block;
@@ -96,19 +89,6 @@ b.stars,
 b.forks{
 	font-weight: bold;
 	display: inline-block;
-}
-b.stars:before,
-b.forks:before{
-	display: inline-block;
-	font-size: 14px;
-	width: 20px;
-	text-align: center;
-}
-b.stars:before{
-	content: '\2605';
-}
-b.forks:before{
-	content: '\2646';
 }
 </style>
 <h1><a href="http://github.com/rcarmo"><span id="project-info"></span>rcarmo <span id="project-count"></span> </a></h1>
@@ -130,22 +110,23 @@ var reposList    = document.getElementById('repos-list'),
 		var l = repositories.length, lp = 0, lf = 0, w = 0, f = 0;
 		for (var i=0; i<l; i++){
 			var r = repositories[i],
-				fork = r.fork ? ' class="fork"' : '',
+				fork = r.fork ? '<i class="icon-code-fork"></i> ' : '',
 				watchers = r.watchers,
 				forks = r.forks;
 			w += r.watchers;
 			f += r.forks;
 			fork ? lf++ : lp++;
-			html += '<li' + fork + '>'
+			html += '<li>'
 				+ '<a href="' + r.html_url + '">'
-				+ '<span class="info"><b class="language">' + (r.language || '') + '</b> <b class="stars">' + watchers + '</b> <b class="forks">' + forks + '</b></span>'
+				+ fork
+				+ '<span class="info"><b class="language">' + (r.language || '') + '</b> <b><i class="icon-star"></i> ' + watchers + '</b> <b><i class="icon-code-fork"></i> ' + forks + '</b></span>'
 				+ '<b>' + r.name + '</b> '
 				+ '<span class="desc">' + r.description + '</span>'
 				+ '</a>';
 		}
 		reposList.innerHTML = html;
 		projectCount.innerHTML = l + ' repositories; ' + lp + ' public, ' + lf + ' forks';
-		projectInfo.innerHTML = '<b class="stars">' + w + '</b> <b class="forks">' + f + '</b>';
+		projectInfo.innerHTML = '<b><i class="icon-star"></i> ' + w + '</b> <b><i class="icon-code-fork"></i> ' + f + '</b>';
 	};
 </script>
 <script src="https://api.github.com/users/rcarmo/repos?callback=load&per_page=100"></script>
