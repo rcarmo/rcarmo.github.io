@@ -1,0 +1,32 @@
+<!DOCTYPE html>
+<html manifest="textile.appcache">
+<head>
+  <meta charset=utf-8>
+  <title>Textile Editor</title>
+  <!-- This is an adaptation of https://github.com/borgar/textile-js in order to provide me with a simple way to preview Textile markup on the go.
+  The layout is iPad-optimized (in the sense that it moves all options to the bottom of the screen to make them easier to reach from a hardware keyboard) and has minimal layout tweaks --> 
+  <link rel="stylesheet" type="text/css" media="screen" href="app.css" />
+  <link rel="apple-touch-icon" sizes="144x144" href="touch-icon-ipad-retina.png" />
+  <script src="jquery.min.js"></script>
+  <script src="jquery.minitabs.js"></script>
+  <script src="textile.min.js"></script>
+  <script src="app.js"></script>
+</head>
+<body>
+  <div id="single_col" class="single-col">
+    <textarea id="tx_input" class="panel" cols="80" rows="20"></textarea>
+    <div id="text_preview" class="panel"></div>
+    <textarea id="html_output" class="panel" cols="80" rows="20" readonly="readonly"></textarea>
+    <textarea id="syntax_guide" class="panel" cols="80" rows="20" readonly="readonly"></textarea>
+    <span class="tools">
+      <button class="clear">Clear</button>
+    </span>
+    <ul class="nav tab">
+      <li><a href="#tx_input">Input</a></li>
+      <li><a href="#text_preview">Preview</a></li>
+      <li><a href="#html_output">HTML Source</a></li>
+      <li><a href="#syntax_guide">Textile Reference</a></li>
+    </ul>
+  </div>
+</body>
+</html>
