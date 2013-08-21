@@ -103,7 +103,7 @@ body > h1 {
 }
 .tabs-active li a {
   display: block;
-  padding: 4px 5px;
+  padding: 4px 10px;
   text-decoration: none;
   color: #999;
   background: #eee;
