@@ -4,7 +4,7 @@
 <!-- 
 All credit for the original design and the way the Github API is invoked goes to http://github.com/cheeaun, who did it so well I just had to adapt it for my own use.
 
-This is a _lot_ more practical than the standard Github dashboard when you're on an iPad, and I only had to do some minor tweaks.
+This is a _lot_ more practical than the standard Github dashboard when you're on an iPad, and I only had to do some minor tweaks (mostly adding FontAwesome, escaping HTML, etc.).
 -->
 <meta name="viewport" content="width=device-width; initial-scale=1.0; maximum-scale=1.0;">
 <link href="//netdna.bootstrapcdn.com/font-awesome/3.2.1/css/font-awesome.min.css" rel="stylesheet">
@@ -94,6 +94,22 @@ b.forks{
 <h1><a href="http://github.com/rcarmo"><img src="https://1.gravatar.com/avatar/94d0529af7b20842fc12759d41436fdf?d=https%3A%2F%2Fidenticons.github.com%2F8b34a45c515c2528fdb22536e6eb07c5.png&s=24" align="absmiddle"> <span id="project-info"></span>rcarmo <span id="project-count"></span> </a></h1>
 <ul id="repos-list"></ul>
 <script>
+
+ var entityMap = {
+    "&": "&amp;",
+    "<": "&lt;",
+    ">": "&gt;",
+    '"': '&quot;',
+    "'": '&#39;',
+    "/": '&#x2F;'
+  };
+
+  function escapeHtml(string) {
+    return String(string).replace(/[&<>"'\/]/g, function (s) {
+      return entityMap[s];
+    });
+  }
+
 var reposList    = document.getElementById('repos-list'),
 	projectCount = document.getElementById('project-count'),
 	projectInfo  = document.getElementById('project-info'),
@@ -121,7 +137,7 @@ var reposList    = document.getElementById('repos-list'),
 				+ fork
 				+ '<span class="info"><b class="language">' + (r.language || '') + '</b> <b><i class="icon-star"></i> ' + watchers + '</b>  <b><i class="icon-code-fork"></i> ' + forks + '</b></span>'
 				+ '<b>' + r.name + '</b> '
-				+ '<span class="desc">' + r.description + '</span>'
+				+ '<span class="desc">' + escapeHtml(r.description) + '</span>'
 				+ '</a>';
 		}
 		reposList.innerHTML = html;
