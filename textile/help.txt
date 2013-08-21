@@ -9,8 +9,6 @@ Textile is a lightweight markup language billed as a "humane web text editor". I
 
 "It is described as":http://textile.thresholdstate.com/:
 
-bq. Textile takes plain text with *simple* markup and produces valid XHTML. It's used in web applications, content management systems, blogging software and online forums. Try it for yourself with the Textile quick reference and preview.
+bq. Textile takes plain text with *simple* markup and produces valid XHTML. It's used in web applications, content management systems, blogging software and online forums. Try it for yourself with the Textile quick reference and preview, accessible from the tabs below.
 
-This document is written in Textile; you can see the plain-text version on the left.  To get a feel for Textile's syntax, type some text into the left window and watch the results in the right.  You can see a Textile syntax guide by switching the right-hand window from _Preview_ to _Syntax Guide_.
-
-Textile-js is a JavaScript port of Textile.  You can get the full source code from its "GitHub repository":https://github.com/borgar/js-textile.
+Textile-js is a JavaScript port of Textile. You can get the full source code from its "GitHub repository":https://github.com/borgar/js-textile, I merely wrapped it up for use on the iPad.
