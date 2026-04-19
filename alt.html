@@ -537,118 +537,122 @@ scene.registerBeforeRender(()=>{
   mono.position.y      = 3   + Math.sin(performance.now()*0.0005)*0.15;
 });
 
+// ── Maths helpers ─────────────────────────────────────────────────────────
+function catmullRom(t,p0,p1,p2,p3){
+  return 0.5*((2*p1)+(-p0+p2)*t+(2*p0-5*p1+4*p2-p3)*t*t+(-p0+3*p1-3*p2+p3)*t*t*t);
+}
+function catmullTangent(t,p0,p1,p2,p3){
+  return 0.5*((-p0+p2)+(2*(2*p0-5*p1+4*p2-p3))*t+3*(-p0+3*p1-3*p2+p3)*t*t);
+}
+function lerpF(a,b,t){ return a+(b-a)*t; }
+function lerpAngle(a,b,t){
+  let d=b-a; while(d>Math.PI)d-=Math.PI*2; while(d<-Math.PI)d+=Math.PI*2; return a+d*t;
+}
+function smoothstep(t){ return t*t*(3-2*t); }
+
 // ── Camera navigation ─────────────────────────────────────────────────────
 let autoRotate=true, autoAngle=camera.alpha;
+let pathState=null; // active path-follow: {pts, t, speed, endAlpha, endBeta, endRadius, onDone}
+
 scene.registerBeforeRender(()=>{
-  if (!autoRotate) return;
-  autoAngle -= 0.002;
-  camera.alpha = autoAngle;
+  if (autoRotate && !pathState){ autoAngle-=0.0015; camera.alpha=autoAngle; return; }
+  if (!pathState) return;
+
+  pathState.t = Math.min(1, pathState.t + pathState.speed);
+  const done = pathState.t >= 1;
+
+  // Catmull-Rom interpolation over gathered waypoints
+  const pts=pathState.pts, N=pts.length-1;
+  const fi=pathState.t*N, i=Math.min(Math.floor(fi),N-1), lt=fi-i;
+  const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[Math.min(N,i+1)],p3=pts[Math.min(N,i+2)];
+  camera.target.set(
+    catmullRom(lt,p0.x,p1.x,p2.x,p3.x),
+    catmullRom(lt,p0.y,p1.y,p2.y,p3.y),
+    catmullRom(lt,p0.z,p1.z,p2.z,p3.z)
+  );
+
+  // Tangent at current point (direction of travel)
+  const tx=catmullTangent(lt,p0.x,p1.x,p2.x,p3.x);
+  const tz=catmullTangent(lt,p0.z,p1.z,p2.z,p3.z);
+
+  const ARRIVAL=0.82;
+  if (pathState.t < ARRIVAL) {
+    // Travel: camera sits BEHIND target = looks forward along path
+    if (Math.abs(tx)+Math.abs(tz)>0.001)
+      camera.alpha = lerpAngle(camera.alpha, Math.atan2(tz,tx)+Math.PI, 0.07);
+    camera.beta   = lerpF(camera.beta,   Math.PI/3.5, 0.04);
+    camera.radius = lerpF(camera.radius, 16,           0.04);
+  } else {
+    // Arrival: rotate toward billboard, reduce radius, level out
+    const at=smoothstep((pathState.t-ARRIVAL)/(1-ARRIVAL));
+    camera.alpha  = lerpAngle(camera.alpha, pathState.endAlpha,  at*0.12);
+    camera.beta   = lerpF(camera.beta,   pathState.endBeta,   at*0.10);
+    camera.radius = lerpF(camera.radius, pathState.endRadius, at*0.10);
+  }
+
+  if (done){ const cb=pathState.onDone; pathState=null; if(cb)cb(); }
 });
 
-function stopAuto() { autoRotate=false; }
-scene.actionManager = new BABYLON.ActionManager(scene);
+function stopAuto(){ autoRotate=false; }
 
-function flyTo(clusterKey) {
-  stopAuto();
-  const v=CAM_VIEWS[clusterKey];
-  if (!v) return;
+function flyTo(clusterKey){
+  stopAuto(); pathState=null; scene.stopAnimation(camera); camera.animations.length=0;
+  const v=CAM_VIEWS[clusterKey]; if(!v) return;
   closeFocus();
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active', b.dataset.cluster===clusterKey));
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.cluster===clusterKey));
   const ease=new BABYLON.SineEase(); ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
-  ['alpha','beta','radius'].forEach(prop => {
-    const anim=new BABYLON.Animation('fly_'+prop, prop, 60,
-      BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-    anim.setEasingFunction(ease);
-    anim.setKeys([{frame:0,value:camera[prop]},{frame:80,value:v[prop]}]);
-    camera.animations.push(anim);
+  ['alpha','beta','radius'].forEach(prop=>{
+    const a=new BABYLON.Animation('fly_'+prop,prop,60,
+      BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    a.setEasingFunction(ease);
+    a.setKeys([{frame:0,value:camera[prop]},{frame:80,value:v[prop]}]);
+    camera.animations.push(a);
   });
-  const tAnim=new BABYLON.Animation('fly_target','target',60,
-    BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-  tAnim.setEasingFunction(ease);
-  tAnim.setKeys([{frame:0,value:camera.target.clone()},{frame:80,value:new BABYLON.Vector3(...v.target)}]);
-  camera.animations.push(tAnim);
+  const ta=new BABYLON.Animation('fly_t','target',60,
+    BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+  ta.setEasingFunction(ease);
+  ta.setKeys([{frame:0,value:camera.target.clone()},{frame:80,value:new BABYLON.Vector3(...v.target)}]);
+  camera.animations.push(ta);
   scene.beginAnimation(camera,0,80,false,1,()=>{ camera.animations.length=0; });
 }
 
-function flyToBillboard(bill) {
-  stopAuto();
+function flyToBillboard(bill){
+  stopAuto(); pathState=null; scene.stopAnimation(camera); camera.animations.length=0;
   const {proj,x,z}=bill.metadata;
-  const clusterKey = Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===proj.url))?.[0]||'highlight';
-  const startKey = nearestClusterKey(camera.target.x, camera.target.z);
-  const route = bfsPath(startKey, clusterKey);
+  const clusterKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===proj.url))?.[0]||'highlight';
+  const startKey=nearestClusterKey(camera.target.x,camera.target.z);
+  const route=bfsPath(startKey,clusterKey);
 
-  const ease=new BABYLON.SineEase();
-  ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
-
-  // ArcRotateCamera final state:
-  //   target = the billboard itself
-  //   alpha  = angle pointing FROM billboard TOWARD cluster centre
-  //            → camera sits inward from the sign, looking outward at it
-  //   radius = comfortable reading distance
-  //   beta   = slight upward look
-  const cpos = CLUSTERS[clusterKey].pos;
-  const dx = cpos[0]-x, dz = cpos[2]-z, dist = Math.hypot(dx,dz)||1;
-  const endAlpha  = Math.atan2(dz/dist, dx/dist);   // inward direction
-  const endTarget = new BABYLON.Vector3(x, bill.position.y*0.6, z);
-  const endRadius = 7;
-  const endBeta   = Math.PI / 3.8;
-
-  // Gather world positions by following the actual stored Bézier curves
-  const worldPts = [{ x:camera.target.x, y:0, z:camera.target.z }];
-
-  for (let i = 0; i < route.length-1; i++) {
-    const fromKey = route[i], toKey = route[i+1];
-    const edgeKey = [fromKey,toKey].sort().join('--');
-    const curve   = PATH_CURVES[edgeKey];
-    if (curve && curve.length) {
-      // Determine traversal direction: pts[0] is near the alphabetically-first cluster
-      const [ek0,ek1] = edgeKey.split('--');
-      const forward   = fromKey === ek0;
-      const pts = forward ? curve : [...curve].reverse();
-      // Skip every 3rd point to reduce keyframe count (still smooth)
-      pts.forEach((p,j) => { if (j%3===0 || j===pts.length-1) worldPts.push({x:p[0],y:0,z:p[1]}); });
+  // Build waypoints from stored Bézier path curves
+  const wpts=[new BABYLON.Vector3(camera.target.x,0,camera.target.z)];
+  for(let i=0;i<route.length-1;i++){
+    const fromKey=route[i],toKey=route[i+1];
+    const edgeKey=[fromKey,toKey].sort().join('--');
+    const curve=PATH_CURVES[edgeKey];
+    if(curve&&curve.length){
+      const fwd=fromKey===edgeKey.split('--')[0];
+      const pts=fwd?curve:[...curve].reverse();
+      pts.forEach((p,j)=>{ if(j%2===0||j===pts.length-1) wpts.push(new BABYLON.Vector3(p[0],0,p[1])); });
     } else {
-      const cp = CLUSTERS[toKey].pos;
-      worldPts.push({x:cp[0],y:0,z:cp[2]});
+      const cp=CLUSTERS[toKey].pos;
+      wpts.push(new BABYLON.Vector3(cp[0],0,cp[2]));
     }
   }
-  // Final approach to billboard
-  const cposV = CLUSTERS[clusterKey].pos;
-  worldPts.push({x:cposV[0], y:0,        z:cposV[2]});
-  worldPts.push({x:endTarget.x, y:endTarget.y, z:endTarget.z});
+  const cposV=CLUSTERS[clusterKey].pos;
+  wpts.push(new BABYLON.Vector3(cposV[0],0,cposV[2]));
+  wpts.push(new BABYLON.Vector3(x, bill.position.y*0.55, z));
 
-  // Build keyframes: ~10 frames per world point
-  const framesPerPt = 10;
-  const totalFrames = Math.max(80, (worldPts.length-1) * framesPerPt);
-  const tKeys = worldPts.map((p,i) => ({
-    frame: Math.round(i * (totalFrames/(worldPts.length-1))),
-    value: new BABYLON.Vector3(p.x, p.y, p.z)
-  }));
-
-  const tAnim=new BABYLON.Animation('ft_target','target',60,
-    BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-  tAnim.setEasingFunction(ease); tAnim.setKeys(tKeys);
-
-  const rAnim=new BABYLON.Animation('ft_radius','radius',60,
-    BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-  rAnim.setEasingFunction(ease);
-  rAnim.setKeys([{frame:0,value:camera.radius},{frame:totalFrames,value:endRadius}]);
-
-  const aAnim=new BABYLON.Animation('ft_alpha','alpha',60,
-    BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-  aAnim.setEasingFunction(ease);
-  aAnim.setKeys([{frame:0,value:camera.alpha},{frame:totalFrames,value:endAlpha}]);
-
-  const bAnim=new BABYLON.Animation('ft_beta','beta',60,
-    BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-  bAnim.setEasingFunction(ease);
-  bAnim.setKeys([{frame:0,value:camera.beta},{frame:totalFrames,value:endBeta}]);
-
-  camera.animations = [tAnim, rAnim, aAnim, bAnim];
-  scene.beginAnimation(camera,0,totalFrames,false,1,()=>{
-    camera.animations.length=0;
-    openFocus(bill);
-  });
+  const cpos=CLUSTERS[clusterKey].pos;
+  const dx=cpos[0]-x, dz=cpos[2]-z, dist=Math.hypot(dx,dz)||1;
+  pathState={
+    pts:   wpts,
+    t:     0,
+    speed: Math.max(0.004, 0.007 - wpts.length*0.0001),
+    endAlpha:  Math.atan2(dz/dist, dx/dist),
+    endRadius: 7,
+    endBeta:   Math.PI/3.8,
+    onDone:    ()=>openFocus(bill),
+  };
 }
 
 // ── Focus panel ───────────────────────────────────────────────────────────
