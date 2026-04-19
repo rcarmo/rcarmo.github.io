@@ -323,8 +323,8 @@ renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.ACESFilmicToneMapping;
-renderer.toneMappingExposure = 1.3;
+renderer.toneMapping = THREE.ReinhardToneMapping;
+renderer.toneMappingExposure = 1.0;
 renderer.setClearColor(0xa1b3f0);
 wrap.appendChild(renderer.domElement);
 
@@ -579,22 +579,42 @@ function makeBillboardTexture(proj, accent, logoImg) {
 }
 
 // ── Bush (rounded shrub cluster) ───────────────────────────────────────────
-function makeBush(x, z, scale=1.0) {
+// makeBush: stacked rotated cubes of varying sizes, embedded in ground,
+//           facing toward the cluster centre at (cx, cz)
+function makeBush(x, z, scale, cx, cz) {
+  scale = scale || 1.0;
   const mats = [
-    new THREE.MeshStandardMaterial({ color:0x33cc33, emissive:0x33cc33, emissiveIntensity:.08, roughness:.95 }),
-    new THREE.MeshStandardMaterial({ color:0x22aa22, emissive:0x22aa22, emissiveIntensity:.06, roughness:.95 }),
-    new THREE.MeshStandardMaterial({ color:0x44dd22, emissive:0x44dd22, emissiveIntensity:.10, roughness:.95 }),
+    new THREE.MeshStandardMaterial({ color:0x2eaa2e, emissive:0x2eaa2e, emissiveIntensity:.07, roughness:1.0, metalness:0.0 }),
+    new THREE.MeshStandardMaterial({ color:0x228822, emissive:0x228822, emissiveIntensity:.05, roughness:1.0, metalness:0.0 }),
+    new THREE.MeshStandardMaterial({ color:0x3dc83d, emissive:0x3dc83d, emissiveIntensity:.09, roughness:1.0, metalness:0.0 }),
   ];
-  // 2-3 overlapping spheres per bush for a lumpy organic look
-  const count = 2 + Math.floor(Math.random() * 2);
-  for (let i = 0; i < count; i++) {
-    const r  = (0.5 + Math.random() * 0.5) * scale;
-    const ox = (Math.random() - 0.5) * scale * 0.8;
-    const oz = (Math.random() - 0.5) * scale * 0.8;
-    const m  = new THREE.Mesh(new THREE.SphereGeometry(r, 7, 5), mats[i % mats.length]);
-    m.position.set(x + ox, r * 0.6, z + oz);
-    m.castShadow = true;
-    scene.add(m);
+  // Angle to face the cluster centre (rotate around Y)
+  const faceAngle = Math.atan2(cz - z, cx - x);
+
+  // Stack 2-3 boxes: each slightly smaller and more rotated than the one below
+  const layers = 2 + Math.floor(Math.random() * 2);
+  let yBase = -0.3 * scale;  // embed in ground
+
+  for (let i = 0; i < layers; i++) {
+    const frac = 1 - i * 0.22;
+    const w = scale * frac * (0.9 + Math.random() * 0.3);
+    const h = scale * frac * (0.55 + Math.random() * 0.3);
+    const d = scale * frac * (0.75 + Math.random() * 0.25);
+    const cube = new THREE.Mesh(
+      new THREE.BoxGeometry(w, h, d),
+      mats[(i + Math.floor(Math.random() * 3)) % mats.length]
+    );
+    // Rotate: face cluster + slight random twist per layer
+    cube.rotation.y = faceAngle + (Math.random() - 0.5) * 0.45 + i * 0.15;
+    // Position: centred at (x, yBase + h/2, z) — stacked upward
+    cube.position.set(
+      x + (Math.random() - 0.5) * 0.12 * scale,
+      yBase + h * 0.5,
+      z + (Math.random() - 0.5) * 0.12 * scale
+    );
+    yBase += h * 0.75;  // next box overlaps the one below slightly
+    cube.castShadow = true;
+    scene.add(cube);
   }
 }
 
@@ -666,20 +686,66 @@ scene.add(skyDome);
 // ── Billboard objects for raycasting ──────────────────────────────────────
 const billboards = [];
 
-// ── Build paths between all cluster centres ──────────────────────────────
+// ── Build path graph: connect each cluster to its 2 nearest neighbours ──
+// Stored globally so flyToBillboard can do BFS pathfinding through it.
+const PATH_GRAPH = {};   // { clusterKey: [neighbourKey, ...] }
+const PATH_DRAWN = new Set();  // avoid duplicate strips
+
 (function buildPaths() {
-  const centres = Object.values(CLUSTERS).map(c => c.pos);
-  for (let i = 0; i < centres.length; i++) {
-    // Connect each cluster to its nearest neighbour only (avoids spaghetti)
-    let minDist = Infinity, nearest = null;
-    for (let j = 0; j < centres.length; j++) {
-      if (i === j) continue;
-      const d = centres[i].distanceTo(centres[j]);
-      if (d < minDist) { minDist = d; nearest = centres[j]; }
-    }
-    if (nearest) makePath(centres[i].x, centres[i].z, nearest.x, nearest.z);
-  }
+  const keys = Object.keys(CLUSTERS);
+  keys.forEach(k => { PATH_GRAPH[k] = []; });
+
+  keys.forEach(k => {
+    // Sort all other clusters by distance
+    const sorted = keys
+      .filter(j => j !== k)
+      .sort((a, b) =>
+        CLUSTERS[k].pos.distanceTo(CLUSTERS[a].pos) -
+        CLUSTERS[k].pos.distanceTo(CLUSTERS[b].pos)
+      );
+    // Connect to 2 nearest
+    sorted.slice(0, 2).forEach(j => {
+      if (!PATH_GRAPH[k].includes(j)) PATH_GRAPH[k].push(j);
+      if (!PATH_GRAPH[j].includes(k)) PATH_GRAPH[j].push(k);
+      const edgeKey = [k, j].sort().join('--');
+      if (!PATH_DRAWN.has(edgeKey)) {
+        PATH_DRAWN.add(edgeKey);
+        const a = CLUSTERS[k].pos, b = CLUSTERS[j].pos;
+        makePath(a.x, a.z, b.x, b.z);
+      }
+    });
+  });
 })();
+
+// BFS: shortest cluster route from startKey to endKey
+function bfsClusterPath(startKey, endKey) {
+  if (startKey === endKey) return [startKey];
+  const queue = [[startKey]];
+  const visited = new Set([startKey]);
+  while (queue.length) {
+    const path = queue.shift();
+    const curr = path[path.length - 1];
+    for (const next of (PATH_GRAPH[curr] || [])) {
+      if (visited.has(next)) continue;
+      const newPath = [...path, next];
+      if (next === endKey) return newPath;
+      visited.add(next);
+      queue.push(newPath);
+    }
+  }
+  return [startKey, endKey]; // fallback: direct
+}
+
+// Which cluster is the camera closest to?
+function nearestClusterKey(pos) {
+  let best = 'highlight', bestDist = Infinity;
+  Object.entries(CLUSTERS).forEach(([k, c]) => {
+    const d = new THREE.Vector2(pos.x, pos.z)
+               .distanceTo(new THREE.Vector2(c.pos.x, c.pos.z));
+    if (d < bestDist) { bestDist = d; best = k; }
+  });
+  return best;
+}
 
 // ── Populate clusters ─────────────────────────────────────────────────────
 function buildCluster(clusterKey, cluster) {
@@ -689,38 +755,63 @@ function buildCluster(clusterKey, cluster) {
   const clusterR = projects.length <= 2 ? 5 : 9;
   makeClusterGround(pos, color, clusterR * 0.85);
 
-  // THREE concentric rings of shrubbery — dense hedgerow feel
+  // Concentric rings of shrubbery with PATH GAPS toward each neighbour cluster
   const innerR = clusterR + 0.4;
   const midR   = clusterR + 1.5;
   const outerR = clusterR + 2.8;
+  const gapHalf = 0.42;   // radians: ±0.42 rad ≈ ±24° gap per path
 
-  // Outer hedge row — largest bushes, tightly packed
+  // Compute directions to all other cluster centres (for path gaps)
+  const gapDirs = Object.values(CLUSTERS)
+    .filter(c => c.pos !== pos)
+    .map(c => Math.atan2(c.pos.z - pos.z, c.pos.x - pos.x));
+  // Keep only the 2-3 nearest directions
+  gapDirs.sort((a, b) => {
+    const da = new THREE.Vector2(Math.cos(a), Math.sin(a));
+    const db = new THREE.Vector2(Math.cos(b), Math.sin(b));
+    const va = new THREE.Vector2(pos.x, pos.z).distanceTo(new THREE.Vector2(pos.x + da.x*20, pos.z + da.y*20));
+    return va;
+  });
+  const pathGaps = gapDirs.slice(0, 3);
+
+  function isPathAngle(a) {
+    return pathGaps.some(dir => {
+      let diff = a - dir;
+      diff = diff - Math.round(diff / (Math.PI*2)) * (Math.PI*2);
+      return Math.abs(diff) < gapHalf;
+    });
+  }
+
+  // Outer hedge row
   const outerCount = Math.round(outerR * Math.PI * 1.4);
   for (let i = 0; i < outerCount; i++) {
     const a = (i / outerCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.15;
+    if (isPathAngle(a)) continue;
     const r = outerR + (Math.random() - 0.5) * 0.6;
-    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.9 + Math.random() * 0.6);
+    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.9 + Math.random() * 0.5, pos.x, pos.z);
   }
-  // Mid ring — medium bushes, slight stagger
+  // Mid ring
   const midCount = Math.round(midR * Math.PI * 1.1);
   for (let i = 0; i < midCount; i++) {
     const a = (i / midCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.25;
+    if (isPathAngle(a)) continue;
     const r = midR + (Math.random() - 0.5) * 0.5;
-    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.55 + Math.random() * 0.4);
+    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.55 + Math.random() * 0.4, pos.x, pos.z);
   }
-  // Inner ring — smaller filler bushes
-  const innerCount = Math.round(innerR * Math.PI * 0.9);
+  // Inner ring (no gaps — the path opens at the perimeter, not all the way inside)
+  const innerCount = Math.round(innerR * Math.PI * 0.8);
   for (let i = 0; i < innerCount; i++) {
     const a = (i / innerCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.3;
+    if (isPathAngle(a)) continue;
     const r = innerR + (Math.random() - 0.5) * 0.4;
-    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.3 + Math.random() * 0.3);
+    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.3 + Math.random() * 0.3, pos.x, pos.z);
   }
-  // Random scatter inside garden for depth
-  const scatterCount = 4 + projects.length;
+  // Inner scatter
+  const scatterCount = 3 + projects.length;
   for (let i = 0; i < scatterCount; i++) {
     const a = Math.random() * Math.PI * 2;
-    const r = Math.random() * clusterR * 0.6;
-    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.25 + Math.random() * 0.25);
+    const r = Math.random() * clusterR * 0.5;
+    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.2 + Math.random() * 0.2, pos.x, pos.z);
   }
 
   // Billboards for each project (skip for single-item hero cluster)
@@ -751,16 +842,15 @@ function buildCluster(clusterKey, cluster) {
       })
     );
     panel.position.set(bx, 3.5, bz);
-    // Nudge panel 0.12 units toward camera along the outward radial
-    // so it clears the post and avoids z-fighting
-    panel.translateOnAxis(
-      new THREE.Vector3(bx, 0, bz).normalize().length() > 0.001
-        ? new THREE.Vector3(bx, 0, bz).normalize()
-        : new THREE.Vector3(0, 0, 1),
-      0.12
-    );
+    // Nudge outward to clear the post
+    const nudgeDir = new THREE.Vector3(bx, 0, bz);
+    if (nudgeDir.length() > 0.001) { nudgeDir.normalize(); panel.position.addScaledVector(nudgeDir, 0.15); }
     panel.castShadow = false;
     panel.receiveShadow = false;
+    // Switch to MeshBasicMaterial — billboards rendered after Moebius pass
+    panel.material = new THREE.MeshBasicMaterial({
+      map: tex, side: THREE.DoubleSide, transparent: false
+    });
     panel.userData = { proj, clusterKey };
     scene.add(panel);
     billboards.push(panel);
@@ -921,28 +1011,65 @@ renderer.domElement.addEventListener('mousemove', e => {
 
 let focusedBill = null;
 
-let bezierCurve  = null;
-let bezierT      = 0;
-let bezierFrames = 90;
-let bezierActive = false;
-const bezierLookA = new THREE.Vector3();
-const bezierLookB = new THREE.Vector3();
+let pathCurve    = null;   // CatmullRomCurve3 through graph waypoints
+let pathT        = 0;
+let pathFrames   = 120;
+let pathActive   = false;
+let pathLookA    = new THREE.Vector3();
+let pathLookB    = new THREE.Vector3();
 
 function flyToBillboard(bill) {
-  const bPos   = bill.position.clone();
-  const outDir = new THREE.Vector3(bPos.x, 0, bPos.z).normalize();
+  const bPos     = bill.position.clone();
+  const clusterKey = bill.userData.clusterKey;
+
+  // Direction outward from cluster centre (billboard faces from there)
+  const cPos    = CLUSTERS[clusterKey] ? CLUSTERS[clusterKey].pos : bPos;
+  const outDir  = new THREE.Vector3(bPos.x - cPos.x, 0, bPos.z - cPos.z).normalize();
   if (outDir.length() < 0.001) outDir.set(0, 0, 1);
-  const endPos = bPos.clone().add(outDir.clone().multiplyScalar(8)).setY(bPos.y + 0.5);
-  const startPos = camera.position.clone();
-  const midH = Math.max(startPos.y, endPos.y) + 14;
-  const p1 = startPos.clone().lerp(endPos, 0.25).setY(midH + 4);
-  const p2 = startPos.clone().lerp(endPos, 0.75).setY(midH);
-  bezierCurve = new THREE.CubicBezierCurve3(startPos, p1, p2, endPos);
-  bezierLookA.copy(controls.target);
-  bezierLookB.copy(bPos);
-  bezierT = 0; bezierActive = true; flying = false;
+  const endPos  = bPos.clone().add(outDir.multiplyScalar(8)).setY(bPos.y + 0.5);
+
+  const startPos   = camera.position.clone();
+  const startKey   = nearestClusterKey(startPos);
+  const routeKeys  = bfsClusterPath(startKey, clusterKey);  // BFS cluster sequence
+
+  // Build waypoints:
+  //   start → [intermediate cluster centres at path height] → approach → endPos
+  const PATH_HEIGHT = 4.5;  // follow paths at this Y (path-level flying)
+  const waypoints = [startPos.clone()];
+
+  // First lift if camera is high (e.g. overview) — descend to path level quickly
+  if (startPos.y > PATH_HEIGHT + 3) {
+    const firstCluster = CLUSTERS[routeKeys[0]].pos;
+    waypoints.push(new THREE.Vector3(
+      startPos.x * 0.3 + firstCluster.x * 0.7,
+      PATH_HEIGHT + 2,
+      startPos.z * 0.3 + firstCluster.z * 0.7
+    ));
+  }
+
+  // Every cluster in the BFS route: waypoint at centre, at PATH_HEIGHT
+  routeKeys.forEach(k => {
+    const cp = CLUSTERS[k].pos;
+    waypoints.push(new THREE.Vector3(cp.x, PATH_HEIGHT, cp.z));
+  });
+
+  // Approach waypoint: between final cluster and billboard
+  waypoints.push(new THREE.Vector3(
+    cPos.x * 0.4 + endPos.x * 0.6,
+    PATH_HEIGHT + 1,
+    cPos.z * 0.4 + endPos.z * 0.6
+  ));
+  waypoints.push(endPos);
+
+  pathCurve  = new THREE.CatmullRomCurve3(waypoints, false, 'catmullrom', 0.5);
+  pathLookA  = controls.target.clone();
+  pathLookB  = bPos.clone();
+
+  // Scale duration by number of hops (80 frames/hop, min 100)
+  pathFrames = Math.max(100, routeKeys.length * 80);
+  pathT = 0; pathActive = true; flying = false;
   controls.autoRotate = false;
-  controls.enabled = false;  // prevent damping from fighting the arc
+  controls.enabled = false;
   targetCamLook = bPos;
 }
 
@@ -1025,22 +1152,21 @@ function animate() {
   });
 
   // Light tracks camera loosely
-  // Keep light close to camera but CLAMP height like original (low = dramatic shadows)
-  sun.position.set(
-    camera.position.x * 0.2 + 4,
-    Math.min(camera.position.y * 0.3 + 5, 14),
-    camera.position.z * 0.2 + 10
-  );
+  // Light stays mostly fixed — gentle 3/4 angle, doesn't follow camera
+  // This prevents harsh hotspots that shift as camera moves
+  sun.position.set(12, 10, 18);
   normalMat.uniforms.lightPos.value.copy(sun.position);
   normalMat.uniforms.cameraPos.value.copy(camera.position);
 
   // Camera fly-to
-  if (bezierActive) {
-    bezierT += 1 / bezierFrames;
-    if (bezierT >= 1) { bezierT = 1; bezierActive = false; controls.enabled = true; }
-    const e = bezierT < 0.5 ? 2*bezierT*bezierT : -1+(4-2*bezierT)*bezierT;
-    camera.position.copy(bezierCurve.getPoint(e));
-    controls.target.lerpVectors(bezierLookA, bezierLookB, e * e);
+  if (pathActive) {
+    pathT += 1 / pathFrames;
+    if (pathT >= 1) { pathT = 1; pathActive = false; controls.enabled = true; }
+    const e = pathT < 0.5 ? 2*pathT*pathT : -1+(4-2*pathT)*pathT; // ease-in-out
+    camera.position.copy(pathCurve.getPoint(e));
+    // Look-at smoothly transitions to the billboard over the second half of the journey
+    const lookT = Math.max(0, (e - 0.5) * 2);
+    controls.target.lerpVectors(pathLookA, pathLookB, lookT);
   }
   if (flying) {
     tmpPos.lerp(targetCamPos, 0.06);
@@ -1121,7 +1247,9 @@ function animate() {
     lastRandUpdate = Date.now();
   }
 
-  // Moebius: render normals to buffer first, then run composer
+  // Moebius: hide billboards → render scene → Moebius → render billboards on top unshaded
+  billboards.forEach(b => { b.visible = false; });
+
   renderer.setRenderTarget(normalBuf);
   const prevOverride = scene.overrideMaterial;
   scene.overrideMaterial = normalMat;
@@ -1131,6 +1259,12 @@ function animate() {
   moebiusPass.material.uniforms.uNormals.value = normalBuf.texture;
 
   composer.render();
+
+  // Now render billboards on top, bypassing the Moebius shader
+  billboards.forEach(b => { b.visible = true; });
+  renderer.autoClear = false;
+  renderer.render(scene, camera);
+  renderer.autoClear = true;
 }
 animate();
 </script>
