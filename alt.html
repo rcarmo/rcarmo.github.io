@@ -1,0 +1,797 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+<title>Projects — Rui Carmo</title>
+<meta name="description" content="A virtual garden of open source projects by Rui Carmo.">
+<link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
+<style>
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #0d1117; }
+
+  #canvas-wrap { position: fixed; inset: 0; }
+  canvas { display: block; width: 100% !important; height: 100% !important; }
+
+  /* Topbar */
+  #topbar {
+    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
+    display: flex; align-items: center; justify-content: space-between;
+    padding: .6rem 1.25rem;
+    background: rgba(13,17,23,.7); backdrop-filter: blur(12px);
+    border-bottom: 1px solid rgba(255,255,255,.08);
+    font-family: ui-monospace, "SF Mono", Menlo, Consolas, monospace;
+    font-size: .75rem; color: rgba(255,255,255,.5);
+    pointer-events: auto;
+  }
+  #topbar a { color: rgba(255,255,255,.9); text-decoration: none; font-weight: 600; }
+  #topbar .right { display: flex; gap: 1.25rem; }
+  #topbar .right a { color: rgba(255,255,255,.4); font-weight: 400; }
+  #topbar .right a:hover { color: rgba(255,255,255,.9); }
+
+  /* Cluster nav pills */
+  #nav {
+    position: fixed; bottom: 1.5rem; left: 50%; transform: translateX(-50%);
+    z-index: 50; display: flex; gap: .5rem; flex-wrap: wrap; justify-content: center;
+    pointer-events: auto;
+  }
+  .nav-btn {
+    background: rgba(13,17,23,.75); backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,.15); border-radius: 2em;
+    color: rgba(255,255,255,.8); font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: .72rem; padding: .35rem .85rem; cursor: pointer;
+    transition: all .2s; white-space: nowrap;
+  }
+  .nav-btn:hover, .nav-btn.active {
+    background: rgba(34,211,238,.15); border-color: #22d3ee; color: #22d3ee;
+  }
+
+  /* Info panel — shown on billboard hover */
+  #info {
+    position: fixed; top: 3.5rem; right: 1rem; z-index: 50;
+    width: 260px;
+    background: rgba(13,17,23,.85); backdrop-filter: blur(16px);
+    border: 1px solid rgba(255,255,255,.12); border-radius: 12px;
+    padding: 1.1rem 1.25rem;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    transform: translateX(300px); transition: transform .25s cubic-bezier(.4,0,.2,1);
+    pointer-events: none;
+  }
+  #info.visible { transform: translateX(0); }
+  #info .proj-name { font-size: 1rem; font-weight: 700; color: #e2e8f4; margin-bottom: .3rem; }
+  #info .proj-stars { font-size: .75rem; color: #fbbf24; font-family: ui-monospace, monospace; margin-bottom: .5rem; }
+  #info .proj-desc { font-size: .8rem; color: #7a8aa8; line-height: 1.55; margin-bottom: .85rem; }
+  #info .proj-link { font-size: .78rem; color: #22d3ee; }
+
+  /* Hint */
+  #hint {
+    position: fixed; bottom: 4.5rem; left: 50%; transform: translateX(-50%);
+    font-family: ui-monospace, monospace; font-size: .68rem; color: rgba(255,255,255,.3);
+    pointer-events: none; white-space: nowrap;
+  }
+</style>
+<script type="importmap">
+{
+  "imports": {
+    "three": "/assets/js/three/build/three.module.js",
+    "three/addons/": "/assets/js/three/examples/jsm/"
+  }
+}
+</script>
+</head>
+<body>
+<div id="canvas-wrap"></div>
+
+<header id="topbar">
+  <a href="/">rcarmo.github.io</a>
+  <div class="right">
+    <a href="/index.html">list view</a>
+    <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
+    <a href="https://github.com/rcarmo" target="_blank" rel="noopener">github</a>
+  </div>
+</header>
+
+<div id="info">
+  <div class="proj-name" id="info-name"></div>
+  <div class="proj-stars" id="info-stars"></div>
+  <div class="proj-desc" id="info-desc"></div>
+  <a class="proj-link" id="info-link" href="#" target="_blank">→ view project</a>
+</div>
+
+<nav id="nav">
+  <button class="nav-btn active" data-cluster="overview">Overview</button>
+  <button class="nav-btn" data-cluster="highlight">piclaw</button>
+  <button class="nav-btn" data-cluster="piku">piku</button>
+  <button class="nav-btn" data-cluster="ai">AI &amp; agents</button>
+  <button class="nav-btn" data-cluster="terminal">Terminal</button>
+  <button class="nav-btn" data-cluster="macos">macOS</button>
+  <button class="nav-btn" data-cluster="infra">Infrastructure</button>
+</nav>
+
+<div id="hint">drag to look around · click a billboard to visit · tap cluster buttons to navigate</div>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { EffectComposer } from 'three/addons/postprocessing/EffectComposer.js';
+import { RenderPass } from 'three/addons/postprocessing/RenderPass.js';
+import { ShaderPass } from 'three/addons/postprocessing/ShaderPass.js';
+import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShader.js';
+
+// ── Project data ───────────────────────────────────────────────────────────
+const CLUSTERS = {
+  highlight: {
+    pos: new THREE.Vector3(0, 0, 0),
+    color: 0x22d3ee,
+    projects: [
+      { id:'piclaw', name:'piclaw', stars:526, lang:'TypeScript',
+        desc:'Self-hosted AI agent workspace — streaming UI, persistent state, built-in tools.',
+        url:'/projects/piclaw.html', color:0x22d3ee },
+    ]
+  },
+  piku: {
+    pos: new THREE.Vector3(-22, 0, -8),
+    color: 0xfbbf24,
+    projects: [
+      { id:'piku', name:'piku/piku', stars:6569, lang:'Python',
+        desc:'The tiniest PaaS — git push deployments to your own server.',
+        url:'/projects/piku.html', color:0xfbbf24 },
+    ]
+  },
+  ai: {
+    pos: new THREE.Vector3(20, 0, -12),
+    color: 0x34d399,
+    projects: [
+      { id:'vibes',  name:'vibes', stars:142, lang:'Python',
+        desc:'Mobile-first web UI for AI agents — ACP and Pi over RPC.',
+        url:'/projects/vibes.html', color:0x34d399 },
+      { id:'agentbox', name:'agentbox', stars:97, lang:'Dockerfile',
+        desc:'Docker sandbox for coding agents — opt-in services, DinD.',
+        url:'/projects/agentbox.html', color:0x34d399 },
+      { id:'umcp', name:'umcp', stars:11, lang:'Python',
+        desc:'Micro MCP server — zero deps, decorator-based.',
+        url:'/projects/umcp.html', color:0x34d399 },
+      { id:'go-busybox', name:'go-busybox', stars:10, lang:'Go',
+        desc:'57 BusyBox utilities in Go — 2 MB WASM binary.',
+        url:'/projects/go-busybox.html', color:0x34d399 },
+      { id:'feed-summarizer', name:'feed-summarizer', stars:27, lang:'Python',
+        desc:'LLM-powered RSS digest that powers feeds.carmo.io.',
+        url:'/projects/feed-summarizer.html', color:0x34d399 },
+      { id:'pve-microvm', name:'pve-microvm', stars:3, lang:'Shell',
+        desc:'QEMU microvm for Proxmox — KVM isolation, <200ms boot.',
+        url:'/projects/pve-microvm.html', color:0x34d399 },
+    ]
+  },
+  terminal: {
+    pos: new THREE.Vector3(22, 0, 14),
+    color: 0xa78bfa,
+    projects: [
+      { id:'webterm', name:'webterm', stars:106, lang:'Go',
+        desc:'Go web terminal — multi-session dashboard for AI agents.',
+        url:'/projects/webterm.html', color:0xa78bfa },
+      { id:'ghostty-web', name:'ghostty-web', stars:5, lang:'TypeScript',
+        desc:'Ghostty terminal sessions in a browser.',
+        url:'/projects/ghostty-web.html', color:0xa78bfa },
+      { id:'go-rdp', name:'go-rdp', stars:9, lang:'Go',
+        desc:'Browser-based RDP client — full MS-RDPBCGR spec.',
+        url:'/projects/go-rdp.html', color:0xa78bfa },
+      { id:'go-te', name:'go-te', stars:7, lang:'Go',
+        desc:'VT100/VT520 terminal library — pyte-faithful, SVG export.',
+        url:'/projects/go-te.html', color:0xa78bfa },
+      { id:'gotel', name:'gotel', stars:5, lang:'Go',
+        desc:'Self-contained OTel collector with SQLite + built-in viewer.',
+        url:'/projects/gotel.html', color:0xa78bfa },
+    ]
+  },
+  macos: {
+    pos: new THREE.Vector3(-18, 0, 16),
+    color: 0xfb923c,
+    projects: [
+      { id:'PhotosExport', name:'PhotosExport', stars:280, lang:'Swift',
+        desc:'Export your complete Apple Photos library.',
+        url:'/projects/PhotosExport.html', color:0xfb923c },
+      { id:'drawterm', name:'drawterm', stars:26, lang:'C',
+        desc:'Plan 9 drawterm — HiDPI, Metal rendering, clipboard bridge.',
+        url:'/projects/drawterm.html', color:0xfb923c },
+      { id:'homekit-steam-user-switcher', name:'homekit-steam', stars:41, lang:'Python',
+        desc:'Switch Steam accounts on a shared PC via HomeKit.',
+        url:'/projects/homekit-steam-user-switcher.html', color:0xfb923c },
+      { id:'macemu', name:'macemu', stars:3, lang:'C++',
+        desc:'Basilisk II / SheepShaver for Raspberry Pi.',
+        url:'/projects/macemu.html', color:0xfb923c },
+    ]
+  },
+  infra: {
+    pos: new THREE.Vector3(2, 0, 26),
+    color: 0xf472b6,
+    projects: [
+      { id:'ground-init', name:'ground-init', stars:64, lang:'Python',
+        desc:'Idempotent Linux bootstrap — YAML-driven, zero deps.',
+        url:'/projects/ground-init.html', color:0xf472b6 },
+      { id:'azure-stable-diffusion', name:'azure-SD', stars:44, lang:'Makefile',
+        desc:'Stable Diffusion on Azure GPU spot — one command.',
+        url:'/projects/azure-stable-diffusion.html', color:0xf472b6 },
+      { id:'proxmox-zpool-monitoring', name:'proxmox-zpool', stars:7, lang:'Python',
+        desc:'ZFS pool metrics for Proxmox → Graphite.',
+        url:'/projects/proxmox-zpool-monitoring.html', color:0xf472b6 },
+      { id:'gnome-thumbnailers', name:'gnome-thumbnailers', stars:26, lang:'Python',
+        desc:'Thumbnails for RAW, HEIC, 3D files in GNOME.',
+        url:'/projects/gnome-thumbnailers.html', color:0xf472b6 },
+    ]
+  }
+};
+
+const CLUSTER_CAMERAS = {
+  overview:  { pos: new THREE.Vector3(0, 55, 52), target: new THREE.Vector3(0, 0, 4) },
+  highlight: { pos: new THREE.Vector3(0, 12, 14), target: new THREE.Vector3(0, 0, 0) },
+  piku:      { pos: new THREE.Vector3(-22, 12, 4), target: new THREE.Vector3(-22, 0, -8) },
+  ai:        { pos: new THREE.Vector3(20, 12, 2), target: new THREE.Vector3(20, 0, -12) },
+  terminal:  { pos: new THREE.Vector3(22, 12, 28), target: new THREE.Vector3(22, 0, 14) },
+  macos:     { pos: new THREE.Vector3(-18, 12, 30), target: new THREE.Vector3(-18, 0, 16) },
+  infra:     { pos: new THREE.Vector3(2, 12, 40), target: new THREE.Vector3(2, 0, 26) },
+};
+
+// ── Renderer ───────────────────────────────────────────────────────────────
+const wrap   = document.getElementById('canvas-wrap');
+const scene  = new THREE.Scene();
+scene.fog    = new THREE.FogExp2(0x0d1117, 0.012);
+scene.background = new THREE.Color(0x0d1117);
+
+const camera = new THREE.PerspectiveCamera(55, wrap.clientWidth / wrap.clientHeight, 0.1, 400);
+camera.position.copy(CLUSTER_CAMERAS.overview.pos);
+
+const renderer = new THREE.WebGLRenderer({ antialias: true });
+renderer.setSize(wrap.clientWidth, wrap.clientHeight);
+renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.outputColorSpace = THREE.SRGBColorSpace;
+renderer.toneMapping = THREE.CineonToneMapping;
+renderer.toneMappingExposure = 1.6;
+renderer.setClearColor(0x0d1117);
+wrap.appendChild(renderer.domElement);
+
+// ── Moebius post-process pass ──────────────────────────────────────────────
+// Normal+lighting buffer shader
+const NORMAL_VERT = `
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  void main() {
+    vNormal = normalize(mat3(modelMatrix) * normal);
+    vWorldPos = (modelMatrix * vec4(position, 1.0)).xyz;
+    gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
+  }`;
+const NORMAL_FRAG = `
+  uniform vec3 lightPos;
+  uniform vec3 cameraPos;
+  varying vec3 vNormal;
+  varying vec3 vWorldPos;
+  void main() {
+    vec3 viewDir  = normalize(cameraPos - vWorldPos);
+    vec3 lightDir = normalize(lightPos - vWorldPos);
+    vec3 reflDir  = reflect(-lightDir, vNormal);
+    float spec = pow(max(dot(viewDir, reflDir), 0.0), length(lightPos - vWorldPos) * 4.0);
+    float diff = max(dot(vNormal, lightDir), 0.0);
+    if (spec > 0.59)       gl_FragColor = vec4(100000.0, 100000.0, 100000.0, 1.0);
+    else if (diff > 0.95)  gl_FragColor = vec4(2000.0, 2000.0, 2000.0, 1.0);
+    else                   gl_FragColor = vec4(vNormal, 1.0);
+  }`;
+
+// Post-process fullscreen shader (Sobel + hatching)
+const MOEBIUS_VERT = `
+  varying vec2 vUv;
+  void main() { vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0); }`;
+const MOEBIUS_FRAG = `
+  uniform sampler2D tDiffuse;
+  uniform sampler2D uNormals;
+  uniform vec2 uResolution;
+  uniform float timerRandoms[32];
+  varying vec2 vUv;
+
+  float rand(vec2 co){ return fract(sin(dot(co,vec2(12.9898,78.233)))*43758.5453); }
+  float randD(float x,float y,float rx,float ry,float f,vec4 rv){
+    float r=rand(vec2(x,y));
+    return ((1.0+r)*(sin(y*ry/rv.x)*f)+(1.0+r)*(sin(y*ry/rv.y)*f)+(1.0+r)*(sin(y*ry/rv.z)*f)+(1.0+r)*(sin(y*ry/rv.w)*f))/4.0;
+  }
+  float lval(sampler2D img,vec2 coord,vec2 texel,vec2 pt){
+    return dot(texture2D(img,coord+texel*pt).xyz,vec3(0.299,0.587,0.114));
+  }
+  float dv(float x,float y){ return lval(tDiffuse,vUv,vec2(1.0/uResolution.x,1.0/uResolution.y),vec2(x,y))*0.6; }
+  float nv(float x,float y){ return lval(uNormals, vUv,vec2(1.0/uResolution.x,1.0/uResolution.y),vec2(x,y))*0.4; }
+  float gv(float x,float y){ return dv(x,y)+nv(x,y); }
+
+  float sobel(){
+    const mat3 Gx=mat3(-1,-2,-1,0,0,0,1,2,1);
+    const mat3 Gy=mat3(-1,0,1,-2,0,2,-1,0,1);
+    float xd=randD(vUv.x,vUv.y,uResolution.x,uResolution.y,1.5,vec4(22.,13.,37.,89.));
+    float yd=randD(vUv.y,vUv.x,uResolution.y,uResolution.x,1.5,vec4(22.,13.,37.,89.));
+    float t00=gv(-1.+xd,-1.+yd),t01=gv(-1.+xd,yd),t02=gv(-1.+xd,1.+yd);
+    float t10=gv(xd,-1.+yd),   t11=gv(xd,yd),   t12=gv(xd,1.+yd);
+    float t20=gv(1.+xd,-1.+yd),t21=gv(1.+xd,yd),t22=gv(1.+xd,1.+yd);
+    float vx=Gx[0][0]*t00+Gx[1][0]*t10+Gx[2][0]*t20+Gx[0][1]*t01+Gx[1][1]*t11+Gx[2][1]*t21+Gx[0][2]*t02+Gx[1][2]*t12+Gx[2][2]*t22;
+    float vy=Gy[0][0]*t00+Gy[1][0]*t10+Gy[2][0]*t20+Gy[0][1]*t01+Gy[1][1]*t11+Gy[2][1]*t21+Gy[0][2]*t02+Gy[1][2]*t12+Gy[2][2]*t22;
+    return clamp(vx*vx+vy*vy,0.0,1.0);
+  }
+  vec3 sat(vec3 rgb,float a){
+    const vec3 W=vec3(0.2125,0.7154,0.0721);
+    return mix(vec3(dot(rgb,W)),rgb,a);
+  }
+  float luma(vec4 c){ return 0.2126*c.x+0.7152*c.y+0.0722*c.z; }
+
+  void main(){
+    float sv=smoothstep(0.01,0.03,sobel());
+    if(sv>0.1){ gl_FragColor=vec4(0,0,0,1); return; }
+
+    vec4 nc=texture2D(uNormals,vUv);
+    if(nc.x>2000.){
+      gl_FragColor=vec4(240./255.,234./255.,214./255.,1.); return;
+    }
+    if(nc.x>100.){
+      gl_FragColor=vec4(sat((texture2D(tDiffuse,vUv)*.5+vec4(240./255.,234./255.,214./255.,1.)*.5).xyz,.4),1.); return;
+    }
+
+    float xd=randD(vUv.x,vUv.y,uResolution.x,uResolution.y,1.5/uResolution.x,vec4(22.,13.,37.,89.));
+    float yd=randD(vUv.y,vUv.x,uResolution.y,uResolution.x,1.5/uResolution.y,vec4(22.,13.,37.,89.));
+    vec2 nuv=vUv+vec2(xd,yd);
+    gl_FragColor=vec4(sat(texture2D(tDiffuse,nuv).xyz,.3),1.);
+
+    float pl=luma(texture2D(tDiffuse,nuv));
+    float rx=uResolution.x; float ry=uResolution.y;
+
+    // hatching layers by luminance
+    if(pl<=0.75){
+      float s=mod((vUv.y*ry+vUv.x*rx)/17.7,4.);
+      float xd2=randD(vUv.x,vUv.y,rx,ry,1.5/rx,vec4(timerRandoms[0],timerRandoms[1],timerRandoms[2],timerRandoms[3]));
+      float yd2=randD(vUv.y,vUv.x,ry,rx,1.5/ry,vec4(timerRandoms[4],timerRandoms[5],timerRandoms[6],timerRandoms[7]));
+      vec2 sv2=vUv+vec2(xd2,yd2);
+      if(mod(sv2.y*ry+sv2.x*rx,17.7)<=1.5) gl_FragColor=vec4(0,0,0,1);
+    }
+    if(pl<=0.55){
+      float xd2=randD(vUv.x,vUv.y,rx,ry,1.5/rx,vec4(timerRandoms[8],timerRandoms[9],timerRandoms[10],timerRandoms[11]));
+      float yd2=randD(vUv.y,vUv.x,ry,rx,1.5/ry,vec4(timerRandoms[12],timerRandoms[13],timerRandoms[14],timerRandoms[15]));
+      vec2 sv2=vUv+vec2(xd2,yd2);
+      if(mod(sv2.x*rx,17.7)<=1.5) gl_FragColor=vec4(0,0,0,1);
+    }
+    if(pl<=0.38){
+      float xd2=randD(vUv.x,vUv.y,rx,ry,1.5/rx,vec4(timerRandoms[16],timerRandoms[17],timerRandoms[18],timerRandoms[19]));
+      float yd2=randD(vUv.y,vUv.x,ry,rx,1.5/ry,vec4(timerRandoms[20],timerRandoms[21],timerRandoms[22],timerRandoms[23]));
+      vec2 sv2=vUv+vec2(xd2,yd2);
+      if(mod(-sv2.y*ry+sv2.x*rx,17.7)<=1.5) gl_FragColor=vec4(0,0,0,1);
+    }
+    if(pl<=0.25){ gl_FragColor=vec4(0,0,0,1); }
+  }`;
+
+// ── Composer setup ─────────────────────────────────────────────────────────
+const W = wrap.clientWidth, H = wrap.clientHeight;
+const composer = new EffectComposer(renderer);
+composer.addPass(new RenderPass(scene, camera));
+composer.addPass(new ShaderPass(GammaCorrectionShader));
+
+// Normal buffer
+const normalBuf = new THREE.WebGLRenderTarget(W, H, {
+  format: THREE.RGBAFormat, type: THREE.HalfFloatType,
+  minFilter: THREE.NearestFilter, magFilter: THREE.NearestFilter,
+  generateMipmaps: false,
+});
+const normalMat = new THREE.ShaderMaterial({
+  uniforms: {
+    lightPos:   { value: new THREE.Vector3(0, 10, 10) },
+    cameraPos:  { value: new THREE.Vector3() },
+  },
+  vertexShader: NORMAL_VERT, fragmentShader: NORMAL_FRAG
+});
+
+// Moebius pass
+const moebiusRands = Array.from({length:32}, () => Math.random()*90+7);
+const moebiusPass = new ShaderPass(new THREE.ShaderMaterial({
+  uniforms: {
+    tDiffuse:    { value: null },
+    uNormals:    { value: normalBuf.texture },
+    uResolution: { value: new THREE.Vector2(W, H) },
+    timerRandoms:{ value: moebiusRands },
+  },
+  vertexShader: MOEBIUS_VERT, fragmentShader: MOEBIUS_FRAG
+}));
+moebiusPass.renderToScreen = true;
+composer.addPass(moebiusPass);
+
+// ── Lighting ───────────────────────────────────────────────────────────────
+const sun = new THREE.PointLight(0xfff4e0, 1800, 200);
+sun.position.set(8, 18, 12);
+sun.castShadow = true;
+sun.shadow.mapSize.setScalar(2048);
+scene.add(sun);
+scene.add(new THREE.AmbientLight(0xb0c8e8, 0.4));
+
+// ── Utility: make canvas billboard texture ─────────────────────────────────
+function makeBillboardTexture(proj, accent) {
+  const W = 512, H = 256, cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+
+  // Background — warm paper
+  ctx.fillStyle = '#f5f0e8';
+  ctx.fillRect(0, 0, W, H);
+
+  // Accent bar top
+  const hex = '#' + accent.toString(16).padStart(6, '0');
+  ctx.fillStyle = hex;
+  ctx.fillRect(0, 0, W, 6);
+
+  // Border
+  ctx.strokeStyle = '#2a1e18';
+  ctx.lineWidth = 3;
+  ctx.strokeRect(1.5, 1.5, W - 3, H - 3);
+
+  // Name
+  ctx.fillStyle = '#1a0e08';
+  ctx.font = 'bold 38px ui-monospace, "SF Mono", monospace';
+  ctx.fillText(proj.name, 20, 56);
+
+  // Stars
+  ctx.fillStyle = hex;
+  ctx.font = 'bold 22px ui-monospace, monospace';
+  ctx.fillText(`★ ${proj.stars.toLocaleString()}  ${proj.lang}`, 20, 88);
+
+  // Description — word-wrap
+  ctx.fillStyle = '#3a2e28';
+  ctx.font = '20px -apple-system, Helvetica, Arial, sans-serif';
+  const words = proj.desc.split(' ');
+  let line = '', y = 128, maxW = W - 40;
+  for (const w of words) {
+    const test = line ? line + ' ' + w : w;
+    if (ctx.measureText(test).width > maxW && line) {
+      ctx.fillText(line, 20, y); y += 26; line = w;
+    } else { line = test; }
+  }
+  if (line) ctx.fillText(line, 20, y);
+
+  // Arrow hint
+  ctx.fillStyle = hex;
+  ctx.font = 'bold 18px ui-monospace, monospace';
+  ctx.fillText('→ click to explore', W - 200, H - 18);
+
+  return new THREE.CanvasTexture(cv);
+}
+
+// ── Platform builder ───────────────────────────────────────────────────────
+function makePlatform(center, color, radius) {
+  const geo = new THREE.CylinderGeometry(radius, radius * 1.1, 0.5, 6);
+  const mat = new THREE.MeshStandardMaterial({
+    color, emissive: color, emissiveIntensity: 0.08, roughness: 0.8, metalness: 0.1
+  });
+  const m = new THREE.Mesh(geo, mat);
+  m.position.copy(center);
+  m.receiveShadow = true; m.castShadow = true;
+  scene.add(m);
+}
+
+// ── Tree (decorative low-poly) ─────────────────────────────────────────────
+function makeTree(x, z) {
+  const trunk = new THREE.Mesh(
+    new THREE.CylinderGeometry(.15, .2, 1.2, 6),
+    new THREE.MeshStandardMaterial({ color:0x6b4226, emissive:0x6b4226, emissiveIntensity:.05 })
+  );
+  trunk.position.set(x, 0.6, z);
+  trunk.castShadow = true;
+  const canopy = new THREE.Mesh(
+    new THREE.ConeGeometry(1.0, 2.5, 6),
+    new THREE.MeshStandardMaterial({ color:0x2d7a3a, emissive:0x2d7a3a, emissiveIntensity:.06, roughness:.9 })
+  );
+  canopy.position.set(x, 2.5, z);
+  canopy.castShadow = true;
+  scene.add(trunk); scene.add(canopy);
+}
+
+// ── Ground ─────────────────────────────────────────────────────────────────
+const ground = new THREE.Mesh(
+  new THREE.PlaneGeometry(150, 150, 40, 40),
+  new THREE.MeshStandardMaterial({ color:0x8faa6e, emissive:0x8faa6e, emissiveIntensity:.03, roughness:.95 })
+);
+ground.rotation.x = -Math.PI / 2;
+ground.position.y = -0.5;
+ground.receiveShadow = true;
+scene.add(ground);
+
+// Grid lines
+const gridHelper = new THREE.GridHelper(150, 30, 0x2a3820, 0x2a3820);
+gridHelper.position.y = -0.48;
+gridHelper.material.opacity = 0.35;
+gridHelper.material.transparent = true;
+scene.add(gridHelper);
+
+// ── Billboard objects for raycasting ──────────────────────────────────────
+const billboards = [];
+
+// ── Populate clusters ─────────────────────────────────────────────────────
+function buildCluster(clusterKey, cluster) {
+  const {pos, color, projects} = cluster;
+
+  // Platform under cluster
+  makePlatform(pos.clone().setY(-0.25), color, projects.length <= 2 ? 4 : 8);
+
+  // Decorative trees around platform
+  const treeCount = Math.min(4, projects.length);
+  for (let i = 0; i < treeCount; i++) {
+    const a = (i / treeCount) * Math.PI * 2;
+    const r = (projects.length <= 2 ? 5 : 10);
+    makeTree(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r);
+  }
+
+  // Billboards for each project
+  const N = projects.length;
+  projects.forEach((proj, i) => {
+    const angle = (N === 1) ? 0 : (i / N) * Math.PI * 2;
+    const r     = N === 1 ? 0 : Math.min(4.5 * Math.sqrt(N/2), 9);
+    const bx = pos.x + Math.cos(angle) * r;
+    const bz = pos.z + Math.sin(angle) * r;
+
+    // Post (stake)
+    const postMat = new THREE.MeshStandardMaterial({ color:0x2a1e18, emissive:0x2a1e18, emissiveIntensity:.02 });
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(.06, .08, 3.5, 6), postMat);
+    post.position.set(bx, 1.25, bz);
+    post.castShadow = true;
+    scene.add(post);
+
+    // Billboard panel
+    const panelW = 3.2, panelH = 1.6;
+    const tex = makeBillboardTexture(proj, color);
+    const panel = new THREE.Mesh(
+      new THREE.PlaneGeometry(panelW, panelH),
+      new THREE.MeshStandardMaterial({
+        map: tex, emissiveMap: tex, emissive: new THREE.Color(1, 1, 1),
+        emissiveIntensity: 0.15, side: THREE.DoubleSide, roughness: .7
+      })
+    );
+    panel.position.set(bx, 3.2, bz);
+    panel.castShadow = false;
+    panel.userData = { proj, clusterKey };
+    scene.add(panel);
+    billboards.push(panel);
+
+    // Frame border
+    const frameMat = new THREE.LineBasicMaterial({ color: color, linewidth: 2 });
+    const half = { w: panelW/2 + .06, h: panelH/2 + .06 };
+    const fpts = [
+      new THREE.Vector3(-half.w, -half.h, 0.01),
+      new THREE.Vector3( half.w, -half.h, 0.01),
+      new THREE.Vector3( half.w,  half.h, 0.01),
+      new THREE.Vector3(-half.w,  half.h, 0.01),
+      new THREE.Vector3(-half.w, -half.h, 0.01),
+    ];
+    const frame = new THREE.Line(
+      new THREE.BufferGeometry().setFromPoints(fpts),
+      frameMat
+    );
+    frame.position.copy(panel.position);
+    scene.add(frame);
+  });
+
+  // Cluster label floating above platform
+  const label = makeLabel(clusterKey, cluster, color);
+  label.position.set(pos.x, 6, pos.z);
+  scene.add(label);
+}
+
+function makeLabel(key, cluster, color) {
+  const W = 320, H = 64, cv = document.createElement('canvas');
+  cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d');
+  ctx.clearRect(0, 0, W, H);
+  const hex = '#' + color.toString(16).padStart(6, '0');
+  ctx.fillStyle = hex;
+  ctx.font = 'bold 36px ui-monospace, "SF Mono", monospace';
+  ctx.textAlign = 'center';
+  ctx.fillText(key.toUpperCase(), W/2, 46);
+  const tex = new THREE.CanvasTexture(cv);
+  const mesh = new THREE.Mesh(
+    new THREE.PlaneGeometry(4, .8),
+    new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
+  );
+  return mesh;
+}
+
+// Build all clusters
+Object.entries(CLUSTERS).forEach(([key, cluster]) => buildCluster(key, cluster));
+
+// ── Floating star for piclaw (hero) ────────────────────────────────────────
+const heroGeo = new THREE.IcosahedronGeometry(1.1, 1);
+const heroMat = new THREE.MeshStandardMaterial({
+  color: 0x22d3ee, emissive: 0x22d3ee, emissiveIntensity: 0.25,
+  roughness: 0.4, metalness: 0.3
+});
+const heroMesh = new THREE.Mesh(heroGeo, heroMat);
+heroMesh.position.set(0, 5.5, 0);
+heroMesh.castShadow = true;
+scene.add(heroMesh);
+
+// ── piku monolith (most starred) ───────────────────────────────────────────
+const monolithMat = new THREE.MeshStandardMaterial({
+  color: 0xfbbf24, emissive: 0xfbbf24, emissiveIntensity: 0.15,
+  roughness: 0.6, metalness: 0.2
+});
+const monolith = new THREE.Mesh(new THREE.BoxGeometry(0.8, 7, 0.8), monolithMat);
+monolith.position.set(-22, 3, -8);
+monolith.castShadow = true;
+scene.add(monolith);
+
+// ── Orbit controls ─────────────────────────────────────────────────────────
+const controls = new OrbitControls(camera, renderer.domElement);
+controls.target.copy(CLUSTER_CAMERAS.overview.target);
+controls.enableDamping = true;
+controls.dampingFactor = 0.08;
+controls.maxPolarAngle = Math.PI * 0.48;
+controls.minDistance = 4;
+controls.maxDistance = 120;
+controls.autoRotate = true;
+controls.autoRotateSpeed = 0.4;
+controls.update();
+
+// ── Camera fly-to animation ────────────────────────────────────────────────
+let targetCamPos  = CLUSTER_CAMERAS.overview.pos.clone();
+let targetCamLook = CLUSTER_CAMERAS.overview.target.clone();
+let flying = false;
+const tmpPos = new THREE.Vector3();
+const tmpLook = new THREE.Vector3();
+
+function flyTo(clusterKey) {
+  const cam = CLUSTER_CAMERAS[clusterKey];
+  if (!cam) return;
+  targetCamPos  = cam.pos.clone();
+  targetCamLook = cam.target.clone();
+  flying = true;
+  controls.autoRotate = false;
+  document.querySelectorAll('.nav-btn').forEach(b => b.classList.remove('active'));
+  document.querySelector(`[data-cluster="${clusterKey}"]`)?.classList.add('active');
+}
+
+document.querySelectorAll('.nav-btn').forEach(btn => {
+  btn.addEventListener('click', () => flyTo(btn.dataset.cluster));
+});
+
+// ── Raycasting / hover + click ─────────────────────────────────────────────
+const raycaster = new THREE.Raycaster();
+const mouse = new THREE.Vector2(-10, -10);
+let hoveredBill = null;
+
+const infoEl   = document.getElementById('info');
+const infoName = document.getElementById('info-name');
+const infoStars= document.getElementById('info-stars');
+const infoDesc = document.getElementById('info-desc');
+const infoLink = document.getElementById('info-link');
+
+renderer.domElement.addEventListener('mousemove', e => {
+  const rect = renderer.domElement.getBoundingClientRect();
+  mouse.set(
+    ((e.clientX - rect.left) / rect.width)  * 2 - 1,
+    -((e.clientY - rect.top)  / rect.height) * 2 + 1
+  );
+});
+
+renderer.domElement.addEventListener('click', () => {
+  if (hoveredBill) {
+    window.location.href = hoveredBill.userData.proj.url;
+  }
+});
+
+// touch support
+renderer.domElement.addEventListener('touchend', e => {
+  const t = e.changedTouches[0];
+  const rect = renderer.domElement.getBoundingClientRect();
+  mouse.set(
+    ((t.clientX - rect.left) / rect.width)  * 2 - 1,
+    -((t.clientY - rect.top)  / rect.height) * 2 + 1
+  );
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(billboards);
+  if (hits.length) window.location.href = hits[0].object.userData.proj.url;
+});
+
+// ── Resize handler ─────────────────────────────────────────────────────────
+window.addEventListener('resize', () => {
+  const w = wrap.clientWidth, h = wrap.clientHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+  composer.setSize(w, h);
+  normalBuf.setSize(w, h);
+  moebiusPass.material.uniforms.uResolution.value.set(w, h);
+});
+
+// ── Animate ────────────────────────────────────────────────────────────────
+let lastRandUpdate = Date.now();
+const clock = new THREE.Clock();
+
+function animate() {
+  requestAnimationFrame(animate);
+  const t = clock.getElapsedTime();
+
+  // Floating hero icosahedron
+  heroMesh.rotation.y += 0.007;
+  heroMesh.rotation.x += 0.004;
+  heroMesh.position.y = 5.5 + Math.sin(t * 0.8) * 0.3;
+
+  // Monolith slow pulse
+  monolith.position.y = 3 + Math.sin(t * 0.5) * 0.15;
+
+  // All billboards face the camera
+  billboards.forEach(b => {
+    b.lookAt(camera.position);
+  });
+
+  // Label planes face camera
+  scene.traverse(obj => {
+    if (obj.isMesh && obj.material?.transparent && obj.material?.map) {
+      obj.lookAt(camera.position);
+    }
+  });
+
+  // Light tracks camera loosely
+  sun.position.set(
+    camera.position.x * 0.3 + 8,
+    Math.max(camera.position.y * 0.8, 10),
+    camera.position.z * 0.3 + 12
+  );
+  normalMat.uniforms.lightPos.value.copy(sun.position);
+  normalMat.uniforms.cameraPos.value.copy(camera.position);
+
+  // Camera fly-to
+  if (flying) {
+    tmpPos.lerp(targetCamPos, 0.06);
+    tmpLook.lerp(targetCamLook, 0.06);
+    if (camera.position.distanceTo(targetCamPos) < 0.5) {
+      flying = false;
+      controls.autoRotate = true;
+    } else {
+      camera.position.lerp(targetCamPos, 0.04);
+      controls.target.lerp(targetCamLook, 0.04);
+    }
+  }
+
+  controls.update();
+
+  // Raycasting
+  raycaster.setFromCamera(mouse, camera);
+  const hits = raycaster.intersectObjects(billboards);
+  if (hits.length) {
+    const bill = hits[0].object;
+    if (bill !== hoveredBill) {
+      hoveredBill = bill;
+      const p = bill.userData.proj;
+      infoName.textContent = p.name;
+      infoStars.textContent = `★ ${p.stars.toLocaleString()}  ·  ${p.lang}`;
+      infoDesc.textContent = p.desc;
+      infoLink.href = p.url;
+      infoEl.classList.add('visible');
+      document.body.style.cursor = 'pointer';
+    }
+  } else {
+    if (hoveredBill) {
+      hoveredBill = null;
+      infoEl.classList.remove('visible');
+      document.body.style.cursor = '';
+    }
+  }
+
+  // Refresh moebius random hatching every second
+  if (Date.now() - lastRandUpdate > 1000) {
+    moebiusRands.forEach((_, i) => moebiusRands[i] = Math.random() * 40 + 7);
+    moebiusPass.material.uniforms.timerRandoms.value = [...moebiusRands];
+    lastRandUpdate = Date.now();
+  }
+
+  // Moebius: render normals to buffer first, then run composer
+  renderer.setRenderTarget(normalBuf);
+  const prevOverride = scene.overrideMaterial;
+  scene.overrideMaterial = normalMat;
+  renderer.render(scene, camera);
+  scene.overrideMaterial = prevOverride;
+  renderer.setRenderTarget(null);
+  moebiusPass.material.uniforms.uNormals.value = normalBuf.texture;
+
+  composer.render();
+}
+animate();
+</script>
+</body>
+</html>
