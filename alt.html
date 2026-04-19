@@ -410,14 +410,14 @@ function makeBillboard(x, z, proj, accentHex, logoImg) {
 
   // Post (stake)
   const post = BABYLON.MeshBuilder.CreateCylinder('post',
-    {diameter:0.16, height:2.5, tessellation:6}, scene);
+    {diameter:0.16, height:1.8, tessellation:6}, scene);
   post.material = toonMat('postmat','#3a2a1a',0.02);
-  post.position.set(x, 0.75, z);
+  post.position.set(x, 0.1, z);     // top reaches billboard lower edge
 
   // Panel
   const panel = BABYLON.MeshBuilder.CreatePlane('panel', {width:4.0, height:2.0}, scene);
   panel.material = mat;
-  panel.position.set(x, 3.6, z);
+  panel.position.set(x, 2.2, z);    // at walking camera level
   panel.billboardMode = BABYLON.Mesh.BILLBOARDMODE_Y; // always face camera
   panel.metadata = { proj, x, z };
   billboards.push(panel);
@@ -621,7 +621,10 @@ scene.registerBeforeRender(()=>{
   } else {
     // Phase 3: ARRIVE — rotate to face billboard from inside garden
     const at = smoothstep((pathState.t-ARRIVE_T)/(1-ARRIVE_T));
-    camera.target.lerpInPlace(pathState.endTarget, at*0.14);
+    const et=pathState.endTarget, f=at*0.14;
+    camera.target.x=lerpF(camera.target.x,et.x,f);
+    camera.target.y=lerpF(camera.target.y,et.y,f);
+    camera.target.z=lerpF(camera.target.z,et.z,f);
     camera.alpha  = lerpAngle(camera.alpha, pathState.endAlpha,  at*0.13);
     camera.beta   = lerpF(camera.beta,   pathState.endBeta,   at*0.11);
     camera.radius = lerpF(camera.radius, pathState.endRadius, at*0.11);
@@ -664,7 +667,7 @@ function rotateToBillboard(bill){
   const endTarget=new BABYLON.Vector3(x, bill.position.y*0.55, z);
   const ease=new BABYLON.SineEase(); ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
   ['alpha','beta','radius'].forEach((prop,pi)=>{
-    const vals=[endAlpha, Math.PI/3.8, 7];
+    const vals=[endAlpha, Math.PI/2.6, 7];
     const a=new BABYLON.Animation('rot_'+prop,prop,60,
       BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
     a.setEasingFunction(ease);
@@ -702,22 +705,21 @@ function flyToBillboard(bill){
     if(curve&&curve.length){
       const fwd=fromKey===edgeKey.split('--')[0];
       const pts=fwd?curve:[...curve].reverse();
-      // Sample every 2nd point for smooth but efficient
-      pts.forEach((p,j)=>{ if(j%2===0||j===pts.length-1) wpts.push(new BABYLON.Vector3(p[0],PATH_Y,p[1])); });
+      // Every point for maximum smoothness (Catmull-Rom will interpolate between them)
+      pts.forEach(p=>wpts.push(new BABYLON.Vector3(p[0],PATH_Y,p[1])));
     } else {
       const cp=CLUSTERS[toKey].pos;
       wpts.push(new BABYLON.Vector3(cp[0],PATH_Y,cp[2]));
     }
   }
-  const cposV=CLUSTERS[clusterKey].pos;
-  wpts.push(new BABYLON.Vector3(cposV[0],PATH_Y,cposV[2]));
+  // Approach billboard directly — no extra cluster-centre waypoint (avoids corner)
   wpts.push(new BABYLON.Vector3(x, bill.position.y*0.55, z));
 
   // Arc-length-based speed: travel at ~9 units/sec
   let arcLen=0;
   for(let i=0;i<wpts.length-1;i++) arcLen+=BABYLON.Vector3.Distance(wpts[i],wpts[i+1]);
   const travelFrac = ARRIVE_T - DROP_T;
-  const totalSec = arcLen / 9 + 0.8;  // 0.8s for drop+arrival phases
+  const totalSec = arcLen / 16 + 0.6;  // faster travel
   const speed = 1 / (totalSec * 60);
 
   const cpos=CLUSTERS[clusterKey].pos;
@@ -730,7 +732,7 @@ function flyToBillboard(bill){
     endTarget: new BABYLON.Vector3(x, bill.position.y*0.55, z),
     endAlpha:  Math.atan2(dz/dist, dx/dist),
     endRadius: 7,
-    endBeta:   Math.PI/3.8,
+    endBeta:   Math.PI/2.6,    // lower angle → camera at eye level for y=2.2 billboard
     onDone:    ()=>openFocus(bill),
   };
 }
