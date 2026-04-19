@@ -1,11 +1,12 @@
 #!/usr/bin/env bun
 /**
- * Build rich single-page project presentations.
- * - Logos inlined as base64 data URIs
- * - Architecture diagrams inlined as SVG
- * - Releases loaded dynamically from GitHub API at page load (no stale baked data)
- * - Date-sorted releases with human-readable dates
- * - No commit list — only releases + verified posts
+ * Build rich project pages using visual-explainer design language:
+ * - Blueprint/Editorial constrained aesthetic (NOT generic blue-on-dark)
+ * - Dot-grid background atmosphere
+ * - Sticky sidebar TOC (desktop) / horizontal scroll bar (mobile) with scroll spy
+ * - Mermaid.js architecture diagrams
+ * - Dynamic releases from GitHub API, date-sorted
+ * - No commit noise
  * Run: bun run build.ts
  */
 import { mkdirSync, writeFileSync, readFileSync, readdirSync } from "node:fs";
@@ -20,19 +21,20 @@ type Post    = { title: string; url: string; date: string };
 type Meta    = { name: string; full_name: string; description: string;
                  homepage: string|null; stars: number; forks: number;
                  language: string; created_at: string; pushed_at: string; topics: string[] };
-type Dossier = { id: string; meta: Meta; readme: string;
-                 posts: Post[]; logo_data_uri: string|null; diagram_inline: string|null };
+type Dossier = { id: string; meta: Meta; posts: Post[];
+                 logo_data_uri: string|null; diagram_inline: string|null };
 
 const POSTS: Record<string, Post[]> = JSON.parse(readFileSync(join(DATA,"verified-posts.json"),"utf-8"));
 
-// ── Per-project content written from READMEs ─────────────────────────────
+// ── Content ───────────────────────────────────────────────────────────────
 type Feature = { icon: string; title: string; body: string };
 type Content = {
-  tagline:  string;
-  about:    string;   // 2–3 sentence overview
-  how:      string;   // 3–5 paragraph explanation of how it actually works
+  tagline: string;
+  about: string;
+  how: string;
   features: Feature[];
-  status:   "active"|"stable"|"maintained"|"archived";
+  mermaid?: string;   // Mermaid diagram definition
+  status: "active"|"stable"|"maintained"|"archived";
 };
 
 const C: Record<string, Content> = {
@@ -40,419 +42,558 @@ const C: Record<string, Content> = {
     status: "stable",
     tagline: "git push deployments to your own server — no Docker, no ops.",
     about: `piku is a single Python script installed as a git post-receive hook. Push your code, piku reads the Procfile, installs dependencies, starts your workers under uwsgi, and wires them up behind nginx with optional Let's Encrypt TLS. The whole runtime fits in ~1,500 lines of readable Python 3 and runs on a first-generation Raspberry Pi.`,
-    how: `piku runs as a git post-receive hook on your server. When you push a commit, it detects your application type from lock files and a Procfile, installs dependencies into an isolated per-app environment (virtualenv for Python, node_modules for Node, a separate GOPATH for Go), and starts your declared processes under uwsgi acting as a process supervisor.
+    how: `piku runs as a git post-receive hook. When you push a commit, it detects your application type from lock files and a Procfile, installs dependencies into an isolated per-app environment, and starts your declared processes under uwsgi acting as a process supervisor.
 
-Nginx is reconfigured automatically on each deploy. Virtual hosts, TLS certificates (via Let's Encrypt ACME), static file serving paths, and cache rules are all driven by a single ENV file you commit alongside your code. Zero-downtime deploys work by replacing workers before shutting down the old ones. ps:scale web=3 and config:set KEY=val take effect without touching your code.
+Nginx is reconfigured automatically on each deploy. Virtual hosts, TLS via Let's Encrypt, static file serving, and cache rules are driven by an ENV file you commit alongside your code. Zero-downtime deploys replace workers before stopping the old ones. ps:scale web=3 and config:set KEY=val take effect without touching code.
 
-The entire implementation stays around 1,500 lines of Python with no external dependencies. You can read the whole thing in an afternoon. That deliberate simplicity is a design goal: piku covers 80% of common deployment use cases without becoming a platform.`,
+The implementation stays around 1,500 lines of Python with no external dependencies. That deliberate simplicity is a design goal — piku covers 80% of deployment use cases without becoming a platform.`,
+    mermaid: `flowchart LR
+    Dev["Developer\\ngit push"] --> Hook["piku hook\\npost-receive"]
+    Hook --> Deps["Install deps\\nvenv / node_modules"]
+    Hook --> Nginx["Configure\\nnginx + TLS"]
+    Deps --> Workers["Start workers\\nuwsgi"]
+    Workers --> App["Live app"]
+    Nginx --> App`,
     features: [
-      { icon: "⌥", title: "Heroku-style workflow", body: "git remote add piku piku@yourserver:appname. git push piku main. The entire deploy flow." },
-      { icon: "🌐", title: "Python, Node, Go, Clojure, Ruby, Java, PHP, static", body: "Language runtimes detected from lock files and Procfiles. If it runs in a shell it runs in piku." },
-      { icon: "🔒", title: "Automatic TLS", body: "Let's Encrypt via ACME, virtual host routing via nginx, zero-downtime worker replacement." },
-      { icon: "⬆", title: "Live scaling and config", body: "ps:scale web=3 and config:set KEY=val take effect instantly without a redeploy." },
-      { icon: "🐧", title: "Any POSIX host", body: "Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016, maintained by the piku org." },
+      { icon: "⌥", title: "Heroku-style workflow", body: "git remote add piku piku@server:app. git push piku main. The full deploy flow." },
+      { icon: "🌐", title: "Any language", body: "Python, Node, Go, Clojure, Ruby, Java, PHP, static. Detected from lock files and Procfiles." },
+      { icon: "🔒", title: "Automatic TLS", body: "Let's Encrypt ACME, virtual host routing, zero-downtime worker replacement." },
+      { icon: "⬆", title: "Live scaling", body: "ps:scale web=3 and config:set KEY=val — no redeploy needed." },
+      { icon: "🐧", title: "Any POSIX host", body: "Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016." },
     ],
   },
   piclaw: {
     status: "active",
     tagline: "A self-hosted AI agent workspace — streaming UI, persistent state, no CDN.",
-    about: `PiClaw packages the Pi Coding Agent runtime into a Docker container with a streaming web UI, multi-provider LLM support, and built-in tools including a Ghostty terminal, code editor, document viewers, draw.io, kanban boards, VNC client, and MCP access. Everything ships in one image; no CDN, no setup wizard, one docker run command.`,
-    how: `PiClaw is a Docker container where Supervisor runs as PID 1 and manages three processes: the Bun-based Pi agent runtime, an optional Ghostty-backed web terminal (Go), and an optional VNC display. Persistent state lives on a bind-mounted /workspace volume — the container itself is stateless and replaceable.
+    about: `PiClaw packages the Pi Coding Agent runtime into a Docker container with a streaming web UI, multi-provider LLM support, and built-in tools including a Ghostty terminal, code editor, document viewers, draw.io, kanban boards, VNC client, and MCP access. One docker run command, no CDN, no setup wizard.`,
+    how: `Supervisor runs as PID 1 inside the container, managing the Bun-based Pi agent runtime, an optional Ghostty-backed web terminal, and an optional VNC display. All persistent state lives on a bind-mounted /workspace volume — the container is stateless and replaceable.
 
-The web UI communicates with the agent runtime over SSE for streaming responses and WebSocket for real-time indicators. The agent's tool surface is layered: a small always-active baseline, with additional tools activated on demand via list_tools and activate_tools. This keeps token usage low while making hundreds of capabilities available. Skills are Markdown-described TypeScript modules discovered at runtime from SKILL.md files.
+The web UI communicates with the agent over SSE for streaming and WebSocket for real-time indicators. The tool surface is layered: a small always-active baseline, with additional tools activated on demand via list_tools and activate_tools — keeping token usage low while hundreds of capabilities remain available. Skills are TypeScript modules discovered at runtime from SKILL.md files.
 
-The keychain stores secrets encrypted at rest with AES-GCM. Sessions branch as git-like conversation trees stored in SQLite — you can fork a conversation, explore a different direction, and return to the original branch. Dream memory consolidation runs nightly to synthesise daily notes from across all sessions and keep long-running workflows coherent.`,
+Sessions branch as git-like conversation trees in SQLite. The keychain stores secrets encrypted with AES-GCM. Dream memory consolidation runs nightly to synthesise notes from all sessions and keep long-running workflows coherent.`,
+    mermaid: `flowchart TB
+    Browser["Browser / Mobile"] --> |"SSE + WebSocket"| WebUI["Web UI\\nStreaming chat"]
+    WebUI --> Agent["Pi Agent Runtime\\n(Bun)"]
+    Agent --> LLM["LLM providers\\nAnthropic · OpenAI · Ollama…"]
+    Agent --> Tools["Tools\\nSSH · Proxmox · Portainer · MCP"]
+    Agent --> Skills["Skills\\nTypeScript modules"]
+    Agent --> DB["SQLite state\\nSessions · Keychain · Media"]
+    subgraph Container["Docker container"]
+        WebUI
+        Agent
+        Terminal["Ghostty terminal"]
+        VNC["VNC display"]
+    end`,
     features: [
-      { icon: "💬", title: "Streaming chat with branches", body: "Real-time Markdown, KaTeX, Mermaid, Adaptive Cards. Branch with /btw, queue follow-ups, steer mid-generation." },
-      { icon: "🗂", title: "Full workspace tooling", body: "File browser, CodeMirror 6 editor, Office/CSV/PDF/image viewers, draw.io, kanban boards, VNC client — no separate apps." },
-      { icon: "🔌", title: "Any LLM", body: "Anthropic, OpenAI, Azure, Gemini, Ollama, or any OpenAI-compatible endpoint. Switch mid-session without restart." },
-      { icon: "🧠", title: "Persistent state", body: "SQLite-backed history, media, tasks, token usage, encrypted keychain. Dream nightly consolidation." },
-      { icon: "🛠", title: "Infrastructure tools", body: "First-class SSH, Proxmox, Portainer profiles. CDP browser automation. Sharp image processing. MCP via pi-mcp-adapter." },
-      { icon: "📦", title: "Single container, no CDN", body: "docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest and you're live." },
+      { icon: "💬", title: "Streaming chat", body: "Markdown, KaTeX, Mermaid, Adaptive Cards. Branch with /btw, queue follow-ups." },
+      { icon: "🗂", title: "Workspace tooling", body: "File browser, CodeMirror 6, Office/PDF viewers, draw.io, kanban, VNC — no separate apps." },
+      { icon: "🔌", title: "Any LLM", body: "Anthropic, OpenAI, Azure, Gemini, Ollama, or any OpenAI-compatible endpoint." },
+      { icon: "🧠", title: "Persistent state", body: "SQLite-backed history, media, tasks, encrypted keychain. Dream nightly consolidation." },
+      { icon: "🛠", title: "Infrastructure tools", body: "SSH, Proxmox, Portainer profiles. CDP browser automation. Sharp image processing. MCP." },
+      { icon: "📦", title: "Single container", body: "docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest" },
     ],
   },
   vibes: {
     status: "active",
     tagline: "Mobile-first web UI for AI agents — ACP and Pi over RPC, zero build step.",
-    about: `Vibes is a lightweight Python web app for talking to AI coding agents from a phone. It supports the Agent Communication Protocol (GitHub Copilot CLI, OpenAI Codex) and Pi agents via RPC. The server is a single aiohttp file; the UI is plain HTML/CSS with no build step.`,
-    how: `The server uses aiohttp with server-sent events for streaming. When a message arrives from the browser, it's forwarded to the configured agent backend — either an ACP agent or a Pi agent via its RPC interface. Responses stream back token-by-token over SSE so the browser sees each word as it arrives.
-
-The UI is a single HTML file — no bundler, no npm, no build step. This makes the project trivially forkable: want a different colour scheme, a different protocol, a custom keybar? Edit one file. PiClaw and Vibes share the same web UI codebase, so improvements in one flow back to the other.`,
+    about: `Vibes is a lightweight Python web app for talking to AI coding agents from a phone. Supports ACP (GitHub Copilot CLI, OpenAI Codex) and Pi agents via RPC. Single Python file server, single HTML UI, no build step.`,
+    how: `The server uses aiohttp with server-sent events for streaming. When a message arrives from the browser, it forwards to the configured agent backend and streams tokens back via SSE. The UI is a single HTML file — no bundler, no npm. Fork it and make it yours in an afternoon. PiClaw and Vibes share the same web UI codebase.`,
+    mermaid: `flowchart LR
+    Phone["Browser / Phone"] --> |HTTP + SSE| Server["vibes server\\naiohttp"]
+    Server --> |ACP| ACP["copilot --acp\\ncodex-acp"]
+    Server --> |RPC| Pi["Pi agent\\nRPC"]`,
     features: [
-      { icon: "📱", title: "Phone-first layout", body: "Designed and tested on iOS and Android before desktop. Layout, scroll, and input all work on a small screen." },
-      { icon: "⚡", title: "ACP + Pi RPC", body: "Connects to copilot --acp, OpenAI Codex, and Pi agents. Protocol adapters are pluggable." },
-      { icon: "🚿", title: "SSE streaming", body: "Live token streaming. No polling, no spinners, no page refreshes." },
-      { icon: "🔩", title: "Zero build step", body: "One Python file for the server, one HTML file for the UI. Clone and run." },
+      { icon: "📱", title: "Phone-first", body: "Designed and tested on iOS/Android before desktop." },
+      { icon: "⚡", title: "ACP + Pi RPC", body: "copilot --acp, OpenAI Codex, Pi agents. Protocol adapters are pluggable." },
+      { icon: "🚿", title: "SSE streaming", body: "Live token streaming. No polling, no spinners." },
+      { icon: "🔩", title: "Zero build step", body: "One Python file. One HTML file. Clone and run." },
     ],
   },
   webterm: {
     status: "active",
     tagline: "Go web terminal with multi-session dashboard mode — built for AI agent workflows.",
-    about: `webterm serves PTY sessions over HTTP/WebSocket with a dashboard view that tiles multiple active terminals in a single browser tab. Built for monitoring several AI coding agents in parallel. WASM renderer, correct VT100/xterm handling, sticky mobile keybar.`,
-    how: `webterm runs a Go HTTP server that accepts WebSocket connections and spawns a PTY for each session. Terminal output is encoded and forwarded to the browser; keyboard events are decoded and written back to the PTY. go-te maintains the server-side VT100/xterm screen state, used for live tile previews in dashboard mode.
-
-The frontend renders via a WebAssembly module compiled from a Go-based xterm renderer. Dashboard mode tiles N active sessions in a responsive CSS grid, each with its own WebSocket feed. This lets you monitor four or five AI agents in parallel from a single browser tab without switching windows or SSH sessions. The mobile sticky keybar (Esc, Ctrl, Shift, Tab, arrows) makes it usable for real work from a phone.`,
+    about: `webterm serves PTY sessions over HTTP/WebSocket with a dashboard that tiles multiple active terminals in a single browser tab — built for monitoring several AI coding agents in parallel. WASM renderer, correct xterm handling, sticky mobile keybar.`,
+    how: `A Go HTTP server accepts WebSocket connections and spawns a PTY for each session. go-te maintains the server-side VT100/xterm screen state for live tile previews in dashboard mode. The frontend renders via WebAssembly for correct escape handling without a JS library. A mobile sticky keybar (Esc, Ctrl, Shift, arrows) makes it usable from a phone.`,
+    mermaid: `flowchart LR
+    Browser["Browser / Phone\\nWASM renderer"] --> |WebSocket| Server["Go HTTP server"]
+    Server --> PTY1["PTY / agent 1"]
+    Server --> PTY2["PTY / agent 2"]
+    Server --> PTY3["PTY / agent N"]
+    Server --> goTE["go-te\\nVT100 state"]`,
     features: [
-      { icon: "🖥", title: "Multi-session dashboard", body: "Tile N agent terminals side-by-side. Watch them run in parallel without switching windows." },
-      { icon: "⚡", title: "WASM renderer", body: "Correct xterm/VT100 escape handling via WebAssembly. No heavy JS framework." },
-      { icon: "📱", title: "Mobile sticky keybar", body: "Draggable Esc/Ctrl/Shift/Tab/arrow keys with sticky combos for Ctrl+C and sequences." },
-      { icon: "🔌", title: "Library-first", body: "Designed to be embedded. Powers the terminal layer in agentbox, piclaw, and ghostty-web." },
+      { icon: "🖥", title: "Multi-session dashboard", body: "Tile N agent terminals side-by-side. Watch them run in parallel." },
+      { icon: "⚡", title: "WASM renderer", body: "Correct xterm/VT100 handling via WebAssembly." },
+      { icon: "📱", title: "Mobile keybar", body: "Sticky Esc/Ctrl/Shift/Tab/arrows with sticky combos." },
+      { icon: "🔌", title: "Library-first", body: "Powers the terminal in agentbox, piclaw, and ghostty-web." },
     ],
   },
   agentbox: {
     status: "active",
     tagline: "Docker sandbox for coding agents — preinstalled runtimes, opt-in services, DinD.",
-    about: `Agentbox is a Debian Trixie container with Copilot CLI, Codex, and Pi preinstalled alongside git, gh, Bun, uv, and Homebrew. Docker, SSH, and RDP are disabled by default and enabled via env vars. A GUI image adds XFCE and XRDP. A workspace skeleton with SKILL.md templates seeds new projects.`,
-    how: `The entrypoint script checks ENABLE_DOCKER, ENABLE_SSH, and ENABLE_RDP and starts only the services you asked for. All three default to off — the container is safe to expose without any network services running by default. When ENABLE_DOCKER=true, dockerd starts inside the container, enabling Docker-in-Docker for agents that build or run their own containers.
-
-The agent user gets passwordless sudo for installs without running as root. The workspace skeleton at /home/agent/workspace-skel is copied into /workspace on first use without overwriting existing files, seeding new projects with SKILL.md templates that tell coding agents how to use available tools correctly. Additional agents (toad, opencode, gemini, mistral-vibe) install via make targets in the agent home directory without touching the image.`,
+    about: `Agentbox is a Debian Trixie container with Copilot CLI, Codex, and Pi preinstalled alongside git, gh, Bun, uv, and Homebrew. Docker, SSH, and RDP disabled by default, enabled via env vars. GUI image with XFCE and XRDP available. Workspace skeleton with SKILL.md templates.`,
+    how: `The entrypoint checks ENABLE_DOCKER, ENABLE_SSH, and ENABLE_RDP and starts only what you asked for — all three default to off. When ENABLE_DOCKER=true, dockerd starts inside the container for Docker-in-Docker. The agent user gets passwordless sudo. The workspace skeleton at /home/agent/workspace-skel copies into /workspace on first use without overwriting files.`,
+    mermaid: `flowchart TB
+    subgraph Container["agentbox container"]
+        Agent["Copilot CLI / Codex / Pi"]
+        Tools["git · gh · bun · uv · brew"]
+        SSH["SSH (opt-in)"]
+        RDP["XRDP (opt-in)"]
+        DinD["Docker daemon (opt-in)"]
+    end
+    Container --> |"bind mount"| Workspace["/workspace"]
+    Container --> |"webterm dashboard"| Browser["Browser"]`,
     features: [
-      { icon: "🤖", title: "Agents preinstalled", body: "Copilot CLI, Codex, Pi ready to use. toad, opencode, gemini, vibe installable via make targets." },
-      { icon: "🔒", title: "Opt-in services", body: "Docker, SSH, and RDP are all off by default. Enable with ENABLE_DOCKER=true, ENABLE_SSH=true, ENABLE_RDP=true." },
-      { icon: "🖥", title: "CLI and GUI images", body: ":latest is headless. :gui adds XFCE, XRDP, and VS Code for visual agent tasks." },
-      { icon: "📘", title: "Workspace skeleton", body: "make init-workspace copies a project scaffold with SKILL.md templates into /workspace without overwriting." },
-      { icon: "🐳", title: "Docker-in-Docker", body: "Run privileged and the Docker daemon starts inside. Agents build and run containers without touching the host." },
+      { icon: "🤖", title: "Agents preinstalled", body: "Copilot CLI, Codex, Pi ready. toad, opencode, gemini via make targets." },
+      { icon: "🔒", title: "Opt-in services", body: "Docker, SSH, RDP all off by default. Enable explicitly." },
+      { icon: "🖥", title: "CLI and GUI images", body: ":latest is headless. :gui adds XFCE, XRDP, VS Code." },
+      { icon: "📘", title: "Workspace skeleton", body: "SKILL.md templates without overwriting existing files." },
+      { icon: "🐳", title: "Docker-in-Docker", body: "Run privileged and agents get their own Docker daemon." },
     ],
   },
   PhotosExport: {
     status: "stable",
     tagline: "Export your complete Apple Photos library — originals, edits, Live Photos, metadata.",
-    about: `PhotosExport uses the PhotoKit framework to export every PHAssetResource in a Photos library: originals, edited renders, Live Photo video pairs, burst frames, adjustment data, and retouching strokes. Deterministic YYYY/MM folder hierarchy, collision-safe naming, full JSON album manifest.`,
-    how: `PhotosExport calls PHAssetResource for each asset in the library to get every stored resource, not just what Photos.app exposes in its export UI. This includes the original file, the edited full-size render if the photo has been processed, the video component of a Live Photo, burst frames, and raw adjustment data. Nothing is silently skipped.
-
-Files get deterministic timestamp names (YYYYMMDDHHMMSSx.ext) stable across re-runs, with a single lowercase letter suffix only when needed for collision avoidance. The album manifest is written as JSON alongside the exported files, recording which assets belong to which albums, smart albums, and folders — the library structure the built-in export UI discards entirely. Every export error goes to a visible log file.`,
+    about: `PhotosExport uses PhotoKit to export every PHAssetResource: originals, edited renders, Live Photo video pairs, burst frames, adjustment data. Deterministic YYYY/MM folder hierarchy, collision-safe naming, full JSON album manifest.`,
+    how: `PhotoKit sees everything Photos.app stores — not just what the export UI exposes. For each asset, it fetches all resource types: original file, edited full-size render, Live Photo video component, burst frames, and raw adjustment data. Files get deterministic timestamp names stable across re-runs. The JSON manifest records full album and folder membership.`,
+    mermaid: `flowchart LR
+    Photos["Photos.app library"] --> |PhotoKit API| Tool["PhotosExport CLI"]
+    Tool --> Originals["Originals\\n.jpg / .heic / .raw"]
+    Tool --> Edits["Edited renders\\nFullSizeRender"]
+    Tool --> Live["Live Photo video\\n.mov pairs"]
+    Tool --> Manifest["album-manifest.json\\nfull structure"]`,
     features: [
-      { icon: "📸", title: "Every resource type", body: "Originals, edits, Live Photo videos, burst frames, adjustment data, brush strokes — whatever Photos stores." },
-      { icon: "📂", title: "Deterministic naming", body: "YYYYMMDDHHMMSSx.ext — stable across re-runs, collision-safe without guessing." },
-      { icon: "🗂", title: "Full album manifest", body: "JSON sidecar with every album, smart album, and folder and their assets. The structure the export UI loses." },
-      { icon: "📋", title: "Visible errors", body: "Export failures logged to export_errors.log. Nothing fails silently." },
+      { icon: "📸", title: "Every resource", body: "Originals, edits, Live Photo videos, burst frames, adjustment data." },
+      { icon: "📂", title: "Deterministic names", body: "YYYYMMDDHHMMSSx.ext — stable, collision-safe." },
+      { icon: "🗂", title: "Album manifest", body: "JSON sidecar preserving album, smart album, and folder structure." },
+      { icon: "📋", title: "Visible errors", body: "Nothing fails silently — export_errors.log for every failure." },
     ],
   },
   drawterm: {
     status: "stable",
-    tagline: "Plan 9 drawterm — HiDPI scaling, Metal rendering, Connect dialog, macOS clipboard.",
-    about: `This fork patches the macOS Cocoa backend to read the display scale factor and scale drawterm accordingly, adds Metal-accelerated incremental redraws, a Preferences panel, a Connect dialog that persists credentials, and a macOS pasteboard bridge. Command maps to mod4 for rio bindings.`,
-    how: `The canonical drawterm renders at 1:1 physical pixels regardless of display scale, making it unreadable on Retina Macs. This fork patches the Cocoa backend to read the display's backing scale factor and scale the drawterm framebuffer accordingly — a small change with a large visible effect.
-
-The Metal rendering path limits full-surface invalidation to scale and resize events; normal terminal updates flush only the dirty region, eliminating the full-screen flicker of the original Core Graphics path. The Connect dialog persists CPU/auth host, user, and optionally a password in user defaults so you don't re-enter connection details every launch. The pasteboard bridge lets you copy and paste between the Plan 9 screen and macOS applications.`,
+    tagline: "Plan 9 drawterm — HiDPI scaling, Metal rendering, Connect dialog, clipboard bridge.",
+    about: `This fork patches the macOS Cocoa backend for HiDPI-aware scaling, adds Metal-accelerated incremental redraws, a Preferences panel, a Connect dialog that persists credentials, and a macOS pasteboard bridge. Command maps to mod4 for rio bindings.`,
+    how: `Standard drawterm renders at 1:1 pixels on Retina screens — unreadable on modern Macs. This fork reads the display backing scale factor and scales the framebuffer accordingly. The Metal rendering path only invalidates the dirty region on each update instead of the full surface. The Connect dialog saves CPU/auth host and credentials to user defaults.`,
     features: [
-      { icon: "🔍", title: "HiDPI / Retina scaling", body: "Reads display backing scale factor. Legible on 5K displays and modern MacBooks." },
-      { icon: "⚡", title: "Metal incremental redraws", body: "Dirty-region updates only. No full-screen flicker on every keystroke." },
-      { icon: "⌨", title: "macOS keyboard + clipboard", body: "Command → mod4 for rio bindings. Pasteboard bridge for text copy/paste between macOS and Plan 9." },
-      { icon: "💾", title: "Persistent Connect dialog", body: "CPU/auth host, user, and password saved in user defaults between launches." },
+      { icon: "🔍", title: "HiDPI scaling", body: "Reads display scale. Legible on 5K displays." },
+      { icon: "⚡", title: "Metal redraws", body: "Dirty-region updates only. No full-screen flicker." },
+      { icon: "⌨", title: "macOS keyboard + clipboard", body: "Command → mod4, pasteboard bridge." },
+      { icon: "💾", title: "Connect dialog", body: "Host, user, password persist between launches." },
     ],
   },
   macemu: {
     status: "maintained",
-    tagline: "Basilisk II and SheepShaver for Raspberry Pi — SDL2 framebuffer, pre-built .deb packages.",
-    about: `This fork targets Raspberry Pi with SDL2 framebuffer/KMS rendering — no X11, no desktop. Pre-built arm64 .deb packages in releases. Basilisk II runs System 6–8; SheepShaver runs Mac OS 8.6–9.0.4.`,
-    how: `The SDL2 build is compiled without OpenGL, Wayland, and X11 support to reduce dependencies and improve startup time on Pi hardware. The framebuffer/KMS backend writes directly to the display without going through a compositor, which gives lower latency and less overhead than running through X11.
-
-Pre-built .deb packages for arm64 are available from GitHub Releases for straightforward installation: download, dpkg -i, and run. Build-from-source instructions are included for other architectures. This fork is used as the emulation layer in the Maclock project — a $20 alarm-clock-shaped replica of a Mac Classic running real System 7 software.`,
+    tagline: "Basilisk II and SheepShaver for Raspberry Pi — SDL2 framebuffer, pre-built .deb.",
+    about: `Fork targeting Raspberry Pi with SDL2 framebuffer/KMS — no X11, no desktop required. Pre-built arm64 .deb packages in releases. Basilisk II runs System 6–8; SheepShaver runs Mac OS 8.6–9.0.4.`,
+    how: `SDL2 is compiled without OpenGL, Wayland, and X11 to reduce dependencies and startup time. The framebuffer/KMS backend writes directly to the display without a compositor. Pre-built .deb packages install with dpkg -i. Used as the emulation layer in the Maclock project.`,
     features: [
-      { icon: "🥧", title: "Raspberry Pi optimised", body: "SDL2 framebuffer/KMS, no X11. Runs on a headless Pi Zero through Pi 5." },
-      { icon: "📦", title: "Pre-built .deb packages", body: "arm64 packages in GitHub Releases. dpkg -i and run." },
+      { icon: "🥧", title: "Raspberry Pi optimised", body: "SDL2 framebuffer/KMS, no X11. Pi Zero through Pi 5." },
+      { icon: "📦", title: "Pre-built packages", body: "arm64 .deb in GitHub Releases. dpkg -i and run." },
       { icon: "💻", title: "68k and PowerPC", body: "Basilisk II for System 6–8. SheepShaver for Mac OS 8.6–9.0.4." },
-      { icon: "🖥", title: "Direct framebuffer", body: "Lower latency than X11. No desktop environment required." },
+      { icon: "🖥", title: "Direct framebuffer", body: "Lower latency than X11." },
     ],
   },
   "ground-init": {
     status: "active",
-    tagline: "Idempotent Linux bootstrap — YAML-driven, like cloud-init but for bare metal.",
-    about: `ground-init takes a YAML config and applies a sequence of declarative steps to a fresh Linux install: packages, users, files, services. Each step checks current state before acting. Pure Python 3 stdlib, no dependencies. Works on Ubuntu, Debian, and Fedora Silverblue.`,
-    how: `Each step in the YAML config is a desired-state declaration, not an imperative command. The script checks whether the current state already matches before doing anything — if a package is installed, it's skipped; if a file has the right contents, it's left alone. Re-running the script on an already-configured machine verifies state without making unwanted changes.
-
-The format covers the cases that come up in every fresh machine setup: apt/rpm-ostree package lists, file contents and permissions, user creation, systemd service enables, git clones, and shell script execution for anything else. Sample configs for common setups — developer workstation, homelab server, Fedora Silverblue overlay — are included as starting points.`,
+    tagline: "Idempotent Linux bootstrap — YAML-driven, like cloud-init for bare metal.",
+    about: `ground-init takes a YAML config and applies declarative steps to a fresh Linux install: packages, users, files, services. Each step checks current state before acting. Pure Python 3 stdlib, no dependencies.`,
+    how: `Each YAML step is a desired-state declaration. The script checks whether the current state matches before doing anything — installed packages are skipped, files with correct content are left alone. Re-running verifies state without unwanted changes. Covers apt/rpm-ostree packages, file contents, user creation, systemd services, git clones, and shell scripts.`,
     features: [
-      { icon: "📄", title: "Idempotent YAML", body: "Desired-state declarations. Run twice to set up and verify. Every step reports: changed, skipped, or failed." },
-      { icon: "🐧", title: "Ubuntu, Debian, Fedora Silverblue", body: "apt and rpm-ostree support. Sample configs included." },
-      { icon: "📦", title: "Zero dependencies", body: "Pure Python 3 stdlib. Works before any package manager is configured on the new machine." },
+      { icon: "📄", title: "Idempotent YAML", body: "Desired-state declarations. Run twice: setup and verify." },
+      { icon: "🐧", title: "Ubuntu, Debian, Fedora Silverblue", body: "apt and rpm-ostree support." },
+      { icon: "📦", title: "Zero dependencies", body: "Pure Python 3 stdlib." },
     ],
   },
   "azure-stable-diffusion": {
     status: "stable",
     tagline: "One-command Stable Diffusion on Azure GPU spot instances.",
-    about: `A Makefile wrapping Azure Bicep. make deploy provisions an NC-series GPU spot VM and installs AUTOMATIC1111. make open opens an SSH tunnel. make destroy tears everything down. Spot pricing keeps costs under $0.10/hour; models and outputs live on a separate data disk that survives preemptions.`,
-    how: `make deploy runs a Bicep template that provisions a resource group, a data disk, and an NC-series GPU spot VM, then executes a cloud-init script that installs CUDA, clones AUTOMATIC1111, downloads default model weights, and starts the web server. make open opens an SSH tunnel and launches a browser pointing at localhost. make destroy deletes the resource group and everything in it.
-
-Spot instances are preempted when Azure needs the capacity, but because models and outputs live on an attached data disk rather than the VM's ephemeral disk, nothing is lost. Rerun make deploy and the disk reattaches to the new VM. The original template targeted NC6s_v3 (6 vCPUs, 112 GB RAM, Tesla V100), running at well under $0.10/hour on spot pricing.`,
+    about: `Makefile wrapping Azure Bicep. make deploy provisions an NC-series GPU spot VM and installs AUTOMATIC1111. make open opens an SSH tunnel. make destroy tears it down. Spot pricing keeps costs under $0.10/hour.`,
+    how: `make deploy runs a Bicep template that provisions a resource group, data disk, and GPU spot VM, then runs cloud-init to install CUDA and AUTOMATIC1111. Models live on an attached data disk that survives spot preemptions and teardowns. make destroy cleans up everything except the data disk configuration.`,
     features: [
-      { icon: "⚡", title: "make deploy / make open / make destroy", body: "Three commands. Under ten minutes from nothing to AUTOMATIC1111 WebUI." },
-      { icon: "💰", title: "Spot instance pricing", body: "NC6s_v3 spot: typically under $0.10/hour. Batch images, then destroy." },
-      { icon: "💾", title: "Persistent model disk", body: "Models and outputs on an attached data disk. Survives spot preemptions and teardowns." },
+      { icon: "⚡", title: "Three commands", body: "make deploy, make open, make destroy. Under 10 minutes total." },
+      { icon: "💰", title: "Spot pricing", body: "NC6s_v3: typically under $0.10/hour." },
+      { icon: "💾", title: "Persistent models", body: "Data disk survives spot preemptions and redeployments." },
     ],
   },
   "feed-summarizer": {
     status: "active",
     tagline: "LLM-powered RSS digest — full-text extraction, runs on a Raspberry Pi.",
-    about: `A cron-job RSS/Atom summarizer. Fetches feeds, extracts full article text with trafilatura, batches prompts to a local Ollama or cloud LLM, writes a static HTML digest. No daemon, no database. The nightly output is feeds.carmo.io.`,
-    how: `The script fetches each configured RSS/Atom feed, extracts full article text using trafilatura (which handles the various page layouts that produce empty or truncated RSS descriptions), and batches the text into LLM prompts. The prompt produces a one-paragraph summary — concise, direct, noting if the article is opinion vs. factual.
-
-Summaries collect into a single HTML file (the daily digest) and a JSON file for programmatic use. Running against a local Ollama instance with a quantised model handles roughly 50 articles per hour on a Raspberry Pi 4. The nightly output of this script is what you read at feeds.carmo.io.`,
+    about: `Cron-job RSS/Atom summarizer. Fetches feeds, extracts full article text with trafilatura, batches prompts to a local Ollama or cloud LLM, writes a static HTML digest. No daemon, no database. Powers feeds.carmo.io.`,
+    how: `trafilatura extracts the actual article body from the linked page, not the RSS description snippet. Summaries batch to the LLM — about 50 articles/hour on a Raspberry Pi 4 with a quantised model. Output is a static HTML file and JSON. Add to crontab and forget it.`,
+    mermaid: `flowchart LR
+    Feeds["RSS/Atom feeds"] --> |feedparser| Extract["trafilatura\\nfull-text extract"]
+    Extract --> LLM["LLM\\nOllama / OpenAI"]
+    LLM --> Digest["Static HTML digest\\nfeeds.carmo.io"]`,
     features: [
-      { icon: "📰", title: "Full-text extraction", body: "trafilatura extracts the actual article body, not the RSS description snippet." },
-      { icon: "🤖", title: "Local or cloud LLM", body: "Ollama (tested on Raspberry Pi 4) or any OpenAI-compatible API." },
-      { icon: "⏰", title: "Cron-friendly", body: "One Python script, no daemon. Add to crontab." },
+      { icon: "📰", title: "Full-text extraction", body: "trafilatura extracts the article body, not the RSS description." },
+      { icon: "🤖", title: "Local or cloud LLM", body: "Ollama on Raspberry Pi 4, or any OpenAI-compatible API." },
+      { icon: "⏰", title: "Cron-friendly", body: "One Python script, no daemon." },
     ],
   },
   umcp: {
     status: "active",
-    tagline: "Micro MCP server — zero deps, decorator-based tool registration, stdio only.",
-    about: `umcp is a single-file MCP server implementation: register tools with a decorator, the server handles JSON-RPC 2.0 over stdio, you write plain Python functions. Zero external dependencies. Both asyncio and sync variants. Works with Claude Desktop, Cursor, any MCP client.`,
-    how: `The protocol layer reads JSON-RPC 2.0 messages from stdin and dispatches to registered handlers. Decorate any Python function with @server.tool() and it becomes an MCP tool — the function's name is the tool name, the docstring is the description, and type annotations generate the JSON Schema for parameters.
-
-The synchronous variant blocks on stdin in a loop. The asyncio variant runs an async loop for embedding in async applications. Both handle MCP initialisation, capability negotiation, and the full tool call/response lifecycle. Adding an MCP tool to an existing Python script takes three lines: import, decorate, run.`,
+    tagline: "Micro MCP server — zero deps, decorator-based, stdio only.",
+    about: `Single-file MCP server: decorate Python functions with @server.tool(), the server handles JSON-RPC 2.0 over stdio, you write plain functions. Zero external dependencies. Async and sync variants.`,
+    how: `The protocol layer reads JSON-RPC 2.0 from stdin and dispatches to registered handlers. Decorate a function with @server.tool() — its name becomes the tool name, its docstring the description, its type annotations the JSON Schema. Return a value and it serialises automatically. Adding MCP to an existing Python script takes three lines.`,
+    mermaid: `flowchart LR
+    Client["MCP client\\nClaude / Cursor"] --> |"JSON-RPC 2.0 (stdio)"| Server["umcp server"]
+    Server --> T1["@server.tool\\nasync handler"]
+    Server --> T2["@server.tool\\nsync handler"]`,
     features: [
-      { icon: "🪶", title: "Zero dependencies", body: "Pure Python 3 stdlib. Copy one file, import it." },
-      { icon: "⚡", title: "Async + sync", body: "@server.tool works on async def and plain def. Use whichever fits." },
-      { icon: "🎯", title: "Decorator registration", body: "Docstring → description. Type annotations → JSON Schema. Return value → serialised." },
+      { icon: "🪶", title: "Zero dependencies", body: "Pure Python 3 stdlib. Copy one file." },
+      { icon: "⚡", title: "Async + sync", body: "@server.tool on async def and plain def." },
+      { icon: "🎯", title: "Decorator registration", body: "Docstring → description. Annotations → JSON Schema." },
     ],
   },
   "go-busybox": {
     status: "active",
-    tagline: "57 BusyBox utilities in Go — compiles to a 2 MB WASM binary, 387/387 tests passing.",
-    about: `go-busybox implements 57 BusyBox-compatible utilities in Go. Compiles to a static native binary or a 2 MB WebAssembly module via TinyGo. All 387 BusyBox reference test cases pass. Multi-call binary dispatches by argv[0] or subcommand.`,
-    how: `The binary is a multi-call binary in the BusyBox tradition: invoke as busybox ls or symlink a name to the binary and invoke that. Each applet is a Go package under cmd/ implementing the POSIX semantics of the corresponding utility.
-
-The WASM target uses TinyGo to produce a 2 MB binary (vs ~20 MB with the standard Go compiler). OS-dependent operations — raw sockets, procfs reads, device ioctl calls — return stubs under WASM so the build succeeds and applets degrade gracefully. The test suite runs all 387 BusyBox reference test cases against the compiled binary.`,
+    tagline: "57 BusyBox utilities in Go — 2 MB WASM binary, 387/387 tests passing.",
+    about: `go-busybox implements 57 BusyBox-compatible utilities in Go. Compiles to a static native binary or a 2 MB WebAssembly module via TinyGo. All 387 BusyBox reference test cases pass.`,
+    how: `A multi-call binary: invoke as busybox ls or symlink a name to the binary. Each applet is a Go package under cmd/. The WASM target uses TinyGo for a 2 MB binary. OS-dependent operations return stubs under WASM so applets degrade gracefully without panicking.`,
+    mermaid: `flowchart TB
+    Binary["busybox binary\\nmulti-call"] --> |native| Applets["57 applets\\nash · awk · grep · find…"]
+    Binary --> |TinyGo| WASM["busybox.wasm\\n2 MB"]
+    WASM --> Sandbox["wasmtime\\nno filesystem access"]`,
     features: [
-      { icon: "📦", title: "57 applets, 387/387 tests", body: "ash, awk, cat, grep, find, sed, ls, ps, kill, xargs, tar, wget, and 44 more." },
-      { icon: "🌐", title: "2 MB WASM target", body: "TinyGo produces a 2 MB .wasm. Run under wasmtime with no filesystem access." },
-      { icon: "📦", title: "Static native binary", body: "No shared libraries, no runtime deps. Any GOARCH." },
-      { icon: "🛡", title: "Sandbox-safe", body: "OS-dependent applets stub under WASM. Boundaries held." },
+      { icon: "📦", title: "57 applets, 100% tests", body: "ash, awk, grep, find, sed, ls, ps, tar, wget, and more." },
+      { icon: "🌐", title: "2 MB WASM", body: "TinyGo target. Run under wasmtime with no host access." },
+      { icon: "📦", title: "Static binary", body: "No shared libraries, no runtime deps, any GOARCH." },
+      { icon: "🛡", title: "Sandbox-safe", body: "OS-dependent applets stub under WASM." },
     ],
   },
   "proxmox-zpool-monitoring": {
     status: "stable",
     tagline: "ZFS pool metrics for Proxmox — exported to Graphite, cron only.",
-    about: `A Python cron script that exports ZFS pool health, I/O, and capacity from Proxmox VE to Graphite. No daemon, no agent, no configuration database. Just a script in crontab and a Graphite endpoint.`,
-    how: `The script runs zpool status for health and error counts, zpool iostat for I/O rates, and zfs list for per-dataset space usage. Metrics are formatted as Graphite plaintext (metric.path value timestamp) and sent over TCP. The metric hierarchy is zfs.hostname.pool.metric so multiple Proxmox nodes share the same Graphite instance without key collisions. Run every 5 minutes from crontab for useful time-series data.`,
+    about: `Python cron script exporting ZFS pool health, I/O, and capacity from Proxmox VE to Graphite. No daemon, no agent. Just a script and a metrics endpoint.`,
+    how: `Runs zpool status, zpool iostat, and zfs list, formats output as Graphite plaintext (metric.path value timestamp), and sends over TCP. Metric hierarchy is zfs.hostname.pool.metric so multiple nodes share one Graphite instance. Run every 5 minutes from crontab.`,
     features: [
-      { icon: "📊", title: "Pool health and I/O", body: "ONLINE/DEGRADED/FAULTED status, errors, capacity, read/write IOPS and bandwidth." },
-      { icon: "⏰", title: "Cron-only", body: "One Python script. Add to crontab, point at Graphite. No daemon." },
-      { icon: "🔌", title: "Graphite plaintext", body: "Compatible with Carbon, InfluxDB + Graphite input, and other backends." },
+      { icon: "📊", title: "Pool health and I/O", body: "Health status, errors, capacity, IOPS, bandwidth." },
+      { icon: "⏰", title: "Cron-only", body: "One script, one endpoint. No daemon." },
+      { icon: "🔌", title: "Graphite plaintext", body: "Compatible with Carbon, InfluxDB, and others." },
     ],
   },
   "gnome-thumbnailers": {
     status: "stable",
     tagline: "File thumbnails for RAW, HEIC, and 3D models in GNOME Files.",
-    about: `A set of Python thumbnailer scripts that add thumbnail support to GNOME Files for RAW photos (CR2/NEF/ARW/ORF/RW2), HEIC/HEIF, and FBX/OBJ/STL 3D models. Register with make install — no GNOME restart.`,
-    how: `Each thumbnailer is a Python script that takes a source file path and a target PNG path as arguments. GNOME's thumbnailer infrastructure calls these in a bwrap sandbox automatically when it encounters a registered MIME type. The scripts handle the sandbox gracefully — the only requirement is a readable source file. If a required library is absent, the script exits cleanly and GNOME skips thumbnailing for that file type without crashing.`,
+    about: `Python thumbnailer scripts adding GNOME Files thumbnail support for RAW photos (CR2/NEF/ARW/ORF/RW2), HEIC/HEIF, and FBX/OBJ/STL 3D models. Register with make install — no restart required.`,
+    how: `Each script takes a source path and target PNG path. GNOME's thumbnailer infrastructure calls these in a bwrap sandbox when it encounters a registered MIME type. Scripts exit cleanly if a required library is missing — GNOME silently skips that file type without crashing anything.`,
     features: [
-      { icon: "📷", title: "RAW formats", body: "CR2, NEF, ARW, ORF, RW2 via rawpy. Camera raw files show previews in Nautilus." },
-      { icon: "🍎", title: "HEIC/HEIF", body: "Apple's default format since iOS 11. Via Pillow's HEIF plugin." },
-      { icon: "🧊", title: "3D model files", body: "FBX, OBJ, STL. Useful for a directory full of print files." },
-      { icon: "🔧", title: "Drop-in install", body: "make install. No restart. Thumbnails appear immediately for new file types." },
+      { icon: "📷", title: "RAW formats", body: "CR2, NEF, ARW, ORF, RW2 via rawpy." },
+      { icon: "🍎", title: "HEIC/HEIF", body: "Via Pillow's HEIF plugin." },
+      { icon: "🧊", title: "3D files", body: "FBX, OBJ, STL thumbnail renders." },
+      { icon: "🔧", title: "Drop-in", body: "make install, thumbnails appear immediately." },
     ],
   },
   "go-rdp": {
     status: "active",
     tagline: "Browser-based RDP client — full MS-RDPBCGR spec, Go backend, WASM frontend.",
-    about: `go-rdp connects to Windows machines via RDP from any browser without a native client. Go backend implementing the full MS-RDPBCGR specification; WASM frontend for rendering. Rewritten from scratch as a reference implementation.`,
-    how: `The Go backend implements RDP protocol security negotiation, capability exchange, and display update decoding, then streams JPEG-encoded frame updates to the browser over WebSocket. Keyboard and mouse events from the browser are decoded and forwarded as RDP input PDUs. The WASM frontend runs a canvas-based renderer that applies frame updates.
-
-TinyGo compiles the rendering logic to WebAssembly, keeping the JavaScript surface minimal. The implementation targets the full MS-RDPBCGR specification rather than just the common subset — more compatible with diverse Windows configurations, but with known edge cases that partial implementations handle via workarounds.`,
+    about: `go-rdp connects to Windows VMs via RDP from any browser without a native client. Go backend implementing the full MS-RDPBCGR specification as a reference implementation; WASM frontend for rendering.`,
+    how: `The Go backend handles RDP security negotiation, capability exchange, and display updates, streaming JPEG-encoded frames to the browser over WebSocket. Keyboard and mouse events are forwarded as RDP input PDUs. TinyGo compiles the frontend renderer to WASM.`,
+    mermaid: `flowchart LR
+    Browser["Browser\\nWASM renderer"] --> |WebSocket| Go["Go RDP proxy"]
+    Go --> |RDP protocol| Windows["Windows VM"]`,
     features: [
-      { icon: "🌐", title: "No native client", body: "Full RDP session in a browser canvas via WebAssembly." },
-      { icon: "📋", title: "Full MS-RDPBCGR spec", body: "Rewritten from scratch against the full protocol spec. Passes the reference test suite." },
-      { icon: "⚙", title: "Go + WASM", body: "Go backend, TinyGo WASM frontend. Docker image for one-command deployment." },
+      { icon: "🌐", title: "No native client", body: "RDP in a browser canvas via WebAssembly." },
+      { icon: "📋", title: "Full spec", body: "MS-RDPBCGR reference implementation." },
+      { icon: "⚙", title: "Go + WASM", body: "Docker image for one-command deployment." },
     ],
   },
   "pve-microvm": {
     status: "active",
-    tagline: "QEMU microvm machine type for Proxmox VE — KVM isolation, under 200 ms boot.",
-    about: `A Debian package that patches qemu-server to add the QEMU microvm machine type to the Proxmox VE UI. microvm VMs boot in under 200 ms, use only virtio-mmio, and give full KVM hardware isolation. Designed for semi-trusted workloads. Uninstall restores original files.`,
-    how: `The package patches two qemu-server files to add microvm as a selectable machine type in the Proxmox VM hardware config. A standard Proxmox VM emulates a full x86 PC with PCI bus, legacy interrupt controllers, and BIOS firmware. A microvm skips all of that — it boots via direct kernel loading and communicates with the host through virtio-mmio memory-mapped I/O, which is faster and has a much smaller attack surface.
-
-The net result is KVM-grade hardware isolation at LXC-comparable boot times. Useful for running coding agents and other semi-trusted workloads where LXC namespace isolation isn't enough but full VM overhead is impractical. This is currently the only Proxmox integration for the QEMU microvm machine type.`,
+    tagline: "QEMU microvm for Proxmox VE — KVM isolation, under 200 ms boot.",
+    about: `Debian package patching qemu-server to add QEMU microvm machine type to the Proxmox UI. microvm VMs boot in under 200 ms, use only virtio-mmio, and give full KVM isolation. Uninstall restores original files.`,
+    how: `Patches two qemu-server files to add microvm as a selectable machine type. A standard Proxmox VM emulates a full x86 PC with PCI bus and BIOS. A microvm skips all that — direct kernel load, virtio-mmio only, much smaller attack surface. The result is KVM-grade isolation at LXC-comparable boot times. Currently the only Proxmox integration for QEMU microvm.`,
+    mermaid: `flowchart LR
+    UI["Proxmox UI\\nmachine type: microvm"] --> QEMU["QEMU microvm\\nvirtio-mmio only"]
+    QEMU --> |"< 200ms"| Guest["Guest kernel\\n+ workload"]
+    subgraph vs["vs. standard VM"]
+        QEMU2["QEMU standard\\nPCI + BIOS + ACPI"]
+        Guest2["Guest kernel\\n2-10s boot"]
+    end`,
     features: [
-      { icon: "⚡", title: "Under 200 ms boot", body: "No emulated PCI bus, no BIOS. virtio-mmio + direct kernel load." },
-      { icon: "🛡", title: "Full KVM isolation", body: "Own kernel per VM. No shared kernel, no namespace breakout." },
-      { icon: "🔌", title: "Proxmox UI integration", body: "Machine type option in the Proxmox web UI. Managed like any other VM." },
-      { icon: "↩", title: "Fully reversible", body: "dpkg -r pve-microvm restores original qemu-server files." },
+      { icon: "⚡", title: "Under 200 ms boot", body: "No emulated PCI, no BIOS. Direct kernel load." },
+      { icon: "🛡", title: "Full KVM isolation", body: "Own kernel per VM. No shared kernel." },
+      { icon: "🔌", title: "Proxmox UI", body: "Appears as a machine type option. Managed like any VM." },
+      { icon: "↩", title: "Fully reversible", body: "dpkg -r restores original qemu-server files." },
     ],
   },
   "homekit-steam-user-switcher": {
     status: "stable",
-    tagline: "Switch Steam accounts on a shared gaming PC via HomeKit.",
-    about: `A HAP-python service that exposes each Steam account as a HomeKit Switch. Tap in the Home app, tell Siri, or use an automation. Uses Steam's local --login flags; no Steam API, no Valve servers.`,
-    how: `HAP-python advertises a HomeKit bridge on the local network. Each configured Steam account is a Switch accessory. When you flip a switch, the on_set_value handler runs subprocess with Steam's --login flag to switch accounts. Steam's --login and --logout flags are a documented local interface — no Web API, no OAuth, no network calls to Valve.
-
-The service reads the current active account from the Steam registry file on startup and sets accessory states accordingly, so the Home app reflects which account is logged in when you open it. Runs as a systemd service on the gaming machine.`,
+    tagline: "Switch Steam accounts on a shared PC via HomeKit.",
+    about: `HAP-python service exposing each Steam account as a HomeKit Switch. Uses Steam's local --login flag — no Steam API, no Valve servers.`,
+    how: `HAP-python advertises a HomeKit bridge on the local network. When you flip a switch, on_set_value runs subprocess with Steam's --login flag. Steam's local CLI handles the account switch without any Web API calls. The service reads the current active account from the Steam registry file on startup.`,
     features: [
-      { icon: "🏠", title: "HomeKit native", body: "Each Steam account is a Switch in the Home app. Siri, Shortcuts, automations all work." },
-      { icon: "🎮", title: "No Steam API", body: "Steam --login flag locally. No API key, no OAuth, no third-party services." },
-      { icon: "🐧", title: "macOS and Linux", body: "HAP-python accessory server. Runs as systemd service on the gaming machine." },
+      { icon: "🏠", title: "HomeKit native", body: "Siri, Shortcuts, automations all work." },
+      { icon: "🎮", title: "No Steam API", body: "Local --login flag only. No Valve network calls." },
+      { icon: "🐧", title: "macOS and Linux", body: "Runs as systemd service." },
     ],
   },
   "zmk-config-totem": {
     status: "stable",
-    tagline: "ZMK keymap for the Totem — home row mods, combos, ZMK Studio support.",
-    about: `Production-ready ZMK config for the 34-key Totem split keyboard. ZMK Studio support for GUI keymap editing without reflashing. Home row mods with per-key timing tuned over months of daily use. More forks than stars — used as a template.`,
-    how: `ZMK firmware is configured via a Kconfig file, device tree overlay, and keymap file. ZMK Studio extends this with a runtime configuration protocol that lets a web app read and write the keymap over USB without a firmware rebuild.
-
-The home row mod timing was tuned over months: long enough to avoid false triggers during fast typing, short enough to not introduce noticeable latency. Combo timing is set to work reliably on the Totem's aggressive column stagger. The 7:2 forks-to-stars ratio suggests most people use this config as a starting point rather than running it as-is — which is exactly the intent.`,
+    tagline: "ZMK keymap for the Totem — home row mods, combos, ZMK Studio.",
+    about: `Production-ready ZMK config for the 34-key Totem split keyboard with ZMK Studio support for GUI keymap editing without reflashing. Home row mods tuned over months of daily use. 7:2 forks-to-stars — used as a template.`,
+    how: `ZMK Studio enables GUI keymap editing over USB without a firmware rebuild. Home row mod timing was tuned over months: long enough to avoid false triggers, short enough to avoid latency. Combo timing works reliably on the Totem's aggressive column stagger.`,
     features: [
-      { icon: "🖥", title: "ZMK Studio", body: "GUI keymap editing over USB without reflashing firmware." },
-      { icon: "✋", title: "Tuned home row mods", body: "Per-key timing from months of daily use. Reliable without false triggers." },
-      { icon: "⌨", title: "34-key layout", body: "Combos for all punctuation. No dedicated symbol layer needed." },
-      { icon: "🍴", title: "Used as a template", body: "7:2 forks-to-stars ratio tells the story." },
+      { icon: "🖥", title: "ZMK Studio", body: "GUI keymap editing without reflashing." },
+      { icon: "✋", title: "Tuned home row mods", body: "Per-key timing from months of use." },
+      { icon: "⌨", title: "34-key layout", body: "Combos for all punctuation." },
+      { icon: "🍴", title: "Template-ready", body: "7:2 forks-to-stars tells the story." },
     ],
   },
   "ghostty-web": {
     status: "active",
-    tagline: "Ghostty terminal sessions in a browser with xterm.js API compatibility.",
-    about: `ghostty-web runs Ghostty in server mode, proxies sessions to a browser via WebSocket, and implements an xterm.js-compatible API layer. Shares go-te with webterm and go-rdp for the terminal state engine.`,
-    how: `Ghostty runs in server mode connected to a Unix socket. The Go server proxies these connections to WebSocket, translating between Ghostty's wire protocol and WebSocket framing. The TypeScript frontend implements the xterm.js ITerminalAddon interface so existing xterm.js extensions work without modification against a ghostty-web backend.
-
-go-te maintains server-side terminal state, enabling features that require knowing the current screen contents: dashboard tile previews, copy-on-select, title tracking. The architecture is deliberately shared with webterm and go-rdp so go-te improvements benefit all three.`,
+    tagline: "Ghostty terminal sessions in a browser — xterm.js compatibility.",
+    about: `ghostty-web runs Ghostty in server mode, proxies sessions to a browser via WebSocket, and implements an xterm.js-compatible API. Shares go-te with webterm and go-rdp.`,
+    how: `Ghostty runs server-mode connected to a Unix socket. The Go server proxies to WebSocket and translates protocols. The TypeScript frontend implements the xterm.js ITerminalAddon interface so existing extensions work unchanged. go-te maintains server-side terminal state for tile previews and copy-on-select.`,
     features: [
-      { icon: "⚡", title: "Ghostty in the browser", body: "Ghostty runs server-side. Browser gets output over WebSocket — Ghostty's speed and correctness, any device." },
-      { icon: "🔌", title: "xterm.js compatibility", body: "Implements the xterm.js ITerminalAddon API. Existing xterm.js tooling works unchanged." },
-      { icon: "🔗", title: "Shared terminal engine", body: "go-te powers webterm, go-rdp, and ghostty-web from a single library." },
+      { icon: "⚡", title: "Ghostty in browser", body: "Server-side Ghostty. Browser gets output over WebSocket." },
+      { icon: "🔌", title: "xterm.js compat", body: "Existing xterm.js tooling works unchanged." },
+      { icon: "🔗", title: "Shared engine", body: "go-te used by webterm, go-rdp, and ghostty-web." },
     ],
   },
   "go-te": {
     status: "active",
-    tagline: "VT100/VT520 terminal emulator library for Go — pyte-faithful, SVG export, 100% ESCTest2.",
-    about: `go-te is a faithful Go port of the Python pyte terminal emulator library, validated against pyte's full test suite and ESCTest2 conformance tests. Multiple screen variants: base, diff (dirty tracking), history (scrollback), debug. Used in webterm, go-rdp, and ghostty-web.`,
-    how: `go-te follows pyte's architecture: a Stream (escape sequence parser) feeds events to a Screen (state machine). The port reproduces pyte's exact semantics in Go, not just its behaviour — edge cases that pyte handles in a specific way are reproduced identically. Additional coverage from ESCTest2 validates comprehensive CSI/OSC/DSR behaviour.
-
-The Screen type has variants: a base screen for simple state queries, a DiffScreen that tracks dirty cells (used for efficient WebSocket updates in webterm), a HistoryScreen with scrollback buffer, and a DebugScreen that logs every event. SVG export lets you snapshot any screen state as a vector image for screenshots or test reports.`,
+    tagline: "VT100/VT520 terminal library for Go — pyte-faithful, ESCTest2, SVG export.",
+    about: `Faithful Go port of the Python pyte library, validated against pyte's full test suite and ESCTest2 conformance tests. Multiple screen variants: base, diff (dirty tracking), history, debug. Powers webterm, go-rdp, and ghostty-web.`,
+    how: `Follows pyte's Stream + Screen architecture. The port reproduces pyte's exact semantics in Go — edge cases handled identically. DiffScreen tracks dirty cells for efficient WebSocket updates. SVG export snapshots any screen state for screenshots or test reports.`,
     features: [
-      { icon: "🔣", title: "Pyte-faithful, VT100–VT520", body: "1:1 pyte semantics. ESCTest2 conformance. Alternate buffer, cursor save/restore." },
-      { icon: "🖼", title: "SVG export", body: "Snapshot screen state as SVG for screenshots and test reporting." },
-      { icon: "📦", title: "Pure Go, zero CGO", body: "go get github.com/rcarmo/go-te. Any GOARCH. No system library deps." },
-      { icon: "🔗", title: "Powers webterm, go-rdp, ghostty-web", body: "One terminal state engine for the whole Go terminal family." },
+      { icon: "🔣", title: "Pyte-faithful, VT100–VT520", body: "1:1 pyte semantics. ESCTest2 conformance." },
+      { icon: "🖼", title: "SVG export", body: "Snapshot screen state as SVG." },
+      { icon: "📦", title: "Pure Go", body: "go get github.com/rcarmo/go-te. Any GOARCH." },
+      { icon: "🔗", title: "Shared engine", body: "Powers webterm, go-rdp, ghostty-web." },
     ],
   },
   gotel: {
     status: "active",
-    tagline: "Self-contained OTel collector with SQLite storage and built-in trace viewer.",
-    about: `gotel is a single-binary OpenTelemetry Collector that stores traces and metrics in SQLite and includes a built-in web UI. OTLP gRPC on 4317, OTLP HTTP on 4318, query API on 3200, trace viewer on 3000. No external storage, no Jaeger setup.`,
-    how: `gotel is a complete OpenTelemetry Collector pipeline in one binary. It accepts traces and metrics via standard OTLP endpoints, runs them through a memory_limiter and batch processor, and writes to a local SQLite database. A built-in query server exposes the trace data as a REST API; a web trace explorer provides a Jaeger-like UI.
-
-For local development and small homelab deployments, this replaces Collector + Jaeger/Tempo + Grafana with one binary and a SQLite file. An embedded default config works immediately; drop a config.yaml alongside the binary to switch exporters, add processors, or point at a remote Prometheus endpoint.`,
+    tagline: "Self-contained OTel collector — SQLite storage, built-in trace viewer.",
+    about: `Single-binary OpenTelemetry Collector storing traces and metrics in SQLite with a built-in web trace viewer. OTLP gRPC 4317, HTTP 4318, query API 3200, viewer 3000. No Jaeger, no Tempo, no Grafana needed.`,
+    how: `A complete OTel Collector pipeline in one binary: OTLP endpoints → memory_limiter → batch processor → SQLite. The built-in query server exposes trace data as REST; the web viewer provides a Jaeger-like UI. One binary, one file, zero external storage.`,
+    mermaid: `flowchart LR
+    Services["Your services"] --> |"OTLP gRPC 4317\\nOTLP HTTP 4318"| gotel["gotel\\nsingle binary"]
+    gotel --> SQLite["SQLite\\ntraces + metrics"]
+    gotel --> |"query API :3200"| API["REST API"]
+    gotel --> |"web UI :3000"| Viewer["Trace viewer"]`,
     features: [
-      { icon: "📦", title: "Single binary", body: "go build -o gotel . and it runs. Embedded default config, works immediately." },
-      { icon: "🗄", title: "SQLite storage", body: "Traces and metrics in a local file. No external storage dependency." },
-      { icon: "🌐", title: "Built-in trace viewer", body: "Jaeger-like UI at :3000. No Grafana setup needed for local development." },
-      { icon: "📊", title: "Standard OTLP endpoints", body: "gRPC on 4317, HTTP on 4318. Drop-in for the official OTel Collector for small deployments." },
+      { icon: "📦", title: "Single binary", body: "go build -o gotel . and run. Embedded config." },
+      { icon: "🗄", title: "SQLite storage", body: "Traces in a local file. No external dependency." },
+      { icon: "🌐", title: "Built-in viewer", body: "Jaeger-like UI at :3000." },
+      { icon: "📊", title: "Standard OTLP", body: "gRPC 4317 + HTTP 4318. Drop-in collector." },
     ],
   },
 };
 
-// ── CSS (reused from previous version with how-section additions) ──────────
+// ── Visual-explainer design language ──────────────────────────────────────
+// Blueprint aesthetic: monospace labels, dot-grid background, deep slate/teal
+// palette — specifically NOT generic blue-on-dark or violet/indigo.
+// Sticky sidebar TOC (desktop) / horizontal scroll bar (mobile) with scroll spy.
+// Mermaid.js diagrams with theme:base deep theming.
+
 const CSS = `
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
 :root {
-  --bg: #08090a; --card: #111214; --border: #1e2024; --border2: #2a2d33;
-  --text: #f0f2f5; --muted: #7a8190; --dim: #464c5a;
-  --accent: #4f8ef7; --accent-glow: rgba(79,142,247,.12);
-  --green: #34d399; --amber: #fbbf24;
-  --radius: 10px; --radius-lg: 16px;
-  --gap: clamp(1rem, 4vw, 2rem); --max: 960px;
+  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Helvetica, Arial, sans-serif;
+  --font-mono: ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
+
+  /* Blueprint palette — deep slate/teal, warm amber accents */
+  --bg: #0b0e14;
+  --surface: #111620;
+  --surface2: #161c2a;
+  --surface-elevated: #1d2435;
+  --border: rgba(255,255,255,.06);
+  --border-bright: rgba(255,255,255,.12);
+  --text: #e2e8f4;
+  --text-dim: #7a8aa8;
+  --accent: #22d3ee;       /* teal — NOT violet/indigo */
+  --accent-dim: rgba(34,211,238,.1);
+  --green: #34d399;
+  --amber: #fbbf24;
+  --orange: #fb923c;
+  --red: #f87171;
+  --radius: 8px; --radius-lg: 14px;
+  --gap: clamp(1rem, 4vw, 2rem); --max: 1400px;
 }
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f5f7fb; --card: #fff; --border: #e2e6ed; --border2: #ced3db;
-    --text: #0f1319; --muted: #5c6370; --dim: #9ca3af;
-    --accent: #1e6ef4; --accent-glow: rgba(30,110,244,.08);
-    --green: #10b981; --amber: #d97706;
+    --bg: #f0f4f8;
+    --surface: #ffffff;
+    --surface2: #eaf0f8;
+    --surface-elevated: #ffffff;
+    --border: rgba(0,0,0,.08);
+    --border-bright: rgba(0,0,0,.16);
+    --text: #0d1b2e;
+    --text-dim: #4a6285;
+    --accent: #0891b2;
+    --accent-dim: rgba(8,145,178,.08);
+    --green: #059669;
+    --amber: #d97706;
+    --orange: #ea580c;
   }
 }
+
 html { scroll-behavior: smooth; }
-body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; }
-a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
-code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; font-size:.875em; background:var(--border); padding:.1em .35em; border-radius:4px; }
-.topbar { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:1px solid var(--border); backdrop-filter:blur(12px); }
-.topbar-inner { max-width:var(--max); margin:0 auto; padding:.7rem var(--gap); display:flex; align-items:center; gap:.6rem; font-size:.8rem; color:var(--muted); }
-.topbar-inner a { color:var(--muted); font-weight:500; } .topbar-inner a:hover { color:var(--text); text-decoration:none; }
-.sep { color:var(--border2); } .current { color:var(--text); font-weight:600; }
-.hero-wrap { max-width:var(--max); margin:0 auto; padding:3rem var(--gap) 2rem; }
-.hero-inner { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
-@media(max-width:560px){ .hero-inner { grid-template-columns:1fr; } .hero-logo { display:none; } }
-.hero-logo img { width:88px; height:88px; border-radius:20px; box-shadow:0 0 0 1px var(--border2), 0 12px 32px rgba(0,0,0,.5); }
-.hero h1 { font-size:clamp(1.8rem,5vw,2.8rem); font-weight:700; letter-spacing:-.03em; line-height:1.1; }
-.hero h1 a { color:var(--text); } .hero h1 a:hover { color:var(--accent); text-decoration:none; }
-.tagline { font-size:clamp(1rem,2.5vw,1.2rem); color:var(--muted); margin:.6rem 0 1.4rem; max-width:580px; line-height:1.5; }
-.meta { display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1.1rem; font-size:.82rem; color:var(--muted); margin-bottom:1.25rem; }
-.meta-stars { color:var(--amber); font-weight:700; font-size:.9rem; }
-.dot { width:9px; height:9px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:3px; flex-shrink:0; }
+
+/* Dot-grid background atmosphere (from visual-explainer css-patterns.md) */
+body {
+  background-color: var(--bg);
+  background-image: radial-gradient(circle, var(--border-bright) 1px, transparent 1px);
+  background-size: 24px 24px;
+  color: var(--text);
+  font-family: var(--font-body);
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: var(--font-mono); font-size: .875em; background: var(--surface2); padding: .1em .35em; border-radius: 4px; border: 1px solid var(--border); }
+
+/* ── Topbar ── */
+.topbar { position: sticky; top: 0; z-index: 300; background: rgba(11,14,20,.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-bright); }
+.topbar-inner { max-width: 900px; margin: 0 auto; padding: .7rem var(--gap); display: flex; align-items: center; gap: .6rem; font-size: .78rem; color: var(--text-dim); font-family: var(--font-mono); }
+.topbar-inner a { color: var(--text-dim); } .topbar-inner a:hover { color: var(--text); text-decoration: none; }
+.sep { opacity: .4; }
+.current { color: var(--text); }
+@media (prefers-color-scheme: light) {
+  .topbar { background: rgba(240,244,248,.88); }
+}
+
+/* ── Page layout: TOC sidebar + main ── */
+.outer { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 170px 1fr; gap: 0 40px; padding: 2rem var(--gap) 4rem; }
+.main { min-width: 0; max-width: 900px; }
+
+/* TOC — Desktop sticky sidebar */
+.toc { position: sticky; top: 56px; align-self: start; padding: 14px 0; grid-row: 1 / -1; max-height: calc(100dvh - 80px); overflow-y: auto; }
+.toc::-webkit-scrollbar { width: 3px; }
+.toc::-webkit-scrollbar-thumb { background: var(--surface-elevated); border-radius: 2px; }
+.toc-title { font-family: var(--font-mono); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); padding: 0 0 10px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
+.toc a { display: block; font-size: 11px; color: var(--text-dim); text-decoration: none; padding: 4px 8px; border-radius: 5px; border-left: 2px solid transparent; transition: all .15s; line-height: 1.4; margin-bottom: 1px; }
+.toc a:hover { color: var(--text); background: var(--surface2); text-decoration: none; }
+.toc a.active { color: var(--text); border-left-color: var(--accent); background: var(--accent-dim); }
+
+/* TOC — Mobile horizontal scrollable bar */
+@media (max-width: 1000px) {
+  .outer { grid-template-columns: 1fr; padding-top: 0; }
+  .toc { position: sticky; top: 44px; z-index: 200; max-height: none; display: flex; gap: 4px; align-items: center; overflow-x: auto; -webkit-overflow-scrolling: touch; background: var(--bg); border-bottom: 1px solid var(--border-bright); padding: 10px 0; margin: 0 calc(-1 * var(--gap)); padding-left: var(--gap); padding-right: var(--gap); grid-row: auto; }
+  .toc::-webkit-scrollbar { display: none; }
+  .toc-title { display: none; }
+  .toc a { white-space: nowrap; flex-shrink: 0; border-left: none; border-bottom: 2px solid transparent; border-radius: 4px 4px 0 0; padding: 6px 10px; font-size: 10px; }
+  .toc a.active { border-left: none; border-bottom-color: var(--accent); background: var(--surface2); }
+}
+
+/* ── Hero ── */
+.hero { padding: 2.5rem 0 2rem; }
+.hero-top { display: flex; align-items: flex-start; gap: 1.5rem; justify-content: space-between; }
+.hero-logo img { width: 80px; height: 80px; border-radius: 18px; box-shadow: 0 0 0 1px var(--border-bright), 0 8px 24px rgba(0,0,0,.5); flex-shrink: 0; }
+h1 { font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
+h1 a { color: var(--text); } h1 a:hover { color: var(--accent); text-decoration: none; }
+.tagline { font-size: clamp(.95rem,2.2vw,1.15rem); color: var(--text-dim); margin: .6rem 0 1.25rem; max-width: 580px; line-height: 1.55; }
+.meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; font-size: .8rem; color: var(--text-dim); margin-bottom: 1.1rem; }
+.stars { color: var(--amber); font-weight: 700; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 3px; }
 .dot-TypeScript{background:#3178c6} .dot-Python{background:#3572A5} .dot-Go{background:#00ADD8}
 .dot-Swift{background:#F05138} .dot-C{background:#555} .dot-Cpp{background:#f34b7d}
 .dot-Dockerfile{background:#384d54} .dot-Shell{background:#89e051} .dot-misc{background:#7a8190}
-.badge { display:inline-flex; align-items:center; padding:.2rem .6rem; border-radius:2em; font-size:.7rem; font-weight:700; letter-spacing:.03em; }
-.badge-active   { background:rgba(52,211,153,.1);  color:#34d399; border:1px solid rgba(52,211,153,.2); }
-.badge-stable   { background:rgba(79,142,247,.1);  color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
-.badge-maintained{background:rgba(167,139,250,.1);color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
-.badge-archived { background:rgba(251,191,36,.1);  color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
-@media(prefers-color-scheme:light){
+.badge { display: inline-flex; align-items: center; padding: .18rem .55rem; border-radius: 2em; font-size: .68rem; font-weight: 700; letter-spacing: .03em; }
+.badge-active   { background: rgba(52,211,153,.1);  color: #34d399; border: 1px solid rgba(52,211,153,.2); }
+.badge-stable   { background: rgba(34,211,238,.1);  color: #22d3ee; border: 1px solid rgba(34,211,238,.2); }
+.badge-maintained{background: rgba(251,191,36,.1);  color: #fbbf24; border: 1px solid rgba(251,191,36,.2); }
+.badge-archived { background: rgba(248,113,113,.1); color: #f87171; border: 1px solid rgba(248,113,113,.2); }
+@media (prefers-color-scheme: light) {
   .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
-  .badge-stable{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
-  .badge-maintained{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd}
-  .badge-archived{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+  .badge-stable{background:#cffafe;color:#0e7490;border-color:#67e8f9}
+  .badge-maintained{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+  .badge-archived{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
 }
-.topics { display:flex; flex-wrap:wrap; gap:.35rem; margin-bottom:1.25rem; }
-.topic { font-size:.72rem; background:var(--card); border:1px solid var(--border2); color:var(--muted); padding:.15rem .55rem; border-radius:2em; }
-.cta { display:flex; flex-wrap:wrap; gap:.6rem; }
-.btn { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem 1.1rem; border-radius:var(--radius); font-size:.85rem; font-weight:500; transition:all .15s; }
-.btn-p { background:var(--accent); color:#fff; } .btn-p:hover { filter:brightness(1.1); text-decoration:none; }
-.btn-g { background:transparent; color:var(--text); border:1px solid var(--border2); } .btn-g:hover { border-color:var(--accent); color:var(--accent); text-decoration:none; }
-.stats-wrap { max-width:var(--max); margin:0 auto; padding:0 var(--gap) 2rem; }
-.stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
-.stat { background:var(--card); padding:1rem 1.2rem; }
-.stat-l { font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:.2rem; }
-.stat-v { font-size:1.45rem; font-weight:700; letter-spacing:-.02em; }
-.stat-sub { font-size:.7rem; color:var(--muted); margin-top:.1rem; }
-.section { max-width:var(--max); margin:0 auto; padding:2.5rem var(--gap); border-top:1px solid var(--border); }
-.eyebrow { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:.4rem; }
-.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.25rem; }
-/* About */
-.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:700px; }
-/* How it works — multi-paragraph prose */
-.how { display:flex; flex-direction:column; gap:1.1rem; max-width:700px; }
-.how p { font-size:.95rem; line-height:1.8; color:var(--muted); }
-/* Feature grid */
-.features { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
-.feat { background:var(--card); padding:1.4rem; display:flex; flex-direction:column; gap:.45rem; }
-.feat-icon { font-size:1.3rem; line-height:1; }
-.feat-title { font-size:.88rem; font-weight:600; color:var(--text); }
-.feat-body { font-size:.82rem; color:var(--muted); line-height:1.6; }
-/* Diagram */
-.diagram-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; padding:1.5rem; }
-.diagram-wrap svg { width:100%; height:auto; display:block; }
-/* Releases — dynamically loaded */
-#releases-list { display:flex; flex-direction:column; gap:.5rem; }
-.rel { display:grid; grid-template-columns:7rem 1fr; gap:1rem; padding:.7rem 0; border-bottom:1px solid var(--border); font-size:.875rem; align-items:start; }
-.rel:last-child { border-bottom:none; }
-.rel-date { color:var(--dim); font-size:.78rem; white-space:nowrap; padding-top:.1rem; }
-.rel-right { display:flex; flex-direction:column; gap:.25rem; }
-.rel-tag { font-family:ui-monospace,monospace; font-size:.75rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; display:inline-block; }
-.rel-name { font-weight:500; color:var(--text); font-size:.88rem; }
-.rel-body { font-size:.8rem; color:var(--muted); line-height:1.5; }
-.rel-loading { color:var(--dim); font-size:.85rem; }
-/* Posts */
-.posts { display:flex; flex-direction:column; gap:.45rem; }
-.post { display:grid; grid-template-columns:6rem 1fr; gap:.75rem; font-size:.875rem; }
-.post-date { color:var(--dim); font-size:.75rem; padding-top:.12rem; white-space:nowrap; }
-footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
-.foot-l { font-size:.78rem; color:var(--dim); }
-.foot-r { display:flex; gap:1.5rem; font-size:.78rem; }
-.foot-r a { color:var(--muted); } .foot-r a:hover { color:var(--text); }
+.topics { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: 1.1rem; }
+.topic { font-size: .7rem; background: var(--surface2); border: 1px solid var(--border-bright); color: var(--text-dim); padding: .13rem .5rem; border-radius: 2em; font-family: var(--font-mono); }
+.cta { display: flex; flex-wrap: wrap; gap: .6rem; }
+.btn { display: inline-flex; align-items: center; gap: .4rem; padding: .48rem 1rem; border-radius: var(--radius); font-size: .83rem; font-weight: 500; transition: all .15s; }
+.btn-p { background: var(--accent); color: #000; } .btn-p:hover { filter: brightness(1.1); text-decoration: none; }
+.btn-g { background: transparent; color: var(--text); border: 1px solid var(--border-bright); } .btn-g:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+
+/* ── Stats ── */
+.stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1px; background: var(--border-bright); border: 1px solid var(--border-bright); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2.5rem; }
+.stat { background: var(--surface); padding: .85rem 1rem; }
+.stat-l { font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text-dim); margin-bottom: .2rem; font-family: var(--font-mono); }
+.stat-v { font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; color: var(--text); }
+.stat-sub { font-size: .68rem; color: var(--text-dim); margin-top: .1rem; }
+
+/* ── Sections ── */
+.sec { padding: 2.5rem 0; border-top: 1px solid var(--border); }
+.eyebrow { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: .4rem; font-family: var(--font-mono); }
+.sec-title { font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 1.2rem; }
+.about { font-size: 1rem; line-height: 1.8; color: var(--text); max-width: 680px; }
+.how { display: flex; flex-direction: column; gap: 1rem; max-width: 680px; }
+.how p { font-size: .95rem; line-height: 1.8; color: var(--text-dim); }
+
+/* ── Features grid ── */
+/* NOTE: using .ve-card to avoid collision with Mermaid's internal .node class */
+.features { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border-bright); border-radius: var(--radius-lg); overflow: hidden; }
+.ve-card { background: var(--surface); padding: 1.3rem; display: flex; flex-direction: column; gap: .4rem; transition: background .15s; }
+.ve-card:hover { background: var(--surface2); }
+.ve-icon { font-size: 1.25rem; line-height: 1; }
+.ve-title { font-size: .86rem; font-weight: 600; color: var(--text); }
+.ve-body { font-size: .8rem; color: var(--text-dim); line-height: 1.6; }
+
+/* ── Mermaid diagram (from visual-explainer css-patterns.md) ── */
+.diagram-wrap { background: var(--surface); border: 1px solid var(--border-bright); border-radius: var(--radius-lg); overflow: hidden; }
+.mermaid-container { padding: 1.5rem; }
+/* Centre the Mermaid SVG — narrow diagrams look bad left-aligned */
+.mermaid { display: flex; justify-content: center; }
+.mermaid svg { max-width: 100%; height: auto; }
+
+/* ── Releases (dynamic) ── */
+#releases-list { display: flex; flex-direction: column; }
+.rel { display: grid; grid-template-columns: 8rem 1fr; gap: .75rem; padding: .65rem 0; border-bottom: 1px solid var(--border); font-size: .85rem; }
+.rel:last-child { border-bottom: none; }
+.rel-date { color: var(--text-dim); font-size: .75rem; white-space: nowrap; padding-top: .12rem; font-family: var(--font-mono); }
+.rel-tag { font-family: var(--font-mono); font-size: .72rem; font-weight: 700; color: var(--accent); background: var(--accent-dim); padding: .08rem .4rem; border-radius: 4px; display: inline-block; margin-right: .4rem; }
+.rel-name { color: var(--text); font-size: .86rem; }
+.rel-note { font-size: .78rem; color: var(--text-dim); margin-top: .2rem; line-height: 1.5; }
+.rel-loading { color: var(--text-dim); font-size: .83rem; }
+
+/* ── Posts ── */
+.posts { display: flex; flex-direction: column; gap: .4rem; }
+.post { display: grid; grid-template-columns: 5.5rem 1fr; gap: .75rem; font-size: .875rem; }
+.post-date { color: var(--text-dim); font-size: .73rem; padding-top: .1rem; white-space: nowrap; font-family: var(--font-mono); }
+
+/* ── Footer ── */
+footer { max-width: 900px; margin: 0 auto; padding: 1.5rem var(--gap); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+.foot-l { font-size: .75rem; color: var(--text-dim); font-family: var(--font-mono); }
+.foot-r { display: flex; gap: 1.5rem; font-size: .75rem; }
+.foot-r a { color: var(--text-dim); } .foot-r a:hover { color: var(--text); }
 `;
 
 function ghSvg() {
-  return `<svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>`;
+  return `<svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>`;
 }
-
 function esc(s: string) { return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
-function fmtDate(iso: string): string {
-  // "2026-04-19T13:52:46Z" → "19 Apr 2026"
-  try {
-    return new Date(iso).toLocaleDateString("en-GB",{day:"numeric",month:"short",year:"numeric"});
-  } catch { return iso.slice(0,10); }
+function mermaidScript(): string {
+  // visual-explainer libraries.md: use theme:'base' + themeVariables for deep theming
+  return `<script type="module">
+import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+mermaid.initialize({
+  startOnLoad: true,
+  theme: 'base',
+  look: 'classic',
+  themeVariables: {
+    primaryColor:       dark ? '#134e4a' : '#ccfbf1',
+    primaryBorderColor: dark ? '#14b8a6' : '#0d9488',
+    primaryTextColor:   dark ? '#f0fdfa' : '#134e4a',
+    secondaryColor:     dark ? '#1e293b' : '#f0fdf4',
+    secondaryBorderColor: dark ? '#059669' : '#16a34a',
+    secondaryTextColor: dark ? '#f1f5f9' : '#1e293b',
+    tertiaryColor:      dark ? '#27201a' : '#fef3c7',
+    tertiaryBorderColor:dark ? '#d97706' : '#f59e0b',
+    lineColor:          dark ? '#4a6285' : '#94a3b8',
+    fontSize: '13px',
+    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
+  }
+});
+</script>`;
 }
 
 function releasesScript(fullName: string): string {
@@ -463,25 +604,63 @@ function releasesScript(fullName: string): string {
   fetch('https://api.github.com/repos/${fullName}/releases?per_page=20')
     .then(function(r){ return r.ok ? r.json() : []; })
     .then(function(releases) {
-      if (!releases || !releases.length) { el.innerHTML = '<p class="rel-loading">No releases yet.</p>'; return; }
-      // Sort by published_at descending (API already does this, but be explicit)
+      if (!releases || !releases.length) {
+        el.innerHTML = '<p class="rel-loading">No releases yet.</p>';
+        return;
+      }
       releases.sort(function(a,b){ return new Date(b.published_at)-new Date(a.published_at); });
       el.innerHTML = releases.slice(0,12).map(function(r) {
         var d = new Date(r.published_at);
-        var dateFmt = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-        var body = (r.body||'').trim().split('\\n')[0].slice(0,160);
+        var fmt = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        var note = (r.body||'').trim().split('\\n')[0].replace(/</g,'&lt;').slice(0,140);
+        var nameHtml = (r.name && r.name !== r.tag_name)
+          ? '<span class="rel-name">' + r.name.replace(/</g,'&lt;') + '</span>' : '';
         return '<div class="rel">'
-          + '<span class="rel-date">' + dateFmt + '</span>'
-          + '<div class="rel-right">'
-          + '<div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">'
-          + '<span class="rel-tag">' + r.tag_name + '</span>'
-          + (r.name && r.name !== r.tag_name ? '<span class="rel-name">' + r.name.replace(/</g,'&lt;') + '</span>' : '')
-          + '</div>'
-          + (body ? '<div class="rel-body">' + body.replace(/</g,'&lt;') + '</div>' : '')
+          + '<span class="rel-date">' + fmt + '</span>'
+          + '<div><span class="rel-tag">' + r.tag_name + '</span>' + nameHtml
+          + (note ? '<div class="rel-note">' + note + '</div>' : '')
           + '</div></div>';
       }).join('');
     })
-    .catch(function() { el.innerHTML = '<p class="rel-loading">Could not load releases.</p>'; });
+    .catch(function(){ el.innerHTML = '<p class="rel-loading">Could not load releases.</p>'; });
+})();
+</script>`;
+}
+
+function scrollSpyScript(): string {
+  return `<script>
+(function() {
+  var toc = document.getElementById('toc');
+  if (!toc) return;
+  var links = toc.querySelectorAll('a');
+  var sections = [];
+  links.forEach(function(link) {
+    var id = link.getAttribute('href').slice(1);
+    var el = document.getElementById(id);
+    if (el) sections.push({ el: el, link: link });
+  });
+  var obs = new IntersectionObserver(function(entries) {
+    entries.forEach(function(e) {
+      if (e.isIntersecting) {
+        links.forEach(function(l){ l.classList.remove('active'); });
+        var m = sections.find(function(s){ return s.el === e.target; });
+        if (m) {
+          m.link.classList.add('active');
+          if (window.innerWidth <= 1000)
+            m.link.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
+        }
+      }
+    });
+  }, { rootMargin: '-10% 0px -80% 0px' });
+  sections.forEach(function(s){ obs.observe(s.el); });
+  links.forEach(function(link) {
+    link.addEventListener('click', function(e) {
+      e.preventDefault();
+      var id = link.getAttribute('href').slice(1);
+      var el = document.getElementById(id);
+      if (el) { el.scrollIntoView({ behavior:'smooth', block:'start' }); history.replaceState(null,'','#'+id); }
+    });
+  });
 })();
 </script>`;
 }
@@ -493,22 +672,39 @@ function page(d: Dossier, c: Content): string {
   const langDot = "dot-" + ({"C++":"Cpp"}[m.language] ?? m.language ?? "misc");
   const posts = POSTS[d.id] ?? [];
 
+  const hasDiagram = !!c.mermaid;
+  const hasPosts   = posts.length > 0;
+
   const logoHtml = d.logo_data_uri
-    ? `<div class="hero-logo"><img src="${d.logo_data_uri}" alt="${esc(displayName)} logo" loading="lazy"></div>` : "";
+    ? `<img src="${d.logo_data_uri}" alt="${esc(displayName)} logo">` : "";
 
-  const howParas = c.how.trim().split(/\n\n+/).map(p => `<p>${esc(p.trim())}</p>`).join("\n");
+  // Build TOC
+  const tocLinks: {id:string;label:string}[] = [
+    {id:"s-about",    label:"Overview"},
+    {id:"s-how",      label:"How it works"},
+    {id:"s-features", label:"Features"},
+    ...(hasDiagram ? [{id:"s-diagram",  label:"Diagram"}] : []),
+    {id:"s-releases", label:"Releases"},
+    ...(hasPosts   ? [{id:"s-posts",    label:"Posts"}] : []),
+  ];
 
-  const diagramHtml = d.diagram_inline ? `
-  <div class="section">
+  const howParas = c.how.trim().split(/\n\n+/).map(p => `<p>${esc(p.trim())}</p>`).join("\n  ");
+
+  const mermaidHtml = hasDiagram ? `
+  <div class="sec" id="s-diagram">
     <div class="eyebrow">Architecture</div>
-    <div class="section-title">System diagram</div>
-    <div class="diagram-wrap">${d.diagram_inline}</div>
+    <div class="sec-title">System diagram</div>
+    <div class="diagram-wrap">
+      <div class="mermaid-container">
+        <pre class="mermaid">${esc(c.mermaid!)}</pre>
+      </div>
+    </div>
   </div>` : "";
 
-  const postsHtml = posts.length > 0 ? `
-  <div class="section">
+  const postsHtml = hasPosts ? `
+  <div class="sec" id="s-posts">
     <div class="eyebrow">Writing</div>
-    <div class="section-title">On taoofmac.com</div>
+    <div class="sec-title">On taoofmac.com</div>
     <div class="posts">
       ${posts.map(p => `
       <div class="post">
@@ -527,6 +723,7 @@ function page(d: Dossier, c: Content): string {
 <meta name="description" content="${esc(c.tagline)}">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>${CSS}</style>
+${hasDiagram ? mermaidScript() : ""}
 </head>
 <body>
 <header class="topbar">
@@ -536,76 +733,90 @@ function page(d: Dossier, c: Content): string {
     <span class="current">${displayName}</span>
   </div>
 </header>
-<main>
-  <div class="hero-wrap">
-    <div class="hero-inner">
-      <div class="hero">
-        <h1><a href="${ghUrl}" target="_blank" rel="noopener">${displayName}</a></h1>
-        <p class="tagline">${esc(c.tagline)}</p>
-        <div class="meta">
-          <span class="meta-stars">★ ${(m.stars ?? 0).toLocaleString()}</span>
-          ${(m.forks ?? 0) > 0 ? `<span>⑂ ${m.forks}</span>` : ""}
-          <span><span class="dot ${langDot}"></span>${esc(m.language ?? "misc")}</span>
-          <span class="badge badge-${c.status}">${c.status}</span>
-        </div>
-        ${(m.topics?.length ?? 0) > 0 ? `<div class="topics">${m.topics.map(t => `<span class="topic">${esc(t)}</span>`).join("")}</div>` : ""}
-        <div class="cta">
-          <a class="btn btn-p" href="${ghUrl}" target="_blank" rel="noopener">${ghSvg()} GitHub</a>
-          ${m.homepage ? `<a class="btn btn-g" href="${m.homepage}" target="_blank" rel="noopener">🌐 Homepage</a>` : ""}
-        </div>
-      </div>
-      ${logoHtml}
-    </div>
-  </div>
 
-  <div class="stats-wrap">
+<div class="outer">
+  <!-- TOC sidebar / mobile horizontal bar -->
+  <nav class="toc" id="toc">
+    <div class="toc-title">Contents</div>
+    ${tocLinks.map(l => `<a href="#${l.id}">${l.label}</a>`).join("\n    ")}
+  </nav>
+
+  <!-- Main content -->
+  <div class="main">
+
+    <!-- Hero -->
+    <div class="hero">
+      <div class="hero-top">
+        <div>
+          <h1><a href="${ghUrl}" target="_blank" rel="noopener">${displayName}</a></h1>
+          <p class="tagline">${esc(c.tagline)}</p>
+          <div class="meta">
+            <span class="stars">★ ${(m.stars ?? 0).toLocaleString()}</span>
+            ${(m.forks ?? 0) > 0 ? `<span>⑂ ${m.forks}</span>` : ""}
+            <span><span class="dot ${langDot}"></span>${esc(m.language ?? "misc")}</span>
+            <span class="badge badge-${c.status}">${c.status}</span>
+          </div>
+          ${(m.topics?.length ?? 0) > 0
+            ? `<div class="topics">${m.topics.map(t => `<span class="topic">${esc(t)}</span>`).join("")}</div>` : ""}
+          <div class="cta">
+            <a class="btn btn-p" href="${ghUrl}" target="_blank" rel="noopener">${ghSvg()} GitHub</a>
+            ${m.homepage ? `<a class="btn btn-g" href="${m.homepage}" target="_blank" rel="noopener">🌐 Homepage</a>` : ""}
+          </div>
+        </div>
+        ${logoHtml ? `<div class="hero-logo">${logoHtml}</div>` : ""}
+      </div>
+    </div>
+
+    <!-- Stats -->
     <div class="stats">
       <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">${(m.stars ?? 0).toLocaleString()}</div><div class="stat-sub">on GitHub</div></div>
       <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">${m.forks ?? 0}</div></div>
-      <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot ${langDot}"></span>${esc(m.language ?? "—")}</div></div>
-      <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">${m.created_at?.slice(0,4) ?? "?"}</div></div>
-      <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">${m.pushed_at?.slice(0,7) ?? "?"}</div></div>
+      <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.4rem"><span class="dot ${langDot}"></span>${esc(m.language ?? "—")}</div></div>
+      <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.05rem;padding-top:.3rem">${m.created_at?.slice(0,4) ?? "?"}</div></div>
+      <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.85rem;padding-top:.38rem">${m.pushed_at?.slice(0,7) ?? "?"}</div></div>
     </div>
-  </div>
 
-  <div class="section">
-    <div class="eyebrow">Overview</div>
-    <p class="about">${esc(c.about.trim())}</p>
-  </div>
-
-  <div class="section">
-    <div class="eyebrow">How it works</div>
-    <div class="section-title">Under the hood</div>
-    <div class="how">${howParas}</div>
-  </div>
-
-  <div class="section">
-    <div class="eyebrow">Capabilities</div>
-    <div class="section-title">What it does</div>
-    <div class="features">
-      ${c.features.map(f => `<div class="feat"><div class="feat-icon">${f.icon}</div><div class="feat-title">${esc(f.title)}</div><div class="feat-body">${esc(f.body)}</div></div>`).join("")}
+    <div class="sec" id="s-about">
+      <div class="eyebrow">Overview</div>
+      <p class="about">${esc(c.about.trim())}</p>
     </div>
-  </div>
 
-  ${diagramHtml}
+    <div class="sec" id="s-how">
+      <div class="eyebrow">Under the hood</div>
+      <div class="sec-title">How it works</div>
+      <div class="how">${howParas}</div>
+    </div>
 
-  <div class="section">
-    <div class="eyebrow">History</div>
-    <div class="section-title">Releases</div>
-    <div id="releases-list"><p class="rel-loading">Loading releases…</p></div>
-  </div>
+    <div class="sec" id="s-features">
+      <div class="eyebrow">Capabilities</div>
+      <div class="sec-title">What it does</div>
+      <div class="features">
+        ${c.features.map(f => `<div class="ve-card"><div class="ve-icon">${f.icon}</div><div class="ve-title">${esc(f.title)}</div><div class="ve-body">${esc(f.body)}</div></div>`).join("")}
+      </div>
+    </div>
 
-  ${postsHtml}
-</main>
+    ${mermaidHtml}
+
+    <div class="sec" id="s-releases">
+      <div class="eyebrow">History</div>
+      <div class="sec-title">Releases</div>
+      <div id="releases-list"><p class="rel-loading">Loading releases…</p></div>
+    </div>
+
+    ${postsHtml}
+  </div><!-- /main -->
+</div><!-- /outer -->
+
 <footer>
-  <div class="foot-l">Last indexed ${m.pushed_at?.slice(0,10) ?? "?"}</div>
+  <div class="foot-l">last indexed ${m.pushed_at?.slice(0,10) ?? "?"}</div>
   <div class="foot-r">
-    <a href="/">← All projects</a>
+    <a href="/">← all projects</a>
     <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
-    <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
+    <a href="https://github.com/rcarmo" target="_blank" rel="noopener">github.com/rcarmo</a>
   </div>
 </footer>
 ${releasesScript(m.full_name)}
+${scrollSpyScript()}
 </body>
 </html>`;
 }

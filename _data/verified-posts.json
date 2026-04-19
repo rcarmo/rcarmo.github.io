@@ -1,59 +1,9 @@
 {
   "piku": [
     {
-      "title": "Some Breakage May Ensue",
-      "date": "2016-04-25",
-      "url": "https://taoofmac.com/space/blog/2016/04/25/1400"
-    },
-    {
-      "title": "Third Python's The Charm",
-      "date": "2016-12-04",
-      "url": "https://taoofmac.com/space/blog/2016/12/04/1351"
-    },
-    {
-      "title": "A Random Asynchronous Walk",
-      "date": "2017-04-02",
-      "url": "https://taoofmac.com/space/blog/2017/04/02/2150"
-    },
-    {
-      "title": "The Third Python",
-      "date": "2018-07-08",
-      "url": "https://taoofmac.com/space/blog/2018/07/08/1330"
-    },
-    {
-      "title": "My Quest for Home Automation, Part 3",
-      "date": "2018-09-23",
-      "url": "https://taoofmac.com/space/blog/2018/09/23/1840"
-    },
-    {
-      "title": "Dealing With a Million Legacy Files Every Day",
-      "date": "2019-08-11",
-      "url": "https://taoofmac.com/space/blog/2019/08/11/2230"
-    },
-    {
-      "title": "Deployment Pains",
-      "date": "2019-10-13",
-      "url": "https://taoofmac.com/space/blog/2019/10/13/1630"
-    },
-    {
-      "title": "Living The Static Life",
-      "date": "2021-03-06",
-      "url": "https://taoofmac.com/space/blog/2021/03/06/1130"
-    },
-    {
-      "title": "Building My Own Yahoo! Pipes",
-      "date": "2021-03-20",
-      "url": "https://taoofmac.com/space/blog/2021/03/20/1945"
-    },
-    {
       "title": "Getting Takah\u0113 to run on Piku",
       "date": "2022-12-21",
       "url": "https://taoofmac.com/space/blog/2022/12/21/0900"
-    },
-    {
-      "title": "Summer Minimalism",
-      "date": "2023-08-20",
-      "url": "https://taoofmac.com/space/blog/2023/08/20/1600"
     },
     {
       "title": "My Quest For Home Automation, Part 6",
@@ -64,6 +14,16 @@
       "title": "My Rube Goldberg RSS Pipeline",
       "date": "2026-01-17",
       "url": "https://taoofmac.com/space/blog/2026/01/17/2130"
+    },
+    {
+      "title": "Living The Static Life",
+      "date": "2021-03-06",
+      "url": "https://taoofmac.com/space/blog/2021/03/06/1130"
+    },
+    {
+      "title": "Building My Own Yahoo! Pipes",
+      "date": "2021-03-20",
+      "url": "https://taoofmac.com/space/blog/2021/03/20/1945"
     }
   ],
   "piclaw": [
@@ -71,6 +31,11 @@
       "title": "So You Want To Do Agentic Development",
       "date": "2026-03-08",
       "url": "https://taoofmac.com/space/blog/2026/03/08/2130"
+    },
+    {
+      "title": "Seizing The Means Of Production (Again)",
+      "date": "2026-02-01",
+      "url": "https://taoofmac.com/space/notes/2026/02/01/1940"
     }
   ],
   "webterm": [
@@ -87,14 +52,14 @@
   ],
   "agentbox": [
     {
-      "title": "Thoughts on AI-Assisted Software Development in 2026",
-      "date": "2026-02-01",
-      "url": "https://taoofmac.com/space/notes/2026/02/01/2130"
-    },
-    {
       "title": "So You Want To Do Agentic Development",
       "date": "2026-03-08",
       "url": "https://taoofmac.com/space/blog/2026/03/08/2130"
+    },
+    {
+      "title": "Thoughts on AI-Assisted Software Development in 2026",
+      "date": "2026-02-01",
+      "url": "https://taoofmac.com/space/notes/2026/02/01/2130"
     }
   ],
   "vibes": [
