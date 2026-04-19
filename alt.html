@@ -323,8 +323,8 @@ renderer.setPixelRatio(Math.min(devicePixelRatio, 2));
 renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
-renderer.toneMapping = THREE.CineonToneMapping;
-renderer.toneMappingExposure = 1.75;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.3;
 renderer.setClearColor(0xa1b3f0);
 wrap.appendChild(renderer.domElement);
 
@@ -396,54 +396,58 @@ const MOEBIUS_FRAG = `
   float luma(vec4 c){ return 0.2126*c.x+0.7152*c.y+0.0722*c.z; }
 
   void main(){
-    // Sample local diffuse colour — used to tint outlines and hatching
     vec4 localDiff = texture2D(tDiffuse, vUv);
-    // inkColor: crushed-dark version of the local hue (outline/hatching colour)
-    vec4 inkColor = vec4(sat(localDiff.rgb, 1.8) * 0.13, 1.0);
+    vec3 inkRgb      = sat(localDiff.rgb, 2.5) * 0.35;
+    vec4 inkColor    = vec4(inkRgb, 1.0);
+    vec4 outlineColor= vec4(sat(localDiff.rgb, 2.8) * 0.22, 1.0);
 
-    float sv=smoothstep(0.01,0.03,sobel());
-    if(sv>0.1){ gl_FragColor=inkColor; return; }
+    float sv=smoothstep(0.008,0.025,sobel());
+    if(sv>0.1){ gl_FragColor=outlineColor; return; }
 
     vec4 nc=texture2D(uNormals,vUv);
     if(nc.x>2000.){
-      gl_FragColor=vec4(250./255.,246./255.,230./255.,1.); return;
+      gl_FragColor=vec4(252./255.,248./255.,232./255.,1.); return;
     }
     if(nc.x>100.){
-      gl_FragColor=vec4(sat((texture2D(tDiffuse,vUv)*.5+vec4(250./255.,246./255.,230./255.,1.)*.5).xyz,.4),1.); return;
+      gl_FragColor=vec4(sat((texture2D(tDiffuse,vUv)*.55+vec4(252./255.,248./255.,232./255.,1.)*.45).xyz,.5),1.); return;
     }
 
     float xd=randD(vUv.x,vUv.y,uResolution.x,uResolution.y,1.5/uResolution.x,vec4(22.,13.,37.,89.));
     float yd=randD(vUv.y,vUv.x,uResolution.y,uResolution.x,1.5/uResolution.y,vec4(22.,13.,37.,89.));
     vec2 nuv=vUv+vec2(xd,yd);
-    gl_FragColor=vec4(sat(texture2D(tDiffuse,nuv).xyz,.3),1.);
+    gl_FragColor=vec4(sat(texture2D(tDiffuse,nuv).xyz,.45),1.);
 
     float pl=luma(texture2D(tDiffuse,nuv));
     float rx=uResolution.x; float ry=uResolution.y;
 
-    // hatchColor: slightly lighter than outline ink, still hue-tinted
-    vec4 hatchColor = vec4(sat(localDiff.rgb, 1.6) * 0.18, 1.0);
+    vec4 hatchLight = vec4(mix(inkRgb, vec3(0.82,0.78,0.68), 0.28), 1.0);
+    vec4 hatchMid   = vec4(inkRgb * 1.1, 1.0);
 
-    // hatching layers by luminance
-    if(pl<=0.75){
-      float s=mod((vUv.y*ry+vUv.x*rx)/17.7,4.);
+    if(pl<=0.80){
       float xd2=randD(vUv.x,vUv.y,rx,ry,1.5/rx,vec4(timerRandoms[0],timerRandoms[1],timerRandoms[2],timerRandoms[3]));
       float yd2=randD(vUv.y,vUv.x,ry,rx,1.5/ry,vec4(timerRandoms[4],timerRandoms[5],timerRandoms[6],timerRandoms[7]));
       vec2 sv2=vUv+vec2(xd2,yd2);
-      if(mod(sv2.y*ry+sv2.x*rx,17.7)<=1.5) gl_FragColor=hatchColor;
+      if(mod(sv2.y*ry+sv2.x*rx,14.0)<=1.8) gl_FragColor=hatchLight;
     }
-    if(pl<=0.55){
+    if(pl<=0.60){
       float xd2=randD(vUv.x,vUv.y,rx,ry,1.5/rx,vec4(timerRandoms[8],timerRandoms[9],timerRandoms[10],timerRandoms[11]));
       float yd2=randD(vUv.y,vUv.x,ry,rx,1.5/ry,vec4(timerRandoms[12],timerRandoms[13],timerRandoms[14],timerRandoms[15]));
       vec2 sv2=vUv+vec2(xd2,yd2);
-      if(mod(sv2.x*rx,17.7)<=1.5) gl_FragColor=hatchColor;
+      if(mod(sv2.x*rx,11.0)<=2.0) gl_FragColor=hatchMid;
     }
-    if(pl<=0.38){
+    if(pl<=0.42){
       float xd2=randD(vUv.x,vUv.y,rx,ry,1.5/rx,vec4(timerRandoms[16],timerRandoms[17],timerRandoms[18],timerRandoms[19]));
       float yd2=randD(vUv.y,vUv.x,ry,rx,1.5/ry,vec4(timerRandoms[20],timerRandoms[21],timerRandoms[22],timerRandoms[23]));
       vec2 sv2=vUv+vec2(xd2,yd2);
-      if(mod(-sv2.y*ry+sv2.x*rx,17.7)<=1.5) gl_FragColor=hatchColor;
+      if(mod(-sv2.y*ry+sv2.x*rx,8.0)<=2.2) gl_FragColor=inkColor;
     }
-    if(pl<=0.25){ gl_FragColor=inkColor; }
+    if(pl<=0.28){
+      float xd2=randD(vUv.x,vUv.y,rx,ry,1.5/rx,vec4(timerRandoms[24],timerRandoms[25],timerRandoms[26],timerRandoms[27]));
+      float yd2=randD(vUv.y,vUv.x,ry,rx,1.5/ry,vec4(timerRandoms[28],timerRandoms[29],timerRandoms[30],timerRandoms[31]));
+      vec2 sv2=vUv+vec2(xd2,yd2);
+      if(mod(sv2.y*ry+sv2.x*rx,6.0)<=2.5) gl_FragColor=inkColor;
+    }
+    if(pl<=0.15){ gl_FragColor=inkColor; }
   }`;
 
 // ── Composer setup ─────────────────────────────────────────────────────────
@@ -717,7 +721,7 @@ function buildCluster(clusterKey, cluster) {
       new THREE.PlaneGeometry(panelW, panelH),
       new THREE.MeshStandardMaterial({
         map: tex, emissiveMap: tex, emissive: new THREE.Color(1, 1, 1),
-        emissiveIntensity: 0.15, side: THREE.DoubleSide, roughness: .7
+        emissiveIntensity: 0.1, side: THREE.DoubleSide, roughness: 1.0, metalness: 0.0
       })
     );
     panel.position.set(bx, 3.5, bz);
@@ -884,14 +888,28 @@ renderer.domElement.addEventListener('mousemove', e => {
 
 let focusedBill = null;
 
+let bezierCurve  = null;
+let bezierT      = 0;
+let bezierFrames = 90;
+let bezierActive = false;
+const bezierLookA = new THREE.Vector3();
+const bezierLookB = new THREE.Vector3();
+
 function flyToBillboard(bill) {
-  const bPos = bill.position.clone();
-  const dir  = new THREE.Vector3(bPos.x, 0, bPos.z).normalize();
-  if (dir.length() < 0.001) dir.set(0, 0, 1);
-  targetCamPos  = bPos.clone().add(dir.multiplyScalar(9)).add(new THREE.Vector3(0, 0.5, 0));
-  targetCamLook = bPos;
-  flying = true;
+  const bPos   = bill.position.clone();
+  const outDir = new THREE.Vector3(bPos.x, 0, bPos.z).normalize();
+  if (outDir.length() < 0.001) outDir.set(0, 0, 1);
+  const endPos = bPos.clone().add(outDir.clone().multiplyScalar(8)).setY(bPos.y + 0.5);
+  const startPos = camera.position.clone();
+  const midH = Math.max(startPos.y, endPos.y) + 14;
+  const p1 = startPos.clone().lerp(endPos, 0.25).setY(midH + 4);
+  const p2 = startPos.clone().lerp(endPos, 0.75).setY(midH);
+  bezierCurve = new THREE.CubicBezierCurve3(startPos, p1, p2, endPos);
+  bezierLookA.copy(controls.target);
+  bezierLookB.copy(bPos);
+  bezierT = 0; bezierActive = true; flying = false;
   controls.autoRotate = false;
+  targetCamLook = bPos;
 }
 
 function openFocus(bill) {
@@ -983,12 +1001,18 @@ function animate() {
   normalMat.uniforms.cameraPos.value.copy(camera.position);
 
   // Camera fly-to
+  if (bezierActive) {
+    bezierT += 1 / bezierFrames;
+    if (bezierT >= 1) { bezierT = 1; bezierActive = false; }
+    const e = bezierT < 0.5 ? 2*bezierT*bezierT : -1+(4-2*bezierT)*bezierT;
+    camera.position.copy(bezierCurve.getPoint(e));
+    controls.target.lerpVectors(bezierLookA, bezierLookB, e * e);
+  }
   if (flying) {
     tmpPos.lerp(targetCamPos, 0.06);
     tmpLook.lerp(targetCamLook, 0.06);
     if (camera.position.distanceTo(targetCamPos) < 0.5) {
-      flying = false;
-      controls.autoRotate = true;
+      flying = false; controls.autoRotate = true;
     } else {
       camera.position.lerp(targetCamPos, 0.04);
       controls.target.lerp(targetCamLook, 0.04);
