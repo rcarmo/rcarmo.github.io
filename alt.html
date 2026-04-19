@@ -588,17 +588,20 @@ function makeBush(x, z, scale, cx, cz) {
     new THREE.MeshStandardMaterial({ color:0x228822, emissive:0x228822, emissiveIntensity:.05, roughness:1.0, metalness:0.0 }),
     new THREE.MeshStandardMaterial({ color:0x3dc83d, emissive:0x3dc83d, emissiveIntensity:.09, roughness:1.0, metalness:0.0 }),
   ];
-  // Angle to face the cluster centre (rotate around Y)
   const faceAngle = Math.atan2(cz - z, cx - x);
-
-  // Stack 2-3 boxes: each slightly smaller and more rotated than the one below
   const layers = 2 + Math.floor(Math.random() * 2);
-  let yBase = -0.3 * scale;  // embed in ground
+
+  // Pre-compute first box height so we can set a ground-relative yBase:
+  // embed exactly 30% of the first box below ground (y=-0.5), 70% above.
+  // Minimum height 0.35 so even tiny bushes poke above the highest surface (path y=-0.28)
+  // yBase fixed at -0.55 — always below grass (-0.5), disc (-0.43) and path (-0.28)
+  const h0 = Math.max(0.35, scale * (0.7 + Math.random() * 0.4));
+  let yBase = -0.55;
 
   for (let i = 0; i < layers; i++) {
     const frac = 1 - i * 0.22;
     const w = scale * frac * (0.9 + Math.random() * 0.3);
-    const h = scale * frac * (0.55 + Math.random() * 0.3);
+    const h = i === 0 ? h0 : Math.max(0.2, scale * frac * (0.7 + Math.random() * 0.4));
     const d = scale * frac * (0.75 + Math.random() * 0.25);
     const cube = new THREE.Mesh(
       new THREE.BoxGeometry(w, h, d),
@@ -619,20 +622,29 @@ function makeBush(x, z, scale, cx, cz) {
 }
 
 // ── Path strip between two world positions ─────────────────────────────────
-function makePath(ax, az, bx, bz) {
+// makePath: trimA/trimB are the inset distances from each cluster end (perimeter radius)
+function makePath(ax, az, bx, bz, trimA, trimB) {
+  trimA = trimA || 0; trimB = trimB || 0;
   const dx = bx - ax, dz = bz - az;
-  const len = Math.sqrt(dx*dx + dz*dz);
-  const cx = (ax+bx)/2, cz = (az+bz)/2;
-  const angle = Math.atan2(dx, dz);
+  const fullLen = Math.sqrt(dx*dx + dz*dz);
+  if (fullLen < trimA + trimB + 1) return;  // clusters too close
+  const dirX = dx / fullLen, dirZ = dz / fullLen;
+  // Trim: start past cluster A's perimeter, end before cluster B's perimeter
+  const sx = ax + dirX * trimA,  sz = az + dirZ * trimA;
+  const ex = bx - dirX * trimB,  ez = bz - dirZ * trimB;
+  const len = Math.sqrt((ex-sx)**2 + (ez-sz)**2);
+  const cx = (sx+ex)/2, cz = (sz+ez)/2;
+  const angle = Math.atan2(ex-sx, ez-sz);
   const path = new THREE.Mesh(
-    new THREE.PlaneGeometry(3.0, len),
+    new THREE.PlaneGeometry(2.6, len),
     new THREE.MeshStandardMaterial({
-      color:0xe8d09a, emissive:0xe8d09a, emissiveIntensity:.10, roughness:1.0
+      color:0xe8d09a, emissive:0xe8d09a, emissiveIntensity:.10, roughness:1.0,
+      polygonOffset:true, polygonOffsetFactor:-2, polygonOffsetUnits:-2
     })
   );
   path.rotation.x = -Math.PI / 2;
   path.rotation.z = angle;
-  path.position.set(cx, -0.38, cz);  // raised above ground — always visible
+  path.position.set(cx, -0.28, cz);
   path.receiveShadow = true;
   scene.add(path);
 }
@@ -646,7 +658,7 @@ function makeClusterGround(pos, color, radius) {
     })
   );
   disc.rotation.x = -Math.PI / 2;
-  disc.position.set(pos.x, -0.47, pos.z);
+  disc.position.set(pos.x, -0.43, pos.z);
   disc.receiveShadow = true;
   scene.add(disc);
 }
@@ -711,7 +723,14 @@ const PATH_DRAWN = new Set();  // avoid duplicate strips
       if (!PATH_DRAWN.has(edgeKey)) {
         PATH_DRAWN.add(edgeKey);
         const a = CLUSTERS[k].pos, b = CLUSTERS[j].pos;
-        makePath(a.x, a.z, b.x, b.z);
+        // Trim = outer ring radius = min(clusterR + 3.5, minNeighDist * 0.42)
+        // clusterR = projects.length <= 2 ? 5 : 9
+        const rK = CLUSTERS[k].projects.length <= 2 ? 5 : 9;
+        const rJ = CLUSTERS[j].projects.length <= 2 ? 5 : 9;
+        const dKJ = a.distanceTo(b);
+        const trimK = Math.min(rK + 3.0, dKJ * 0.40);
+        const trimJ = Math.min(rJ + 3.0, dKJ * 0.40);
+        makePath(a.x, a.z, b.x, b.z, trimK, trimJ);
       }
     });
   });
@@ -811,11 +830,13 @@ function buildCluster(clusterKey, cluster) {
     const r = innerR + (Math.random() - 0.5) * 0.4;
     makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.3 + Math.random() * 0.3, pos.x, pos.z);
   }
-  // Inner scatter
+  // Inner scatter — skip positions that would land on path corridors
   const scatterCount = 3 + projects.length;
   for (let i = 0; i < scatterCount; i++) {
     const a = Math.random() * Math.PI * 2;
-    const r = Math.random() * clusterR * 0.5;
+    const r = Math.random() * clusterR * 0.45;
+    // Path corridors only matter near the perimeter — safe to scatter freely inside half-radius
+    if (r > clusterR * 0.25 && isPathAngle(a)) continue;
     makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.2 + Math.random() * 0.2, pos.x, pos.z);
   }
 
@@ -857,6 +878,7 @@ function buildCluster(clusterKey, cluster) {
       map: tex, side: THREE.DoubleSide, transparent: false
     });
     panel.userData = { proj, clusterKey };
+    panel.layers.set(1);  // layer 1 = rendered after Moebius, bypassing it
     scene.add(panel);
     billboards.push(panel);
 
@@ -1029,9 +1051,10 @@ function flyToBillboard(bill) {
 
   // Direction outward from cluster centre (billboard faces from there)
   const cPos    = CLUSTERS[clusterKey] ? CLUSTERS[clusterKey].pos : bPos;
-  const outDir  = new THREE.Vector3(bPos.x - cPos.x, 0, bPos.z - cPos.z).normalize();
-  if (outDir.length() < 0.001) outDir.set(0, 0, 1);
-  const endPos  = bPos.clone().add(outDir.multiplyScalar(8)).setY(bPos.y + 0.5);
+  // Camera stands INSIDE the garden, 5 units inward from the billboard
+  const inDir = new THREE.Vector3(cPos.x - bPos.x, 0, cPos.z - bPos.z).normalize();
+  if (inDir.length() < 0.001) inDir.set(0, 0, -1);
+  const endPos = bPos.clone().addScaledVector(inDir, 5).setY(bPos.y + 1.2);
 
   const startPos   = camera.position.clone();
   const startKey   = nearestClusterKey(startPos);
@@ -1253,7 +1276,8 @@ function animate() {
   }
 
   // Moebius: hide billboards → render scene → Moebius → render billboards on top unshaded
-  billboards.forEach(b => { b.visible = false; });
+  // Hide layer 1 (billboards) from Moebius passes
+  camera.layers.disable(1);
 
   renderer.setRenderTarget(normalBuf);
   const prevOverride = scene.overrideMaterial;
@@ -1263,13 +1287,14 @@ function animate() {
   renderer.setRenderTarget(null);
   moebiusPass.material.uniforms.uNormals.value = normalBuf.texture;
 
-  composer.render();
+  composer.render();  // Moebius on layer 0 only
 
-  // Now render billboards on top, bypassing the Moebius shader
-  billboards.forEach(b => { b.visible = true; });
+  // Now render layer 1 (billboards) unshaded on top
+  camera.layers.set(1);
   renderer.autoClear = false;
   renderer.render(scene, camera);
   renderer.autoClear = true;
+  camera.layers.enableAll();  // restore
 }
 animate();
 </script>
