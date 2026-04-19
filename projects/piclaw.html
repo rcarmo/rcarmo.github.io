@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>piclaw — Rui Carmo</title>
-<meta name="description" content="A self-hosted AI agent workspace — streaming UI, persistent state, built-in tools.">
+<meta name="description" content="A self-hosted AI agent workspace — streaming UI, persistent state, no CDN.">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,13 +28,10 @@ html { scroll-behavior: smooth; }
 body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; }
 a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
 code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; font-size:.875em; background:var(--border); padding:.1em .35em; border-radius:4px; }
-/* Topbar */
 .topbar { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:1px solid var(--border); backdrop-filter:blur(12px); }
 .topbar-inner { max-width:var(--max); margin:0 auto; padding:.7rem var(--gap); display:flex; align-items:center; gap:.6rem; font-size:.8rem; color:var(--muted); }
 .topbar-inner a { color:var(--muted); font-weight:500; } .topbar-inner a:hover { color:var(--text); text-decoration:none; }
-.sep { color:var(--border2); }
-.current { color:var(--text); font-weight:600; }
-/* Hero */
+.sep { color:var(--border2); } .current { color:var(--text); font-weight:600; }
 .hero-wrap { max-width:var(--max); margin:0 auto; padding:3rem var(--gap) 2rem; }
 .hero-inner { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
 @media(max-width:560px){ .hero-inner { grid-template-columns:1fr; } .hero-logo { display:none; } }
@@ -49,10 +46,10 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 .dot-Swift{background:#F05138} .dot-C{background:#555} .dot-Cpp{background:#f34b7d}
 .dot-Dockerfile{background:#384d54} .dot-Shell{background:#89e051} .dot-misc{background:#7a8190}
 .badge { display:inline-flex; align-items:center; padding:.2rem .6rem; border-radius:2em; font-size:.7rem; font-weight:700; letter-spacing:.03em; }
-.badge-active   { background:rgba(52,211,153,.1); color:#34d399; border:1px solid rgba(52,211,153,.2); }
-.badge-stable   { background:rgba(79,142,247,.1); color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
-.badge-maintained { background:rgba(167,139,250,.1); color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
-.badge-archived { background:rgba(251,191,36,.1); color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
+.badge-active   { background:rgba(52,211,153,.1);  color:#34d399; border:1px solid rgba(52,211,153,.2); }
+.badge-stable   { background:rgba(79,142,247,.1);  color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
+.badge-maintained{background:rgba(167,139,250,.1);color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
+.badge-archived { background:rgba(251,191,36,.1);  color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
 @media(prefers-color-scheme:light){
   .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
   .badge-stable{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
@@ -65,19 +62,20 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 .btn { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem 1.1rem; border-radius:var(--radius); font-size:.85rem; font-weight:500; transition:all .15s; }
 .btn-p { background:var(--accent); color:#fff; } .btn-p:hover { filter:brightness(1.1); text-decoration:none; }
 .btn-g { background:transparent; color:var(--text); border:1px solid var(--border2); } .btn-g:hover { border-color:var(--accent); color:var(--accent); text-decoration:none; }
-/* Stats */
 .stats-wrap { max-width:var(--max); margin:0 auto; padding:0 var(--gap) 2rem; }
 .stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
 .stat { background:var(--card); padding:1rem 1.2rem; }
 .stat-l { font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:.2rem; }
 .stat-v { font-size:1.45rem; font-weight:700; letter-spacing:-.02em; }
 .stat-sub { font-size:.7rem; color:var(--muted); margin-top:.1rem; }
-/* Sections */
 .section { max-width:var(--max); margin:0 auto; padding:2.5rem var(--gap); border-top:1px solid var(--border); }
 .eyebrow { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:.4rem; }
-.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.5rem; }
+.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.25rem; }
 /* About */
-.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:680px; }
+.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:700px; }
+/* How it works — multi-paragraph prose */
+.how { display:flex; flex-direction:column; gap:1.1rem; max-width:700px; }
+.how p { font-size:.95rem; line-height:1.8; color:var(--muted); }
 /* Feature grid */
 .features { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
 .feat { background:var(--card); padding:1.4rem; display:flex; flex-direction:column; gap:.45rem; }
@@ -87,19 +85,20 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 /* Diagram */
 .diagram-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; padding:1.5rem; }
 .diagram-wrap svg { width:100%; height:auto; display:block; }
-/* Releases */
-.releases { display:flex; flex-direction:column; gap:.6rem; }
-.release { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1.1rem; }
-.rel-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:.5rem; margin-bottom:.25rem; }
-.rel-tag { font-family:ui-monospace,monospace; font-size:.8rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; }
-.rel-name { font-weight:500; font-size:.88rem; }
-.rel-date { color:var(--dim); font-size:.75rem; margin-left:auto; }
-.rel-body { font-size:.8rem; color:var(--muted); white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:hidden; }
+/* Releases — dynamically loaded */
+#releases-list { display:flex; flex-direction:column; gap:.5rem; }
+.rel { display:grid; grid-template-columns:7rem 1fr; gap:1rem; padding:.7rem 0; border-bottom:1px solid var(--border); font-size:.875rem; align-items:start; }
+.rel:last-child { border-bottom:none; }
+.rel-date { color:var(--dim); font-size:.78rem; white-space:nowrap; padding-top:.1rem; }
+.rel-right { display:flex; flex-direction:column; gap:.25rem; }
+.rel-tag { font-family:ui-monospace,monospace; font-size:.75rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; display:inline-block; }
+.rel-name { font-weight:500; color:var(--text); font-size:.88rem; }
+.rel-body { font-size:.8rem; color:var(--muted); line-height:1.5; }
+.rel-loading { color:var(--dim); font-size:.85rem; }
 /* Posts */
 .posts { display:flex; flex-direction:column; gap:.45rem; }
 .post { display:grid; grid-template-columns:6rem 1fr; gap:.75rem; font-size:.875rem; }
 .post-date { color:var(--dim); font-size:.75rem; padding-top:.12rem; white-space:nowrap; }
-/* Footer */
 footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
 .foot-l { font-size:.78rem; color:var(--dim); }
 .foot-r { display:flex; gap:1.5rem; font-size:.78rem; }
@@ -119,7 +118,7 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
     <div class="hero-inner">
       <div class="hero">
         <h1><a href="https://github.com/rcarmo/piclaw" target="_blank" rel="noopener">piclaw</a></h1>
-        <p class="tagline">A self-hosted AI agent workspace — streaming UI, persistent state, built-in tools.</p>
+        <p class="tagline">A self-hosted AI agent workspace — streaming UI, persistent state, no CDN.</p>
         <div class="meta">
           <span class="meta-stars">★ 526</span>
           <span>⑂ 37</span>
@@ -135,28 +134,42 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
       <div class="hero-logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAMAAABrrFhUAAAAAXNSR0IArs4c6QAAAwBQTFRFR3BMmzoYukok6ksR1UET0TwQ93Q59m419msy9mkv9mcs9GYr9WQp9GIm9GAk814j81wg8lod8Fga8FUY71IU7k8R60wQ6koP40oT0Vcp3koWr0sn1EoazUoeqEIjqTMTliwPrikJvzgTxTUOtUsnuzIOoUosrjgYqisMrTERtjMRrT4bvDYUuy4Gty8LrkMjvzcOwkAQEgwOEREWFhgcGBwhHSEmSRwNizMNgEcEam4GgyAGjh0DlyADnyIEpSIDqiMDriQDsicDticDuSgDvioDwCwEwy0Exi8EyTAEzTMF0DQG0zcG1jgH0zQFzDEFyS0E3T4I3DwI2TsI1zoI2j4J3j8K30EK4kIK40MK5UQL5kYM50gO50kP6EwS6k4U61EW7VQY8Fse8V8hsT4UqkcnpzgZmigKoDARpEIjtD4crkgkyEYVcoQUXXQPYXoUWXwFYYIKZIgKZIwDZo4SaJIQaZgEbp8EapsBZpQBZJECXosEXIcFWYQEV4ECU30BUXgBTXMBSm0BWXACYXcIXHQLRWYBO14ANlQAQ2EEDSQ+Zz88JEFfGDJPEipGDSVAGzNGGzJLHzdSIT5cHThXJ0JgJD5cIDxaHzpYHjhXHTdVHDVSGTNQGDFOGC5JGilBDx83DyM8EydBESdCHThWGTFHDSU/mc0nlcUtd5QldJgfe5UrcJgadZobgqcrh6gwbo8ai50tk8MqlcMxksQkhLAYjb0ht+NQst9Hrtw/qtk2ptYvo9Qnn9EhnM8bms0cl8sWlMkTkscQkMQQjMMKi8ELh7wIir4KhbkIgbYGfrMFe68EeKsDcqQCdagCSDtAgoGB7OrprKurNS4yRwgAZAwAdBIBfxMAihYBlRkAnRwAox4AqiABsiQBcWIPak0CdjMLaCQJqnoNtWIKopwPqyYFxDAK1kcW3E0X5FMb0Vgq3E0b3Vkk5Fge40kS5EYO4UQN20QS00AR0joJzTcHyTMGxDIGwC8GuisEtCsFrScFpiUGpyoLqzERrD8fiVQxIov3GgAAAQB0Uk5TAAEw7dn0////////////////////////xUKpFntmPebU6L7lI9MKcb6khE+Y//fr/f7///////////39//////////////////////////////////////////////////////7Q/P7+9rSP//GtdP///////////////////////////9D////o1hDtbv79STggz67+/////////////r2ie4iXXefrrGq8IfrdUDeMEIZmzP7+/////////////////////////////////v7///7///////////////////////Ty6/3bU5LA+/////7+//////////////5gBHv8Fi0AADMESURBVHja7NfPThpRFAbw7w4g1WFGxFjGmSFN6ohR3DYm7pp00aQq9A+wsC2M7PoA9SF8EI0YSTWsurDRYtNVm7R7NwWLJIoJJTal3NqE3SQFJCxuOb/12Zz75dyTA0IIIYQQQgghhBBCCCGEEEIIIUQ0nGGASaZ27jYwoAyzPBFYG6+GMIiYpafHVH8quVSSMIAs3fYpdnUpOj1nQRTMqOhmSOLoWbiSVpV0IlqalyASPTOsBFIuPbSBnkyW/T47Hp2aCUMsleR5ei0jZ9Iv9R6S4+a4L3PxqCRc+0A4NDtdW45f2L6xoCbhZja0Mdl+Epu1ICIGIzI/tZK0lUBQN3ADVllVX6yUIhAWYyzyaqkaUCZcZ+ia5JL91ehdA4KT9KcpZXy1EkZXmOQaWXscm+cQX8RdzYyuakaX+Y8EErEZ/Bc29LidCbqtrvq/dZ1/E+Lguf29rb/29rNwCCVs5faphU4ZrhF/UqD++e7W5rvDo0Lhw/Hxx3x+O+vYCGeXtpLq+JgLa7KSjM5AENm9zYOj94WW/Prr9Z2c8yO4DKhBLYyOVFT5eXQOvWPov9zPCc9QA2hx56QGFlgz7piCRXln+eCUo73Qj/rowtcTLsIDvGHyEJfrDGgN7HCWc4DdSzhKzS93nl0dfkNb1olHvv/pqojeSX2Pv656mYfzZvM3wK+x1gUo7Tpqi5HYtndxEu2wmtf7oParCPTOhf7aV/1uND3NBjg4Zxxwtxovms5doGa/Z4uftbf4N/Phn/buBLqu8j73//d59zkabKYkJAwGEiYDhqQJzdzeJAQsT7Ll2SEkgI1t2fJESOC29/b2tr1d/9uGJsGWJ9kGkzYknvCIZ2huJhqGJoEACY4JYTBjCwZj6wx7v8/fPpKWZVsmHRRRWn8kn+UlLy2v5zm/9937HB3t8/Phrz+1k+6Q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" alt="piclaw logo" loading="lazy"></div>
     </div>
   </div>
-  <div class="stats-wrap"><div class="stats">
-    <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">526</div><div class="stat-sub">on GitHub</div></div>
-    <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">37</div></div>
-    <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-TypeScript"></span>TypeScript</div></div>
-    <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2026</div></div>
-    <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2026-04</div></div>
-  </div></div>
-  <div class="section">
-    <div class="eyebrow">About</div>
-    <p class="about">PiClaw packages the Pi Coding Agent runtime into a Docker container with a streaming web UI, multi-provider LLM support, SQLite-backed state, and no CDN dependencies. Built-in tools include a Ghostty terminal, code editor, Office/PDF/image viewers, draw.io, kanban boards, VNC client, browser automation, and MCP access — everything needed for practical daily agent work in one container.</p>
-  </div>
-  <div class="section">
-    <div class="eyebrow">Features</div>
-    <div class="section-title">What it does</div>
-    <div class="features">
-      <div class="feat"><div class="feat-icon">💬</div><div class="feat-title">Streaming chat with branches</div><div class="feat-body">Real-time Markdown, KaTeX, Mermaid, Adaptive Cards. Branch conversations with /btw, queue follow-ups, steer mid-generation.</div></div><div class="feat"><div class="feat-icon">🗂</div><div class="feat-title">Full workspace tooling</div><div class="feat-body">Sidebar file browser with drag-upload, in-browser code editor (CodeMirror 6), Office/CSV/PDF/image viewers, draw.io, kanban boards, VNC client — no separate apps.</div></div><div class="feat"><div class="feat-icon">🔌</div><div class="feat-title">Any LLM</div><div class="feat-body">Anthropic, OpenAI, Azure, Gemini, Ollama, or any OpenAI-compatible endpoint. Configurable per session — no restart needed.</div></div><div class="feat"><div class="feat-icon">🧠</div><div class="feat-title">Persistent state</div><div class="feat-body">SQLite-backed message history, media, tasks, token usage, and encrypted keychain. Dream memory consolidation keeps long sessions coherent.</div></div><div class="feat"><div class="feat-icon">🛠</div><div class="feat-title">Infrastructure tools</div><div class="feat-body">First-class SSH, Proxmox, and Portainer profiles. CDP browser automation. Sharp image processing. MCP server access via pi-mcp-adapter. Scheduled tasks.</div></div><div class="feat"><div class="feat-icon">📦</div><div class="feat-title">Single container, no CDN</div><div class="feat-body">docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest and you're live. Everything ships in the image.</div></div>
+
+  <div class="stats-wrap">
+    <div class="stats">
+      <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">526</div><div class="stat-sub">on GitHub</div></div>
+      <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">37</div></div>
+      <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-TypeScript"></span>TypeScript</div></div>
+      <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2026</div></div>
+      <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2026-04</div></div>
     </div>
   </div>
+
+  <div class="section">
+    <div class="eyebrow">Overview</div>
+    <p class="about">PiClaw packages the Pi Coding Agent runtime into a Docker container with a streaming web UI, multi-provider LLM support, and built-in tools including a Ghostty terminal, code editor, document viewers, draw.io, kanban boards, VNC client, and MCP access. Everything ships in one image; no CDN, no setup wizard, one docker run command.</p>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">How it works</div>
+    <div class="section-title">Under the hood</div>
+    <div class="how"><p>PiClaw is a Docker container where Supervisor runs as PID 1 and manages three processes: the Bun-based Pi agent runtime, an optional Ghostty-backed web terminal (Go), and an optional VNC display. Persistent state lives on a bind-mounted /workspace volume — the container itself is stateless and replaceable.</p>
+<p>The web UI communicates with the agent runtime over SSE for streaming responses and WebSocket for real-time indicators. The agent's tool surface is layered: a small always-active baseline, with additional tools activated on demand via list_tools and activate_tools. This keeps token usage low while making hundreds of capabilities available. Skills are Markdown-described TypeScript modules discovered at runtime from SKILL.md files.</p>
+<p>The keychain stores secrets encrypted at rest with AES-GCM. Sessions branch as git-like conversation trees stored in SQLite — you can fork a conversation, explore a different direction, and return to the original branch. Dream memory consolidation runs nightly to synthesise daily notes from across all sessions and keep long-running workflows coherent.</p></div>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">Capabilities</div>
+    <div class="section-title">What it does</div>
+    <div class="features">
+      <div class="feat"><div class="feat-icon">💬</div><div class="feat-title">Streaming chat with branches</div><div class="feat-body">Real-time Markdown, KaTeX, Mermaid, Adaptive Cards. Branch with /btw, queue follow-ups, steer mid-generation.</div></div><div class="feat"><div class="feat-icon">🗂</div><div class="feat-title">Full workspace tooling</div><div class="feat-body">File browser, CodeMirror 6 editor, Office/CSV/PDF/image viewers, draw.io, kanban boards, VNC client — no separate apps.</div></div><div class="feat"><div class="feat-icon">🔌</div><div class="feat-title">Any LLM</div><div class="feat-body">Anthropic, OpenAI, Azure, Gemini, Ollama, or any OpenAI-compatible endpoint. Switch mid-session without restart.</div></div><div class="feat"><div class="feat-icon">🧠</div><div class="feat-title">Persistent state</div><div class="feat-body">SQLite-backed history, media, tasks, token usage, encrypted keychain. Dream nightly consolidation.</div></div><div class="feat"><div class="feat-icon">🛠</div><div class="feat-title">Infrastructure tools</div><div class="feat-body">First-class SSH, Proxmox, Portainer profiles. CDP browser automation. Sharp image processing. MCP via pi-mcp-adapter.</div></div><div class="feat"><div class="feat-icon">📦</div><div class="feat-title">Single container, no CDN</div><div class="feat-body">docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest and you're live.</div></div>
+    </div>
+  </div>
+
   
   <div class="section">
     <div class="eyebrow">Architecture</div>
-    <div class="section-title">How it works</div>
+    <div class="section-title">System diagram</div>
     <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 280" width="640" height="280">
   <style>
     @media (prefers-color-scheme: dark) {
@@ -246,126 +259,13 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
 
 </svg></div>
   </div>
-  
+
   <div class="section">
-    <div class="eyebrow">Versions</div>
+    <div class="eyebrow">History</div>
     <div class="section-title">Releases</div>
-    <div class="releases">
-      
-      <div class="release">
-        <div class="rel-head">
-          <span class="rel-tag">v1.7.10</span>
-          <span class="rel-name">PiClaw v1.7.10 — Microserfs</span>
-          <span class="rel-date">2026-04-10</span>
-        </div>
-        <div class="rel-body"># PiClaw v1.7.10 — "Microserfs"
-
-A patch release about office software, experimental integrations, and the ongoing effort to make modern work feel slightly less like a badly managed group project with sockets.
-
-## Features
-
-- **Experimental Microsoft 365 extension now ships in the bundle** — PiClaw can now package an env-gated M365 integration for Teams, Microsoft Graph, OneDrive, SharePoint, cale</div>
-      </div>
-      <div class="release">
-        <div class="rel-head">
-          <span class="rel-tag">v1.8.2</span>
-          <span class="rel-name">PiClaw v1.8.2 — Sliding Doors</span>
-          <span class="rel-date">2026-04-19</span>
-        </div>
-        <div class="rel-body"># PiClaw v1.8.2 — "Sliding Doors"
-
-A patch release about interrupted turns, restored model state, and swipe navigation finally behaving like someone thought through what happens on phones after 2023.
-
-## Features
-
-- **Automatic turn recovery now has a proper user-facing shape** — interrupted turns can recover more deliberately, recovered replies carry an explicit marker in the timeline, stale in-f</div>
-      </div>
-      <div class="release">
-        <div class="rel-head">
-          <span class="rel-tag">v1.8.1</span>
-          <span class="rel-name">PiClaw v1.8.1 — Heat</span>
-          <span class="rel-date">2026-04-18</span>
-        </div>
-        <div class="rel-body"># PiClaw v1.8.1 — "Heat"
-
-A point release about hardening the doors, slimming the startup path, and finally teaching the web client how to do push notifications without embarrassing itself in public.
-
-## Platform news
-
-- **Startup has been put on a stricter diet** — Azure bootstrap work, web viewer routes, bundled browser tooling, and office tooling have been shoved off the cold path so PiClaw can</div>
-      </div>
-      <div class="release">
-        <div class="rel-head">
-          <span class="rel-tag">v1.8.0</span>
-          <span class="rel-name">PiClaw v1.8.0 — This Is Spinal Tap</span>
-          <span class="rel-date">2026-04-16</span>
-        </div>
-        <div class="rel-body"># PiClaw v1.8.0 - "This Is Spinal Tap"
-
-A hefty point release about making the web UI faster, the discovery surface smarter, the image pipeline unexpectedly ambitious, and the upstream model stack current enough to suggest someone has been feeding the amplifier after midnight.
-
-## Features
-
-- **PiClaw now picks up support for Anthropic Opus 4.7 via the upstream Pi core package updates** — the upst</div>
-      </div>
-      <div class="release">
-        <div class="rel-head">
-          <span class="rel-tag">v1.7.15</span>
-          <span class="rel-name">PiClaw v1.7.15 — Blow-Up</span>
-          <span class="rel-date">2026-04-15</span>
-        </div>
-        <div class="rel-body"># PiClaw v1.7.15 — "Blow-Up"
-
-A release about seeing what the system is actually doing, surviving iPhone PWA melodrama, and giving operators better answers than a blank stare and a quietly compromised log file.
-
-## Features
-
-- **The `messages` tool grew into a proper audit surface** — it now supports `grep`, `extract`, and checkpoint `diff`, which makes chat-history forensics much less dependent o</div>
-      </div>
-      <div class="release">
-        <div class="rel-head">
-          <span class="rel-tag">v1.7.14</span>
-          <span class="rel-name">PiClaw v1.7.14 — Brazil</span>
-          <span class="rel-date">2026-04-14</span>
-        </div>
-        <div class="rel-body"># PiClaw v1.7.14 — "Brazil"
-
-A patch release about making the operator surface clearer under pressure: better status hints, better timeout behavior, better terminal and compose ergonomics, and fewer situations where provider failures vanish into the wallpaper like a procedural memo nobody meant to approve.
-
-## Features
-
-- **Added `/effort` as an alias for `/thinking`, with provider-native level la</div>
-      </div>
-      <div class="release">
-        <div class="rel-head">
-          <span class="rel-tag">v1.7.13</span>
-          <span class="rel-name">PiClaw v1.7.13 — The Paper Chase</span>
-          <span class="rel-date">2026-04-13</span>
-        </div>
-        <div class="rel-body"># PiClaw v1.7.13 — "The Paper Chase"
-
-A release about operator ergonomics, search behaving properly, and giving the M365 extension enough actual skills to justify its paperwork — which feels especially on-brand for a Monday the 13th, a date apparently engineered to combine bureaucracy with menace.
-
-## Features
-
-- **The experimental M365 extension now ships eleven operator-facing skills** — which m</div>
-      </div>
-      <div class="release">
-        <div class="rel-head">
-          <span class="rel-tag">v1.7.12</span>
-          <span class="rel-name">PiClaw v1.7.12 — The Conversation</span>
-          <span class="rel-date">2026-04-12</span>
-        </div>
-        <div class="rel-body"># PiClaw v1.7.12 — "The Conversation"
-
-A release about seeing more, guessing less, and making the web UI slightly less likely to surprise you in ways nobody ordered.
-
-## Features
-
-- **The session tree viewer is now properly useful instead of merely promising to be** — `/tree` gained a search/filter box, more compact rows, theme-derived role tags, fuller sidebar detail, human-readable tool argument</div>
-      </div>
-    </div>
+    <div id="releases-list"><p class="rel-loading">Loading releases…</p></div>
   </div>
+
   
   <div class="section">
     <div class="eyebrow">Writing</div>
@@ -387,5 +287,33 @@ A release about seeing more, guessing less, and making the web UI slightly less 
     <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
+<script>
+(function() {
+  var el = document.getElementById('releases-list');
+  if (!el) return;
+  fetch('https://api.github.com/repos/rcarmo/piclaw/releases?per_page=20')
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .then(function(releases) {
+      if (!releases || !releases.length) { el.innerHTML = '<p class="rel-loading">No releases yet.</p>'; return; }
+      // Sort by published_at descending (API already does this, but be explicit)
+      releases.sort(function(a,b){ return new Date(b.published_at)-new Date(a.published_at); });
+      el.innerHTML = releases.slice(0,12).map(function(r) {
+        var d = new Date(r.published_at);
+        var dateFmt = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        var body = (r.body||'').trim().split('\n')[0].slice(0,160);
+        return '<div class="rel">'
+          + '<span class="rel-date">' + dateFmt + '</span>'
+          + '<div class="rel-right">'
+          + '<div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">'
+          + '<span class="rel-tag">' + r.tag_name + '</span>'
+          + (r.name && r.name !== r.tag_name ? '<span class="rel-name">' + r.name.replace(/</g,'&lt;') + '</span>' : '')
+          + '</div>'
+          + (body ? '<div class="rel-body">' + body.replace(/</g,'&lt;') + '</div>' : '')
+          + '</div></div>';
+      }).join('');
+    })
+    .catch(function() { el.innerHTML = '<p class="rel-loading">Could not load releases.</p>'; });
+})();
+</script>
 </body>
 </html>

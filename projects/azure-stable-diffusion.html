@@ -28,13 +28,10 @@ html { scroll-behavior: smooth; }
 body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; }
 a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
 code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; font-size:.875em; background:var(--border); padding:.1em .35em; border-radius:4px; }
-/* Topbar */
 .topbar { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:1px solid var(--border); backdrop-filter:blur(12px); }
 .topbar-inner { max-width:var(--max); margin:0 auto; padding:.7rem var(--gap); display:flex; align-items:center; gap:.6rem; font-size:.8rem; color:var(--muted); }
 .topbar-inner a { color:var(--muted); font-weight:500; } .topbar-inner a:hover { color:var(--text); text-decoration:none; }
-.sep { color:var(--border2); }
-.current { color:var(--text); font-weight:600; }
-/* Hero */
+.sep { color:var(--border2); } .current { color:var(--text); font-weight:600; }
 .hero-wrap { max-width:var(--max); margin:0 auto; padding:3rem var(--gap) 2rem; }
 .hero-inner { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
 @media(max-width:560px){ .hero-inner { grid-template-columns:1fr; } .hero-logo { display:none; } }
@@ -49,10 +46,10 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 .dot-Swift{background:#F05138} .dot-C{background:#555} .dot-Cpp{background:#f34b7d}
 .dot-Dockerfile{background:#384d54} .dot-Shell{background:#89e051} .dot-misc{background:#7a8190}
 .badge { display:inline-flex; align-items:center; padding:.2rem .6rem; border-radius:2em; font-size:.7rem; font-weight:700; letter-spacing:.03em; }
-.badge-active   { background:rgba(52,211,153,.1); color:#34d399; border:1px solid rgba(52,211,153,.2); }
-.badge-stable   { background:rgba(79,142,247,.1); color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
-.badge-maintained { background:rgba(167,139,250,.1); color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
-.badge-archived { background:rgba(251,191,36,.1); color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
+.badge-active   { background:rgba(52,211,153,.1);  color:#34d399; border:1px solid rgba(52,211,153,.2); }
+.badge-stable   { background:rgba(79,142,247,.1);  color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
+.badge-maintained{background:rgba(167,139,250,.1);color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
+.badge-archived { background:rgba(251,191,36,.1);  color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
 @media(prefers-color-scheme:light){
   .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
   .badge-stable{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
@@ -65,19 +62,20 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 .btn { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem 1.1rem; border-radius:var(--radius); font-size:.85rem; font-weight:500; transition:all .15s; }
 .btn-p { background:var(--accent); color:#fff; } .btn-p:hover { filter:brightness(1.1); text-decoration:none; }
 .btn-g { background:transparent; color:var(--text); border:1px solid var(--border2); } .btn-g:hover { border-color:var(--accent); color:var(--accent); text-decoration:none; }
-/* Stats */
 .stats-wrap { max-width:var(--max); margin:0 auto; padding:0 var(--gap) 2rem; }
 .stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
 .stat { background:var(--card); padding:1rem 1.2rem; }
 .stat-l { font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:.2rem; }
 .stat-v { font-size:1.45rem; font-weight:700; letter-spacing:-.02em; }
 .stat-sub { font-size:.7rem; color:var(--muted); margin-top:.1rem; }
-/* Sections */
 .section { max-width:var(--max); margin:0 auto; padding:2.5rem var(--gap); border-top:1px solid var(--border); }
 .eyebrow { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:.4rem; }
-.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.5rem; }
+.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.25rem; }
 /* About */
-.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:680px; }
+.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:700px; }
+/* How it works — multi-paragraph prose */
+.how { display:flex; flex-direction:column; gap:1.1rem; max-width:700px; }
+.how p { font-size:.95rem; line-height:1.8; color:var(--muted); }
 /* Feature grid */
 .features { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
 .feat { background:var(--card); padding:1.4rem; display:flex; flex-direction:column; gap:.45rem; }
@@ -87,19 +85,20 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 /* Diagram */
 .diagram-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; padding:1.5rem; }
 .diagram-wrap svg { width:100%; height:auto; display:block; }
-/* Releases */
-.releases { display:flex; flex-direction:column; gap:.6rem; }
-.release { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1.1rem; }
-.rel-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:.5rem; margin-bottom:.25rem; }
-.rel-tag { font-family:ui-monospace,monospace; font-size:.8rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; }
-.rel-name { font-weight:500; font-size:.88rem; }
-.rel-date { color:var(--dim); font-size:.75rem; margin-left:auto; }
-.rel-body { font-size:.8rem; color:var(--muted); white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:hidden; }
+/* Releases — dynamically loaded */
+#releases-list { display:flex; flex-direction:column; gap:.5rem; }
+.rel { display:grid; grid-template-columns:7rem 1fr; gap:1rem; padding:.7rem 0; border-bottom:1px solid var(--border); font-size:.875rem; align-items:start; }
+.rel:last-child { border-bottom:none; }
+.rel-date { color:var(--dim); font-size:.78rem; white-space:nowrap; padding-top:.1rem; }
+.rel-right { display:flex; flex-direction:column; gap:.25rem; }
+.rel-tag { font-family:ui-monospace,monospace; font-size:.75rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; display:inline-block; }
+.rel-name { font-weight:500; color:var(--text); font-size:.88rem; }
+.rel-body { font-size:.8rem; color:var(--muted); line-height:1.5; }
+.rel-loading { color:var(--dim); font-size:.85rem; }
 /* Posts */
 .posts { display:flex; flex-direction:column; gap:.45rem; }
 .post { display:grid; grid-template-columns:6rem 1fr; gap:.75rem; font-size:.875rem; }
 .post-date { color:var(--dim); font-size:.75rem; padding-top:.12rem; white-space:nowrap; }
-/* Footer */
 footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
 .foot-l { font-size:.78rem; color:var(--dim); }
 .foot-r { display:flex; gap:1.5rem; font-size:.78rem; }
@@ -135,26 +134,45 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
       
     </div>
   </div>
-  <div class="stats-wrap"><div class="stats">
-    <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">44</div><div class="stat-sub">on GitHub</div></div>
-    <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">6</div></div>
-    <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-Makefile"></span>Makefile</div></div>
-    <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2022</div></div>
-    <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2023-04</div></div>
-  </div></div>
-  <div class="section">
-    <div class="eyebrow">About</div>
-    <p class="about">Built in September 2022 when Stable Diffusion first dropped. A Makefile wrapping Azure Bicep provisions an NC-series GPU spot VM, installs CUDA and AUTOMATIC1111 WebUI, and exposes it via SSH tunnel. make deploy, make open, make destroy. Spot pricing keeps it under $0.10/hour for an NC6s_v3. Models and outputs live on an attached data disk that survives spot interruptions.</p>
-  </div>
-  <div class="section">
-    <div class="eyebrow">Features</div>
-    <div class="section-title">What it does</div>
-    <div class="features">
-      <div class="feat"><div class="feat-icon">⚡</div><div class="feat-title">make deploy / make open / make destroy</div><div class="feat-body">Three commands. Eight minutes from nothing to AUTOMATIC1111 WebUI. Zero to teardown is two minutes.</div></div><div class="feat"><div class="feat-icon">💰</div><div class="feat-title">Spot instance pricing</div><div class="feat-body">NC6s_v3 spot: typically under $0.10/hour. Batch 200 images for a few dollars, then destroy the VM.</div></div><div class="feat"><div class="feat-icon">💾</div><div class="feat-title">Persistent model storage</div><div class="feat-body">Models and outputs live on an attached data disk — survive spot preemptions and make destroy / make deploy cycles.</div></div>
+
+  <div class="stats-wrap">
+    <div class="stats">
+      <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">44</div><div class="stat-sub">on GitHub</div></div>
+      <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">6</div></div>
+      <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-Makefile"></span>Makefile</div></div>
+      <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2022</div></div>
+      <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2023-04</div></div>
     </div>
   </div>
+
+  <div class="section">
+    <div class="eyebrow">Overview</div>
+    <p class="about">A Makefile wrapping Azure Bicep. make deploy provisions an NC-series GPU spot VM and installs AUTOMATIC1111. make open opens an SSH tunnel. make destroy tears everything down. Spot pricing keeps costs under $0.10/hour; models and outputs live on a separate data disk that survives preemptions.</p>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">How it works</div>
+    <div class="section-title">Under the hood</div>
+    <div class="how"><p>make deploy runs a Bicep template that provisions a resource group, a data disk, and an NC-series GPU spot VM, then executes a cloud-init script that installs CUDA, clones AUTOMATIC1111, downloads default model weights, and starts the web server. make open opens an SSH tunnel and launches a browser pointing at localhost. make destroy deletes the resource group and everything in it.</p>
+<p>Spot instances are preempted when Azure needs the capacity, but because models and outputs live on an attached data disk rather than the VM's ephemeral disk, nothing is lost. Rerun make deploy and the disk reattaches to the new VM. The original template targeted NC6s_v3 (6 vCPUs, 112 GB RAM, Tesla V100), running at well under $0.10/hour on spot pricing.</p></div>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">Capabilities</div>
+    <div class="section-title">What it does</div>
+    <div class="features">
+      <div class="feat"><div class="feat-icon">⚡</div><div class="feat-title">make deploy / make open / make destroy</div><div class="feat-body">Three commands. Under ten minutes from nothing to AUTOMATIC1111 WebUI.</div></div><div class="feat"><div class="feat-icon">💰</div><div class="feat-title">Spot instance pricing</div><div class="feat-body">NC6s_v3 spot: typically under $0.10/hour. Batch images, then destroy.</div></div><div class="feat"><div class="feat-icon">💾</div><div class="feat-title">Persistent model disk</div><div class="feat-body">Models and outputs on an attached data disk. Survives spot preemptions and teardowns.</div></div>
+    </div>
+  </div>
+
   
-  
+
+  <div class="section">
+    <div class="eyebrow">History</div>
+    <div class="section-title">Releases</div>
+    <div id="releases-list"><p class="rel-loading">Loading releases…</p></div>
+  </div>
+
   
   <div class="section">
     <div class="eyebrow">Writing</div>
@@ -180,5 +198,33 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
     <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
+<script>
+(function() {
+  var el = document.getElementById('releases-list');
+  if (!el) return;
+  fetch('https://api.github.com/repos/rcarmo/azure-stable-diffusion/releases?per_page=20')
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .then(function(releases) {
+      if (!releases || !releases.length) { el.innerHTML = '<p class="rel-loading">No releases yet.</p>'; return; }
+      // Sort by published_at descending (API already does this, but be explicit)
+      releases.sort(function(a,b){ return new Date(b.published_at)-new Date(a.published_at); });
+      el.innerHTML = releases.slice(0,12).map(function(r) {
+        var d = new Date(r.published_at);
+        var dateFmt = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        var body = (r.body||'').trim().split('\n')[0].slice(0,160);
+        return '<div class="rel">'
+          + '<span class="rel-date">' + dateFmt + '</span>'
+          + '<div class="rel-right">'
+          + '<div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">'
+          + '<span class="rel-tag">' + r.tag_name + '</span>'
+          + (r.name && r.name !== r.tag_name ? '<span class="rel-name">' + r.name.replace(/</g,'&lt;') + '</span>' : '')
+          + '</div>'
+          + (body ? '<div class="rel-body">' + body.replace(/</g,'&lt;') + '</div>' : '')
+          + '</div></div>';
+      }).join('');
+    })
+    .catch(function() { el.innerHTML = '<p class="rel-loading">Could not load releases.</p>'; });
+})();
+</script>
 </body>
 </html>

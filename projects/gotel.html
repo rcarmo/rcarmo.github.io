@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>gotel — Rui Carmo</title>
-<meta name="description" content="A self-contained OpenTelemetry collector with SQLite storage and built-in trace viewer.">
+<meta name="description" content="Self-contained OTel collector with SQLite storage and built-in trace viewer.">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,13 +28,10 @@ html { scroll-behavior: smooth; }
 body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; }
 a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
 code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; font-size:.875em; background:var(--border); padding:.1em .35em; border-radius:4px; }
-/* Topbar */
 .topbar { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:1px solid var(--border); backdrop-filter:blur(12px); }
 .topbar-inner { max-width:var(--max); margin:0 auto; padding:.7rem var(--gap); display:flex; align-items:center; gap:.6rem; font-size:.8rem; color:var(--muted); }
 .topbar-inner a { color:var(--muted); font-weight:500; } .topbar-inner a:hover { color:var(--text); text-decoration:none; }
-.sep { color:var(--border2); }
-.current { color:var(--text); font-weight:600; }
-/* Hero */
+.sep { color:var(--border2); } .current { color:var(--text); font-weight:600; }
 .hero-wrap { max-width:var(--max); margin:0 auto; padding:3rem var(--gap) 2rem; }
 .hero-inner { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
 @media(max-width:560px){ .hero-inner { grid-template-columns:1fr; } .hero-logo { display:none; } }
@@ -49,10 +46,10 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 .dot-Swift{background:#F05138} .dot-C{background:#555} .dot-Cpp{background:#f34b7d}
 .dot-Dockerfile{background:#384d54} .dot-Shell{background:#89e051} .dot-misc{background:#7a8190}
 .badge { display:inline-flex; align-items:center; padding:.2rem .6rem; border-radius:2em; font-size:.7rem; font-weight:700; letter-spacing:.03em; }
-.badge-active   { background:rgba(52,211,153,.1); color:#34d399; border:1px solid rgba(52,211,153,.2); }
-.badge-stable   { background:rgba(79,142,247,.1); color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
-.badge-maintained { background:rgba(167,139,250,.1); color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
-.badge-archived { background:rgba(251,191,36,.1); color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
+.badge-active   { background:rgba(52,211,153,.1);  color:#34d399; border:1px solid rgba(52,211,153,.2); }
+.badge-stable   { background:rgba(79,142,247,.1);  color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
+.badge-maintained{background:rgba(167,139,250,.1);color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
+.badge-archived { background:rgba(251,191,36,.1);  color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
 @media(prefers-color-scheme:light){
   .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
   .badge-stable{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
@@ -65,19 +62,20 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 .btn { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem 1.1rem; border-radius:var(--radius); font-size:.85rem; font-weight:500; transition:all .15s; }
 .btn-p { background:var(--accent); color:#fff; } .btn-p:hover { filter:brightness(1.1); text-decoration:none; }
 .btn-g { background:transparent; color:var(--text); border:1px solid var(--border2); } .btn-g:hover { border-color:var(--accent); color:var(--accent); text-decoration:none; }
-/* Stats */
 .stats-wrap { max-width:var(--max); margin:0 auto; padding:0 var(--gap) 2rem; }
 .stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
 .stat { background:var(--card); padding:1rem 1.2rem; }
 .stat-l { font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:.2rem; }
 .stat-v { font-size:1.45rem; font-weight:700; letter-spacing:-.02em; }
 .stat-sub { font-size:.7rem; color:var(--muted); margin-top:.1rem; }
-/* Sections */
 .section { max-width:var(--max); margin:0 auto; padding:2.5rem var(--gap); border-top:1px solid var(--border); }
 .eyebrow { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:.4rem; }
-.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.5rem; }
+.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.25rem; }
 /* About */
-.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:680px; }
+.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:700px; }
+/* How it works — multi-paragraph prose */
+.how { display:flex; flex-direction:column; gap:1.1rem; max-width:700px; }
+.how p { font-size:.95rem; line-height:1.8; color:var(--muted); }
 /* Feature grid */
 .features { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
 .feat { background:var(--card); padding:1.4rem; display:flex; flex-direction:column; gap:.45rem; }
@@ -87,19 +85,20 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 /* Diagram */
 .diagram-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; padding:1.5rem; }
 .diagram-wrap svg { width:100%; height:auto; display:block; }
-/* Releases */
-.releases { display:flex; flex-direction:column; gap:.6rem; }
-.release { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1.1rem; }
-.rel-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:.5rem; margin-bottom:.25rem; }
-.rel-tag { font-family:ui-monospace,monospace; font-size:.8rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; }
-.rel-name { font-weight:500; font-size:.88rem; }
-.rel-date { color:var(--dim); font-size:.75rem; margin-left:auto; }
-.rel-body { font-size:.8rem; color:var(--muted); white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:hidden; }
+/* Releases — dynamically loaded */
+#releases-list { display:flex; flex-direction:column; gap:.5rem; }
+.rel { display:grid; grid-template-columns:7rem 1fr; gap:1rem; padding:.7rem 0; border-bottom:1px solid var(--border); font-size:.875rem; align-items:start; }
+.rel:last-child { border-bottom:none; }
+.rel-date { color:var(--dim); font-size:.78rem; white-space:nowrap; padding-top:.1rem; }
+.rel-right { display:flex; flex-direction:column; gap:.25rem; }
+.rel-tag { font-family:ui-monospace,monospace; font-size:.75rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; display:inline-block; }
+.rel-name { font-weight:500; color:var(--text); font-size:.88rem; }
+.rel-body { font-size:.8rem; color:var(--muted); line-height:1.5; }
+.rel-loading { color:var(--dim); font-size:.85rem; }
 /* Posts */
 .posts { display:flex; flex-direction:column; gap:.45rem; }
 .post { display:grid; grid-template-columns:6rem 1fr; gap:.75rem; font-size:.875rem; }
 .post-date { color:var(--dim); font-size:.75rem; padding-top:.12rem; white-space:nowrap; }
-/* Footer */
 footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
 .foot-l { font-size:.78rem; color:var(--dim); }
 .foot-r { display:flex; gap:1.5rem; font-size:.78rem; }
@@ -119,7 +118,7 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
     <div class="hero-inner">
       <div class="hero">
         <h1><a href="https://github.com/rcarmo/gotel" target="_blank" rel="noopener">gotel</a></h1>
-        <p class="tagline">A self-contained OpenTelemetry collector with SQLite storage and built-in trace viewer.</p>
+        <p class="tagline">Self-contained OTel collector with SQLite storage and built-in trace viewer.</p>
         <div class="meta">
           <span class="meta-stars">★ 5</span>
           
@@ -135,26 +134,45 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
       <div class="hero-logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAMAAABrrFhUAAAAAXNSR0IArs4c6QAAAwBQTFRFR3BMO0RBWFhQU1tVZWZWRk1JVlhQSlRPVllQQk1KOEhIOEhKO1FYf149d1pAgl49blEziGZGj25MmXdVnn5cqIVhrYxotZNvu5p0waF7x6iDzK6I0bSQ1rqX2r+d3cWk4syortPUx9vbhMDDdMXJb8HGwp51o3xPmnNGuIU5sX4xq3cnnmwlbJ3KZpjGYZPCWo6+VYi5TX+xRHapPm+hOWiaLF2SNWGTNFyLLlaGLlSBKlF/KE57Jkt2JEdxIEJqGj1lFjddEjFVDitNDCVECyI/EihCFi5IHDVSJD1aHztTJURbJ0VfKEx2RoWMRoiQQ4KKO3V9OXF5OnN6P3h8P36DQYGGRYSJSYmOTI2TUJKYUZifXJyhQ2VlRHFyRH2CTI+WRIWLTI6WT5GXXaSqU56kdZttaXFqWmRhUVdURkxPOkNGMjk8Jy8yHSYpFh0gkpaUf4eGbn6DOVtb/Pz6+fn29vby8vPv7/Ds6+zo5+jk4+Tf39/b29vX1tfS0dHNy8vHxsS/vr67s7i1rbCtpamnl6qsvsXFlNvdkdnbjtfaitTXhtHVg87SgMzQfcrOe8nNesjMeMbLd8XKdsTJdcPIc8LHcsDFcL/Dbr3CbLvAarm+aLe9ZrW7ZbO4Y7G3Yq+1YK+1X62zXauxXKmvWqetWKWsV6SpVqKpVaGnVJ+mUp2jUJqhTpmfTZadS5SbSZKYR4+WRoyTRIqRQoiPQYaMP4OLPYGJPH+GO32EO3yCOXqBOHh/N3d9NXV7NHN4NHF1MG92MG1yLWpwK2ZtKGJoJV9kJFtdH1deHVNaG09WF0lRE0FMDDdCTHByBBcxBBg1Bh07XT4ffUcIhVEMkVoNmWEQoWcQpm0UqnEWsHUStnoSvIAUwYYWxosYy5Aaz5Uc05oe1p0f2aIi3ack4qwo5bIr6bcw7L0z78E28cU99MtE99BJ+NRQ98469ckv9MMk7bwgnnZDoXlIrIFON3B3J1BrcMDFarvAgaSMbr7DaLi+YbC1iKSB7r4imuSaIx+QjQAAAQB0Uk5TAAEECA0QGCArNkRSc7r6//7+/v7///7////////////////8w7vObc7+///+///////////////////////////////////////bi7nt8tnDl7DN+/////7+/v78PlBppIPA7/7//v///////////////v3///////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////7/////////u0lFl+fl1NqYJ6d2SRWAAeMKLikAACrjSURBVHja7HoLsGRVee73rbX37sc5MwwCiTH3Vt2k4vUauamUIRI18YEiKDGGMwPMCEmR8hEhaHygVamYpBKxTImCAhJBAigwChFMSsaoREM0FR3NgzyFPBAfwMDMMJx5nNPde6/15bDW6l67TzGlnDahgufrXnuvV/ee71v//6/V/xmsYx3rWMc61rGOdaxjHetYxzrWsY51rGMd61jH/1RUc/Pz87/cxfcp5haO+6njfvr4449fmi/x/Yf+0nHPPO5nnv2c5zz3uc999svnDb5LEE8IdF+8dyRbAIyM/OeOWv4+EqA6cZ9vvC0CG0ZS/h8O4ruBwf942FNO2uudM4E/jTEEQPMTp/D7wgLYP2E3oBodEERVXMi3OCcI2rTjiS8Au3tPACDnioKgvdTH7jc3goICT3ABTtkLQEAwANr3j0npbSMP6I6DT+gYkPl7BR6BPwGBF15iAfxk74ltAXP/P9AHGt8huUGQLhQY+vimBtj06frxEMAJgjPPAASA+EdY0PUdvrfY/xIFrskD7BwFjIp3KzF7o4M23fo9EqAYQATtd6QuuatrTwgIJUIU7GX8F7Ljvlcq85inpif4xpZE2QcgjHCxp0DIvF7Q3x3C7AIMTXO1gxf4q2Tn8LPkPuSQVkWBNcXUpgBCKF/LghYzQuXoQWx2QhKgKMiNS2Ifgw5G9t2R19uWoSM/5WYVYMg/9I0TIBC05+hRJDCjRldCStwDhDZEjEHzga/5DmYA3YPUsT8mRDhXGZr9tFUHJDorCjAMvKmBjtgxowD1tU1TS1CazOp1JabRNNfUkBcFJXtPEEKdQrIFpofy8q8ZiylYOuG7gfZLGOHU8MBJDKwHgDHdimBndLGPD3q9sOkzo1kE4PJ1Te28QBKAJNCe23OYwPnmKjpEiVbzD8yRwbGMIMrXqZO/RDc0Hr9s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" alt="gotel logo" loading="lazy"></div>
     </div>
   </div>
-  <div class="stats-wrap"><div class="stats">
-    <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">5</div><div class="stat-sub">on GitHub</div></div>
-    <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">0</div></div>
-    <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-Go"></span>Go</div></div>
-    <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2026</div></div>
-    <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2026-02</div></div>
-  </div></div>
-  <div class="section">
-    <div class="eyebrow">About</div>
-    <p class="about">gotel is a single-binary OpenTelemetry collector that stores traces and metrics in SQLite and includes a built-in web UI for exploring trace data. Designed for small deployments and local development where running a full Jaeger/Tempo stack is overkill. Exposes OTLP gRPC (4317), OTLP HTTP (4318), a query API (3200), and the trace viewer (3000).</p>
-  </div>
-  <div class="section">
-    <div class="eyebrow">Features</div>
-    <div class="section-title">What it does</div>
-    <div class="features">
-      <div class="feat"><div class="feat-icon">📦</div><div class="feat-title">Single binary</div><div class="feat-body">go build -o gotel . and it runs. Ships with an embedded default config — OTLP → memory_limiter → batch → SQLite. Override with config.yaml if needed.</div></div><div class="feat"><div class="feat-icon">🗄</div><div class="feat-title">SQLite storage</div><div class="feat-body">Traces and metrics stored in a local SQLite file. No external storage dependency, no volume mounts, just a file.</div></div><div class="feat"><div class="feat-icon">🌐</div><div class="feat-title">Built-in trace viewer</div><div class="feat-body">Web UI at :3000 for exploring trace data. No Grafana setup required for local development.</div></div><div class="feat"><div class="feat-icon">📊</div><div class="feat-title">OTLP gRPC and HTTP</div><div class="feat-body">Standard OTLP endpoints on ports 4317 (gRPC) and 4318 (HTTP). Drop-in replacement for the official OTel Collector for small deployments.</div></div>
+
+  <div class="stats-wrap">
+    <div class="stats">
+      <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">5</div><div class="stat-sub">on GitHub</div></div>
+      <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">0</div></div>
+      <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-Go"></span>Go</div></div>
+      <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2026</div></div>
+      <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2026-02</div></div>
     </div>
   </div>
+
+  <div class="section">
+    <div class="eyebrow">Overview</div>
+    <p class="about">gotel is a single-binary OpenTelemetry Collector that stores traces and metrics in SQLite and includes a built-in web UI. OTLP gRPC on 4317, OTLP HTTP on 4318, query API on 3200, trace viewer on 3000. No external storage, no Jaeger setup.</p>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">How it works</div>
+    <div class="section-title">Under the hood</div>
+    <div class="how"><p>gotel is a complete OpenTelemetry Collector pipeline in one binary. It accepts traces and metrics via standard OTLP endpoints, runs them through a memory_limiter and batch processor, and writes to a local SQLite database. A built-in query server exposes the trace data as a REST API; a web trace explorer provides a Jaeger-like UI.</p>
+<p>For local development and small homelab deployments, this replaces Collector + Jaeger/Tempo + Grafana with one binary and a SQLite file. An embedded default config works immediately; drop a config.yaml alongside the binary to switch exporters, add processors, or point at a remote Prometheus endpoint.</p></div>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">Capabilities</div>
+    <div class="section-title">What it does</div>
+    <div class="features">
+      <div class="feat"><div class="feat-icon">📦</div><div class="feat-title">Single binary</div><div class="feat-body">go build -o gotel . and it runs. Embedded default config, works immediately.</div></div><div class="feat"><div class="feat-icon">🗄</div><div class="feat-title">SQLite storage</div><div class="feat-body">Traces and metrics in a local file. No external storage dependency.</div></div><div class="feat"><div class="feat-icon">🌐</div><div class="feat-title">Built-in trace viewer</div><div class="feat-body">Jaeger-like UI at :3000. No Grafana setup needed for local development.</div></div><div class="feat"><div class="feat-icon">📊</div><div class="feat-title">Standard OTLP endpoints</div><div class="feat-body">gRPC on 4317, HTTP on 4318. Drop-in for the official OTel Collector for small deployments.</div></div>
+    </div>
+  </div>
+
   
-  
+
+  <div class="section">
+    <div class="eyebrow">History</div>
+    <div class="section-title">Releases</div>
+    <div id="releases-list"><p class="rel-loading">Loading releases…</p></div>
+  </div>
+
   
 </main>
 <footer>
@@ -165,5 +183,33 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
     <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
+<script>
+(function() {
+  var el = document.getElementById('releases-list');
+  if (!el) return;
+  fetch('https://api.github.com/repos/rcarmo/gotel/releases?per_page=20')
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .then(function(releases) {
+      if (!releases || !releases.length) { el.innerHTML = '<p class="rel-loading">No releases yet.</p>'; return; }
+      // Sort by published_at descending (API already does this, but be explicit)
+      releases.sort(function(a,b){ return new Date(b.published_at)-new Date(a.published_at); });
+      el.innerHTML = releases.slice(0,12).map(function(r) {
+        var d = new Date(r.published_at);
+        var dateFmt = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        var body = (r.body||'').trim().split('\n')[0].slice(0,160);
+        return '<div class="rel">'
+          + '<span class="rel-date">' + dateFmt + '</span>'
+          + '<div class="rel-right">'
+          + '<div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">'
+          + '<span class="rel-tag">' + r.tag_name + '</span>'
+          + (r.name && r.name !== r.tag_name ? '<span class="rel-name">' + r.name.replace(/</g,'&lt;') + '</span>' : '')
+          + '</div>'
+          + (body ? '<div class="rel-body">' + body.replace(/</g,'&lt;') + '</div>' : '')
+          + '</div></div>';
+      }).join('');
+    })
+    .catch(function() { el.innerHTML = '<p class="rel-loading">Could not load releases.</p>'; });
+})();
+</script>
 </body>
 </html>

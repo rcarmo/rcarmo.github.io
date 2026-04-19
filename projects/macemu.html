@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>macemu — Rui Carmo</title>
-<meta name="description" content="Basilisk II and SheepShaver for Raspberry Pi — SDL2, no X11, pre-built .deb packages.">
+<meta name="description" content="Basilisk II and SheepShaver for Raspberry Pi — SDL2 framebuffer, pre-built .deb packages.">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -28,13 +28,10 @@ html { scroll-behavior: smooth; }
 body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; }
 a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
 code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; font-size:.875em; background:var(--border); padding:.1em .35em; border-radius:4px; }
-/* Topbar */
 .topbar { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:1px solid var(--border); backdrop-filter:blur(12px); }
 .topbar-inner { max-width:var(--max); margin:0 auto; padding:.7rem var(--gap); display:flex; align-items:center; gap:.6rem; font-size:.8rem; color:var(--muted); }
 .topbar-inner a { color:var(--muted); font-weight:500; } .topbar-inner a:hover { color:var(--text); text-decoration:none; }
-.sep { color:var(--border2); }
-.current { color:var(--text); font-weight:600; }
-/* Hero */
+.sep { color:var(--border2); } .current { color:var(--text); font-weight:600; }
 .hero-wrap { max-width:var(--max); margin:0 auto; padding:3rem var(--gap) 2rem; }
 .hero-inner { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
 @media(max-width:560px){ .hero-inner { grid-template-columns:1fr; } .hero-logo { display:none; } }
@@ -49,10 +46,10 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 .dot-Swift{background:#F05138} .dot-C{background:#555} .dot-Cpp{background:#f34b7d}
 .dot-Dockerfile{background:#384d54} .dot-Shell{background:#89e051} .dot-misc{background:#7a8190}
 .badge { display:inline-flex; align-items:center; padding:.2rem .6rem; border-radius:2em; font-size:.7rem; font-weight:700; letter-spacing:.03em; }
-.badge-active   { background:rgba(52,211,153,.1); color:#34d399; border:1px solid rgba(52,211,153,.2); }
-.badge-stable   { background:rgba(79,142,247,.1); color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
-.badge-maintained { background:rgba(167,139,250,.1); color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
-.badge-archived { background:rgba(251,191,36,.1); color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
+.badge-active   { background:rgba(52,211,153,.1);  color:#34d399; border:1px solid rgba(52,211,153,.2); }
+.badge-stable   { background:rgba(79,142,247,.1);  color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
+.badge-maintained{background:rgba(167,139,250,.1);color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
+.badge-archived { background:rgba(251,191,36,.1);  color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
 @media(prefers-color-scheme:light){
   .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
   .badge-stable{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
@@ -65,19 +62,20 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 .btn { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem 1.1rem; border-radius:var(--radius); font-size:.85rem; font-weight:500; transition:all .15s; }
 .btn-p { background:var(--accent); color:#fff; } .btn-p:hover { filter:brightness(1.1); text-decoration:none; }
 .btn-g { background:transparent; color:var(--text); border:1px solid var(--border2); } .btn-g:hover { border-color:var(--accent); color:var(--accent); text-decoration:none; }
-/* Stats */
 .stats-wrap { max-width:var(--max); margin:0 auto; padding:0 var(--gap) 2rem; }
 .stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
 .stat { background:var(--card); padding:1rem 1.2rem; }
 .stat-l { font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:.2rem; }
 .stat-v { font-size:1.45rem; font-weight:700; letter-spacing:-.02em; }
 .stat-sub { font-size:.7rem; color:var(--muted); margin-top:.1rem; }
-/* Sections */
 .section { max-width:var(--max); margin:0 auto; padding:2.5rem var(--gap); border-top:1px solid var(--border); }
 .eyebrow { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:.4rem; }
-.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.5rem; }
+.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.25rem; }
 /* About */
-.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:680px; }
+.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:700px; }
+/* How it works — multi-paragraph prose */
+.how { display:flex; flex-direction:column; gap:1.1rem; max-width:700px; }
+.how p { font-size:.95rem; line-height:1.8; color:var(--muted); }
 /* Feature grid */
 .features { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
 .feat { background:var(--card); padding:1.4rem; display:flex; flex-direction:column; gap:.45rem; }
@@ -87,19 +85,20 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 /* Diagram */
 .diagram-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; padding:1.5rem; }
 .diagram-wrap svg { width:100%; height:auto; display:block; }
-/* Releases */
-.releases { display:flex; flex-direction:column; gap:.6rem; }
-.release { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1.1rem; }
-.rel-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:.5rem; margin-bottom:.25rem; }
-.rel-tag { font-family:ui-monospace,monospace; font-size:.8rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; }
-.rel-name { font-weight:500; font-size:.88rem; }
-.rel-date { color:var(--dim); font-size:.75rem; margin-left:auto; }
-.rel-body { font-size:.8rem; color:var(--muted); white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:hidden; }
+/* Releases — dynamically loaded */
+#releases-list { display:flex; flex-direction:column; gap:.5rem; }
+.rel { display:grid; grid-template-columns:7rem 1fr; gap:1rem; padding:.7rem 0; border-bottom:1px solid var(--border); font-size:.875rem; align-items:start; }
+.rel:last-child { border-bottom:none; }
+.rel-date { color:var(--dim); font-size:.78rem; white-space:nowrap; padding-top:.1rem; }
+.rel-right { display:flex; flex-direction:column; gap:.25rem; }
+.rel-tag { font-family:ui-monospace,monospace; font-size:.75rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; display:inline-block; }
+.rel-name { font-weight:500; color:var(--text); font-size:.88rem; }
+.rel-body { font-size:.8rem; color:var(--muted); line-height:1.5; }
+.rel-loading { color:var(--dim); font-size:.85rem; }
 /* Posts */
 .posts { display:flex; flex-direction:column; gap:.45rem; }
 .post { display:grid; grid-template-columns:6rem 1fr; gap:.75rem; font-size:.875rem; }
 .post-date { color:var(--dim); font-size:.75rem; padding-top:.12rem; white-space:nowrap; }
-/* Footer */
 footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
 .foot-l { font-size:.78rem; color:var(--dim); }
 .foot-r { display:flex; gap:1.5rem; font-size:.78rem; }
@@ -119,7 +118,7 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
     <div class="hero-inner">
       <div class="hero">
         <h1><a href="https://github.com/rcarmo/macemu" target="_blank" rel="noopener">macemu</a></h1>
-        <p class="tagline">Basilisk II and SheepShaver for Raspberry Pi — SDL2, no X11, pre-built .deb packages.</p>
+        <p class="tagline">Basilisk II and SheepShaver for Raspberry Pi — SDL2 framebuffer, pre-built .deb packages.</p>
         <div class="meta">
           <span class="meta-stars">★ 3</span>
           
@@ -135,26 +134,45 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
       
     </div>
   </div>
-  <div class="stats-wrap"><div class="stats">
-    <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">3</div><div class="stat-sub">on GitHub</div></div>
-    <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">0</div></div>
-    <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-Cpp"></span>C++</div></div>
-    <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2025</div></div>
-    <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2026-04</div></div>
-  </div></div>
-  <div class="section">
-    <div class="eyebrow">About</div>
-    <p class="about">This fork of the Basilisk II (68k Mac) and SheepShaver (PowerPC Mac) emulators targets Raspberry Pi with SDL2 framebuffer/KMS rendering — no X11 or desktop required. Pre-built .deb packages for arm64 are available in releases. Build scripts use an optimised SDL2 build that runs on the Pi's bare console, making it practical to run classic Mac software on a headless Raspberry Pi.</p>
-  </div>
-  <div class="section">
-    <div class="eyebrow">Features</div>
-    <div class="section-title">What it does</div>
-    <div class="features">
-      <div class="feat"><div class="feat-icon">🥧</div><div class="feat-title">Raspberry Pi optimised</div><div class="feat-body">SDL2 built with framebuffer/KMS, no OpenGL, no X11. Runs on a headless Pi Zero through Pi 5 — no desktop environment needed.</div></div><div class="feat"><div class="feat-icon">📦</div><div class="feat-title">Pre-built packages</div><div class="feat-body">arm64 .deb packages available from GitHub Releases. dpkg -i and you're done. Build from source instructions are included for other targets.</div></div><div class="feat"><div class="feat-icon">💻</div><div class="feat-title">68k and PowerPC</div><div class="feat-body">Basilisk II runs System 6–8 on 68k. SheepShaver runs Mac OS 8.6–9.0.4 on PowerPC. Both emulators share the same build system.</div></div><div class="feat"><div class="feat-icon">🖥</div><div class="feat-title">Direct framebuffer access</div><div class="feat-body">SDL2 framebuffer backend writes directly to the display buffer — lower latency and less overhead than running through X11 or a compositor.</div></div>
+
+  <div class="stats-wrap">
+    <div class="stats">
+      <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">3</div><div class="stat-sub">on GitHub</div></div>
+      <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">0</div></div>
+      <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-Cpp"></span>C++</div></div>
+      <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2025</div></div>
+      <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2026-04</div></div>
     </div>
   </div>
+
+  <div class="section">
+    <div class="eyebrow">Overview</div>
+    <p class="about">This fork targets Raspberry Pi with SDL2 framebuffer/KMS rendering — no X11, no desktop. Pre-built arm64 .deb packages in releases. Basilisk II runs System 6–8; SheepShaver runs Mac OS 8.6–9.0.4.</p>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">How it works</div>
+    <div class="section-title">Under the hood</div>
+    <div class="how"><p>The SDL2 build is compiled without OpenGL, Wayland, and X11 support to reduce dependencies and improve startup time on Pi hardware. The framebuffer/KMS backend writes directly to the display without going through a compositor, which gives lower latency and less overhead than running through X11.</p>
+<p>Pre-built .deb packages for arm64 are available from GitHub Releases for straightforward installation: download, dpkg -i, and run. Build-from-source instructions are included for other architectures. This fork is used as the emulation layer in the Maclock project — a $20 alarm-clock-shaped replica of a Mac Classic running real System 7 software.</p></div>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">Capabilities</div>
+    <div class="section-title">What it does</div>
+    <div class="features">
+      <div class="feat"><div class="feat-icon">🥧</div><div class="feat-title">Raspberry Pi optimised</div><div class="feat-body">SDL2 framebuffer/KMS, no X11. Runs on a headless Pi Zero through Pi 5.</div></div><div class="feat"><div class="feat-icon">📦</div><div class="feat-title">Pre-built .deb packages</div><div class="feat-body">arm64 packages in GitHub Releases. dpkg -i and run.</div></div><div class="feat"><div class="feat-icon">💻</div><div class="feat-title">68k and PowerPC</div><div class="feat-body">Basilisk II for System 6–8. SheepShaver for Mac OS 8.6–9.0.4.</div></div><div class="feat"><div class="feat-icon">🖥</div><div class="feat-title">Direct framebuffer</div><div class="feat-body">Lower latency than X11. No desktop environment required.</div></div>
+    </div>
+  </div>
+
   
-  
+
+  <div class="section">
+    <div class="eyebrow">History</div>
+    <div class="section-title">Releases</div>
+    <div id="releases-list"><p class="rel-loading">Loading releases…</p></div>
+  </div>
+
   
   <div class="section">
     <div class="eyebrow">Writing</div>
@@ -176,5 +194,33 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
     <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
+<script>
+(function() {
+  var el = document.getElementById('releases-list');
+  if (!el) return;
+  fetch('https://api.github.com/repos/rcarmo/macemu/releases?per_page=20')
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .then(function(releases) {
+      if (!releases || !releases.length) { el.innerHTML = '<p class="rel-loading">No releases yet.</p>'; return; }
+      // Sort by published_at descending (API already does this, but be explicit)
+      releases.sort(function(a,b){ return new Date(b.published_at)-new Date(a.published_at); });
+      el.innerHTML = releases.slice(0,12).map(function(r) {
+        var d = new Date(r.published_at);
+        var dateFmt = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        var body = (r.body||'').trim().split('\n')[0].slice(0,160);
+        return '<div class="rel">'
+          + '<span class="rel-date">' + dateFmt + '</span>'
+          + '<div class="rel-right">'
+          + '<div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">'
+          + '<span class="rel-tag">' + r.tag_name + '</span>'
+          + (r.name && r.name !== r.tag_name ? '<span class="rel-name">' + r.name.replace(/</g,'&lt;') + '</span>' : '')
+          + '</div>'
+          + (body ? '<div class="rel-body">' + body.replace(/</g,'&lt;') + '</div>' : '')
+          + '</div></div>';
+      }).join('');
+    })
+    .catch(function() { el.innerHTML = '<p class="rel-loading">Could not load releases.</p>'; });
+})();
+</script>
 </body>
 </html>

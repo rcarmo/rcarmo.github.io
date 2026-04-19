@@ -28,13 +28,10 @@ html { scroll-behavior: smooth; }
 body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; }
 a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
 code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; font-size:.875em; background:var(--border); padding:.1em .35em; border-radius:4px; }
-/* Topbar */
 .topbar { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:1px solid var(--border); backdrop-filter:blur(12px); }
 .topbar-inner { max-width:var(--max); margin:0 auto; padding:.7rem var(--gap); display:flex; align-items:center; gap:.6rem; font-size:.8rem; color:var(--muted); }
 .topbar-inner a { color:var(--muted); font-weight:500; } .topbar-inner a:hover { color:var(--text); text-decoration:none; }
-.sep { color:var(--border2); }
-.current { color:var(--text); font-weight:600; }
-/* Hero */
+.sep { color:var(--border2); } .current { color:var(--text); font-weight:600; }
 .hero-wrap { max-width:var(--max); margin:0 auto; padding:3rem var(--gap) 2rem; }
 .hero-inner { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
 @media(max-width:560px){ .hero-inner { grid-template-columns:1fr; } .hero-logo { display:none; } }
@@ -49,10 +46,10 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 .dot-Swift{background:#F05138} .dot-C{background:#555} .dot-Cpp{background:#f34b7d}
 .dot-Dockerfile{background:#384d54} .dot-Shell{background:#89e051} .dot-misc{background:#7a8190}
 .badge { display:inline-flex; align-items:center; padding:.2rem .6rem; border-radius:2em; font-size:.7rem; font-weight:700; letter-spacing:.03em; }
-.badge-active   { background:rgba(52,211,153,.1); color:#34d399; border:1px solid rgba(52,211,153,.2); }
-.badge-stable   { background:rgba(79,142,247,.1); color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
-.badge-maintained { background:rgba(167,139,250,.1); color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
-.badge-archived { background:rgba(251,191,36,.1); color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
+.badge-active   { background:rgba(52,211,153,.1);  color:#34d399; border:1px solid rgba(52,211,153,.2); }
+.badge-stable   { background:rgba(79,142,247,.1);  color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
+.badge-maintained{background:rgba(167,139,250,.1);color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
+.badge-archived { background:rgba(251,191,36,.1);  color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
 @media(prefers-color-scheme:light){
   .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
   .badge-stable{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
@@ -65,19 +62,20 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 .btn { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem 1.1rem; border-radius:var(--radius); font-size:.85rem; font-weight:500; transition:all .15s; }
 .btn-p { background:var(--accent); color:#fff; } .btn-p:hover { filter:brightness(1.1); text-decoration:none; }
 .btn-g { background:transparent; color:var(--text); border:1px solid var(--border2); } .btn-g:hover { border-color:var(--accent); color:var(--accent); text-decoration:none; }
-/* Stats */
 .stats-wrap { max-width:var(--max); margin:0 auto; padding:0 var(--gap) 2rem; }
 .stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
 .stat { background:var(--card); padding:1rem 1.2rem; }
 .stat-l { font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:.2rem; }
 .stat-v { font-size:1.45rem; font-weight:700; letter-spacing:-.02em; }
 .stat-sub { font-size:.7rem; color:var(--muted); margin-top:.1rem; }
-/* Sections */
 .section { max-width:var(--max); margin:0 auto; padding:2.5rem var(--gap); border-top:1px solid var(--border); }
 .eyebrow { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:.4rem; }
-.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.5rem; }
+.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.25rem; }
 /* About */
-.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:680px; }
+.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:700px; }
+/* How it works — multi-paragraph prose */
+.how { display:flex; flex-direction:column; gap:1.1rem; max-width:700px; }
+.how p { font-size:.95rem; line-height:1.8; color:var(--muted); }
 /* Feature grid */
 .features { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
 .feat { background:var(--card); padding:1.4rem; display:flex; flex-direction:column; gap:.45rem; }
@@ -87,19 +85,20 @@ code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; 
 /* Diagram */
 .diagram-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; padding:1.5rem; }
 .diagram-wrap svg { width:100%; height:auto; display:block; }
-/* Releases */
-.releases { display:flex; flex-direction:column; gap:.6rem; }
-.release { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1.1rem; }
-.rel-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:.5rem; margin-bottom:.25rem; }
-.rel-tag { font-family:ui-monospace,monospace; font-size:.8rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; }
-.rel-name { font-weight:500; font-size:.88rem; }
-.rel-date { color:var(--dim); font-size:.75rem; margin-left:auto; }
-.rel-body { font-size:.8rem; color:var(--muted); white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:hidden; }
+/* Releases — dynamically loaded */
+#releases-list { display:flex; flex-direction:column; gap:.5rem; }
+.rel { display:grid; grid-template-columns:7rem 1fr; gap:1rem; padding:.7rem 0; border-bottom:1px solid var(--border); font-size:.875rem; align-items:start; }
+.rel:last-child { border-bottom:none; }
+.rel-date { color:var(--dim); font-size:.78rem; white-space:nowrap; padding-top:.1rem; }
+.rel-right { display:flex; flex-direction:column; gap:.25rem; }
+.rel-tag { font-family:ui-monospace,monospace; font-size:.75rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; display:inline-block; }
+.rel-name { font-weight:500; color:var(--text); font-size:.88rem; }
+.rel-body { font-size:.8rem; color:var(--muted); line-height:1.5; }
+.rel-loading { color:var(--dim); font-size:.85rem; }
 /* Posts */
 .posts { display:flex; flex-direction:column; gap:.45rem; }
 .post { display:grid; grid-template-columns:6rem 1fr; gap:.75rem; font-size:.875rem; }
 .post-date { color:var(--dim); font-size:.75rem; padding-top:.12rem; white-space:nowrap; }
-/* Footer */
 footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
 .foot-l { font-size:.78rem; color:var(--dim); }
 .foot-r { display:flex; gap:1.5rem; font-size:.78rem; }
@@ -135,28 +134,42 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
       <div class="hero-logo"><img src="data:image/png;base64,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" alt="piku/piku logo" loading="lazy"></div>
     </div>
   </div>
-  <div class="stats-wrap"><div class="stats">
-    <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">6,569</div><div class="stat-sub">on GitHub</div></div>
-    <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">155</div></div>
-    <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-Python"></span>Python</div></div>
-    <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2016</div></div>
-    <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2026-01</div></div>
-  </div></div>
-  <div class="section">
-    <div class="eyebrow">About</div>
-    <p class="about">piku is a single Python script installed as a git post-receive hook. Push your code, piku reads the Procfile, installs dependencies into a per-app virtualenv/gopath/node_modules, starts your workers under uwsgi, and wires them up behind nginx with optional Let's Encrypt TLS. The whole runtime fits in ~1500 lines of readable Python and runs on a first-generation Raspberry Pi.</p>
-  </div>
-  <div class="section">
-    <div class="eyebrow">Features</div>
-    <div class="section-title">What it does</div>
-    <div class="features">
-      <div class="feat"><div class="feat-icon">⌥</div><div class="feat-title">Heroku-style workflow</div><div class="feat-body">git remote add piku piku@yourserver:appname. git push piku main. That's the entire deploy flow.</div></div><div class="feat"><div class="feat-icon">🌐</div><div class="feat-title">Python, Node, Go, Clojure, Ruby, Java, PHP, static</div><div class="feat-body">If it runs in a shell it runs in piku. Language runtimes are detected from lock files and Procfiles.</div></div><div class="feat"><div class="feat-icon">🔒</div><div class="feat-title">Automatic TLS</div><div class="feat-body">Let's Encrypt certificates via ACME, virtual host routing, zero-downtime deploys, and static file serving — all configured through a single ENV file.</div></div><div class="feat"><div class="feat-icon">⬆</div><div class="feat-title">Live scaling and config</div><div class="feat-body">ps:scale web=3 and config:set KEY=val take effect instantly without a redeploy or restart.</div></div><div class="feat"><div class="feat-icon">🐧</div><div class="feat-title">Any POSIX host</div><div class="feat-body">Runs on Debian, Ubuntu, Alpine, FreeBSD, WSL. Tested on ARM and Intel from a $35 Raspberry Pi to cloud VMs. Stable since 2016, maintained by the piku org.</div></div>
+
+  <div class="stats-wrap">
+    <div class="stats">
+      <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">6,569</div><div class="stat-sub">on GitHub</div></div>
+      <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">155</div></div>
+      <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-Python"></span>Python</div></div>
+      <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2016</div></div>
+      <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2026-01</div></div>
     </div>
   </div>
+
+  <div class="section">
+    <div class="eyebrow">Overview</div>
+    <p class="about">piku is a single Python script installed as a git post-receive hook. Push your code, piku reads the Procfile, installs dependencies, starts your workers under uwsgi, and wires them up behind nginx with optional Let's Encrypt TLS. The whole runtime fits in ~1,500 lines of readable Python 3 and runs on a first-generation Raspberry Pi.</p>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">How it works</div>
+    <div class="section-title">Under the hood</div>
+    <div class="how"><p>piku runs as a git post-receive hook on your server. When you push a commit, it detects your application type from lock files and a Procfile, installs dependencies into an isolated per-app environment (virtualenv for Python, node_modules for Node, a separate GOPATH for Go), and starts your declared processes under uwsgi acting as a process supervisor.</p>
+<p>Nginx is reconfigured automatically on each deploy. Virtual hosts, TLS certificates (via Let's Encrypt ACME), static file serving paths, and cache rules are all driven by a single ENV file you commit alongside your code. Zero-downtime deploys work by replacing workers before shutting down the old ones. ps:scale web=3 and config:set KEY=val take effect without touching your code.</p>
+<p>The entire implementation stays around 1,500 lines of Python with no external dependencies. You can read the whole thing in an afternoon. That deliberate simplicity is a design goal: piku covers 80% of common deployment use cases without becoming a platform.</p></div>
+  </div>
+
+  <div class="section">
+    <div class="eyebrow">Capabilities</div>
+    <div class="section-title">What it does</div>
+    <div class="features">
+      <div class="feat"><div class="feat-icon">⌥</div><div class="feat-title">Heroku-style workflow</div><div class="feat-body">git remote add piku piku@yourserver:appname. git push piku main. The entire deploy flow.</div></div><div class="feat"><div class="feat-icon">🌐</div><div class="feat-title">Python, Node, Go, Clojure, Ruby, Java, PHP, static</div><div class="feat-body">Language runtimes detected from lock files and Procfiles. If it runs in a shell it runs in piku.</div></div><div class="feat"><div class="feat-icon">🔒</div><div class="feat-title">Automatic TLS</div><div class="feat-body">Let's Encrypt via ACME, virtual host routing via nginx, zero-downtime worker replacement.</div></div><div class="feat"><div class="feat-icon">⬆</div><div class="feat-title">Live scaling and config</div><div class="feat-body">ps:scale web=3 and config:set KEY=val take effect instantly without a redeploy.</div></div><div class="feat"><div class="feat-icon">🐧</div><div class="feat-title">Any POSIX host</div><div class="feat-body">Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016, maintained by the piku org.</div></div>
+    </div>
+  </div>
+
   
   <div class="section">
     <div class="eyebrow">Architecture</div>
-    <div class="section-title">How it works</div>
+    <div class="section-title">System diagram</div>
     <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 240" width="640" height="240">
   <style>
     @media (prefers-color-scheme: dark) {
@@ -233,30 +246,13 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
 
 </svg></div>
   </div>
-  
+
   <div class="section">
-    <div class="eyebrow">Versions</div>
+    <div class="eyebrow">History</div>
     <div class="section-title">Releases</div>
-    <div class="releases">
-      
-      <div class="release">
-        <div class="rel-head">
-          <span class="rel-tag">v1.0.0</span>
-          <span class="rel-name">The One</span>
-          <span class="rel-date">2024-04-06</span>
-        </div>
-        <div class="rel-body">Just a stability milestone, really.</div>
-      </div>
-      <div class="release">
-        <div class="rel-head">
-          <span class="rel-tag">legacy</span>
-          <span class="rel-name">The Legacy Edition</span>
-          <span class="rel-date">2023-03-23</span>
-        </div>
-        <div class="rel-body">This is a snapshot of the source tree that should be suitable for Python 3.5-3.7 on Debian 9/10 and Ubuntu 16.04/18.04.</div>
-      </div>
-    </div>
+    <div id="releases-list"><p class="rel-loading">Loading releases…</p></div>
   </div>
+
   
   <div class="section">
     <div class="eyebrow">Writing</div>
@@ -326,5 +322,33 @@ footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border
     <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
+<script>
+(function() {
+  var el = document.getElementById('releases-list');
+  if (!el) return;
+  fetch('https://api.github.com/repos/piku/piku/releases?per_page=20')
+    .then(function(r){ return r.ok ? r.json() : []; })
+    .then(function(releases) {
+      if (!releases || !releases.length) { el.innerHTML = '<p class="rel-loading">No releases yet.</p>'; return; }
+      // Sort by published_at descending (API already does this, but be explicit)
+      releases.sort(function(a,b){ return new Date(b.published_at)-new Date(a.published_at); });
+      el.innerHTML = releases.slice(0,12).map(function(r) {
+        var d = new Date(r.published_at);
+        var dateFmt = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        var body = (r.body||'').trim().split('\n')[0].slice(0,160);
+        return '<div class="rel">'
+          + '<span class="rel-date">' + dateFmt + '</span>'
+          + '<div class="rel-right">'
+          + '<div style="display:flex;align-items:center;gap:.6rem;flex-wrap:wrap">'
+          + '<span class="rel-tag">' + r.tag_name + '</span>'
+          + (r.name && r.name !== r.tag_name ? '<span class="rel-name">' + r.name.replace(/</g,'&lt;') + '</span>' : '')
+          + '</div>'
+          + (body ? '<div class="rel-body">' + body.replace(/</g,'&lt;') + '</div>' : '')
+          + '</div></div>';
+      }).join('');
+    })
+    .catch(function() { el.innerHTML = '<p class="rel-loading">Could not load releases.</p>'; });
+})();
+</script>
 </body>
 </html>
