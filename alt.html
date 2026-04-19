@@ -122,7 +122,7 @@ import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShade
 const CLUSTERS = {
   highlight: {
     pos: new THREE.Vector3(0, 0, 0),
-    color: 0x22d3ee,
+    color: 0x00ffee,
     projects: [
       { id:'piclaw', name:'piclaw', stars:526, lang:'TypeScript',
         desc:'Self-hosted AI agent workspace — streaming UI, persistent state, built-in tools.',
@@ -131,7 +131,7 @@ const CLUSTERS = {
   },
   piku: {
     pos: new THREE.Vector3(-22, 0, -8),
-    color: 0xfbbf24,
+    color: 0xffdd00,
     projects: [
       { id:'piku', name:'piku/piku', stars:6569, lang:'Python',
         desc:'The tiniest PaaS — git push deployments to your own server.',
@@ -140,7 +140,7 @@ const CLUSTERS = {
   },
   ai: {
     pos: new THREE.Vector3(20, 0, -12),
-    color: 0x34d399,
+    color: 0x00ff88,
     projects: [
       { id:'vibes',  name:'vibes', stars:142, lang:'Python',
         desc:'Mobile-first web UI for AI agents — ACP and Pi over RPC.',
@@ -164,7 +164,7 @@ const CLUSTERS = {
   },
   terminal: {
     pos: new THREE.Vector3(22, 0, 14),
-    color: 0xa78bfa,
+    color: 0xbb44ff,
     projects: [
       { id:'webterm', name:'webterm', stars:106, lang:'Go',
         desc:'Go web terminal — multi-session dashboard for AI agents.',
@@ -185,7 +185,7 @@ const CLUSTERS = {
   },
   macos: {
     pos: new THREE.Vector3(-18, 0, 16),
-    color: 0xfb923c,
+    color: 0xff6600,
     projects: [
       { id:'PhotosExport', name:'PhotosExport', stars:280, lang:'Swift',
         desc:'Export your complete Apple Photos library.',
@@ -203,7 +203,7 @@ const CLUSTERS = {
   },
   infra: {
     pos: new THREE.Vector3(2, 0, 26),
-    color: 0xf472b6,
+    color: 0xff2255,
     projects: [
       { id:'ground-init', name:'ground-init', stars:64, lang:'Python',
         desc:'Idempotent Linux bootstrap — YAML-driven, zero deps.',
@@ -222,7 +222,7 @@ const CLUSTERS = {
 };
 
 const CLUSTER_CAMERAS = {
-  overview:  { pos: new THREE.Vector3(0, 55, 52), target: new THREE.Vector3(0, 0, 4) },
+  overview:  { pos: new THREE.Vector3(0, 32, 48), target: new THREE.Vector3(0, 0, 4) },
   highlight: { pos: new THREE.Vector3(0, 12, 14), target: new THREE.Vector3(0, 0, 0) },
   piku:      { pos: new THREE.Vector3(-22, 12, 4), target: new THREE.Vector3(-22, 0, -8) },
   ai:        { pos: new THREE.Vector3(20, 12, 2), target: new THREE.Vector3(20, 0, -12) },
@@ -234,8 +234,8 @@ const CLUSTER_CAMERAS = {
 // ── Renderer ───────────────────────────────────────────────────────────────
 const wrap   = document.getElementById('canvas-wrap');
 const scene  = new THREE.Scene();
-scene.fog    = new THREE.FogExp2(0x0d1117, 0.012);
-scene.background = new THREE.Color(0x0d1117);
+scene.fog = new THREE.FogExp2(0xa8bfe8, 0.007);
+scene.background = new THREE.Color(0xa1b3f0);
 
 const camera = new THREE.PerspectiveCamera(55, wrap.clientWidth / wrap.clientHeight, 0.1, 400);
 camera.position.copy(CLUSTER_CAMERAS.overview.pos);
@@ -247,8 +247,8 @@ renderer.shadowMap.enabled = true;
 renderer.shadowMap.type = THREE.PCFSoftShadowMap;
 renderer.outputColorSpace = THREE.SRGBColorSpace;
 renderer.toneMapping = THREE.CineonToneMapping;
-renderer.toneMappingExposure = 1.6;
-renderer.setClearColor(0x0d1117);
+renderer.toneMappingExposure = 1.75;
+renderer.setClearColor(0xa1b3f0);
 wrap.appendChild(renderer.domElement);
 
 // ── Moebius post-process pass ──────────────────────────────────────────────
@@ -324,10 +324,10 @@ const MOEBIUS_FRAG = `
 
     vec4 nc=texture2D(uNormals,vUv);
     if(nc.x>2000.){
-      gl_FragColor=vec4(240./255.,234./255.,214./255.,1.); return;
+      gl_FragColor=vec4(250./255.,246./255.,230./255.,1.); return;
     }
     if(nc.x>100.){
-      gl_FragColor=vec4(sat((texture2D(tDiffuse,vUv)*.5+vec4(240./255.,234./255.,214./255.,1.)*.5).xyz,.4),1.); return;
+      gl_FragColor=vec4(sat((texture2D(tDiffuse,vUv)*.5+vec4(250./255.,246./255.,230./255.,1.)*.5).xyz,.4),1.); return;
     }
 
     float xd=randD(vUv.x,vUv.y,uResolution.x,uResolution.y,1.5/uResolution.x,vec4(22.,13.,37.,89.));
@@ -375,7 +375,7 @@ const normalBuf = new THREE.WebGLRenderTarget(W, H, {
 });
 const normalMat = new THREE.ShaderMaterial({
   uniforms: {
-    lightPos:   { value: new THREE.Vector3(0, 10, 10) },
+    lightPos:   { value: new THREE.Vector3(0, 5, 8) },
     cameraPos:  { value: new THREE.Vector3() },
   },
   vertexShader: NORMAL_VERT, fragmentShader: NORMAL_FRAG
@@ -396,12 +396,12 @@ moebiusPass.renderToScreen = true;
 composer.addPass(moebiusPass);
 
 // ── Lighting ───────────────────────────────────────────────────────────────
-const sun = new THREE.PointLight(0xfff4e0, 1800, 200);
-sun.position.set(8, 18, 12);
+const sun = new THREE.PointLight(0xf0ead6, 1600, 280);
+sun.position.set(0, 5, 8);
 sun.castShadow = true;
 sun.shadow.mapSize.setScalar(2048);
 scene.add(sun);
-scene.add(new THREE.AmbientLight(0xb0c8e8, 0.4));
+scene.add(new THREE.AmbientLight(0xfff4d0, 0.45));
 
 // ── Utility: make canvas billboard texture ─────────────────────────────────
 function makeBillboardTexture(proj, accent) {
@@ -470,13 +470,13 @@ function makePlatform(center, color, radius) {
 function makeTree(x, z) {
   const trunk = new THREE.Mesh(
     new THREE.CylinderGeometry(.15, .2, 1.2, 6),
-    new THREE.MeshStandardMaterial({ color:0x6b4226, emissive:0x6b4226, emissiveIntensity:.05 })
+    new THREE.MeshStandardMaterial({ color:0xcc7722, emissive:0xcc7722, emissiveIntensity:.07 })
   );
   trunk.position.set(x, 0.6, z);
   trunk.castShadow = true;
   const canopy = new THREE.Mesh(
     new THREE.ConeGeometry(1.0, 2.5, 6),
-    new THREE.MeshStandardMaterial({ color:0x2d7a3a, emissive:0x2d7a3a, emissiveIntensity:.06, roughness:.9 })
+    new THREE.MeshStandardMaterial({ color:0x22dd22, emissive:0x22dd22, emissiveIntensity:.08, roughness:.9 })
   );
   canopy.position.set(x, 2.5, z);
   canopy.castShadow = true;
@@ -486,7 +486,7 @@ function makeTree(x, z) {
 // ── Ground ─────────────────────────────────────────────────────────────────
 const ground = new THREE.Mesh(
   new THREE.PlaneGeometry(150, 150, 40, 40),
-  new THREE.MeshStandardMaterial({ color:0x8faa6e, emissive:0x8faa6e, emissiveIntensity:.03, roughness:.95 })
+  new THREE.MeshStandardMaterial({ color:0x88dd44, emissive:0x88dd44, emissiveIntensity:.08, roughness:.95 })
 );
 ground.rotation.x = -Math.PI / 2;
 ground.position.y = -0.5;
@@ -494,7 +494,7 @@ ground.receiveShadow = true;
 scene.add(ground);
 
 // Grid lines
-const gridHelper = new THREE.GridHelper(150, 30, 0x2a3820, 0x2a3820);
+const gridHelper = new THREE.GridHelper(150, 30, 0x336622, 0x336622);
 gridHelper.position.y = -0.48;
 gridHelper.material.opacity = 0.35;
 gridHelper.material.transparent = true;
@@ -528,7 +528,7 @@ function buildCluster(clusterKey, cluster) {
 
     // Post (stake)
     const postMat = new THREE.MeshStandardMaterial({ color:0x2a1e18, emissive:0x2a1e18, emissiveIntensity:.02 });
-    const post = new THREE.Mesh(new THREE.CylinderGeometry(.06, .08, 3.5, 6), postMat);
+    const post = new THREE.Mesh(new THREE.CylinderGeometry(.08, .10, 3.5, 6), postMat);
     post.position.set(bx, 1.25, bz);
     post.castShadow = true;
     scene.add(post);
@@ -550,7 +550,7 @@ function buildCluster(clusterKey, cluster) {
     billboards.push(panel);
 
     // Frame border
-    const frameMat = new THREE.LineBasicMaterial({ color: color, linewidth: 2 });
+    const frameMat = new THREE.LineBasicMaterial({ color: color, linewidth: 3 });
     const half = { w: panelW/2 + .06, h: panelH/2 + .06 };
     const fpts = [
       new THREE.Vector3(-half.w, -half.h, 0.01),
@@ -597,7 +597,7 @@ Object.entries(CLUSTERS).forEach(([key, cluster]) => buildCluster(key, cluster))
 // ── Floating star for piclaw (hero) ────────────────────────────────────────
 const heroGeo = new THREE.IcosahedronGeometry(1.1, 1);
 const heroMat = new THREE.MeshStandardMaterial({
-  color: 0x22d3ee, emissive: 0x22d3ee, emissiveIntensity: 0.25,
+  color: 0x00ffee, emissive: 0x00cccc, emissiveIntensity: 0.1,
   roughness: 0.4, metalness: 0.3
 });
 const heroMesh = new THREE.Mesh(heroGeo, heroMat);
@@ -607,7 +607,7 @@ scene.add(heroMesh);
 
 // ── piku monolith (most starred) ───────────────────────────────────────────
 const monolithMat = new THREE.MeshStandardMaterial({
-  color: 0xfbbf24, emissive: 0xfbbf24, emissiveIntensity: 0.15,
+  color: 0xffdd00, emissive: 0xffdd00, emissiveIntensity: 0.1,
   roughness: 0.6, metalness: 0.2
 });
 const monolith = new THREE.Mesh(new THREE.BoxGeometry(0.8, 7, 0.8), monolithMat);
@@ -727,10 +727,11 @@ function animate() {
   });
 
   // Light tracks camera loosely
+  // Keep light close to camera but CLAMP height like original (low = dramatic shadows)
   sun.position.set(
-    camera.position.x * 0.3 + 8,
-    Math.max(camera.position.y * 0.8, 10),
-    camera.position.z * 0.3 + 12
+    camera.position.x * 0.2 + 4,
+    Math.min(camera.position.y * 0.3 + 5, 14),
+    camera.position.z * 0.2 + 10
   );
   normalMat.uniforms.lightPos.value.copy(sun.position);
   normalMat.uniforms.cameraPos.value.copy(camera.position);
