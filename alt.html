@@ -37,7 +37,7 @@
     white-space: nowrap;
   }
   .nav-btn:hover, .nav-btn.active {
-    background: rgba(161,179,240,.25); border-color: #a1b3f0; color: #d8e4ff;
+    background: rgba(74,124,200,.25); border-color: #4a7cc8; color: #d0e4ff;
   }
 
   #focus-panel {
@@ -217,7 +217,7 @@ function nearestClusterKey(x, z) {
 const canvas = document.getElementById('cv');
 const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer:true });
 const scene  = new BABYLON.Scene(engine);
-scene.clearColor = new BABYLON.Color4(0xc8/255, 0xd8/255, 0xf4/255, 1);  // soft sky
+scene.clearColor = new BABYLON.Color4(0x4a/255, 0x7c/255, 0xc8/255, 1);  // real sky blue
 
 // Camera (ArcRotateCamera — orbit built in)
 const camera = new BABYLON.ArcRotateCamera('cam',
@@ -232,9 +232,9 @@ camera.attachControl(canvas, true);
 
 // Lights
 const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.4, -0.8, -0.3), scene);
-sun.intensity = 0.55;  // very soft key light
+sun.intensity = 0.35;  // minimal key — just for depth/shadow
 const fill = new BABYLON.HemisphericLight('fill', new BABYLON.Vector3(0, 1, 0), scene);
-fill.intensity     = 1.6;  // strong warm fill — nearly flat lighting
+fill.intensity     = 1.0;  // reduced — prevents over-bright washout
 fill.diffuse       = new BABYLON.Color3(0.98, 0.96, 0.88);
 fill.groundColor   = new BABYLON.Color3(0.55, 0.50, 0.42);  // warmer ground bounce
 
@@ -250,7 +250,7 @@ function darkHex(h) {
 function toonMat(name, hexCol, emFactor) {
   const m = new BABYLON.StandardMaterial(name, scene);
   m.diffuseColor  = hex3(hexCol);
-  m.emissiveColor = hex3(hexCol).scale(emFactor || 0.08);
+  m.emissiveColor = hex3(hexCol).scale(emFactor || 0.05);
   m.specularColor = BABYLON.Color3.Black();
   return m;
 }
@@ -262,7 +262,7 @@ function outlineOn(mesh, hexCol, width) {
 
 // ── Ground ────────────────────────────────────────────────────────────────
 const ground = BABYLON.MeshBuilder.CreateGround('ground', {width:160, height:160, subdivisions:2}, scene);
-ground.material = toonMat('gmat', '#8aaa6a', 0.06);  // sage
+ground.material = toonMat('gmat', '#4a7838', 0.05);  // deep grass green
 
 // ── Cluster disc ─────────────────────────────────────────────────────────
 function makeDisc(pos, col) {
@@ -410,9 +410,9 @@ function makeBillboard(x, z, proj, accentHex, logoImg) {
 
   // Post (stake)
   const post = BABYLON.MeshBuilder.CreateCylinder('post',
-    {diameter:0.16, height:4.5, tessellation:6}, scene);
+    {diameter:0.16, height:2.5, tessellation:6}, scene);
   post.material = toonMat('postmat','#3a2a1a',0.02);
-  post.position.set(x, 1.75, z);
+  post.position.set(x, 0.75, z);
 
   // Panel
   const panel = BABYLON.MeshBuilder.CreatePlane('panel', {width:4.0, height:2.0}, scene);
