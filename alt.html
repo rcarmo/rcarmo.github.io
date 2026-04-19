@@ -625,14 +625,14 @@ function makePath(ax, az, bx, bz) {
   const cx = (ax+bx)/2, cz = (az+bz)/2;
   const angle = Math.atan2(dx, dz);
   const path = new THREE.Mesh(
-    new THREE.PlaneGeometry(1.8, len),
+    new THREE.PlaneGeometry(3.0, len),
     new THREE.MeshStandardMaterial({
-      color:0xd4b483, emissive:0xd4b483, emissiveIntensity:.06, roughness:1.0
+      color:0xe8d09a, emissive:0xe8d09a, emissiveIntensity:.10, roughness:1.0
     })
   );
   path.rotation.x = -Math.PI / 2;
   path.rotation.z = angle;
-  path.position.set(cx, -0.48, cz);
+  path.position.set(cx, -0.38, cz);  // raised above ground — always visible
   path.receiveShadow = true;
   scene.add(path);
 }
@@ -756,10 +756,15 @@ function buildCluster(clusterKey, cluster) {
   makeClusterGround(pos, color, clusterR * 0.85);
 
   // Concentric rings of shrubbery with PATH GAPS toward each neighbour cluster
-  const innerR = clusterR + 0.4;
-  const midR   = clusterR + 1.5;
-  const outerR = clusterR + 2.8;
-  const gapHalf = 0.42;   // radians: ±0.42 rad ≈ ±24° gap per path
+  // Cap ring radii so the path corridor between adjacent clusters stays open
+  const minNeighbourDist = Object.values(CLUSTERS)
+    .filter(c => c.pos !== pos)
+    .reduce((min, c) => Math.min(min, pos.distanceTo(c.pos)), Infinity);
+  const maxRing = Math.min(minNeighbourDist * 0.42, clusterR + 3.5);
+  const innerR = Math.min(clusterR + 0.4, maxRing - 2.0);
+  const midR   = Math.min(clusterR + 1.5, maxRing - 1.0);
+  const outerR = maxRing;
+  const gapHalf = 0.55;   // radians: ±0.42 rad ≈ ±24° gap per path
 
   // Compute directions to all other cluster centres (for path gaps)
   const gapDirs = Object.values(CLUSTERS)
