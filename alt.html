@@ -508,8 +508,28 @@ Object.entries(CLUSTERS).forEach(([key,cluster]) => {
   if (key==='highlight') return;
   const N=projects.length;
   projects.forEach((proj,i) => {
-    const angle=(N===1)?0:(i/N)*Math.PI*2;
-    const r=N===1?0:Math.min(4.5*Math.sqrt(N/2),9);
+    let angle, r;
+    if (N === 1) {
+      // Single-project garden: place the sign like a statue plaque —
+      // offset AWAY from the nearest path entrance so it faces into the garden.
+      // Find the direction toward the nearest neighbour cluster (path entrance),
+      // then go opposite so the sign is on the far, quiet side.
+      const neighbour = (PATH_GRAPH[key]||[]).reduce((best,k)=>{
+        const d=Math.hypot(pos[0]-CLUSTERS[k].pos[0], pos[2]-CLUSTERS[k].pos[2]);
+        return d < best.d ? {k,d} : best;
+      }, {k:null, d:Infinity});
+      if (neighbour.k) {
+        const np = CLUSTERS[neighbour.k].pos;
+        const toPath = Math.atan2(np[2]-pos[2], np[0]-pos[0]);
+        angle = toPath + Math.PI;   // opposite direction = away from main path
+      } else {
+        angle = 0;
+      }
+      r = 3.5;  // offset enough to be clear of the obelisk/hero mesh
+    } else {
+      angle = (i/N)*Math.PI*2;
+      r = Math.min(4.5*Math.sqrt(N/2), 9);
+    }
     const bx=pos[0]+Math.cos(angle)*r, bz=pos[2]+Math.sin(angle)*r;
     const logo=(typeof LOGOS!=='undefined')?LOGOS[proj.id]:null;
     const img=logo?(()=>{const im=new Image();im.src=logo;return im;})():null;
@@ -552,7 +572,12 @@ function smoothstep(t){ return t*t*(3-2*t); }
 
 // ── Camera navigation ─────────────────────────────────────────────────────
 let autoRotate=true, autoAngle=camera.alpha;
-let pathState=null; // active path-follow: {pts, t, speed, endAlpha, endBeta, endRadius, onDone}
+let pathState=null;
+// pathState phases: DROP(0→DROP_T) → TRAVEL(DROP_T→ARRIVE_T) → ARRIVE(ARRIVE_T→1)
+const DROP_T=0.14, ARRIVE_T=0.86;
+const PATH_Y=1.6;     // target height during travel (slightly above hedges)
+const TRAVEL_R=3.8;   // camera radius during ground-level travel
+const TRAVEL_BETA=Math.PI/2.05; // nearly horizontal
 
 scene.registerBeforeRender(()=>{
   if (autoRotate && !pathState){ autoAngle-=0.0015; camera.alpha=autoAngle; return; }
@@ -561,33 +586,45 @@ scene.registerBeforeRender(()=>{
   pathState.t = Math.min(1, pathState.t + pathState.speed);
   const done = pathState.t >= 1;
 
-  // Catmull-Rom interpolation over gathered waypoints
-  const pts=pathState.pts, N=pts.length-1;
-  const fi=pathState.t*N, i=Math.min(Math.floor(fi),N-1), lt=fi-i;
-  const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[Math.min(N,i+1)],p3=pts[Math.min(N,i+2)];
-  camera.target.set(
-    catmullRom(lt,p0.x,p1.x,p2.x,p3.x),
-    catmullRom(lt,p0.y,p1.y,p2.y,p3.y),
-    catmullRom(lt,p0.z,p1.z,p2.z,p3.z)
-  );
+  if (pathState.t <= DROP_T) {
+    // Phase 1: DROP — descend in place to hedge height before moving
+    const dt = smoothstep(pathState.t / DROP_T);
+    camera.target.set(
+      lerpF(pathState.startTx, pathState.pts[0].x, dt * 0.3),
+      lerpF(pathState.startTy, PATH_Y, dt),
+      lerpF(pathState.startTz, pathState.pts[0].z, dt * 0.3)
+    );
+    camera.beta   = lerpF(pathState.startBeta,   TRAVEL_BETA, dt * 0.6);
+    camera.radius = lerpF(pathState.startRadius, TRAVEL_R,    dt * 0.5);
 
-  // Tangent at current point (direction of travel)
-  const tx=catmullTangent(lt,p0.x,p1.x,p2.x,p3.x);
-  const tz=catmullTangent(lt,p0.z,p1.z,p2.z,p3.z);
+  } else if (pathState.t <= ARRIVE_T) {
+    // Phase 2: TRAVEL — move horizontally along path curve at hedge height
+    const tt = (pathState.t - DROP_T) / (ARRIVE_T - DROP_T);
+    const pts=pathState.pts, N=pts.length-1;
+    const fi=tt*N, i=Math.min(Math.floor(fi),N-1), lt=fi-i;
+    const p0=pts[Math.max(0,i-1)], p1=pts[i], p2=pts[Math.min(N,i+1)], p3=pts[Math.min(N,i+2)];
 
-  const ARRIVAL=0.82;
-  if (pathState.t < ARRIVAL) {
-    // Travel: camera sits BEHIND target = looks forward along path
+    camera.target.set(
+      catmullRom(lt,p0.x,p1.x,p2.x,p3.x),
+      PATH_Y,
+      catmullRom(lt,p0.z,p1.z,p2.z,p3.z)
+    );
+
+    // Look forward: camera behind target
+    const tx=catmullTangent(lt,p0.x,p1.x,p2.x,p3.x);
+    const tz=catmullTangent(lt,p0.z,p1.z,p2.z,p3.z);
     if (Math.abs(tx)+Math.abs(tz)>0.001)
-      camera.alpha = lerpAngle(camera.alpha, Math.atan2(tz,tx)+Math.PI, 0.07);
-    camera.beta   = lerpF(camera.beta,   Math.PI/3.5, 0.04);
-    camera.radius = lerpF(camera.radius, 16,           0.04);
+      camera.alpha = lerpAngle(camera.alpha, Math.atan2(tz,tx)+Math.PI, 0.09);
+    camera.beta   = lerpF(camera.beta,   TRAVEL_BETA, 0.06);
+    camera.radius = lerpF(camera.radius, TRAVEL_R,    0.06);
+
   } else {
-    // Arrival: rotate toward billboard, reduce radius, level out
-    const at=smoothstep((pathState.t-ARRIVAL)/(1-ARRIVAL));
-    camera.alpha  = lerpAngle(camera.alpha, pathState.endAlpha,  at*0.12);
-    camera.beta   = lerpF(camera.beta,   pathState.endBeta,   at*0.10);
-    camera.radius = lerpF(camera.radius, pathState.endRadius, at*0.10);
+    // Phase 3: ARRIVE — rotate to face billboard from inside garden
+    const at = smoothstep((pathState.t-ARRIVE_T)/(1-ARRIVE_T));
+    camera.target.lerpInPlace(pathState.endTarget, at*0.14);
+    camera.alpha  = lerpAngle(camera.alpha, pathState.endAlpha,  at*0.13);
+    camera.beta   = lerpF(camera.beta,   pathState.endBeta,   at*0.11);
+    camera.radius = lerpF(camera.radius, pathState.endRadius, at*0.11);
   }
 
   if (done){ const cb=pathState.onDone; pathState=null; if(cb)cb(); }
@@ -616,15 +653,48 @@ function flyTo(clusterKey){
   scene.beginAnimation(camera,0,80,false,1,()=>{ camera.animations.length=0; });
 }
 
+function rotateToBillboard(bill){
+  // Same garden: just turn to face the sign
+  scene.stopAnimation(camera); camera.animations.length=0;
+  const {x,z}=bill.metadata;
+  const clusterKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===bill.metadata.proj.url))?.[0]||'highlight';
+  const cpos=CLUSTERS[clusterKey].pos;
+  const dx=cpos[0]-x, dz=cpos[2]-z, dist=Math.hypot(dx,dz)||1;
+  const endAlpha=Math.atan2(dz/dist, dx/dist);
+  const endTarget=new BABYLON.Vector3(x, bill.position.y*0.55, z);
+  const ease=new BABYLON.SineEase(); ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+  ['alpha','beta','radius'].forEach((prop,pi)=>{
+    const vals=[endAlpha, Math.PI/3.8, 7];
+    const a=new BABYLON.Animation('rot_'+prop,prop,60,
+      BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    a.setEasingFunction(ease);
+    a.setKeys([{frame:0,value:camera[prop]},{frame:55,value:vals[pi]}]);
+    camera.animations.push(a);
+  });
+  const ta=new BABYLON.Animation('rot_t','target',60,
+    BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+  ta.setEasingFunction(ease);
+  ta.setKeys([{frame:0,value:camera.target.clone()},{frame:55,value:endTarget}]);
+  camera.animations.push(ta);
+  scene.beginAnimation(camera,0,55,false,1,()=>{ camera.animations.length=0; openFocus(bill); });
+}
+
 function flyToBillboard(bill){
   stopAuto(); pathState=null; scene.stopAnimation(camera); camera.animations.length=0;
   const {proj,x,z}=bill.metadata;
   const clusterKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===proj.url))?.[0]||'highlight';
   const startKey=nearestClusterKey(camera.target.x,camera.target.z);
+
+  // Same garden: just rotate, no travel needed
+  if (startKey===clusterKey){
+    rotateToBillboard(bill);
+    return;
+  }
+
   const route=bfsPath(startKey,clusterKey);
 
-  // Build waypoints from stored Bézier path curves
-  const wpts=[new BABYLON.Vector3(camera.target.x,0,camera.target.z)];
+  // Build waypoints along actual path curves
+  const wpts=[new BABYLON.Vector3(camera.target.x, PATH_Y, camera.target.z)];
   for(let i=0;i<route.length-1;i++){
     const fromKey=route[i],toKey=route[i+1];
     const edgeKey=[fromKey,toKey].sort().join('--');
@@ -632,22 +702,32 @@ function flyToBillboard(bill){
     if(curve&&curve.length){
       const fwd=fromKey===edgeKey.split('--')[0];
       const pts=fwd?curve:[...curve].reverse();
-      pts.forEach((p,j)=>{ if(j%2===0||j===pts.length-1) wpts.push(new BABYLON.Vector3(p[0],0,p[1])); });
+      // Sample every 2nd point for smooth but efficient
+      pts.forEach((p,j)=>{ if(j%2===0||j===pts.length-1) wpts.push(new BABYLON.Vector3(p[0],PATH_Y,p[1])); });
     } else {
       const cp=CLUSTERS[toKey].pos;
-      wpts.push(new BABYLON.Vector3(cp[0],0,cp[2]));
+      wpts.push(new BABYLON.Vector3(cp[0],PATH_Y,cp[2]));
     }
   }
   const cposV=CLUSTERS[clusterKey].pos;
-  wpts.push(new BABYLON.Vector3(cposV[0],0,cposV[2]));
+  wpts.push(new BABYLON.Vector3(cposV[0],PATH_Y,cposV[2]));
   wpts.push(new BABYLON.Vector3(x, bill.position.y*0.55, z));
+
+  // Arc-length-based speed: travel at ~9 units/sec
+  let arcLen=0;
+  for(let i=0;i<wpts.length-1;i++) arcLen+=BABYLON.Vector3.Distance(wpts[i],wpts[i+1]);
+  const travelFrac = ARRIVE_T - DROP_T;
+  const totalSec = arcLen / 9 + 0.8;  // 0.8s for drop+arrival phases
+  const speed = 1 / (totalSec * 60);
 
   const cpos=CLUSTERS[clusterKey].pos;
   const dx=cpos[0]-x, dz=cpos[2]-z, dist=Math.hypot(dx,dz)||1;
+
   pathState={
-    pts:   wpts,
-    t:     0,
-    speed: Math.max(0.004, 0.007 - wpts.length*0.0001),
+    pts: wpts, t: 0, speed,
+    startTx: camera.target.x, startTy: camera.target.y, startTz: camera.target.z,
+    startBeta: camera.beta, startRadius: camera.radius,
+    endTarget: new BABYLON.Vector3(x, bill.position.y*0.55, z),
     endAlpha:  Math.atan2(dz/dist, dx/dist),
     endRadius: 7,
     endBeta:   Math.PI/3.8,
