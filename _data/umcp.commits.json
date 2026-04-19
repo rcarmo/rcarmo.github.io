@@ -1,0 +1,87 @@
+[
+  {
+    "sha": "7a0b035e",
+    "date": "2025-12-26T19:43:13Z",
+    "msg": "chore: update .gitignore and enhance README with prompt templates documentation"
+  },
+  {
+    "sha": "ad306f48",
+    "date": "2025-10-10T21:36:40Z",
+    "msg": "prompt support"
+  },
+  {
+    "sha": "382ad66f",
+    "date": "2025-05-30T19:53:23Z",
+    "msg": "chore: docstrings"
+  },
+  {
+    "sha": "486416e5",
+    "date": "2025-05-30T19:52:07Z",
+    "msg": "chore: README"
+  },
+  {
+    "sha": "14d7013d",
+    "date": "2025-05-30T19:48:55Z",
+    "msg": "chore: tests"
+  },
+  {
+    "sha": "651ea06b",
+    "date": "2025-05-30T19:45:40Z",
+    "msg": "chore: tests"
+  },
+  {
+    "sha": "d124c834",
+    "date": "2025-05-30T19:44:43Z",
+    "msg": "minor tweaks"
+  },
+  {
+    "sha": "25a6125b",
+    "date": "2025-05-30T19:38:38Z",
+    "msg": "README"
+  },
+  {
+    "sha": "a2eac017",
+    "date": "2025-05-30T19:34:22Z",
+    "msg": "Minimal Python version"
+  },
+  {
+    "sha": "1d27d186",
+    "date": "2025-05-30T08:41:48Z",
+    "msg": "removed unwanted"
+  },
+  {
+    "sha": "c710f98c",
+    "date": "2025-05-30T08:36:04Z",
+    "msg": "updated readme"
+  },
+  {
+    "sha": "d858ed90",
+    "date": "2025-05-30T08:35:44Z",
+    "msg": "updated readme"
+  },
+  {
+    "sha": "934793b4",
+    "date": "2025-05-29T18:22:11Z",
+    "msg": "updated readme"
+  },
+  {
+    "sha": "b4ad5453",
+    "date": "2025-05-29T18:21:14Z",
+    "msg": "updated readme"
+  },
+  {
+    "sha": "788019f8",
+    "date": "2025-05-29T18:09:45Z",
+    "msg": "initial thing done"
+  },
+  {
+    "sha": "2f5632ce",
+    "date": "2025-05-29T17:40:38Z",
+    "msg": "initialized"
+  },
+  {
+    "sha": "19f81758",
+    "date": "2025-05-29T16:56:10Z",
+    "msg": "initialized"
+  }
+]

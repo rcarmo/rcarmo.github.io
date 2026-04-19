@@ -1,0 +1,78 @@
+{
+  "id": "feed-summarizer",
+  "meta": {
+    "name": "feed-summarizer",
+    "full_name": "rcarmo/feed-summarizer",
+    "description": "The feed summarizer that powers feeds.carmo.io",
+    "homepage": null,
+    "stars": 27,
+    "forks": 2,
+    "language": "Python",
+    "created_at": "2025-11-21T23:05:19Z",
+    "pushed_at": "2026-01-01T10:19:09Z",
+    "updated_at": "2026-04-14T22:11:58Z",
+    "topics": []
+  },
+  "readme": "# Feed Summarizer\n\nFunny story: This was mostly a vibe-coded project that got out of hand. It actually started as a Node-RED flow for personal use, then morphed into a Python script, and I thought it would both help me save time reading news in the mornings and make for a great demo of spec-driven development.\n\nAs a direct outcome of my swearing at various LLMs, it became this, which is, in a mouthful, an `asyncio`-based background service that fetches multiple RSS/Atom (and optional Mastodon) sources, stores raw items in SQLite, generates AI summaries (Azure OpenAI), groups them into bulletins, and publishes both HTML and RSS outputs (optionally uploading to Azure Blob Static Website hosting).\n\nAnd the end-user experience, for me (using [Reeder Classic](https://reederapp.com/classic)), looks like this:\n\n![Feed Summarizer Example Output](docs/reeder.png)\n\nNeatly organized by topic, with concise summaries and links to the original articles, all in a clean, readable format I can peruse over breakfast.\n\n## Overview\n\nThe pipeline is designed for efficiency (conditional fetching, batching, backoff) and the output is tailored to my reading habits (three \"bulletins\" per day that group items by topic, each bulletin published as both HTML and an RSS entry).\n\nMost of the implementation started as a vibe-coded prototype, with some manual tweaking here and there, but it now has extensive error handling, logging, and observability hooks for Azure Application Insights via OpenTelemetry, and it publishes to Azure Blob Storage for publishing the results because there is no way I am letting this thing run a web server.\n\nIt is also deployable as a Docker Swarm service using [`kata`](https://github.com/rcarmo/kata), a private helper tool used for my own infrastructure.\n\n\n## Quickstart (5 commands)\n\n```bash\npython -m venv .venv              # 1. Create virtualenv\nsource .venv/bin/activate         # 2. Activate it\npip install -r requirements.txt   # 3. Install dependencies\ncp feeds.yaml.example feeds.yaml  # 4. Seed a starter config (edit it)\npython main.py run                # 5. One full pipeline run (fetch→summarize→publish→upload*)\n```\n\n(\\*) Azure upload happens only if storage env vars are set; otherwise it is skipped automatically.\n\n## Features\n\n- Concurrent conditional feed fetching (ETag / Last-Modified; respectful backoff & error tracking)\n- Optional reader mode & GitHub README enrichment for richer summarization context\n- AI summarization with per‑group introductions (opt‑in) via Azure OpenAI\n- Topic/group bulletins rendered as responsive HTML + RSS 2.0 feeds\n- SimHash-powered dedupe (optional BM25/FTS5 fallback) merges near-duplicate summaries and surfaces every source link\n- Optional passthrough (raw) feeds with minimal processing\n- Smart time‑based scheduling (timezone aware) plus interval overrides\n- Azure Blob Storage upload with MD5 de‑dup (skip unchanged) & optional sync delete\n- Graceful shutdown with executor timeouts and robust logging\n- Config hot‑reload for feeds; caching of YAML & prompt data\n- Observability hooks via OpenTelemetry (HTTP, DB, custom spans)\n\n## Documentation\n\nLong-form documentation is in the `docs/` folder:\n\n- [CONFIGURATION](docs/CONFIGURATION.md) (env vars, secrets, scheduling)\n- [RUNNING](docs/RUNNING.md) (CLI modes, flags, scheduling)\n- [PUBLISHING](docs/PUBLISHING.md) (output paths, Azure upload)\n- [TELEMETRY](docs/TELEMETRY.md) (OpenTelemetry + Azure exporter)\n- [TROUBLESHOOTING](docs/TROUBLESHOOTING.md) (common symptoms and fixes)\n- [ARCHITECTURE](docs/ARCHITECTURE.md) (module map and pipeline flow)\n- [MERGE_TUNING](docs/MERGE_TUNING.md) (dedupe/merge behavior and diagnostics)\n- [RETENTION](docs/RETENTION.md) (age window & retention controls)\n- [SPEC](docs/SPEC.md) (long-form architecture/runtime spec)\n\n---\n\n## Contributions & License\n\nSee `LICENSE` (MIT) for licensing details. Contribution guidelines and a code of conduct will be documented in `CONTRIBUTING.md` and `CODE_OF_CONDUCT.md` as the project evolves. Security reports: (will be defined in `SECURITY.md`).\n\n## Attribution\n\nSome components and refactoring work were assisted by AI tooling; all code is reviewed for clarity and maintainability.\n",
+  "commits": [
+    {
+      "sha": "4870d834",
+      "date": "2026-01-01T10:18:51Z",
+      "msg": "sync with private branch, reviewed duplicate logic"
+    },
+    {
+      "sha": "103328da",
+      "date": "2025-12-20T11:02:46Z",
+      "msg": "docs"
+    },
+    {
+      "sha": "9f490d05",
+      "date": "2025-12-20T10:30:42Z",
+      "msg": "sync with private branch; refactoring"
+    },
+    {
+      "sha": "3c65b572",
+      "date": "2025-12-16T09:17:52Z",
+      "msg": "item merging improvements"
+    },
+    {
+      "sha": "7ea046ee",
+      "date": "2025-12-03T13:44:36Z",
+      "msg": "cleanup"
+    },
+    {
+      "sha": "55eccfaf",
+      "date": "2025-11-29T14:42:46Z",
+      "msg": "prompt"
+    },
+    {
+      "sha": "a2620ccf",
+      "date": "2025-11-29T10:49:59Z",
+      "msg": "simhash merging and various fixes"
+    },
+    {
+      "sha": "aa8be7c7",
+      "date": "2025-11-21T23:18:23Z",
+      "msg": "import private repo"
+    },
+    {
+      "sha": "feee24bd",
+      "date": "2025-11-21T23:05:19Z",
+      "msg": "Initial commit"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "My Rube Goldberg RSS Pipeline",
+      "date": "2026-01-17",
+      "url": "https://taoofmac.com/space/blog/2026/01/17/2130"
+    },
+    {
+      "title": "Seizing The Means Of Production (Again)",
+      "date": "2026-02-01",
+      "url": "https://taoofmac.com/space/notes/2026/02/01/1940"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

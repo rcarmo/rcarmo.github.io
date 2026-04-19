@@ -1,0 +1,152 @@
+[
+  {
+    "sha": "808b5249",
+    "date": "2026-02-13T18:15:38Z",
+    "msg": "fix: address audit items 3-8"
+  },
+  {
+    "sha": "d723d411",
+    "date": "2026-02-13T18:09:42Z",
+    "msg": "fix: restore QuerySpansByTime and SpanTimeQueryOptions"
+  },
+  {
+    "sha": "1095bb6b",
+    "date": "2026-02-13T18:08:18Z",
+    "msg": "fix: apply 19 audit fixes across codebase"
+  },
+  {
+    "sha": "77c2a6d9",
+    "date": "2026-02-10T10:24:02Z",
+    "msg": "Optimize trace search and upgrade OTel dependencies"
+  },
+  {
+    "sha": "f3198fd6",
+    "date": "2026-02-09T23:36:01Z",
+    "msg": "Harden query API and web UI, refactor exporter"
+  },
+  {
+    "sha": "218f337e",
+    "date": "2026-02-07T16:24:59Z",
+    "msg": "Bump version to 0.2.4"
+  },
+  {
+    "sha": "a7e02da8",
+    "date": "2026-02-07T14:59:31Z",
+    "msg": "Bump version to 0.2.3"
+  },
+  {
+    "sha": "306bb9c1",
+    "date": "2026-02-07T14:59:16Z",
+    "msg": "Fix 6 logic errors found in code audit"
+  },
+  {
+    "sha": "a0d57dcd",
+    "date": "2026-02-07T13:06:15Z",
+    "msg": "Bump version to 0.2.2"
+  },
+  {
+    "sha": "9cc59239",
+    "date": "2026-02-07T13:06:06Z",
+    "msg": "Bump version to 0.2.1"
+  },
+  {
+    "sha": "ad0a0ade",
+    "date": "2026-02-07T13:05:38Z",
+    "msg": "Import agentbox/skel scaffolding and align CI/CD"
+  },
+  {
+    "sha": "0a603901",
+    "date": "2026-01-24T00:29:41Z",
+    "msg": "refactor(web): improve ExceptionsView UX and consolidate server API logic"
+  },
+  {
+    "sha": "148c697d",
+    "date": "2026-01-23T20:12:00Z",
+    "msg": "tests: expanded coverage"
+  },
+  {
+    "sha": "c0698a9a",
+    "date": "2026-01-22T18:37:14Z",
+    "msg": "feat(web): Azure Portal / Fluent UI redesign"
+  },
+  {
+    "sha": "c5b7d550",
+    "date": "2026-01-11T09:29:26Z",
+    "msg": "chore: try to compensate for Grafana weirdness"
+  },
+  {
+    "sha": "fd7f7cee",
+    "date": "2026-01-10T23:03:40Z",
+    "msg": "fix: tempo queries"
+  },
+  {
+    "sha": "4323ee30",
+    "date": "2026-01-10T19:55:04Z",
+    "msg": "chore: enhance search functionality to handle wildcard service names in trace queries"
+  },
+  {
+    "sha": "6c8074ab",
+    "date": "2026-01-10T19:49:00Z",
+    "msg": "chore: enhance Grafana datasource configuration for improved compatibility and performance"
+  },
+  {
+    "sha": "0cbcd7b5",
+    "date": "2026-01-10T19:46:50Z",
+    "msg": "chore: add additional span count, duration, and error count metrics to Grafana dashboard"
+  },
+  {
+    "sha": "699e9ef9",
+    "date": "2026-01-10T19:40:00Z",
+    "msg": "chore: enhance Grafana dashboard with additional metrics for span count, duration, and error count"
+  },
+  {
+    "sha": "d3aaeee9",
+    "date": "2026-01-10T18:51:13Z",
+    "msg": "chore: update Grafana dashboard queries for improved data representation"
+  },
+  {
+    "sha": "fc0c25a7",
+    "date": "2026-01-10T17:44:57Z",
+    "msg": "chore: pasted in edited dashboard, more debug"
+  },
+  {
+    "sha": "6dfc4221",
+    "date": "2026-01-10T17:36:47Z",
+    "msg": "chore: more logging"
+  },
+  {
+    "sha": "acb3a009",
+    "date": "2026-01-10T17:26:09Z",
+    "msg": "chore: fiddle with Grafana settings"
+  },
+  {
+    "sha": "7006139f",
+    "date": "2026-01-10T17:17:55Z",
+    "msg": "chore: paste in partly fixed dashboard"
+  },
+  {
+    "sha": "9a77ebe9",
+    "date": "2026-01-10T17:10:52Z",
+    "msg": "chore: I hate grafana"
+  },
+  {
+    "sha": "62ca8a92",
+    "date": "2026-01-10T17:10:10Z",
+    "msg": "fix: v2 api hack"
+  },
+  {
+    "sha": "c8a87a6a",
+    "date": "2026-01-10T16:51:48Z",
+    "msg": "fix: update resource spans validation and adjust Grafana dashboard targets"
+  },
+  {
+    "sha": "83ac2231",
+    "date": "2026-01-10T16:49:16Z",
+    "msg": "feat: super hacky aliasByNode feature"
+  },
+  {
+    "sha": "306134ad",
+    "date": "2026-01-10T16:25:51Z",
+    "msg": "fix(?): update grafana self-provision"
+  }
+]

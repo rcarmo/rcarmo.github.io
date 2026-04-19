@@ -1,0 +1,152 @@
+[
+  {
+    "sha": "5babdfed",
+    "date": "2026-04-19T14:30:45Z",
+    "msg": "v0.1.13: fix initrd busybox, auto-inject initrd, guest agent support"
+  },
+  {
+    "sha": "59ce059e",
+    "date": "2026-04-19T14:06:32Z",
+    "msg": "v0.1.12: ship minimal initrd with virtio modules"
+  },
+  {
+    "sha": "1009b3ce",
+    "date": "2026-04-19T13:37:17Z",
+    "msg": "v0.1.11: use host kernel+initrd fallback, document known issues"
+  },
+  {
+    "sha": "47f66805",
+    "date": "2026-04-19T13:36:13Z",
+    "msg": "Document known issues: virtio-mmio discovery and serial buffering"
+  },
+  {
+    "sha": "cedac7ad",
+    "date": "2026-04-19T13:19:55Z",
+    "msg": "v0.1.10: fix kernel build — verify and force virtio configs after olddefconfig"
+  },
+  {
+    "sha": "9803c58c",
+    "date": "2026-04-19T13:07:29Z",
+    "msg": "v0.1.9: fix kernel — force virtio_net/balloon/console in overlay"
+  },
+  {
+    "sha": "466f8b70",
+    "date": "2026-04-19T12:35:48Z",
+    "msg": "v0.1.8: fix virtio discovery for net/serial/balloon"
+  },
+  {
+    "sha": "5cf795eb",
+    "date": "2026-04-19T12:35:35Z",
+    "msg": "Fix virtio device discovery: enable ACPI + auto-kernel-cmdline + mmio cmdline devices"
+  },
+  {
+    "sha": "e93dfca0",
+    "date": "2026-04-19T11:50:01Z",
+    "msg": "Roadmap: add gaps from testing and smolvm comparison"
+  },
+  {
+    "sha": "6a09c92c",
+    "date": "2026-04-19T11:21:48Z",
+    "msg": "v0.1.7: fix cloud-init — add iso9660/vfat to kernel, agent to template"
+  },
+  {
+    "sha": "52f862e5",
+    "date": "2026-04-19T10:50:08Z",
+    "msg": "v0.1.6: cloud-init, qemu-agent, Docker first-boot setup"
+  },
+  {
+    "sha": "24ee0506",
+    "date": "2026-04-19T10:48:55Z",
+    "msg": "Roadmap: add SSH agent forwarding, network isolation, egress allow-list, declarative config"
+  },
+  {
+    "sha": "5f43707a",
+    "date": "2026-04-19T10:44:47Z",
+    "msg": "Roadmap: add AArch64/ARM64 support as low-priority exploratory item"
+  },
+  {
+    "sha": "0e7bce13",
+    "date": "2026-04-19T10:44:32Z",
+    "msg": "Roadmap: add Plan 9 / 9Front microVM support as low-priority nice-to-have"
+  },
+  {
+    "sha": "d95f7ccf",
+    "date": "2026-04-19T10:44:05Z",
+    "msg": "Roadmap: check off cloud-init"
+  },
+  {
+    "sha": "907ef58e",
+    "date": "2026-04-19T10:43:55Z",
+    "msg": "Cloud-init + qemu-agent + Docker first-boot setup"
+  },
+  {
+    "sha": "f1e3e6aa",
+    "date": "2026-04-19T10:35:27Z",
+    "msg": "Add comprehensive roadmap with priorities, impact, and effort"
+  },
+  {
+    "sha": "258ec8b1",
+    "date": "2026-04-18T18:37:41Z",
+    "msg": "Fix CI: update oras to 1.3.2 (1.2.2 tarball broken)"
+  },
+  {
+    "sha": "220ef777",
+    "date": "2026-04-18T18:23:35Z",
+    "msg": "v0.1.5: docs restructure, GUI, init, balloon"
+  },
+  {
+    "sha": "83e6ed9c",
+    "date": "2026-04-18T18:09:26Z",
+    "msg": "Restructure docs: concise README with demo GIF, split into docs/"
+  },
+  {
+    "sha": "d40690a8",
+    "date": "2026-04-18T18:03:17Z",
+    "msg": "GUI extension, proper init, balloon device"
+  },
+  {
+    "sha": "44c4aca6",
+    "date": "2026-04-18T17:53:46Z",
+    "msg": "Use qboot for instant kernel loading, disable balloon in config"
+  },
+  {
+    "sha": "e1931a4a",
+    "date": "2026-04-18T17:49:07Z",
+    "msg": "Fix: allow vga=serial0 (PVE serial console redirect)"
+  },
+  {
+    "sha": "4baa8426",
+    "date": "2026-04-18T17:35:16Z",
+    "msg": "v0.1.4: serial console in PVE UI, trixie-slim default, end-to-end tested"
+  },
+  {
+    "sha": "b61f1091",
+    "date": "2026-04-18T17:29:18Z",
+    "msg": "Default to debian:trixie-slim, support systemd images"
+  },
+  {
+    "sha": "28db86d0",
+    "date": "2026-04-18T17:22:51Z",
+    "msg": "Add pve-microvm-template: OCI image to PVE template workflow"
+  },
+  {
+    "sha": "00595a8e",
+    "date": "2026-04-18T17:20:05Z",
+    "msg": "Fix runtime issues from live testing"
+  },
+  {
+    "sha": "efb5912b",
+    "date": "2026-04-18T17:17:41Z",
+    "msg": "Fix network: correct bridge script path (/usr/libexec/qemu-server/)"
+  },
+  {
+    "sha": "ad6d2769",
+    "date": "2026-04-18T16:50:38Z",
+    "msg": "Fix runtime: proper Perl module imports, args quoting, get_vm_machine"
+  },
+  {
+    "sha": "7f723bfc",
+    "date": "2026-04-18T15:49:58Z",
+    "msg": "v0.1.3: publish .deb to GitHub Packages via ORAS"
+  }
+]

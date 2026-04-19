@@ -1,0 +1,183 @@
+{
+  "id": "azure-stable-diffusion",
+  "meta": {
+    "name": "azure-stable-diffusion",
+    "full_name": "rcarmo/azure-stable-diffusion",
+    "description": "An Azure template to run Stable Diffusion on a GPU-enabled spot instance",
+    "homepage": null,
+    "stars": 44,
+    "forks": 6,
+    "language": "Makefile",
+    "created_at": "2022-11-27T17:36:32Z",
+    "pushed_at": "2023-04-20T15:00:49Z",
+    "updated_at": "2025-11-03T08:16:10Z",
+    "topics": []
+  },
+  "readme": "# azure-stable-diffusion\n\nA quick hack to run Stable Diffusion on an Azure GPU Spot Instance.\n\n## What\n\nThis is an Azure Resource Manager template that automatically deploys a GPU enabled spot instance running Ubuntu 20.04. \n\nThe template defaults to deploying NV6 Series VMs (`Standard_NV6`, `Standard_NV6_Promo` or, if you can get them, `Standard_NV6ads_A10_v5`) with the smallest possible managed SSD disk size (P4, 32GB). It also deploys (and mounts) an Azure File Share on the machine with (very) permissive access at `/srv`, which makes it quite easy to keep copies of your work between VM instantiations.\n\nYou will need to set a `HUGGINGFACE_TOKEN` environment variable when running the `Makefile`, and the machine will reboot after installing _almost_ everything (it will automatically install `GFPGAN` and other auxiliary models when you run `webui.sh --listen` the first time).\n\n## Why\n\nI was getting a little bored with the notebook workflow in [Google Collab][collab] and wanted access to a more persistent GPU setup without breaking the bank (hence spot instances, which I can run on demand in my personal subscription).\n\n## Roadmap\n\n* [ ] Automatically set up Tailscale with `--authkey` to remove need for Gradio\n* [ ] Built-in auto-shutdown (easy to set via the portal, but I will be adding it to the template)\n* [x] Experimental [imaginAIry](https://github.com/brycedrennan/imaginAIry) installation (just use `experimental.yaml` instead of `cloud-init.yaml`)\n* [x] Set up [AUTOMATIC1111](https://github.com/AUTOMATIC1111/stable-diffusion-webui)'s pretty amazing Web UI\n* [x] change instance type to `Spot` for lower cost (also, removed availability set and changed SKU to be non-`_Promo`)\n* [x] Install NVIDIA drivers and CUDA toolkit\n* [x] remove unused packages from `cloud-config`\n* [x] remove unnecessary commands from `Makefile`\n* [x] remove unnecessary files from repo and trim history\n* [x] fork from [`azure-k3s-cluster`][k3s], new `README`\n\n## Cheapest Spots\n\nGo to the [Azure Resource Graph Explorer](https://portal.azure.com/?feature.customportal=false#view/HubsExtension/ArgQueryBlade) and enter this query to find the cheapest SKU/location combo for spot instances:\n\n```\nSpotResources \n| where type =~ 'microsoft.compute/skuspotpricehistory/ostype/location' \n| where sku.name in~ ('Standard_NV6','Standard_NV6ads_A10_v5') \n| where properties.osType =~ 'linux' \n| where location in~ ('westeurope','northeurope','eastus','eastus2') \n| project skuName = tostring(sku.name), osType = tostring(properties.osType), location, latestSpotPriceUSD = todouble(properties.spotPrices[0].priceUSD) \n| order by latestSpotPriceUSD asc \n```\n\n## `Makefile` commands\n\n* `make keys` - generates an SSH key for provisioning\n* `make deploy-storage` - deploys shared storage\n* `make params` - generates ARM template parameters\n* `make deploy-compute` - deploys VM\n* `make view-deployment` - view deployment status\n* `make watch-deployment` - watch deployment progress\n* `make ssh` - opens an SSH session to `master0` and sets up TCP forwarding to `localhost`\n* `make tail-cloud-init` - opens an SSH session and tails the `cloud-init` log\n* `make list-endpoints` - list DNS aliases\n* `make destroy-environment` - destroys the entire environment (should not be the default)\n* `make destroy-compute` - destroys only the compute resources (should be the default if you want to save costs)\n* `make destroy-storage` - destroys the storage (should be avoided)\n\n## Recommended Sequence\n\n    az login\n    make keys\n    make deploy-storage\n    make params\n    make deploy-compute\n    make view-deployment\n    # Go to the Azure portal and check the deployment progress\n    \n    # Clean up after we're done working for the day, to save costs (preserves storage)\n    make destroy-compute\n    \n    # Clean up the whole thing (destroys storage as well)\n    make destroy-environment\n\n## Requirements\n\n[Azure Cloud Shell](https://shell.azure.com/) (which includes all the below in `bash` mode) or:\n\n* [Python 3][p]\n* The [Azure CLI][az] (`pip install -U -r requirements.txt` will install it)\n* GNU `make` (you can just read through the `Makefile` and type the commands yourself)\n\n## NVIDIA Support\n\nAlthough it is possible to run SKUs like `Standard_NV6ads_A10_v5` as spot instances, this should be considered experimental.\n\n## Deployment Notes\n\n> **Pro Tip:** You can set `STORAGE_ACCOUNT_GROUP` and `STORAGE_ACCOUNT_NAME` inside an `.env` file if you want to use a pre-existing storage account. As long as you use `make` to do everything, the value will be automatically overridden.\n\n## Disclaimers\n\nKeep in mind that this is not meant to be used as a production service.\n\n[k3s]: https://github.com/rcarmo/azure-k3s-cluster\n[d]: http://docker.com\n[p]: http://python.org\n[az]: https://github.com/Azure/azure-cli\n[collab]: https://colab.research.google.com/\n",
+  "commits": [
+    {
+      "sha": "392eb76f",
+      "date": "2023-04-20T15:00:49Z",
+      "msg": "Update README.md"
+    },
+    {
+      "sha": "5a08f04e",
+      "date": "2022-12-13T17:26:08Z",
+      "msg": "fix gen2 detection"
+    },
+    {
+      "sha": "58caf1c2",
+      "date": "2022-11-29T13:33:32Z",
+      "msg": ".PHONY targets"
+    },
+    {
+      "sha": "cd6baaaa",
+      "date": "2022-11-29T13:28:07Z",
+      "msg": "cleanup"
+    },
+    {
+      "sha": "909959f0",
+      "date": "2022-11-29T13:27:21Z",
+      "msg": "moved TUI to separate folder"
+    },
+    {
+      "sha": "0ec9bd26",
+      "date": "2022-11-29T13:27:11Z",
+      "msg": "moved TUI to separate folder"
+    },
+    {
+      "sha": "564be911",
+      "date": "2022-11-29T13:24:55Z",
+      "msg": "basic TUI bootstrap"
+    },
+    {
+      "sha": "bd603456",
+      "date": "2022-11-29T11:19:49Z",
+      "msg": "added basic TUI stub"
+    },
+    {
+      "sha": "ba6a8a9b",
+      "date": "2022-11-29T10:20:49Z",
+      "msg": "deprecated az command"
+    },
+    {
+      "sha": "bbf91e75",
+      "date": "2022-11-27T22:42:50Z",
+      "msg": "Update README.md"
+    },
+    {
+      "sha": "a8afec7f",
+      "date": "2022-11-27T18:31:03Z",
+      "msg": "missing text"
+    },
+    {
+      "sha": "9b06e0da",
+      "date": "2022-11-27T18:11:05Z",
+      "msg": "rename model files"
+    },
+    {
+      "sha": "877f2fa9",
+      "date": "2022-11-27T18:08:24Z",
+      "msg": "fix folder name"
+    },
+    {
+      "sha": "5d4fe231",
+      "date": "2022-11-27T17:46:21Z",
+      "msg": "checklist"
+    },
+    {
+      "sha": "c46f1532",
+      "date": "2022-11-27T17:08:48Z",
+      "msg": "SD 2.0 cleanup"
+    },
+    {
+      "sha": "c6f65159",
+      "date": "2022-11-26T20:16:34Z",
+      "msg": "temporarily disable xformers"
+    },
+    {
+      "sha": "f8af81a4",
+      "date": "2022-11-26T18:20:24Z",
+      "msg": "Automatic1111"
+    },
+    {
+      "sha": "648fdda3",
+      "date": "2022-11-26T18:19:32Z",
+      "msg": "Huggingface"
+    },
+    {
+      "sha": "01b054bf",
+      "date": "2022-11-26T18:19:21Z",
+      "msg": "Add experimental variant"
+    },
+    {
+      "sha": "20098807",
+      "date": "2022-11-25T15:49:48Z",
+      "msg": "Fixed Python base, added tailscale"
+    },
+    {
+      "sha": "b558e6a0",
+      "date": "2022-11-25T15:25:50Z",
+      "msg": "Test Python install and cache fix"
+    },
+    {
+      "sha": "da7dc87d",
+      "date": "2022-11-25T15:25:33Z",
+      "msg": "Spot instance changes"
+    },
+    {
+      "sha": "7c528e2d",
+      "date": "2022-11-25T15:25:08Z",
+      "msg": "Spot instance SKUs"
+    },
+    {
+      "sha": "7291f90a",
+      "date": "2022-11-24T20:45:02Z",
+      "msg": "working solution"
+    },
+    {
+      "sha": "85ddfccc",
+      "date": "2022-11-24T20:44:19Z",
+      "msg": "Parameters"
+    },
+    {
+      "sha": "695d6981",
+      "date": "2022-10-17T12:15:20Z",
+      "msg": "First pass at template"
+    },
+    {
+      "sha": "b0a58fcd",
+      "date": "2022-10-17T11:56:08Z",
+      "msg": "first pass at params"
+    },
+    {
+      "sha": "0e049432",
+      "date": "2022-10-17T11:51:00Z",
+      "msg": "first pass at README"
+    },
+    {
+      "sha": "27fee019",
+      "date": "2022-10-17T11:44:05Z",
+      "msg": "initial pass"
+    },
+    {
+      "sha": "52394e22",
+      "date": "2022-10-17T10:58:35Z",
+      "msg": "First pass at cloud-init"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "Very Stable Diffusion",
+      "date": "2022-09-03",
+      "url": "https://taoofmac.com/space/blog/2022/09/03/1400"
+    },
+    {
+      "title": "A Diffuse Return",
+      "date": "2022-11-27",
+      "url": "https://taoofmac.com/space/blog/2022/11/27/1800"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

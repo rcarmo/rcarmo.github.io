@@ -1,0 +1,183 @@
+{
+  "id": "vibes",
+  "meta": {
+    "name": "vibes",
+    "full_name": "rcarmo/vibes",
+    "description": "A simple mobile-focused chat app to talk to an agent via the ACP protocol",
+    "homepage": "",
+    "stars": 142,
+    "forks": 3,
+    "language": "Python",
+    "created_at": "2026-01-30T18:18:24Z",
+    "pushed_at": "2026-04-18T19:38:12Z",
+    "updated_at": "2026-04-11T15:44:27Z",
+    "topics": []
+  },
+  "readme": "# Vibes\n\nA mobile-friendly web UI for coding agents, supporting [ACP](https://docs.github.com/en/copilot) (`copilot --acp`, [`codex-acp`](https://github.com/openai/codex)) and [Pi](https://pi.dev) via RPC. Inspired by [Toad](https://github.com/batrachianai/toad), built for personal use over Tailscale.\n\n![Demo](docs/demo.gif)\n\n> Vibes and [piclaw](https://github.com/rcarmo/piclaw) share the same web UI.\n\n## Features\n\n- **Streaming chat** — real-time SSE with Markdown, KaTeX, and Mermaid rendering\n- **Workspace explorer** — file tree with previews, drag-and-drop upload, and folder downloads\n- **Code editor** — tabbed CodeMirror 6 editor (13 languages, Vim mode, search/replace, pop-out windows)\n- **Agent controls** — approve/deny tool calls, queue follow-ups, mid-turn steering (Pi), slash commands\n- **Rich media** — paste images, attach files, OpenGraph link previews\n- **SQLite storage** — messages, media, and full-text search in a single file\n- **PWA** — installable, dark/light themes, responsive from phone to desktop\n\n## Installation\n\n```bash\n# Install directly from GitHub\npip install -U git+https://github.com/rcarmo/vibes.git\n\n# Install a specific tag\npip install -U \"vibes @ git+https://github.com/rcarmo/vibes.git@v0.1.0\"\n\n# Or with uv (faster alternative, installs as isolated tool)\nuv tool install git+https://github.com/rcarmo/vibes.git\n\n# Install a specific tag with uv\nuv tool install \"vibes @ git+https://github.com/rcarmo/vibes.git@v0.1.0\"\n```\n\nOr for development:\n\n```bash\ngit clone https://github.com/rcarmo/vibes.git\ncd vibes\npip install -e \".[dev]\"\n```\n\n## Usage\n\n```bash\n# Run the server (defaults to copilot --acp)\nvibes\n\n# Or with custom options\nVIBES_DEFAULT_AGENT=pi VIBES_HOST=127.0.0.1 VIBES_PORT=3000 vibes\n\n# Use codex-acp as the agent\nVIBES_ACP_AGENT=\"codex-acp\" vibes\n\n# Manage agent permission whitelist\nvibes whitelist add \"Run command\"\nvibes whitelist remove \"Run command\"\nvibes whitelist list\n```\n\n## Keyboard shortcuts\n\n| Shortcut | Action |\n|----------|--------|\n| `Cmd/Ctrl+S` | Save current editor tab |\n| `Cmd/Ctrl+F` | Search/replace in editor |\n| `Escape` | Close active editor tab |\n| `Alt+V` | Toggle Vim mode |\n| `Alt+W` | Toggle whitespace visibility |\n| `↑` / `↓` | Cycle compose history |\n\nType `/commands` in the chat input to list all slash commands.\n\n## Configuration\n\nSee [docs/CONFIGURATION.md](docs/CONFIGURATION.md). For Pi integration, see [docs/PI_MODE.md](docs/PI_MODE.md). For the full API, see [docs/API.md](docs/API.md).\n\n## Development\n\n```bash\npip install -e \".[dev]\"        # dev dependencies\nmake check                     # lint + 388 unit tests + 34 E2E tests\nmake build-frontend            # rebuild JS/CSS bundles (requires bun)\nbunx playwright test           # E2E tests (Chromium + WebKit)\nmake serve                     # run dev server\n```\n\n## License\n\nMIT\n",
+  "commits": [
+    {
+      "sha": "41078033",
+      "date": "2026-04-02T22:16:05Z",
+      "msg": "docs: trim README to user-focused essentials"
+    },
+    {
+      "sha": "81b1a818",
+      "date": "2026-04-02T22:14:27Z",
+      "msg": "docs: comprehensive update of README, SPEC, and API reference"
+    },
+    {
+      "sha": "038771f0",
+      "date": "2026-04-02T22:09:36Z",
+      "msg": "Bump version to 0.6.12"
+    },
+    {
+      "sha": "2802d777",
+      "date": "2026-04-02T21:46:58Z",
+      "msg": "style(editor): hide tab bar in popout window"
+    },
+    {
+      "sha": "c3f48dd5",
+      "date": "2026-04-02T21:43:52Z",
+      "msg": "fix(editor): force popup window instead of tab in Safari"
+    },
+    {
+      "sha": "e022c6cb",
+      "date": "2026-04-02T21:40:18Z",
+      "msg": "Bump version to 0.6.11"
+    },
+    {
+      "sha": "8746913c",
+      "date": "2026-04-02T21:23:03Z",
+      "msg": "fix(editor): make popout open editor-only window and close inner tab"
+    },
+    {
+      "sha": "ef12fa73",
+      "date": "2026-04-02T21:04:20Z",
+      "msg": "Bump version to 0.6.10"
+    },
+    {
+      "sha": "e396f440",
+      "date": "2026-04-02T21:00:28Z",
+      "msg": "refactor(editor): remove redundant header bar"
+    },
+    {
+      "sha": "4f1cdc5c",
+      "date": "2026-04-02T20:55:21Z",
+      "msg": "Bump version to 0.6.9"
+    },
+    {
+      "sha": "b6cd0beb",
+      "date": "2026-04-02T20:53:03Z",
+      "msg": "fix(editor): prevent Safari/WebKit freeze on editor open"
+    },
+    {
+      "sha": "b71e4ef8",
+      "date": "2026-04-02T20:33:31Z",
+      "msg": "Bump version to 0.6.8"
+    },
+    {
+      "sha": "64920937",
+      "date": "2026-04-02T20:32:57Z",
+      "msg": "test(e2e): add Playwright editor/tab UX tests"
+    },
+    {
+      "sha": "2e875c11",
+      "date": "2026-04-02T14:40:08Z",
+      "msg": "Bump version to 0.6.7"
+    },
+    {
+      "sha": "e67071f4",
+      "date": "2026-04-02T14:32:22Z",
+      "msg": "fix(web): make Open in Window actually open editor popouts"
+    },
+    {
+      "sha": "d3a68b79",
+      "date": "2026-04-02T14:28:28Z",
+      "msg": "Bump version to 0.6.6"
+    },
+    {
+      "sha": "068aa6d5",
+      "date": "2026-04-02T14:26:50Z",
+      "msg": "Port Piclaw pane popout/detach UI and attachment preview decoupling"
+    },
+    {
+      "sha": "c032b76a",
+      "date": "2026-03-16T10:01:33Z",
+      "msg": "Bump version to 0.6.5"
+    },
+    {
+      "sha": "9a790bde",
+      "date": "2026-03-16T10:01:22Z",
+      "msg": "Use cached agent avatar in dynamic manifest icons"
+    },
+    {
+      "sha": "332803f8",
+      "date": "2026-03-16T08:21:33Z",
+      "msg": "Bump version to 0.6.4"
+    },
+    {
+      "sha": "ed6e774e",
+      "date": "2026-03-16T08:21:22Z",
+      "msg": "Add shared queue steering UX and expose thinking level control"
+    },
+    {
+      "sha": "c9f76f13",
+      "date": "2026-03-16T08:20:28Z",
+      "msg": "Bump version to 0.6.3"
+    },
+    {
+      "sha": "a041ad9e",
+      "date": "2026-03-16T07:44:23Z",
+      "msg": "Bump version to 0.6.2"
+    },
+    {
+      "sha": "6333efa9",
+      "date": "2026-03-14T00:11:32Z",
+      "msg": "Bump version to 0.6.1"
+    },
+    {
+      "sha": "a20b15a6",
+      "date": "2026-03-14T00:11:20Z",
+      "msg": "Match Piclaw solarized auto light-dark theme behavior"
+    },
+    {
+      "sha": "ca4e4c2e",
+      "date": "2026-03-13T12:54:14Z",
+      "msg": "Bump version to 0.6.0"
+    },
+    {
+      "sha": "835e8e37",
+      "date": "2026-03-13T12:52:04Z",
+      "msg": "Port Piclaw editor UX and expand slash command parity"
+    },
+    {
+      "sha": "a7d7ce55",
+      "date": "2026-03-13T11:47:55Z",
+      "msg": "Bump version to 0.5.3"
+    },
+    {
+      "sha": "839cb4cd",
+      "date": "2026-03-13T08:03:23Z",
+      "msg": "feat: port message refs, scroll-to-message, and theme/tint enhancements from piclaw"
+    },
+    {
+      "sha": "6ebd1f5e",
+      "date": "2026-03-10T23:48:14Z",
+      "msg": "feat: port workspace create/rename/move, drag-drop, inline rename, and meta color from piclaw"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "Vibing with the Agent Control Protocol",
+      "date": "2026-02-01",
+      "url": "https://taoofmac.com/space/notes/2026/02/01/2100"
+    },
+    {
+      "title": "Notes for February 2-7",
+      "date": "2026-02-07",
+      "url": "https://taoofmac.com/space/notes/2026/02/07/2000"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

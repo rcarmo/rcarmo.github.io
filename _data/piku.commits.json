@@ -1,0 +1,152 @@
+[
+  {
+    "sha": "8beff69e",
+    "date": "2026-01-31T07:12:09Z",
+    "msg": "Merge pull request #414 from clusterfudge/claude/add-client-plugins-kZEcv"
+  },
+  {
+    "sha": "100ede17",
+    "date": "2026-01-19T09:51:56Z",
+    "msg": "Merge pull request #405 from louisabraham/fix-issue-404-worker-docs"
+  },
+  {
+    "sha": "840b853f",
+    "date": "2026-01-03T05:26:28Z",
+    "msg": "Add client-side plugin examples and documentation"
+  },
+  {
+    "sha": "57f4001f",
+    "date": "2026-01-02T23:08:56Z",
+    "msg": "Add client-side plugin support"
+  },
+  {
+    "sha": "31854ad3",
+    "date": "2025-11-01T23:36:27Z",
+    "msg": "Don't d/l to a literal dot in piku cmd."
+  },
+  {
+    "sha": "0a5140f5",
+    "date": "2025-10-10T02:06:06Z",
+    "msg": "Merge branch 'master' into gh-pr-395"
+  },
+  {
+    "sha": "9f78e80f",
+    "date": "2025-08-29T03:56:42Z",
+    "msg": "Optimize tmux command to use single SSH round trip"
+  },
+  {
+    "sha": "9c221179",
+    "date": "2025-08-19T12:51:56Z",
+    "msg": "partial fix to #404"
+  },
+  {
+    "sha": "e2c61311",
+    "date": "2025-07-04T01:21:02Z",
+    "msg": "Merge pull request #400 from chr15m/issue-399-node-binary-break"
+  },
+  {
+    "sha": "5ba3f210",
+    "date": "2025-07-02T19:45:47Z",
+    "msg": "Fix CI: Use --help flag for piku.py execution check"
+  },
+  {
+    "sha": "c1b23f5d",
+    "date": "2025-07-02T19:29:29Z",
+    "msg": "Improve tmux command error handling"
+  },
+  {
+    "sha": "1c4fad6d",
+    "date": "2025-04-28T19:11:23Z",
+    "msg": "Merge branch 'piku:master' into master"
+  },
+  {
+    "sha": "7f645460",
+    "date": "2025-04-28T08:44:19Z",
+    "msg": "If node binary is broken, reinstall."
+  },
+  {
+    "sha": "c1c08ca2",
+    "date": "2025-04-28T02:32:10Z",
+    "msg": "Merge branch 'python-3.8-tests'"
+  },
+  {
+    "sha": "108ff2c3",
+    "date": "2025-04-28T02:18:41Z",
+    "msg": "Removed buster as Piku only supports 3.8 and higher."
+  },
+  {
+    "sha": "866acdcf",
+    "date": "2025-04-11T11:29:35Z",
+    "msg": "Merge pull request #396 from chr15m/issue-297-config-set-spaces"
+  },
+  {
+    "sha": "d5836797",
+    "date": "2025-04-11T10:09:41Z",
+    "msg": "Use shlex.split to re-interpret SSH split args."
+  },
+  {
+    "sha": "d077d4bc",
+    "date": "2025-04-02T00:33:39Z",
+    "msg": "[Add support for passing arguments with dashes to Piku's tmux command]"
+  },
+  {
+    "sha": "07e60c01",
+    "date": "2025-04-02T00:21:03Z",
+    "msg": "Merge pull request #1 from clusterfudge/feature/tmux"
+  },
+  {
+    "sha": "3c884eff",
+    "date": "2025-04-02T00:17:40Z",
+    "msg": "[Add tmux command to Piku CLI]"
+  },
+  {
+    "sha": "0b748fe9",
+    "date": "2025-01-26T22:24:05Z",
+    "msg": "Update README.md"
+  },
+  {
+    "sha": "56b1ba70",
+    "date": "2025-01-26T22:21:53Z",
+    "msg": "Bump Python version to 3.8"
+  },
+  {
+    "sha": "2db8ebcc",
+    "date": "2025-01-26T22:21:06Z",
+    "msg": "Drop Python 3.7"
+  },
+  {
+    "sha": "669fcbfe",
+    "date": "2025-01-26T22:17:20Z",
+    "msg": "Merge pull request #390 from karlb/uv-python-deploy"
+  },
+  {
+    "sha": "04dbc1e6",
+    "date": "2025-01-25T08:13:03Z",
+    "msg": "Add support for python deployments with uv"
+  },
+  {
+    "sha": "29970d7c",
+    "date": "2025-01-17T02:32:04Z",
+    "msg": "Merge pull request #387 from delzac/patch-1"
+  },
+  {
+    "sha": "4fbe7361",
+    "date": "2025-01-02T19:10:57Z",
+    "msg": "more listing"
+  },
+  {
+    "sha": "f9877ac6",
+    "date": "2025-01-02T19:09:31Z",
+    "msg": "linting"
+  },
+  {
+    "sha": "6d745660",
+    "date": "2025-01-02T19:04:49Z",
+    "msg": "experimental poetry support"
+  },
+  {
+    "sha": "1513fc2a",
+    "date": "2024-10-18T07:40:37Z",
+    "msg": "Enable NGINX caching to include query parameters"
+  }
+]

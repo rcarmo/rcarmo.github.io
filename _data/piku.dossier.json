@@ -1,0 +1,275 @@
+{
+  "id": "piku",
+  "meta": {
+    "name": "piku",
+    "full_name": "piku/piku",
+    "description": "The tiniest PaaS you've ever seen. Piku allows you to do git push deployments to your own servers.",
+    "homepage": "http://piku.github.io",
+    "stars": 6569,
+    "forks": 155,
+    "language": "Python",
+    "created_at": "2016-03-26T12:53:50Z",
+    "pushed_at": "2026-01-31T07:12:10Z",
+    "updated_at": "2026-04-19T04:07:37Z",
+    "topics": [
+      "arm",
+      "heroku",
+      "nodejs",
+      "paas",
+      "python",
+      "raspberry-pi",
+      "raspbian",
+      "ubuntu"
+    ]
+  },
+  "readme": "![piku logo](./img/logo.png)\n\n`piku`, inspired by `dokku`, allows you do `git push` deployments to your own servers, no matter how small they are.\n\n## Demo\n\n[![asciicast](https://asciinema.org/a/Ar31IoTkzsZmWWvlJll6p7haS.svg)](https://asciinema.org/a/Ar31IoTkzsZmWWvlJll6p7haS)\n\n[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)\n\n### Documentation: [Install](#install) | [Using](#workflow) | [Procfile](https://piku.github.io/configuration/procfile.html) | [ENV](https://piku.github.io/configuration/env.html) | [Examples](https://piku.github.io/community/examples.html) | [Roadmap](https://github.com/orgs/piku/projects/2) | [Contributing](https://piku.github.io/community/contributing.html) | [LinuxConf Talk](https://www.youtube.com/watch?v=ec-GoDukHWk) | [Fast Web App Tutorial](https://github.com/piku/webapp-tutorial) | [Discussion Forum](https://github.com/piku/piku/discussions)\n\n## [Install](https://piku.github.io/install)\n\nTL;DR:\n\n```bash\ncurl https://piku.github.io/get | sh\n```\n\nThere are also [other installation methods](https://piku.github.io/install) available, including [`cloud-init`](https://github.com/piku/cloud-init) and [manual installation](https://piku.github.io/install).\n\n## Project Activity\n\n**`piku` is considered STABLE**. It is actively maintained, but \"actively\" here means the feature set is pretty much done, so it is only updated when new language runtimes are added or reproducible bugs crop up.\n\nIt currently requires Python 3.8 or above (which is what we test against), although it can be cajoled to run on older versions. We currently aim to support the latest two Debian and Ubuntu LTS major versions.\n\n## Motivation\n\nWe wanted an Heroku/CloudFoundry-like way to deploy stuff on a few `ARM` boards, but since `dokku` didn't work on `ARM` at the time and even `docker` can be overkill sometimes, a simpler solution was needed.\n\n`piku` is currently able to deploy, manage and independently scale multiple applications per host on both ARM and Intel architectures, and works on any cloud provider (as well as bare metal) that can run Python, `nginx` and `uwsgi`.\n\n## Workflow\n\n`piku` supports a Heroku-like workflow:\n\n* Create a `git` SSH remote pointing to your `piku` server with the app name as repo name:\n  `git remote add piku piku@yourserver:appname`.\n* Push your code: `git push piku master` (or if you want to push a different branch than the current one use `git push piku release-branch-name`).\n* `piku` determines the runtime and installs the dependencies for your app (building whatever's required).\n   * For Python, it segregates each app's dependencies into a `virtualenv`.\n   * For Go, it defines a separate `GOPATH` for each app.\n   * For Node, it installs whatever is in `package.json` into `node_modules`.\n   * For Java, it builds your app depending on either `pom.xml` or `build.gradle` file.\n   * For Clojure, it can use either `leiningen` or the Clojure CLI and a `deps.edn` file.\n   * For Ruby, it does `bundle install` of your gems in an isolated folder.\n* It then looks at a [`Procfile`](https://piku.github.io/configuration/procfile.html) and starts the relevant workers using `uwsgi` as a generic process manager.\n* You can optionally also specify a `release` worker which is run once when the app is deployed.\n* You can then remotely change application settings (`config:set`) or scale up/down worker processes (`ps:scale`).\n* You can also bake application and `nginx` settings into an [`ENV`](https://piku.github.io/configuration/env.html) file.\nYou can also deploy a `gh-pages` style static site using a `static` worker type, with the root path as the argument, and run a `release` task to do some processing on the server after `git push`.\n\n### Virtual Hosts and SSL\n\n`piku` has full virtual host support - i.e., you can host multiple apps on the same VPS and use DNS aliases to access them via different hostnames. \n\n`piku`  will also set up either a private certificate or obtain one via [Let's Encrypt](https://letsencrypt.org/) to enable SSL.\n\nIf you are on a LAN and are accessing `piku` from macOS/iOS/Linux clients, you can try using [`piku/avahi-aliases`](https://github.com/piku/avahi-aliases) to announce different hosts for the same IP address via Avahi/mDNS/Bonjour.\n\n### Caching and Static Paths\n\nBesides static sites, `piku` also supports directly mapping specific URL prefixes to filesystem paths (to serve static assets) or caching back-end responses (to remove load from applications).\n\nThese features are configured by setting appropriate values in the [`ENV`](https://piku.github.io/configuration/env.html) file.\n\n### Supported Platforms\n\n`piku` is intended to work in any POSIX-like environment where you have Python, `nginx`, `uwsgi` and SSH: it has been deployed on Linux, FreeBSD, [Cygwin][cygwin] and the [Windows Subsystem for Linux][wsl].\n\nAs a baseline, it began its development on an original 256MB Raspberry Pi Model B, and still runs reliably on it.\n\nBut its main use is as a micro-PaaS to run applications on cloud servers with both Intel and ARM CPUs, with Debian and Ubuntu Linux as target platforms.\n\n### Supported Runtimes\n\n`piku` currently supports apps written in Python, Node, Clojure, Java and a few other languages (like Go) in the works.\n\nBut as a general rule, if it can be invoked from a shell, it can be run inside `piku`.\n\n### Core values\n\n * Run on low end devices.\n * Accessible to hobbyists and K-12 schools.\n * ~1500 lines readable code.\n * Functional code style.\n * Few (single?) dependencies\n * [12 factor app](https://12factor.net).\n * Simplify user experience.\n * Cover 80% of common use cases.\n * Sensible defaults for all features.\n * Leverage distro packages in Raspbian/Debian/Ubuntu (Alpine and RHEL support is WIP)\n * Leverage standard tooling (`git`, `ssh`, `uwsgi`, `nginx`).\n * Preserve backwards compatibility where possible\n\n[raspi-cluster]: https://github.com/rcarmo/raspi-cluster\n[cygwin]: http://www.cygwin.com\n[wsl]: https://en.wikipedia.org/wiki/Windows_Subsystem_for_Linux\n",
+  "commits": [
+    {
+      "sha": "8beff69e",
+      "date": "2026-01-31T07:12:09Z",
+      "msg": "Merge pull request #414 from clusterfudge/claude/add-client-plugins-kZEcv"
+    },
+    {
+      "sha": "100ede17",
+      "date": "2026-01-19T09:51:56Z",
+      "msg": "Merge pull request #405 from louisabraham/fix-issue-404-worker-docs"
+    },
+    {
+      "sha": "840b853f",
+      "date": "2026-01-03T05:26:28Z",
+      "msg": "Add client-side plugin examples and documentation"
+    },
+    {
+      "sha": "57f4001f",
+      "date": "2026-01-02T23:08:56Z",
+      "msg": "Add client-side plugin support"
+    },
+    {
+      "sha": "31854ad3",
+      "date": "2025-11-01T23:36:27Z",
+      "msg": "Don't d/l to a literal dot in piku cmd."
+    },
+    {
+      "sha": "0a5140f5",
+      "date": "2025-10-10T02:06:06Z",
+      "msg": "Merge branch 'master' into gh-pr-395"
+    },
+    {
+      "sha": "9f78e80f",
+      "date": "2025-08-29T03:56:42Z",
+      "msg": "Optimize tmux command to use single SSH round trip"
+    },
+    {
+      "sha": "9c221179",
+      "date": "2025-08-19T12:51:56Z",
+      "msg": "partial fix to #404"
+    },
+    {
+      "sha": "e2c61311",
+      "date": "2025-07-04T01:21:02Z",
+      "msg": "Merge pull request #400 from chr15m/issue-399-node-binary-break"
+    },
+    {
+      "sha": "5ba3f210",
+      "date": "2025-07-02T19:45:47Z",
+      "msg": "Fix CI: Use --help flag for piku.py execution check"
+    },
+    {
+      "sha": "c1b23f5d",
+      "date": "2025-07-02T19:29:29Z",
+      "msg": "Improve tmux command error handling"
+    },
+    {
+      "sha": "1c4fad6d",
+      "date": "2025-04-28T19:11:23Z",
+      "msg": "Merge branch 'piku:master' into master"
+    },
+    {
+      "sha": "7f645460",
+      "date": "2025-04-28T08:44:19Z",
+      "msg": "If node binary is broken, reinstall."
+    },
+    {
+      "sha": "c1c08ca2",
+      "date": "2025-04-28T02:32:10Z",
+      "msg": "Merge branch 'python-3.8-tests'"
+    },
+    {
+      "sha": "108ff2c3",
+      "date": "2025-04-28T02:18:41Z",
+      "msg": "Removed buster as Piku only supports 3.8 and higher."
+    },
+    {
+      "sha": "866acdcf",
+      "date": "2025-04-11T11:29:35Z",
+      "msg": "Merge pull request #396 from chr15m/issue-297-config-set-spaces"
+    },
+    {
+      "sha": "d5836797",
+      "date": "2025-04-11T10:09:41Z",
+      "msg": "Use shlex.split to re-interpret SSH split args."
+    },
+    {
+      "sha": "d077d4bc",
+      "date": "2025-04-02T00:33:39Z",
+      "msg": "[Add support for passing arguments with dashes to Piku's tmux command]"
+    },
+    {
+      "sha": "07e60c01",
+      "date": "2025-04-02T00:21:03Z",
+      "msg": "Merge pull request #1 from clusterfudge/feature/tmux"
+    },
+    {
+      "sha": "3c884eff",
+      "date": "2025-04-02T00:17:40Z",
+      "msg": "[Add tmux command to Piku CLI]"
+    },
+    {
+      "sha": "0b748fe9",
+      "date": "2025-01-26T22:24:05Z",
+      "msg": "Update README.md"
+    },
+    {
+      "sha": "56b1ba70",
+      "date": "2025-01-26T22:21:53Z",
+      "msg": "Bump Python version to 3.8"
+    },
+    {
+      "sha": "2db8ebcc",
+      "date": "2025-01-26T22:21:06Z",
+      "msg": "Drop Python 3.7"
+    },
+    {
+      "sha": "669fcbfe",
+      "date": "2025-01-26T22:17:20Z",
+      "msg": "Merge pull request #390 from karlb/uv-python-deploy"
+    },
+    {
+      "sha": "04dbc1e6",
+      "date": "2025-01-25T08:13:03Z",
+      "msg": "Add support for python deployments with uv"
+    },
+    {
+      "sha": "29970d7c",
+      "date": "2025-01-17T02:32:04Z",
+      "msg": "Merge pull request #387 from delzac/patch-1"
+    },
+    {
+      "sha": "4fbe7361",
+      "date": "2025-01-02T19:10:57Z",
+      "msg": "more listing"
+    },
+    {
+      "sha": "f9877ac6",
+      "date": "2025-01-02T19:09:31Z",
+      "msg": "linting"
+    },
+    {
+      "sha": "6d745660",
+      "date": "2025-01-02T19:04:49Z",
+      "msg": "experimental poetry support"
+    },
+    {
+      "sha": "1513fc2a",
+      "date": "2024-10-18T07:40:37Z",
+      "msg": "Enable NGINX caching to include query parameters"
+    }
+  ],
+  "releases": [
+    {
+      "tag": "v1.0.0",
+      "name": "The One",
+      "date": "2024-04-06T16:16:43Z",
+      "body": "Just a stability milestone, really."
+    },
+    {
+      "tag": "legacy",
+      "name": "The Legacy Edition",
+      "date": "2023-03-23T08:31:37Z",
+      "body": "This is a snapshot of the source tree that should be suitable for Python 3.5-3.7 on Debian 9/10 and Ubuntu 16.04/18.04."
+    }
+  ],
+  "posts": [
+    {
+      "title": "Some Breakage May Ensue",
+      "date": "2016-04-25",
+      "url": "https://taoofmac.com/space/blog/2016/04/25/1400"
+    },
+    {
+      "title": "Third Python's The Charm",
+      "date": "2016-12-04",
+      "url": "https://taoofmac.com/space/blog/2016/12/04/1351"
+    },
+    {
+      "title": "A Random Asynchronous Walk",
+      "date": "2017-04-02",
+      "url": "https://taoofmac.com/space/blog/2017/04/02/2150"
+    },
+    {
+      "title": "My Quest for Home Automation, Part 2",
+      "date": "2018-03-25",
+      "url": "https://taoofmac.com/space/blog/2018/03/25/2244"
+    },
+    {
+      "title": "The Third Python",
+      "date": "2018-07-08",
+      "url": "https://taoofmac.com/space/blog/2018/07/08/1330"
+    },
+    {
+      "title": "My Quest for Home Automation, Part 3",
+      "date": "2018-09-23",
+      "url": "https://taoofmac.com/space/blog/2018/09/23/1840"
+    },
+    {
+      "title": "Dealing With a Million Legacy Files Every Day",
+      "date": "2019-08-11",
+      "url": "https://taoofmac.com/space/blog/2019/08/11/2230"
+    },
+    {
+      "title": "Deployment Pains",
+      "date": "2019-10-13",
+      "url": "https://taoofmac.com/space/blog/2019/10/13/1630"
+    },
+    {
+      "title": "Living The Static Life",
+      "date": "2021-03-06",
+      "url": "https://taoofmac.com/space/blog/2021/03/06/1130"
+    },
+    {
+      "title": "Building My Own Yahoo! Pipes",
+      "date": "2021-03-20",
+      "url": "https://taoofmac.com/space/blog/2021/03/20/1945"
+    },
+    {
+      "title": "Homelab Tour",
+      "date": "2022-02-12",
+      "url": "https://taoofmac.com/space/blog/2022/02/12/1930"
+    },
+    {
+      "title": "Getting Takahē to run on Piku",
+      "date": "2022-12-21",
+      "url": "https://taoofmac.com/space/blog/2022/12/21/0900"
+    },
+    {
+      "title": "A Fediverse Update",
+      "date": "2023-07-09",
+      "url": "https://taoofmac.com/space/blog/2023/07/09/1800"
+    },
+    {
+      "title": "Summer Minimalism",
+      "date": "2023-08-20",
+      "url": "https://taoofmac.com/space/blog/2023/08/20/1600"
+    },
+    {
+      "title": "My Quest For Home Automation, Part 6",
+      "date": "2025-05-03",
+      "url": "https://taoofmac.com/space/blog/2025/05/03/1830"
+    },
+    {
+      "title": "My Rube Goldberg RSS Pipeline",
+      "date": "2026-01-17",
+      "url": "https://taoofmac.com/space/blog/2026/01/17/2130"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

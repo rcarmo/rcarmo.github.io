@@ -1,0 +1,152 @@
+[
+  {
+    "sha": "fc1b59e2",
+    "date": "2026-02-15T13:48:59Z",
+    "msg": "Enhance README with additional references"
+  },
+  {
+    "sha": "96307458",
+    "date": "2026-02-14T16:35:14Z",
+    "msg": "Fix ByteStream C1 handling and bump version"
+  },
+  {
+    "sha": "7172019e",
+    "date": "2026-02-14T10:06:46Z",
+    "msg": "Add MIT license"
+  },
+  {
+    "sha": "edf070e4",
+    "date": "2026-02-14T10:04:34Z",
+    "msg": "Document WASM usage"
+  },
+  {
+    "sha": "594419b2",
+    "date": "2026-02-14T10:00:30Z",
+    "msg": "Fix tmux capture newline handling"
+  },
+  {
+    "sha": "d67ec61b",
+    "date": "2026-02-14T09:51:08Z",
+    "msg": "Fix SVG rendering for tmux captures"
+  },
+  {
+    "sha": "c7eec559",
+    "date": "2026-02-14T09:46:25Z",
+    "msg": "Add SVG capture tooling and improve docs"
+  },
+  {
+    "sha": "2c124b81",
+    "date": "2026-02-14T09:26:48Z",
+    "msg": "Move documentation into docs directory"
+  },
+  {
+    "sha": "d1c91ce0",
+    "date": "2026-02-14T09:25:15Z",
+    "msg": "Refresh pyte test coverage documentation"
+  },
+  {
+    "sha": "0ef414d4",
+    "date": "2026-02-14T09:24:18Z",
+    "msg": "Fix terminal emulator behavior and add SVG exporter"
+  },
+  {
+    "sha": "7ee4ed0e",
+    "date": "2026-02-13T20:08:21Z",
+    "msg": "refactor te package and port esctest2 coverage"
+  },
+  {
+    "sha": "989953d3",
+    "date": "2026-02-13T17:27:03Z",
+    "msg": "Port esctest DECSET margin/morefix and change color tests"
+  },
+  {
+    "sha": "373a1d9b",
+    "date": "2026-02-13T17:20:22Z",
+    "msg": "Port esctest DA/DA2/DECID/xterm save/reset color"
+  },
+  {
+    "sha": "3d96589a",
+    "date": "2026-02-13T17:13:46Z",
+    "msg": "Align DSR cursor reporting with wrap-next state"
+  },
+  {
+    "sha": "efea0c74",
+    "date": "2026-02-13T16:55:26Z",
+    "msg": "Port esctest DECSET reverse wrap/altbuf tests"
+  },
+  {
+    "sha": "4df4bf61",
+    "date": "2026-02-13T16:51:59Z",
+    "msg": "Port esctest APC/PM/SOS/DCS/DECALN suites"
+  },
+  {
+    "sha": "d6595eb0",
+    "date": "2026-02-13T16:49:58Z",
+    "msg": "Port esctest DECFI/DECBI suites"
+  },
+  {
+    "sha": "73b0bc29",
+    "date": "2026-02-13T16:47:00Z",
+    "msg": "Port esctest DECSET tite inhibit save/restore suite"
+  },
+  {
+    "sha": "5b446709",
+    "date": "2026-02-13T16:46:08Z",
+    "msg": "Port esctest SCORC save/restore suite"
+  },
+  {
+    "sha": "fe0f80b3",
+    "date": "2026-02-13T16:44:38Z",
+    "msg": "Port esctest DECRC save/restore suite"
+  },
+  {
+    "sha": "46056506",
+    "date": "2026-02-13T16:31:57Z",
+    "msg": "Port esctest DECSTR suite"
+  },
+  {
+    "sha": "1bb5a0bb",
+    "date": "2026-02-13T16:28:14Z",
+    "msg": "Port esctest REP and RIS suites"
+  },
+  {
+    "sha": "6a39bd93",
+    "date": "2026-02-13T16:09:28Z",
+    "msg": "Port esctest BS suite"
+  },
+  {
+    "sha": "96c3c2f0",
+    "date": "2026-02-13T16:00:39Z",
+    "msg": "Port esctest DECSTBM suite"
+  },
+  {
+    "sha": "ba7c895a",
+    "date": "2026-02-13T15:58:29Z",
+    "msg": "Port esctest SU/SD scroll suites"
+  },
+  {
+    "sha": "7a880c43",
+    "date": "2026-02-13T15:56:17Z",
+    "msg": "Port esctest IL/DL suites"
+  },
+  {
+    "sha": "8ecbb365",
+    "date": "2026-02-13T15:54:29Z",
+    "msg": "Port esctest DCH/ICH suites"
+  },
+  {
+    "sha": "8a6f42a9",
+    "date": "2026-02-13T15:52:39Z",
+    "msg": "Port esctest ED suite and add ISO protection support"
+  },
+  {
+    "sha": "ae2b140e",
+    "date": "2026-02-13T15:47:22Z",
+    "msg": "Port esctest ECH/EL suites and add protection handling"
+  },
+  {
+    "sha": "0538757b",
+    "date": "2026-02-13T15:42:41Z",
+    "msg": "Port esctest RI and S8C1T suites"
+  }
+]

@@ -1,0 +1,17 @@
+{
+  "name": "go-busybox",
+  "full_name": "rcarmo/go-busybox",
+  "description": "A sandboxable port of busybox for AI agents",
+  "homepage": "",
+  "stars": 10,
+  "forks": 2,
+  "language": "Go",
+  "created_at": "2026-02-07T16:10:55Z",
+  "pushed_at": "2026-02-17T19:18:33Z",
+  "updated_at": "2026-03-30T14:26:09Z",
+  "topics": [
+    "busybox",
+    "golang",
+    "ports"
+  ]
+}

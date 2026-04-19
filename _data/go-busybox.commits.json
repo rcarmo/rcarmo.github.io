@@ -1,0 +1,152 @@
+[
+  {
+    "sha": "13f3053f",
+    "date": "2026-02-17T18:30:19Z",
+    "msg": "Update README source file count to 138"
+  },
+  {
+    "sha": "ffa263e9",
+    "date": "2026-02-17T17:54:55Z",
+    "msg": "Fix WASM build: add missing build constraints and stubs"
+  },
+  {
+    "sha": "1586cedf",
+    "date": "2026-02-17T17:40:49Z",
+    "msg": "Overhaul documentation: terse British English throughout"
+  },
+  {
+    "sha": "b1090131",
+    "date": "2026-02-17T17:17:59Z",
+    "msg": "Add comprehensive fuzz tests for all text-processing applets"
+  },
+  {
+    "sha": "b460f597",
+    "date": "2026-02-17T16:47:47Z",
+    "msg": "Add comprehensive Godoc coverage and remove unused import"
+  },
+  {
+    "sha": "8e88d3e8",
+    "date": "2026-02-17T16:20:00Z",
+    "msg": "Update README: 387/387 (100%) - perfect score"
+  },
+  {
+    "sha": "784fefa8",
+    "date": "2026-02-17T16:19:49Z",
+    "msg": "Rewrite wget with proper flag parsing: -q, -O, -P support"
+  },
+  {
+    "sha": "413b091c",
+    "date": "2026-02-17T16:05:53Z",
+    "msg": "Update README: 384/387 (99.2%), all new-style tests 100%"
+  },
+  {
+    "sha": "3571f90b",
+    "date": "2026-02-17T16:04:49Z",
+    "msg": "Fix sed trailing newline + wfile: per-line no-NL tracking"
+  },
+  {
+    "sha": "f5073a29",
+    "date": "2026-02-17T15:51:41Z",
+    "msg": "Fix diff -B: filter blank-only hunks instead of stripping blank lines"
+  },
+  {
+    "sha": "62d0c058",
+    "date": "2026-02-17T15:43:28Z",
+    "msg": "Update README: 381/387 (98.4%) test pass rate"
+  },
+  {
+    "sha": "555e021b",
+    "date": "2026-02-17T15:42:52Z",
+    "msg": "Fix pidof cmdline matching + self-exclusion: 381/387 (98.4%)"
+  },
+  {
+    "sha": "dc0df0c9",
+    "date": "2026-02-17T15:36:47Z",
+    "msg": "Major sed improvements + fixes: 380/387 (98.1%) test pass rate"
+  },
+  {
+    "sha": "62525517",
+    "date": "2026-02-17T15:19:23Z",
+    "msg": "Major improvements: 374/387 (96.6%) test pass rate"
+  },
+  {
+    "sha": "38dfa1e4",
+    "date": "2026-02-17T14:45:08Z",
+    "msg": "Fix xargs test: no-args defaults to echo (busybox compat)"
+  },
+  {
+    "sha": "ae99c8cc",
+    "date": "2026-02-17T14:42:52Z",
+    "msg": "Fix sed s///p trailing newline tracking: 84/92 sed tests, 361/387 total (93%)"
+  },
+  {
+    "sha": "c6178df0",
+    "date": "2026-02-17T14:38:02Z",
+    "msg": "Update README with busybox test suite results: 364/387 (94.1%)"
+  },
+  {
+    "sha": "1fcedc02",
+    "date": "2026-02-17T14:32:37Z",
+    "msg": "Improve ls -l format, sed BRE/backrefs: 361+/387 (93%+)"
+  },
+  {
+    "sha": "ed3e80c8",
+    "date": "2026-02-17T14:25:48Z",
+    "msg": "Major sed improvements: 84/92 tests (91.3%), combined 360/387 (93.0%)"
+  },
+  {
+    "sha": "0390c34b",
+    "date": "2026-02-17T14:09:12Z",
+    "msg": "Add printf applet, fix cp/cut/uniq/xargs/ls/tr: 338/387 (87.3%)"
+  },
+  {
+    "sha": "943ac85f",
+    "date": "2026-02-17T13:43:52Z",
+    "msg": "Run busybox test suite against applets: 285/387 passing (73.6%)"
+  },
+  {
+    "sha": "386eac44",
+    "date": "2026-02-17T12:55:11Z",
+    "msg": "ash: fix all remaining test failures — 349/349 busybox ash tests passing (100%)"
+  },
+  {
+    "sha": "cdf155dc",
+    "date": "2026-02-17T08:35:49Z",
+    "msg": "Fix ash var expansion, patterns, and subshell scoping"
+  },
+  {
+    "sha": "a882634a",
+    "date": "2026-02-16T22:57:37Z",
+    "msg": "Fix ash quoting glob and case pattern handling"
+  },
+  {
+    "sha": "47ea0796",
+    "date": "2026-02-16T21:19:15Z",
+    "msg": "Optimize builtin background execution"
+  },
+  {
+    "sha": "370db5bf",
+    "date": "2026-02-16T15:49:08Z",
+    "msg": "Fix command substitution status, redir errors, and loop breaks"
+  },
+  {
+    "sha": "8cbd1e8f",
+    "date": "2026-02-16T15:05:47Z",
+    "msg": "Handle backgrounded and/or lists, reserved function names, and & tokenization"
+  },
+  {
+    "sha": "b0883dc4",
+    "date": "2026-02-16T12:11:19Z",
+    "msg": "Fix case backslash matching and defer signals during subshells"
+  },
+  {
+    "sha": "33ee36d9",
+    "date": "2026-02-16T11:51:02Z",
+    "msg": "Fix case parsing in subshells and case patterns"
+  },
+  {
+    "sha": "a53a6952",
+    "date": "2026-02-16T11:41:00Z",
+    "msg": "Prevent literal backslash markers from leaking into assignment values"
+  }
+]

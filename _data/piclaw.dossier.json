@@ -1,0 +1,297 @@
+{
+  "id": "piclaw",
+  "meta": {
+    "name": "piclaw",
+    "full_name": "rcarmo/piclaw",
+    "description": "I'm going to build my own OpenClaw, with blackjack... and bun!",
+    "homepage": "",
+    "stars": 526,
+    "forks": 37,
+    "language": "TypeScript",
+    "created_at": "2026-02-17T19:06:49Z",
+    "pushed_at": "2026-04-19T13:52:30Z",
+    "updated_at": "2026-04-19T13:52:32Z",
+    "topics": [
+      "adaptive-cards",
+      "ai-agent",
+      "bun",
+      "coding-agent",
+      "docker",
+      "llm",
+      "pi-agent",
+      "self-hosted",
+      "typescript",
+      "vnc",
+      "web-ui",
+      "workspace"
+    ]
+  },
+  "readme": "# `piclaw` — your self-hosted AI workspace\n\n![PiClaw](docs/icon-256.png)\n\nPiClaw packages the [Pi Coding Agent](https://github.com/badlogic/pi-mono) into a self-hosted workspace with a streaming web UI, multi-provider LLM support, persistent state, and a growing collection of built-in tools — code editor, terminal, VNC client, document viewers, kanban boards, and autonomous experiment loops.\n\nIt is built for people who want a practical, stateful agent they can run locally or in a container without stitching together half a dozen separate services.\n\n## Why PiClaw\n\n![Demo Animation](docs/demo.gif)\n\n- **Streaming web UI** — real-time chat with Markdown, KaTeX, Mermaid, and Adaptive Cards\n- **Persistent agent state** — SQLite-backed messages, media, tasks, token usage, encrypted keychain, and session-scoped SSH / Proxmox / Portainer profiles\n- **Workspace-native workflow** — browse files, preview documents, upload attachments, drag files into the workspace explorer with progress feedback and a client-side size guard, edit code, reference files in prompts, and optionally flip core tools to a remote SSH host for the current session\n- **Built-in tools** — Ghostty-based terminal, code editor, Office/PDF/CSV/image/video viewers, draw.io, kanban board and mindmap editors, VNC client, browser automation, sharp-backed image processing, bundled MCP access via `pi-mcp-adapter`, and agent-only infrastructure tools for SSH, Proxmox, and Portainer\n- **Agent control features** — steering, queued follow-ups, threading, side prompts, autoresearch experiment loops, and scheduled tasks\n- **Context conservation by default** — small always-active tool baseline, staged tool/script discovery via `list_tools` / `list_scripts` (filtered or intent-guided discovery → compact summary → on-demand detail → activate/use), lazy activation for non-default tools, and opt-in examples for higher-detail workflow help\n- **Optional auth and channels** — passkeys/TOTP for the web UI, plus optional WhatsApp integration\n\n## Quick start\n\n```bash\nmkdir -p ./home ./workspace\n\ndocker run -d \\\n  --init \\\n  --name piclaw \\\n  --restart unless-stopped \\\n  -p 8080:8080 \\\n  -e PICLAW_WEB_PORT=8080 \\\n  -v \"$(pwd)/home:/config\" \\\n  -v \"$(pwd)/workspace:/workspace\" \\\n  ghcr.io/rcarmo/piclaw:latest\n```\n\nOpen `http://localhost:8080` and type `/login` to configure your LLM provider, including custom OpenAI-compatible endpoints when you are not using one of the built-in hosted providers.\n\n> [!TIP]\n> Keep `--init` enabled for `docker run` / `podman run` so the runtime inserts a tiny init process for signal forwarding and zombie reaping. The bundled `docker-compose.yml` now sets the equivalent `init: true` flag.\n\n| Mount | Container path | Contents |\n|---|---|---|\n| Home | `/config` | Agent home (`.pi/`, `.gitconfig`, `.bashrc`) |\n| Workspace | `/workspace` | Projects, notes, and piclaw state |\n\n> [!WARNING]\n> Never delete `/workspace/.piclaw/store/messages.db`. It contains chat history, media, and task state.\n\n> [!IMPORTANT]\n> You do **not** need to set provider API keys in piclaw environment variables. PiClaw reuses provider credentials configured in Pi Agent settings.\n\n> [!NOTE]\n> Power users can place workspace-scoped shell environment overrides in `/workspace/.env.sh`. PiClaw sources that file for the embedded terminal and on runtime startup, which is useful for things like `PATH` tweaks or persisting `gh auth login` with `GH_CONFIG_DIR=/workspace/.config/gh`. This hook is user-controlled: if its contents break PiClaw startup, shell behavior, or tool resolution, that breakage is the user's responsibility.\n\n## Web UI\n\nPiClaw is single-user, mobile-friendly, and streams updates over SSE.\n\n### Chat\n\n- Thought and draft panels during streaming\n- Live steering and queued follow-ups\n- Adaptive Cards with persisted submissions\n- `/btw` side conversations\n- File attachments, link previews, threaded turns, and syntax-highlighted previews for common text/code attachments\n- Themes and tinting via `/theme` and `/tint`\n- Mobile-friendly layout with webapp manifest\n\n### Workspace\n\n- Sidebar file browser with auto-refresh, drag-and-drop upload progress, and a client-side 256 MB upload guard before the request even starts\n- File-reference pills in prompts\n- Folder sizes in the starburst explorer\n- Workspace search index status with one-click reindex from the explorer header\n\n### Editor\n\n- CodeMirror 6 with syntax highlighting for JS/TS, Python, Go, JSON, CSS, HTML, YAML, SQL, XML/SVG, Markdown, and Shell\n- Search and replace, dirty-state tracking, line wrapping\n- Lazy-loaded local bundle — no CDN dependency\n\n### Terminal\n\n- Ghostty-based web terminal — a real shell in the browser, not a simulation\n- Runs as a dock panel or a standalone tab\n- Detachable into popout windows with live session transfer\n- Enabled by default on Linux and macOS; disable with `PICLAW_WEB_TERMINAL_ENABLED=0`\n- Still disabled by default on Windows\n\n### Viewers\n\n- **Draw.io** — self-hosted editor with SVG/PNG/XML export back to workspace\n- **Office documents** — `.docx`, `.xlsx`, `.pptx`, `.odt`, `.ods`, `.odp`\n- **CSV/TSV** — dedicated table viewer\n- **PDF, images, video** — inline viewers\n- **Text/code attachments** — syntax-highlighted timeline preview modal for common code/config formats\n- **Kanban boards** — `*.kanban.md` in a drag-and-drop board editor (Obsidian Kanban compatible)\n- **Mindmaps** — `*.mindmap.yaml` in a D3/SVG visual editor\n- **VNC remote display** — connect to allowlisted targets from a tab, with direct-connect enabled by default on Linux, macOS, and Windows (experimental); disable with `PICLAW_WEB_VNC_ALLOW_DIRECT=0`\n\n### Automation\n\n- **`/image` and `/flux`** — workspace-backed image generation commands for Azure OpenAI / Foundry; `/image` now supports `--transparent` for transparent PNG output when the Azure OpenAI model supports it\n- **`image_process`** — sharp-backed workspace image manipulation for resize/crop/convert/optimise, metadata inspection, text/SVG/composite operations, and animated GIF frame/spritesheet workflows\n- **`cdp_browser`** — Chromium/Edge/Chrome automation via CDP for navigation, JS evaluation, DOM clicking, and screenshots\n- **`mcp` via `pi-mcp-adapter`** — token-efficient access to external MCP servers configured through `.pi/mcp.json`\n- **Experimental `m365` extension** — opt-in Microsoft 365 automation bundle for Teams, Graph, OneDrive, SharePoint, and calendar flows; enable with `PICLAW_ENABLE_M365_EXPERIMENTAL=1` (primarily validated on Windows with YOLO mode, with Edge → Chrome → Chromium browser lookup across Windows/macOS/Linux). Graph-backed consumer-account support now exists; Teams chat flows still require a work/school tenant, and the auth/browser reuse path now follows the current Teams web-app entry instead of the stale legacy route.\n- **`win_*` tools** — Windows-only desktop automation via Win32 FFI for window enumeration, screenshots, element inspection, clicking, typing, and process management. No-ops on non-Windows platforms.\n\n## Configuration\n\nKey environment variables:\n\n| Variable | Default | Purpose |\n|---|---|---|\n| `PICLAW_WEB_PORT` | `8080` | Web UI port |\n| `PICLAW_WEB_TERMINAL_ENABLED` | `1` on Linux/macOS, `0` on Windows | Enable or disable the authenticated Ghostty-based web terminal |\n| `PICLAW_WEB_VNC_ALLOW_DIRECT` | `1` on Linux/macOS/Windows | Allow or disable direct VNC targets supplied at runtime |\n| `PICLAW_WEB_TOTP_SECRET` | _(empty)_ | Base32 TOTP secret; enables login gate (or initialize with `/totp`) |\n| `PICLAW_WEB_PASSKEY_MODE` | `totp-fallback` | `totp-fallback`, `passkey-only`, or `totp-only` |\n| `PICLAW_ASSISTANT_NAME` | `PiClaw` | Display name in the UI |\n| `PICLAW_ENABLE_M365_EXPERIMENTAL` | `0` | Enable the experimental Microsoft 365 extension bundle |\n| `PICLAW_KEYCHAIN_KEY` | _(empty)_ | Master key for encrypted secret storage |\n| `PICLAW_TRUST_PROXY` | `0` | Enable when behind a reverse proxy\n",
+  "commits": [
+    {
+      "sha": "abce3fda",
+      "date": "2026-04-19T13:52:23Z",
+      "msg": "build: rebuild dist for session timeout defaults + update release docs"
+    },
+    {
+      "sha": "c130922f",
+      "date": "2026-04-19T13:50:20Z",
+      "msg": "Increase default compaction idle wait to 300s"
+    },
+    {
+      "sha": "53f7011f",
+      "date": "2026-04-19T13:16:47Z",
+      "msg": "Make session idle wait timeouts configurable via env vars"
+    },
+    {
+      "sha": "6c949b95",
+      "date": "2026-04-19T10:46:41Z",
+      "msg": "build: rebuild dist for recovery chip styling"
+    },
+    {
+      "sha": "84286ea9",
+      "date": "2026-04-19T09:26:54Z",
+      "msg": "fix(web): recovery chip — smaller font, human-readable tooltip"
+    },
+    {
+      "sha": "8214bf6b",
+      "date": "2026-04-19T09:15:37Z",
+      "msg": "fix(web): tone down recovery chip — use theme colors, subtler label"
+    },
+    {
+      "sha": "b520399d",
+      "date": "2026-04-19T08:44:19Z",
+      "msg": "build: rebuild dist for Windows path hotfix"
+    },
+    {
+      "sha": "d11eeb95",
+      "date": "2026-04-19T08:42:53Z",
+      "msg": "Consolidate path-safety helpers; fix Windows editor-vendor 403"
+    },
+    {
+      "sha": "6e9e564f",
+      "date": "2026-04-19T08:33:15Z",
+      "msg": "build: rebuild dist bundles and sync workitems for v1.8.2"
+    },
+    {
+      "sha": "990d4b6f",
+      "date": "2026-04-19T08:22:10Z",
+      "msg": "fix(ci): replace second silent catch in stamp-cache-buster with explicit log"
+    },
+    {
+      "sha": "eb0cd082",
+      "date": "2026-04-19T07:46:12Z",
+      "msg": "build: refresh generated dist for v1.8.2 retag"
+    },
+    {
+      "sha": "00679f94",
+      "date": "2026-04-19T07:39:23Z",
+      "msg": "Return provider usage for branch chats without live sessions"
+    },
+    {
+      "sha": "e0773282",
+      "date": "2026-04-19T07:35:14Z",
+      "msg": "Use content-hash cache busters instead of epoch timestamps"
+    },
+    {
+      "sha": "8e80c85c",
+      "date": "2026-04-19T07:16:29Z",
+      "msg": "Reset model/context state on chat switch to prevent stale display"
+    },
+    {
+      "sha": "941eb4c7",
+      "date": "2026-04-19T01:25:55Z",
+      "msg": "fix(ci): replace silent catch in stamp-cache-buster with explicit warning log"
+    },
+    {
+      "sha": "877971d5",
+      "date": "2026-04-19T01:17:45Z",
+      "msg": "fix(web): bust stale vendor bundle cache — stamp importmap URL + fix broken cache-buster regex"
+    },
+    {
+      "sha": "7a1fda17",
+      "date": "2026-04-19T01:12:21Z",
+      "msg": "fix(web): exclude Apple Pencil from chat swipe navigation"
+    },
+    {
+      "sha": "4d529520",
+      "date": "2026-04-19T01:07:24Z",
+      "msg": "fix(web): don't overwrite cached context usage with null API response"
+    },
+    {
+      "sha": "8ef6f186",
+      "date": "2026-04-19T01:05:43Z",
+      "msg": "Update generated dist for branch recovery skip-replay"
+    },
+    {
+      "sha": "1056abfd",
+      "date": "2026-04-19T01:00:04Z",
+      "msg": "Skip replay for branch chats on startup/stale recovery (no session context)"
+    },
+    {
+      "sha": "5a3f80e4",
+      "date": "2026-04-19T00:55:32Z",
+      "msg": "build: refresh generated dist for automatic-recovery context-pressure path"
+    },
+    {
+      "sha": "789e0f7a",
+      "date": "2026-04-19T00:55:24Z",
+      "msg": "fix(editor): pin @codemirror/commands in overrides to enforce singleton resolution"
+    },
+    {
+      "sha": "a261c485",
+      "date": "2026-04-19T00:53:36Z",
+      "msg": "fix(editor): pin CodeMirror commands singleton dependency"
+    },
+    {
+      "sha": "c2443826",
+      "date": "2026-04-19T00:51:00Z",
+      "msg": "Allow compaction recovery despite tool activity for context-pressure failures"
+    },
+    {
+      "sha": "ccdb7dc2",
+      "date": "2026-04-19T00:31:30Z",
+      "msg": "build: refresh dist, config tests, and github collate script for v1.8.2 retag"
+    },
+    {
+      "sha": "4d3122ad",
+      "date": "2026-04-19T00:21:48Z",
+      "msg": "build: rebuild web bundles with singleton CodeMirror + VNC touch fix"
+    },
+    {
+      "sha": "8097226c",
+      "date": "2026-04-19T00:21:11Z",
+      "msg": "fix(editor): enforce singleton CodeMirror instances to prevent extension errors"
+    },
+    {
+      "sha": "747af0b3",
+      "date": "2026-04-19T00:09:38Z",
+      "msg": "build: refresh dist for v1.8.2 retag"
+    },
+    {
+      "sha": "a3acb6bc",
+      "date": "2026-04-19T00:06:05Z",
+      "msg": "fix(vnc): iPad touch/pen stuck clicks — skip setPointerCapture for non-mouse, add cross-pointer release, reduce idle timer"
+    },
+    {
+      "sha": "b307d920",
+      "date": "2026-04-18T23:53:50Z",
+      "msg": "Add session line-count cap to auto-rotation (default 8000)"
+    }
+  ],
+  "releases": [
+    {
+      "tag": "v1.7.10",
+      "name": "PiClaw v1.7.10 — Microserfs",
+      "date": "2026-04-10T16:58:45Z",
+      "body": "# PiClaw v1.7.10 — \"Microserfs\"\n\nA patch release about office software, experimental integrations, and the ongoing effort to make modern work feel slightly less like a badly managed group project with sockets.\n\n## Features\n\n- **Experimental Microsoft 365 extension now ships in the bundle** — PiClaw can now package an env-gated M365 integration for Teams, Microsoft Graph, OneDrive, SharePoint, cale"
+    },
+    {
+      "tag": "v1.8.2",
+      "name": "PiClaw v1.8.2 — Sliding Doors",
+      "date": "2026-04-19T13:52:46Z",
+      "body": "# PiClaw v1.8.2 — \"Sliding Doors\"\n\nA patch release about interrupted turns, restored model state, and swipe navigation finally behaving like someone thought through what happens on phones after 2023.\n\n## Features\n\n- **Automatic turn recovery now has a proper user-facing shape** — interrupted turns can recover more deliberately, recovered replies carry an explicit marker in the timeline, stale in-f"
+    },
+    {
+      "tag": "v1.8.1",
+      "name": "PiClaw v1.8.1 — Heat",
+      "date": "2026-04-18T09:59:11Z",
+      "body": "# PiClaw v1.8.1 — \"Heat\"\n\nA point release about hardening the doors, slimming the startup path, and finally teaching the web client how to do push notifications without embarrassing itself in public.\n\n## Platform news\n\n- **Startup has been put on a stricter diet** — Azure bootstrap work, web viewer routes, bundled browser tooling, and office tooling have been shoved off the cold path so PiClaw can"
+    },
+    {
+      "tag": "v1.8.0",
+      "name": "PiClaw v1.8.0 — This Is Spinal Tap",
+      "date": "2026-04-16T21:55:50Z",
+      "body": "# PiClaw v1.8.0 - \"This Is Spinal Tap\"\n\nA hefty point release about making the web UI faster, the discovery surface smarter, the image pipeline unexpectedly ambitious, and the upstream model stack current enough to suggest someone has been feeding the amplifier after midnight.\n\n## Features\n\n- **PiClaw now picks up support for Anthropic Opus 4.7 via the upstream Pi core package updates** — the upst"
+    },
+    {
+      "tag": "v1.7.15",
+      "name": "PiClaw v1.7.15 — Blow-Up",
+      "date": "2026-04-15T21:10:46Z",
+      "body": "# PiClaw v1.7.15 — \"Blow-Up\"\n\nA release about seeing what the system is actually doing, surviving iPhone PWA melodrama, and giving operators better answers than a blank stare and a quietly compromised log file.\n\n## Features\n\n- **The `messages` tool grew into a proper audit surface** — it now supports `grep`, `extract`, and checkpoint `diff`, which makes chat-history forensics much less dependent o"
+    },
+    {
+      "tag": "v1.7.14",
+      "name": "PiClaw v1.7.14 — Brazil",
+      "date": "2026-04-14T15:43:05Z",
+      "body": "# PiClaw v1.7.14 — \"Brazil\"\n\nA patch release about making the operator surface clearer under pressure: better status hints, better timeout behavior, better terminal and compose ergonomics, and fewer situations where provider failures vanish into the wallpaper like a procedural memo nobody meant to approve.\n\n## Features\n\n- **Added `/effort` as an alias for `/thinking`, with provider-native level la"
+    },
+    {
+      "tag": "v1.7.13",
+      "name": "PiClaw v1.7.13 — The Paper Chase",
+      "date": "2026-04-13T19:19:14Z",
+      "body": "# PiClaw v1.7.13 — \"The Paper Chase\"\n\nA release about operator ergonomics, search behaving properly, and giving the M365 extension enough actual skills to justify its paperwork — which feels especially on-brand for a Monday the 13th, a date apparently engineered to combine bureaucracy with menace.\n\n## Features\n\n- **The experimental M365 extension now ships eleven operator-facing skills** — which m"
+    },
+    {
+      "tag": "v1.7.12",
+      "name": "PiClaw v1.7.12 — The Conversation",
+      "date": "2026-04-12T22:55:46Z",
+      "body": "# PiClaw v1.7.12 — \"The Conversation\"\n\nA release about seeing more, guessing less, and making the web UI slightly less likely to surprise you in ways nobody ordered.\n\n## Features\n\n- **The session tree viewer is now properly useful instead of merely promising to be** — `/tree` gained a search/filter box, more compact rows, theme-derived role tags, fuller sidebar detail, human-readable tool argument"
+    },
+    {
+      "tag": "v1.7.11",
+      "name": "PiClaw v1.7.11 — Inception",
+      "date": "2026-04-12T09:40:39Z",
+      "body": "# PiClaw v1.7.11 — \"Inception\"\n\nA release about trees, widgets, previews, Azure behaving slightly less like an expensive practical joke, and the experimental M365 auth stack becoming just a touch less feral.\n\n## Features\n\n- **Added an interactive session tree viewer for the web UI** — `/tree` now opens a proper in-app widget for exploring chat branches, active leaves, tool calls, outputs, and mess"
+    },
+    {
+      "tag": "v1.7.9",
+      "name": "PiClaw v1.7.9 — The Player",
+      "date": "2026-04-08T20:58:42Z",
+      "body": "# PiClaw v1.7.9 — \"The Player\"\n\nA patch release about visibility, polish, previews, and the general business of making the UI look more intentional than accidental.\n\n## Features\n\n- **Workspace index status and reindex controls** — the workspace UI now exposes indexing state and lets you kick a reindex when search feels stale, which is rather better than treating uncertainty as an advanced feature."
+    },
+    {
+      "tag": "v1.7.8",
+      "name": "PiClaw v1.7.8 — Ghost in the Shell",
+      "date": "2026-04-07T20:56:48Z",
+      "body": "# PiClaw v1.7.8 — \"Ghost in the Shell\"\n\nA patch release about shells, markdown, Dream bootstrap, and making a few previously unhelpful surfaces behave like they have met a competent adult.\n\n## Features\n\n- **Rendered markdown code blocks now get syntax highlighting** — timeline posts with fenced code blocks are easier to scan, which is useful because monochrome walls of code are mostly just a tax o"
+    },
+    {
+      "tag": "v1.7.7",
+      "name": "PiClaw v1.7.7 — Ronin",
+      "date": "2026-04-06T21:34:19Z",
+      "body": "# PiClaw v1.7.7 — \"Ronin\"\n\nA smaller release about handling secrets, shells, and unreliable infrastructure with slightly more professionalism and slightly less theatre.\n\n## Platform news\n\n- **Keychain env secrets now flow across shell exec surfaces** — keychain entries with shell-safe names can now be injected automatically across local `bash`, PowerShell, SSH-backed shell sessions, and exec-style"
+    },
+    {
+      "tag": "v1.7.6",
+      "name": "PiClaw v1.7.6 — Dreamscape",
+      "date": "2026-04-06T07:35:07Z",
+      "body": "# PiClaw v1.7.6 — \"Dreamscape\"\n\nDream now runs in its own lane, as a proper memory-maintenance pass rather than a chatty impostor wearing the clothes of the old daily-notes and situational-awareness skills.\n\n## Features\n\n- **Dream mode replaces the old daily-notes / situational-awareness workflow** — `/dream` and AutoDream now provide the canonical memory-maintenance path, consolidating what used "
+    },
+    {
+      "tag": "v1.7.5",
+      "name": "PiClaw v1.7.5 — Sneakers",
+      "date": "2026-04-05T19:23:42Z",
+      "body": "# PiClaw v1.7.5 — \"Sneakers\"\n\nMore tools, more documentation, and slightly fewer opportunities to improvise your way into trouble.\n\n## Platform news\n\n- **Session-scoped SSH core tooling** — chats can now direct the core tool path at a remote SSH target on a per-session basis, so remote file and shell work no longer needs awkward global configuration.\n- **Infra tooling consolidated** — the infrastr"
+    },
+    {
+      "tag": "v1.7.4",
+      "name": "PiClaw v1.7.4 — Total Recall",
+      "date": "2026-04-03T23:08:14Z",
+      "body": "# PiClaw v1.7.4 — \"Total Recall\"\n\nThe runtime has been replaced. Then adjusted. Then adjusted again. Memory is a process.\n\n## Upstream\n\n- **`pi-coding-agent` upgraded to 0.65.0** — introduces `AgentSessionRuntime`, a unified runtime abstraction that replaces the previous session/model/tool wiring. PiClaw now adopts it end-to-end. The old compatibility glue has been removed. It served us well. We w"
+    }
+  ],
+  "posts": [
+    {
+      "title": "Vibing with the Agent Control Protocol",
+      "date": "2026-02-01",
+      "url": "https://taoofmac.com/space/notes/2026/02/01/2100"
+    },
+    {
+      "title": "Seizing The Means Of Production (Again)",
+      "date": "2026-02-01",
+      "url": "https://taoofmac.com/space/notes/2026/02/01/1940"
+    },
+    {
+      "title": "Thoughts on AI-Assisted Software Development in 2026",
+      "date": "2026-02-01",
+      "url": "https://taoofmac.com/space/notes/2026/02/01/2130"
+    },
+    {
+      "title": "So You Want To Do Agentic Development",
+      "date": "2026-03-08",
+      "url": "https://taoofmac.com/space/blog/2026/03/08/2130"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

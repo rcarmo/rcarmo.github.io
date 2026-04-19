@@ -1,0 +1,48 @@
+{
+  "id": "homekit-steam-user-switcher",
+  "meta": {
+    "name": "homekit-steam-user-switcher",
+    "full_name": "rcarmo/homekit-steam-user-switcher",
+    "description": "A way to remotely switch Steam users using HomeKit",
+    "homepage": null,
+    "stars": 41,
+    "forks": 0,
+    "language": "Python",
+    "created_at": "2025-08-09T14:25:51Z",
+    "pushed_at": "2025-12-03T21:37:23Z",
+    "updated_at": "2025-12-03T21:37:27Z",
+    "topics": []
+  },
+  "readme": "# HomeKit Steam User Switcher\n\nThis script exposes a virtual HomeKit Television accessory where each input corresponds to a Steam user. Selecting an input updates the Steam’s AutoLoginUser; turning the \"TV\" off restarts Steam.\n\n## Why\n\nWe regularly game on a headless machine and wanted to switch Steam users easily without fiddling with a KVM. HomeKit provides a convenient way to control devices, and by exposing Steam user accounts as HomeKit inputs, we can seamlessly switch users with our existing HomeKit setup and even set up personalized scenes.\n\n## What it does\n- HomeKit Television service (Active + ActiveIdentifier)\n- Inputs are Steam users (PersonaName as label, AccountName as slug)\n- When you switch input, AutoLoginUser is set accordingly\n- When you turn the TV off, Steam is restarted (killall steam)\n- Pairing/state stored under XDG state: `~/.local/state/homekit-steam-user-switcher/`\n\n## Requirements\n- Linux with Python 3.9+\n\n## Install (user scope)\n\n1) Install dependencies\n```zsh\npip install --user -r requirements.txt\n```\n\n2) Install the script into your user bin directory\n```zsh\ninstall -Dm755 homekit_steam_user_switcher.py ~/.local/bin/homekit_steam_user_switcher.py\n```\n\n3) Create a systemd user unit\n```zsh\ninstall -Dm644 homekit-steam-user-switcher.service ~/.config/systemd/user/homekit-steam-user-switcher.service\nsystemctl --user daemon-reload\nsystemctl --user enable --now homekit-steam-user-switcher.service\n```\n\nLogs:\n```zsh\njournalctl --user -u homekit-steam-user-switcher.service -f\n```\n\n## Pairing\n- Pairing code: `111-11-111`\n- In Apple Home: Add Accessory -> More Options -> select the accessory named by `--name` (default \"Steam Switcher\").\n\n## Advanced\n- Change name/port/bind IP, or pass manual inputs:\n```zsh\n~/.local/bin/homekit_steam_user_switcher.py --name \"Steam Switcher\" --port 51826 --bind auto\n~/.local/bin/homekit_steam_user_switcher.py --inputs \"Alice,Bob\"\n```\n\n## Reset pairing\nDelete the state directory:\n```zsh\nrm -rf ~/.local/state/homekit-steam-user-switcher\n```\n\n## Uninstall\n```zsh\nsystemctl --user disable --now homekit-steam-user-switcher.service\nrm -f ~/.config/systemd/user/homekit-steam-user-switcher.service\nrm -f ~/.local/bin/homekit_steam_user_switcher.py\nrm -rf ~/.local/state/homekit-steam-user-switcher\n```\n\n## License\nMIT\n",
+  "commits": [
+    {
+      "sha": "f31a0f46",
+      "date": "2025-12-03T21:37:17Z",
+      "msg": "monkeypatch for 3.14 and PyHAP <= 5.0.0"
+    },
+    {
+      "sha": "7cc1234d",
+      "date": "2025-08-09T14:28:43Z",
+      "msg": "typos"
+    },
+    {
+      "sha": "012f2517",
+      "date": "2025-08-09T14:26:52Z",
+      "msg": "import"
+    },
+    {
+      "sha": "78f45ad0",
+      "date": "2025-08-09T14:25:51Z",
+      "msg": "Initial commit"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "Notes, 2025-12-24",
+      "date": "2025-12-24",
+      "url": "https://taoofmac.com/space/notes/2025/12/24/1400"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

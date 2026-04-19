@@ -1,0 +1,192 @@
+{
+  "id": "go-busybox",
+  "meta": {
+    "name": "go-busybox",
+    "full_name": "rcarmo/go-busybox",
+    "description": "A sandboxable port of busybox for AI agents",
+    "homepage": "",
+    "stars": 10,
+    "forks": 2,
+    "language": "Go",
+    "created_at": "2026-02-07T16:10:55Z",
+    "pushed_at": "2026-02-17T19:18:33Z",
+    "updated_at": "2026-03-30T14:26:09Z",
+    "topics": [
+      "busybox",
+      "golang",
+      "ports"
+    ]
+  },
+  "readme": "# go-busybox\n\n<p align=\"center\">\n  <img src=\"docs/icon-256.png\" alt=\"Busybox WASM\" width=\"256\" />\n</p>\n\nBusybox utilities in Go, compilable to WebAssembly via TinyGo for sandboxed execution in AI agents. Produces a unified multi-call `busybox` binary and standalone applet binaries under `cmd/`.\n\n**Reference target:** BusyBox v1.35.0 (Debian 1:1.35.0-4+b7)\n**Test suite: 387/387 (100%)**\n\n---\n\n## Contents\n\n- [Quick start](#quick-start)\n- [Applets](#applets)\n- [Test results](#test-results)\n- [Shell](#shell-ash)\n- [Text processing](#text-processing)\n- [Testing](#testing)\n- [Structure](#structure)\n- [Sandboxing](#sandboxing)\n- [Development](#development)\n\n---\n\n## Quick start\n\n```bash\nmake setup-toolchain   # Go + TinyGo via Homebrew\nmake install-dev       # linters, security tools\nmake build             # native binary → _build/busybox\nmake build-wasm        # WASM binary       → _build/busybox.wasm  (4.7MB)\nmake build-wasm-optimized  # size-optimised → _build/busybox.wasm  (2.0MB)\nmake test\n```\n\n```bash\n./_build/busybox sed 's/foo/bar/g' input.txt\nln -s _build/busybox _build/grep && ./_build/grep -i pattern file.txt\nwasmtime --dir=. _build/busybox.wasm cat file.txt\n```\n\n---\n\n## Applets\n\n57 applets, all with full Godoc (including flag lists).\n\n| Category | Applets |\n|---|---|\n| Shell | `ash` (`sh`) |\n| Text | `awk` `cat` `cut` `diff` `echo` `grep` `head` `printf` `sed` `sort` `tail` `tr` `uniq` `wc` |\n| Files | `cp` `find` `ls` `mkdir` `mv` `pwd` `rm` `rmdir` |\n| Archive | `gunzip` `gzip` `tar` |\n| Process | `kill` `killall` `nice` `nohup` `pgrep` `pidof` `pkill` `ps` `renice` `setsid` `start-stop-daemon` `taskset` `time` `timeout` `top` `xargs` |\n| System | `free` `ionice` `logname` `nproc` `sleep` `uptime` `users` `w` `watch` `who` `whoami` |\n| Network | `dig` `nc` `ss` `wget` |\n\n`start-stop-daemon`, `top`, and 14 other OS-dependent applets return stubs under WASM (see [Sandboxing](#sandboxing)).\n\n---\n\n## Test results\n\n### BusyBox reference suite — 387/387\n\nRuns via `/bin/bash` with `ECHO=\"echo\"`.\n\n**New-style (`.tests`) — 308/308:**\n\n| Applet | Pass | Applet | Pass | Applet | Pass |\n|---|---|---|---|---|---|\n| awk | 53/53 | gunzip | 5/5 | sort | 5/5 |\n| cp | 13/13 | head | 2/2 | tail | 2/2 |\n| cut | 22/22 | pidof | 3/3 | tar | 3/3 |\n| diff | 12/12 | printf | 24/24 | taskset | 3/3 |\n| find | 2/2 | sed | 92/92 | tr | 2/2 |\n| grep | 44/44 | | | uniq | 14/14 |\n| | | | | xargs | 7/7 |\n\n**Old-style (directory-based) — 79/79:** cat, cp, cut, echo, find, gzip, ls, mkdir, mv, pwd, rm, rmdir, tail, tr, wc, wget.\n\n### ash — 349/349\n\n| Category | Pass | Category | Pass |\n|---|---|---|---|\n| ash-alias | 5/5 | ash-quoting | 24/24 |\n| ash-arith | 6/6 | ash-read | 10/10 |\n| ash-comm | 3/3 | ash-redir | 27/27 |\n| ash-getopts | 8/8 | ash-signals | 22/22 |\n| ash-glob | 10/10 | ash-standalone | 6/6 |\n| ash-heredoc | 25/25 | ash-vars | 69/69 |\n| ash-invert | 3/3 | ash-z_slow | 3/3 |\n| ash-misc | 99/99 | | |\n| ash-parsing | 35/35 | **Total** | **349/349** |\n\n---\n\n## Shell (ash)\n\nNear-complete POSIX shell. Pipelines, redirections (`<` `>` `>>` `2>` `>&` `<&` `>&-`), control flow (`if`/`elif`/`else`/`fi`, `while`, `until`, `for`, `case`/`esac`), command substitution (`$(...)`, backticks), arithmetic (`$(())`), functions, parameter expansion (`${VAR:-default}`, `${#VAR}`, `${VAR##pattern}`), 25+ builtins, background jobs (`&`, `jobs`/`fg`/`wait`), here-documents, subshells, traps/signals.\n\n21 fixes applied to reach 349/349:\n\n- **Parser:** backslash-newline continuation; `if` across continuation lines; empty-word handling (`$empty\"\"`); `\"$@\"` with no args; `if()` reserved-word detection; case-pattern quoting; alias in case body.\n- **Expansion:** prefix `IFS=` for builtins; `${x#'*'}` pattern quoting in heredocs; single-quote patterns; backtick inside single quotes; command-sub newline stripping; `unset -ff`; `\\<newline>` at EOF.\n- **Redirections:** `exec 1>&-` persistence; `1>&-`/`2>&-` parsing; `exec <file` + `read` + `cat`.\n- **Signals:** trap exit codes; nested traps; `return` in trap handlers; subshell signal reset.\n\n---\n\n## Text processing\n\n### sed — 92/92\n\nBRE/ERE (`-E`/`-r`), backreferences (`\\1`–`\\9`), all standard commands (`s` `d` `p` `q` `a` `i` `c` `y` `=` `l` `r` `w` `h` `H` `g` `G` `x` `N` `P` `D` `b` `t` `T`), addresses (line, `$`, regex, ranges, `first~step`, `0,/regex/`), in-place editing (`-i`), escape sequences (`\\n` `\\t` `\\r`), labels/branches, multiple expressions (`-e`, `-f`), `--version`.\n\nPer-line trailing-newline tracking via `noNLLines map[int]bool` — suppresses final `\\n` when the last output line originated from an input line lacking a trailing newline. The `w` command truncates output files similarly via `wfileLastLine`.\n\n### diff — 12/12\n\n`-u` `-U N` `-b` `-w` `-B` `-a` `-q` `-r` `-N`. The `-B` implementation post-filters blank-only hunks rather than stripping blanks pre-diff.\n\n### grep — 44/44\n\n`-E` `-F` `-i` `-v` `-c` `-l` `-L` `-n` `-h` `-H` `-o` `-q` `-r` `-w` `-x` `-s` `-e` `-f`. Invokable as `egrep`/`fgrep`.\n\n### awk — 53/53\n\nFull parser/evaluator: BEGIN/END, patterns, arrays, control flow, 30+ builtins, printf/sprintf, getline, regex, I/O redirection.\n\n---\n\n## Testing\n\nFour layers:\n\n1. **Unit tests** — 62 `*_test.go` files, per-applet.\n2. **Fuzz tests** — 100 functions across 58 `*_fuzz_test.go` files, 353 seed entries.\n3. **Integration** — BusyBox comparison matrix (`pkg/integration/`).\n4. **Reference suite** — 387/387.\n\n### Fuzz coverage\n\nEvery applet has at least one fuzz test. The 22 most complex have multi-function coverage:\n\n| Applet | Fns | Seeds | Scope |\n|---|---|---|---|\n| sed | 4 | 33 | input, expression parsing, multi-command, flags |\n| grep | 3 | 22 | input, pattern parsing, flags |\n| cut | 4 | 20 | delimited fields, field specs, char mode, flags |\n| tr | 5 | 22 | translate, delete, squeeze, complement, SET operands |\n| diff | 5 | 15 | identical, different, flags, binary, context |\n| awk | 2 | 25 | programme parsing, input with fixed programmes |\n| tar | 3 | 10 | create, create→extract roundtrip, invalid archives |\n| gzip | 3 | 11 | compress, compress→decompress roundtrip, levels |\n| gunzip | 3 | 10 | decompress, invalid data, stdin |\n| cat | 3 | 11 | file, stdin, multi-file |\n| head | 3 | 14 | fixed `-n`, varied `-n`, stdin |\n| tail | 3 | 11 | fixed `-n`, stdin, flags |\n| sort | 2 | 10 | input, flags (`-r` `-n` `-u` `-f`) |\n| uniq | 2 | 9 | input, flags (`-c` `-d` `-u` `-i`) |\n| wc | 2 | 10 | input, flags (`-l` `-w` `-c` `-L`) |\n| echo | 2 | 10 | arguments, flags (`-n` `-e` `-ne` `-E`) |\n| find | 3 | 9 | traversal, `-name` patterns, predicates |\n| ls | 2 | 4 | listing, flags (`-1` `-a` `-l` `-R` `-S` `-r` `-t`) |\n| cp | 3 | 10 | copy, copy-verify roundtrip, flags |\n| xargs | 3 | 11 | echo, no-command default, flags (`-n` `-I`) |\n| printf | 2 | 20 | format string, arguments |\n| procutil | 2 | 8 | signal parsing, UID lookup |\n\n**Roundtrip tests** verify data integrity:\n- `gzip -c | gunzip` — byte-for-byte via `compress/gzip`\n- `tar -cf | tar -xf` — extracted files match originals\n- `cp src dst` — destination matches source\n\n**Safety filters** prevent non-termination during fuzzing:\n- sed: rejects branch labels, `N;D` cycles, excessive quantifiers\n- printf: skips format strings that consume no arguments\n- All inputs clamped to 2048 bytes\n\n### Running tests\n\n```bash\nmake test                   # unit tests\nmake test-race              # with race detector\nmake coverage               # with coverage\n\n# fuzz seeds only (quick)\ngo test ./pkg/applets/sed -run='Fuzz' -count=1\n\n# actual fuzzing (10s)\ngo test ./pkg/applets/sed -run='^$' -fuzz='^FuzzSedExpr$' -fuzztime=10s\n\n# all fuzz seeds\nfor d in pkg/applets/*/; do go test ./$d -run='Fuzz' -count=1 -timeout 30s; done\n```\n\n---\n\n## Structure\n\n```\ngo-busybox/\n├── cmd/                  # standalone entry points (51 + busybox)\n│   └── busybox/          # multi-call dispatcher\n├── pkg/\n│   ├── applets/          # 57 appl\n",
+  "commits": [
+    {
+      "sha": "13f3053f",
+      "date": "2026-02-17T18:30:19Z",
+      "msg": "Update README source file count to 138"
+    },
+    {
+      "sha": "ffa263e9",
+      "date": "2026-02-17T17:54:55Z",
+      "msg": "Fix WASM build: add missing build constraints and stubs"
+    },
+    {
+      "sha": "1586cedf",
+      "date": "2026-02-17T17:40:49Z",
+      "msg": "Overhaul documentation: terse British English throughout"
+    },
+    {
+      "sha": "b1090131",
+      "date": "2026-02-17T17:17:59Z",
+      "msg": "Add comprehensive fuzz tests for all text-processing applets"
+    },
+    {
+      "sha": "b460f597",
+      "date": "2026-02-17T16:47:47Z",
+      "msg": "Add comprehensive Godoc coverage and remove unused import"
+    },
+    {
+      "sha": "8e88d3e8",
+      "date": "2026-02-17T16:20:00Z",
+      "msg": "Update README: 387/387 (100%) - perfect score"
+    },
+    {
+      "sha": "784fefa8",
+      "date": "2026-02-17T16:19:49Z",
+      "msg": "Rewrite wget with proper flag parsing: -q, -O, -P support"
+    },
+    {
+      "sha": "413b091c",
+      "date": "2026-02-17T16:05:53Z",
+      "msg": "Update README: 384/387 (99.2%), all new-style tests 100%"
+    },
+    {
+      "sha": "3571f90b",
+      "date": "2026-02-17T16:04:49Z",
+      "msg": "Fix sed trailing newline + wfile: per-line no-NL tracking"
+    },
+    {
+      "sha": "f5073a29",
+      "date": "2026-02-17T15:51:41Z",
+      "msg": "Fix diff -B: filter blank-only hunks instead of stripping blank lines"
+    },
+    {
+      "sha": "62d0c058",
+      "date": "2026-02-17T15:43:28Z",
+      "msg": "Update README: 381/387 (98.4%) test pass rate"
+    },
+    {
+      "sha": "555e021b",
+      "date": "2026-02-17T15:42:52Z",
+      "msg": "Fix pidof cmdline matching + self-exclusion: 381/387 (98.4%)"
+    },
+    {
+      "sha": "dc0df0c9",
+      "date": "2026-02-17T15:36:47Z",
+      "msg": "Major sed improvements + fixes: 380/387 (98.1%) test pass rate"
+    },
+    {
+      "sha": "62525517",
+      "date": "2026-02-17T15:19:23Z",
+      "msg": "Major improvements: 374/387 (96.6%) test pass rate"
+    },
+    {
+      "sha": "38dfa1e4",
+      "date": "2026-02-17T14:45:08Z",
+      "msg": "Fix xargs test: no-args defaults to echo (busybox compat)"
+    },
+    {
+      "sha": "ae99c8cc",
+      "date": "2026-02-17T14:42:52Z",
+      "msg": "Fix sed s///p trailing newline tracking: 84/92 sed tests, 361/387 total (93%)"
+    },
+    {
+      "sha": "c6178df0",
+      "date": "2026-02-17T14:38:02Z",
+      "msg": "Update README with busybox test suite results: 364/387 (94.1%)"
+    },
+    {
+      "sha": "1fcedc02",
+      "date": "2026-02-17T14:32:37Z",
+      "msg": "Improve ls -l format, sed BRE/backrefs: 361+/387 (93%+)"
+    },
+    {
+      "sha": "ed3e80c8",
+      "date": "2026-02-17T14:25:48Z",
+      "msg": "Major sed improvements: 84/92 tests (91.3%), combined 360/387 (93.0%)"
+    },
+    {
+      "sha": "0390c34b",
+      "date": "2026-02-17T14:09:12Z",
+      "msg": "Add printf applet, fix cp/cut/uniq/xargs/ls/tr: 338/387 (87.3%)"
+    },
+    {
+      "sha": "943ac85f",
+      "date": "2026-02-17T13:43:52Z",
+      "msg": "Run busybox test suite against applets: 285/387 passing (73.6%)"
+    },
+    {
+      "sha": "386eac44",
+      "date": "2026-02-17T12:55:11Z",
+      "msg": "ash: fix all remaining test failures — 349/349 busybox ash tests passing (100%)"
+    },
+    {
+      "sha": "cdf155dc",
+      "date": "2026-02-17T08:35:49Z",
+      "msg": "Fix ash var expansion, patterns, and subshell scoping"
+    },
+    {
+      "sha": "a882634a",
+      "date": "2026-02-16T22:57:37Z",
+      "msg": "Fix ash quoting glob and case pattern handling"
+    },
+    {
+      "sha": "47ea0796",
+      "date": "2026-02-16T21:19:15Z",
+      "msg": "Optimize builtin background execution"
+    },
+    {
+      "sha": "370db5bf",
+      "date": "2026-02-16T15:49:08Z",
+      "msg": "Fix command substitution status, redir errors, and loop breaks"
+    },
+    {
+      "sha": "8cbd1e8f",
+      "date": "2026-02-16T15:05:47Z",
+      "msg": "Handle backgrounded and/or lists, reserved function names, and & tokenization"
+    },
+    {
+      "sha": "b0883dc4",
+      "date": "2026-02-16T12:11:19Z",
+      "msg": "Fix case backslash matching and defer signals during subshells"
+    },
+    {
+      "sha": "33ee36d9",
+      "date": "2026-02-16T11:51:02Z",
+      "msg": "Fix case parsing in subshells and case patterns"
+    },
+    {
+      "sha": "a53a6952",
+      "date": "2026-02-16T11:41:00Z",
+      "msg": "Prevent literal backslash markers from leaking into assignment values"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "Vibing with the Agent Control Protocol",
+      "date": "2026-02-01",
+      "url": "https://taoofmac.com/space/notes/2026/02/01/2100"
+    },
+    {
+      "title": "Notes for February 2-7",
+      "date": "2026-02-07",
+      "url": "https://taoofmac.com/space/notes/2026/02/07/2000"
+    },
+    {
+      "title": "Notes for February 8-15",
+      "date": "2026-02-15",
+      "url": "https://taoofmac.com/space/notes/2026/02/15/1530"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

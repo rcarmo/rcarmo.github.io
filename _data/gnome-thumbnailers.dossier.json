@@ -1,0 +1,152 @@
+{
+  "id": "gnome-thumbnailers",
+  "meta": {
+    "name": "gnome-thumbnailers",
+    "full_name": "rcarmo/gnome-thumbnailers",
+    "description": "My personal set of file thumbnailing utilities for GNOME 42+",
+    "homepage": "",
+    "stars": 26,
+    "forks": 5,
+    "language": "Python",
+    "created_at": "2022-12-13T14:39:32Z",
+    "pushed_at": "2022-12-13T23:32:18Z",
+    "updated_at": "2026-02-17T14:40:57Z",
+    "topics": [
+      "3dprinting",
+      "gnome",
+      "nautilus"
+    ]
+  },
+  "readme": "# gnome-thumbnailers\n\nThis is a small set of custom thumbnailer scripts (mostly for 3D printing formats) that I crafted based on various samples floating about on the Internet, and which work in GNOME 42+.\n\nIn short, these will render pretty little file previews in your file manager (not just Nautilus, but that is what I tested with):\n\n![](demo/demo.png)\n\n## Supported Formats\n\n* `.3mf` (Cura, PrusaSlicer, SuperSlicer, etc.)\n* `.gcode` with embedded thumbnails\n* `.scad` (OpenSCAD, will blindly render the default object)\n* `.stl` (Actually uses OpenSCAD to render as well)\n* `.blend` (uses the built-in `blender-thumbnailer` that comes with Blender)\n\n## Installation\n\n* put `.thumbnailer` files in `/usr/share/thumbnailers`\n* put the other files in `/usr/local/bin`, marked as executable\n* remove all the cached thumbnails in `~/.cache/thumbnails`\n* restart Nautilus with `nautilus -q`\n\nThe `Makefile` does that for you.\n\n## Dependencies\n\n* `3mf.thumbnailer` and `gcode.thumbnailer` require nothing but Python 3 installed, because they cheat and use the thumbnail the slicer inserts into the file.\n* `stlscad.thumbnailer` requires `Xvfb`, `openscad` and `ImageMagick` installed to render and convert files.\n* `blender.thumbnailer` requires Blender to be installed.\n\n## FAQ\n\n> But isn't `openscad` prevented from accessing X because of `bwrap` thumbnail generation sandboxing in modern GNOME?\n\nYes. But it works _perfectly_ with `xvfb-run` and software rendering, so I'd rather take the performance hit rather than spend hours trying to persuade `bwrap` to do weird stuff like `--bind /tmp/.X11-unix/X0 /tmp/.X11-unix/X0 --setenv DISPLAY :0`. \n\nSometimes brute force is the simplest, more maintainable (and more secure) approach.\n\n> I have a `.3mf` or `.gcode` file without thumbnail, is the thumbnailer broken?\n\nNo. It's quite likely that the slicer you used to create it did not include a thumbnail, or that it is in a weird format. There are limits to these things.\n\n> My OpenSCAD thumbnails are blank!\n\nThis usually happens when it's either a library file (that would render nothing on its own) or a customizer file that is missing some default (and hence renders nothing as well).\n\n> My Blender thumbnails are blank!\n\nThat usually happens when you either don't have a camera defined or it's pointing towards literally nothing.\n",
+  "commits": [
+    {
+      "sha": "6d695f6e",
+      "date": "2022-12-13T23:32:15Z",
+      "msg": "cleanup"
+    },
+    {
+      "sha": "cecf5e97",
+      "date": "2022-12-13T23:31:36Z",
+      "msg": "Merge branch 'master' of github.com:rcarmo/gnome-thumbnailers"
+    },
+    {
+      "sha": "20153788",
+      "date": "2022-12-13T23:30:59Z",
+      "msg": "gcode"
+    },
+    {
+      "sha": "6370d9df",
+      "date": "2022-12-13T22:39:31Z",
+      "msg": "Update README.md"
+    },
+    {
+      "sha": "317c2862",
+      "date": "2022-12-13T22:38:24Z",
+      "msg": "demo"
+    },
+    {
+      "sha": "78b335f7",
+      "date": "2022-12-13T22:18:26Z",
+      "msg": "cleanup"
+    },
+    {
+      "sha": "9a4a95e6",
+      "date": "2022-12-13T22:17:59Z",
+      "msg": "faq"
+    },
+    {
+      "sha": "1363ecdf",
+      "date": "2022-12-13T22:14:11Z",
+      "msg": "cleanup"
+    },
+    {
+      "sha": "74e63732",
+      "date": "2022-12-13T22:10:29Z",
+      "msg": "blender"
+    },
+    {
+      "sha": "80f85afc",
+      "date": "2022-12-13T21:50:14Z",
+      "msg": "handle uppercase extensions"
+    },
+    {
+      "sha": "db740ba8",
+      "date": "2022-12-13T21:43:38Z",
+      "msg": "silent"
+    },
+    {
+      "sha": "c1a97a5f",
+      "date": "2022-12-13T21:34:22Z",
+      "msg": "capitalization"
+    },
+    {
+      "sha": "e246c9f8",
+      "date": "2022-12-13T21:25:35Z",
+      "msg": "README"
+    },
+    {
+      "sha": "d762f547",
+      "date": "2022-12-13T21:21:03Z",
+      "msg": "README"
+    },
+    {
+      "sha": "5d980918",
+      "date": "2022-12-13T21:20:38Z",
+      "msg": "more instructions for extremely distracted people"
+    },
+    {
+      "sha": "6f802f11",
+      "date": "2022-12-13T21:04:30Z",
+      "msg": "Merge branch 'master' of github.com:rcarmo/gnome-thumbnailers"
+    },
+    {
+      "sha": "08901a25",
+      "date": "2022-12-13T21:04:08Z",
+      "msg": "added Makefile"
+    },
+    {
+      "sha": "995ce1b8",
+      "date": "2022-12-13T15:23:40Z",
+      "msg": "Readability"
+    },
+    {
+      "sha": "4400f846",
+      "date": "2022-12-13T14:51:05Z",
+      "msg": "tidy up"
+    },
+    {
+      "sha": "a537d2e2",
+      "date": "2022-12-13T14:49:27Z",
+      "msg": "tidy up"
+    },
+    {
+      "sha": "f9e63494",
+      "date": "2022-12-13T14:47:52Z",
+      "msg": "faq"
+    },
+    {
+      "sha": "42eab5bc",
+      "date": "2022-12-13T14:41:19Z",
+      "msg": "first set"
+    },
+    {
+      "sha": "04be28b0",
+      "date": "2022-12-13T14:39:32Z",
+      "msg": "Initial commit"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "You Can Leave Your Hat On",
+      "date": "2022-04-02",
+      "url": "https://taoofmac.com/space/blog/2022/04/02/2130"
+    },
+    {
+      "title": "Homelab Update",
+      "date": "2022-10-28",
+      "url": "https://taoofmac.com/space/blog/2022/10/28/1900"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

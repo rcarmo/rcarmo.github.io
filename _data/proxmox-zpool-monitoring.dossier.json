@@ -1,0 +1,99 @@
+{
+  "id": "proxmox-zpool-monitoring",
+  "meta": {
+    "name": "proxmox-zpool-monitoring",
+    "full_name": "rcarmo/proxmox-zpool-monitoring",
+    "description": "ZFS pool monitoring for Proxmox VE",
+    "homepage": "",
+    "stars": 7,
+    "forks": 2,
+    "language": "Python",
+    "created_at": "2025-04-24T20:36:23Z",
+    "pushed_at": "2025-04-25T11:15:52Z",
+    "updated_at": "2025-11-21T16:56:09Z",
+    "topics": [
+      "monitoring",
+      "notifications",
+      "proxmox",
+      "pushover",
+      "zfs"
+    ]
+  },
+  "readme": "# Proxmox Zpool Monitoring\n\nA Python script for monitoring ZFS zpools and disk health on a Proxmox (or other Linux) server.\n\n## Table of Contents\n\n- [Proxmox Zpool Monitoring](#proxmox-zpool-monitoring)\n  - [Table of Contents](#table-of-contents)\n  - [Introduction](#introduction)\n  - [Features](#features)\n  - [Dependencies](#dependencies)\n  - [Installation](#installation)\n  - [Usage](#usage)\n  - [Configuration](#configuration)\n  - [Contributing](#contributing)\n  - [License](#license)\n\n## Introduction\n\nThis script is designed to help you monitor the health and status of ZFS zpools and the underlying physical disks on your server. It provides detailed information and sends alerts via Gotify and/or Pushover, helping you ensure that your storage system is running smoothly. It uses standard Python libraries and requires external commands like `zpool` and `smartctl`.\n\n## Features\n\n- Monitors ZFS pool status (configurable list).\n- Checks individual disk SMART health status using `smartctl`.\n- Gathers SMART attributes like temperature, power-on hours, and lifetime remaining/used for both SATA and NVMe drives.\n- Calculates estimated SSD endurance (TBW) usage and remaining life (based on a configurable `RATED_TBW`).\n- Sends a summary notification for all pools via Gotify and/or Pushover using standard Python libraries.\n- Sends detailed notifications for individual disks *only if* an issue is detected (e.g., SMART failure, TBW exceeded, replacement needed soon).\n- Summary notification priority adjusts based on pool health; drive notification priority adjusts based on the specific issue.\n- Uses Python's `logging` module for output. `VERBOSE` flag enables detailed `DEBUG` level logging.\n\n## Dependencies\n\nThe script requires the following:\n\n- **Python 3:** The script is written in Python 3. Standard libraries like `subprocess`, `os`, `re`, `datetime`, `math`, `sys`, `urllib`, `json`, and `logging` are used. No external Python packages are required.\n- **`zfsutils-linux`:** Provides the `zpool` and `zfs` commands used to query pool status and properties.\n- **`smartmontools`:** Provides the `smartctl` command used to query disk health and SMART attributes.\n\n## Installation\n\n1. Clone the repository:\n\n    ```sh\n    git clone https://github.com/overcuriousity/proxmox-zpool-monitoring.git\n    cd proxmox-zpool-monitoring\n    ```\n\n2. Install the required command-line dependencies (example for Debian/Ubuntu):\n\n    ```sh\n    sudo apt-get update\n    sudo apt-get install -y zfsutils-linux smartmontools python3\n    ```\n\n3. Make the Python script executable:\n\n    ```sh\n    chmod +x monitor.py\n    ```\n\n    *(Optional: You can move `monitor.py` to a location in your PATH, like `/usr/local/bin/`, if desired)*\n\n## Usage\n\n1. **Configure the script:** Edit `monitor.py` to set your notification service API keys/tokens, enable the desired services, and configure pools and TBW rating (see Configuration section below).\n\n2. Run the monitoring script manually:\n\n    ```sh\n    sudo ./monitor.py\n    ```\n\n    *(Or `sudo python3 monitor.py` if not executable or not in PATH)*\n\n3. To set up a cron job to run the script periodically, edit your crontab:\n\n    ```sh\n    sudo crontab -e\n    ```\n\n    Add the following line to run the script daily at 3 AM (adjust path and timing as needed):\n\n    ```sh\n    # Example: Run daily at 3 AM from the cloned directory\n    0 3 * * * cd /path/to/proxmox-zpool-monitoring && sudo ./monitor.py >> /var/log/zpool-monitor.log 2>&1\n    ```\n\n    *Make sure to replace `/path/to/proxmox-zpool-monitoring` with the actual path.*\n\n## Configuration\n\nConfiguration is done by editing the variables at the beginning of the `monitor.py` script:\n\n```python\n# --- Configuration ---\n\n# Gotify Configuration\nGOTIFY_URL = \"https://gotify.domain.com/message\"\nGOTIFY_API_KEY = \"UNSET\" # Your Gotify application token\nGOTIFY_ENABLED = True # Control Gotify notifications\n\n# Pushover Configuration\nPUSHOVER_API_URL = \"https://api.pushover.net/1/messages.json\"\nPUSHOVER_APP_TOKEN = \"UNSET\" # Your Pushover application token\nPUSHOVER_USER_KEY = \"UNSET\" # Your Pushover user/group key\nPUSHOVER_ENABLED = False # Control Pushover notifications\n\n# Monitoring Configuration\nPOOLS_TO_MONITOR = [\"rpool\"] # List of ZFS pools to monitor\nRATED_TBW = 360 # Assumed SSD TBW rating in Terabytes\nREPLACEMENT_YEARS_AGE_LIMIT = 5 # Default age limit for replacement suggestion\nVERBOSE = False # Set to True for DEBUG level logging, False for INFO level logging\n```\n\n- Set the `_ENABLED` flag to `True` for the notification services you want to use.\n- Fill in the corresponding `_URL`, `_API_KEY`, `_APP_TOKEN`, and `_USER_KEY` values.\n- Adjust `RATED_TBW` if you are using SSDs with a different endurance rating.\n- Modify the `POOLS_TO_MONITOR` list with the names of the ZFS pools you wish to monitor.\n- Set `VERBOSE` to `True` for detailed debug logging during script execution (includes raw smartctl output and detailed drive summaries).\n\n## Contributing\n\nWe welcome contributions! Please open an issue or pull request.\n\n## License\n\nThis project is licensed under the MIT License. See the [LICENSE](LICENSE) file for details.\n",
+  "commits": [
+    {
+      "sha": "ef477e73",
+      "date": "2025-04-25T11:15:47Z",
+      "msg": "docs"
+    },
+    {
+      "sha": "aa03a779",
+      "date": "2025-04-25T11:10:44Z",
+      "msg": "Switch to logging"
+    },
+    {
+      "sha": "2ebdff6d",
+      "date": "2025-04-25T11:03:56Z",
+      "msg": "formatting"
+    },
+    {
+      "sha": "e9e815f4",
+      "date": "2025-04-25T11:03:18Z",
+      "msg": "add /usr/sbin to PATH"
+    },
+    {
+      "sha": "028ced07",
+      "date": "2025-04-24T22:09:20Z",
+      "msg": "tweaks"
+    },
+    {
+      "sha": "0223f381",
+      "date": "2025-04-24T22:04:23Z",
+      "msg": "README and spec"
+    },
+    {
+      "sha": "cd843ee1",
+      "date": "2025-04-24T22:04:10Z",
+      "msg": "Python version"
+    },
+    {
+      "sha": "ce17bead",
+      "date": "2025-04-24T22:03:42Z",
+      "msg": "refactor shell version"
+    },
+    {
+      "sha": "9d8f3a30",
+      "date": "2025-04-24T22:03:28Z",
+      "msg": "Add pushover API spec"
+    },
+    {
+      "sha": "e68039ad",
+      "date": "2025-04-06T19:18:31Z",
+      "msg": "Update README.md"
+    },
+    {
+      "sha": "d8306ab3",
+      "date": "2025-04-06T19:18:11Z",
+      "msg": "Update README.md"
+    },
+    {
+      "sha": "42cc8f8f",
+      "date": "2025-04-06T19:17:12Z",
+      "msg": "Create monitor.sh"
+    },
+    {
+      "sha": "76e89d63",
+      "date": "2025-04-06T19:16:17Z",
+      "msg": "Initial commit"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "Proxmox VE on the FriendlyELEC CM3588 NAS",
+      "date": "2024-11-09",
+      "url": "https://taoofmac.com/space/notes/2024/11/09/1940"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

@@ -1,0 +1,67 @@
+[
+  {
+    "sha": "ef477e73",
+    "date": "2025-04-25T11:15:47Z",
+    "msg": "docs"
+  },
+  {
+    "sha": "aa03a779",
+    "date": "2025-04-25T11:10:44Z",
+    "msg": "Switch to logging"
+  },
+  {
+    "sha": "2ebdff6d",
+    "date": "2025-04-25T11:03:56Z",
+    "msg": "formatting"
+  },
+  {
+    "sha": "e9e815f4",
+    "date": "2025-04-25T11:03:18Z",
+    "msg": "add /usr/sbin to PATH"
+  },
+  {
+    "sha": "028ced07",
+    "date": "2025-04-24T22:09:20Z",
+    "msg": "tweaks"
+  },
+  {
+    "sha": "0223f381",
+    "date": "2025-04-24T22:04:23Z",
+    "msg": "README and spec"
+  },
+  {
+    "sha": "cd843ee1",
+    "date": "2025-04-24T22:04:10Z",
+    "msg": "Python version"
+  },
+  {
+    "sha": "ce17bead",
+    "date": "2025-04-24T22:03:42Z",
+    "msg": "refactor shell version"
+  },
+  {
+    "sha": "9d8f3a30",
+    "date": "2025-04-24T22:03:28Z",
+    "msg": "Add pushover API spec"
+  },
+  {
+    "sha": "e68039ad",
+    "date": "2025-04-06T19:18:31Z",
+    "msg": "Update README.md"
+  },
+  {
+    "sha": "d8306ab3",
+    "date": "2025-04-06T19:18:11Z",
+    "msg": "Update README.md"
+  },
+  {
+    "sha": "42cc8f8f",
+    "date": "2025-04-06T19:17:12Z",
+    "msg": "Create monitor.sh"
+  },
+  {
+    "sha": "76e89d63",
+    "date": "2025-04-06T19:16:17Z",
+    "msg": "Initial commit"
+  }
+]

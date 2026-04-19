@@ -1,0 +1,188 @@
+{
+  "id": "go-rdp",
+  "meta": {
+    "name": "go-rdp",
+    "full_name": "rcarmo/go-rdp",
+    "description": "A Go-backed web RDP client (and reference client implementation)",
+    "homepage": null,
+    "stars": 9,
+    "forks": 1,
+    "language": "Go",
+    "created_at": "2026-01-24T20:16:21Z",
+    "pushed_at": "2026-02-15T09:33:38Z",
+    "updated_at": "2026-04-05T15:34:31Z",
+    "topics": []
+  },
+  "readme": "# Go RDP Client\n\n![Logo](docs/icon-256.png)\n\nA browser-based Remote Desktop Protocol (RDP) client built with Go and WebAssembly, originally inspired by [`kulaginda/rdp-html5`](https://github.com/kulaginds/rdp-html5) but completely rewritten from scratch to pass all the reference tests in Microsoft's [MS-RDPBCGR](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-rdpbcgr/) specification and be a reference implementation for RDP in Go.\n\n> ⚠️ **Note**: While functional, this implementation has known limitations.\n\n## Quick Start\n\n### Using Docker (Recommended)\n\n```bash\n# Run with default settings (TLS validation enabled)\ndocker run -d -p 8080:8080 ghcr.io/rcarmo/go-rdp:latest\n\n# Run with TLS validation disabled (for self-signed certs)\ndocker run -d -p 8080:8080 -e TLS_SKIP_VERIFY=true ghcr.io/rcarmo/rdp-html5:latest\n\n# Run with debug logging\ndocker run -d -p 8080:8080 -e LOG_LEVEL=debug ghcr.io/rcarmo/rdp-html5:latest\n```\n\nThen open http://localhost:8080 in your browser.\n\n### Using Docker Compose\n\n```bash\ngit clone https://github.com/rcarmo/go-rdp.git\ncd go-rdp\ndocker-compose up -d\n```\n\n### Building from Source\n\n**Prerequisites:**\n- Go 1.21+\n- TinyGo 0.34+ (for WASM)\n- Node.js 18+ (for JS bundling)\n\n```bash\n# Clone and build\ngit clone https://github.com/rcarmo/go-rdp.git\ncd go-rdp\nmake deps    # Install dependencies\nmake build   # Build everything (WASM + JS + binary)\n\n# Run\n./bin/go-rdp\n```\n\n## Configuration\n\nEnvironment variables:\n\n| Variable | Default | Description |\n|----------|---------|-------------|\n| `SERVER_PORT` | `8080` | HTTP server port |\n| `LOG_LEVEL` | `info` | Logging level: debug, info, warn, error |\n| `TLS_SKIP_VERIFY` | `false` | Skip RDP server TLS certificate validation |\n| `TLS_ALLOW_ANY_SERVER_NAME` | `false` | Allow connecting without enforcing SNI (lab/testing) |\n| `ENABLE_TLS` | `false` | Enable HTTPS for the web interface |\n| `TLS_CERT_FILE` | - | Path to TLS certificate |\n| `TLS_KEY_FILE` | - | Path to TLS private key |\n| `RDP_ENABLE_RFX` | `true` | Enable RemoteFX codec support |\n| `RDP_ENABLE_UDP` | `false` | Enable UDP transport (experimental) |\n| `RDP_PREFER_PCM_AUDIO` | `false` | Prefer PCM audio (best quality, high bandwidth) |\n\nCommand-line flags:\n\n| Flag | Description |\n|------|-------------|\n| `-host` | Server listen host (default: 0.0.0.0) |\n| `-port` | Server listen port (default: 8080) |\n| `-log-level` | Log level: debug, info, warn, error |\n| `-tls-skip-verify` | Skip TLS certificate validation |\n| `-tls-server-name` | Override TLS server name (SNI) |\n| `-tls-allow-any-server-name` | Allow connecting without enforcing SNI (lab/testing only) |\n| `-nla` | Enable Network Level Authentication |\n| `-no-rfx` | Disable RemoteFX codec support |\n| `-udp` | Enable UDP transport (experimental) |\n| `-prefer-pcm-audio` | Prefer PCM audio (best quality, high bandwidth) |\n| `-version` | Show version information |\n| `-help` | Show help message |\n\nSee [docs/configuration.md](docs/configuration.md) for full configuration options.\n\n## Documentation\n\n### User Documentation\n\n- [Architecture](docs/ARCHITECTURE.md) - System design and data flow\n- [Configuration](docs/configuration.md) - Configuration options (env vars + flags)\n- [Debugging](docs/debugging.md) - Troubleshooting guide\n\n### Implementation Documentation\n\n- [NSCodec](docs/NSCODEC.md) - Bitmap codec implementation\n- [RemoteFX](docs/REMOTEFX.md) - RemoteFX wavelet codec implementation\n- [WebGL](docs/webgl.md) - WebGL rendering implementation\n\n### Protocol Specifications\n\nThis implementation follows Microsoft's open protocol specifications:\n\n| Protocol | Description | Specification |\n|----------|-------------|---------------|\n| MS-RDPBCGR | Basic Connectivity | [Link](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-rdpbcgr/) |\n| MS-RDPEA | Audio Output | [Link](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-rdpea/) |\n| MS-RDPEDYC | Dynamic Channels | [Link](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-rdpedyc/) |\n| MS-RDPEDISP | Display Control | [Link](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-rdpedisp/) |\n| MS-RDPEMT | Multitransport | [Link](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-rdpemt/) |\n| MS-RDPEUDP | UDP Transport | [Link](https://learn.microsoft.com/en-us/openspecs/windows_protocols/ms-rdpeudp/) |\n\n## Features\n\n- **Secure Credentials** - Passwords sent via WebSocket, not URL\n- **TLS Support** - TLS 1.2+ encryption for RDP connections\n- **NLA Authentication** - Network Level Authentication (with limitations)\n- **Clipboard** - Bidirectional text clipboard\n- **Audio** - Audio redirection with PCM, AAC, and MP3 support\n- **WebAssembly** - RLE/NSCodec/RemoteFX decoding via WASM\n- **Configurable** - Environment-based configuration\n\n## Limitations\n\n- **Windows Compatibility** - Primarily tested with XRDP; Windows servers may have issues\n- **Graphics** - RemoteFX codec implemented; H.264 not yet supported\n- **NLA** - Works with many configurations but not all (see limitations below)\n\n## Development\n\n```bash\nmake help       # Show all targets\nmake dev        # Run in development mode\nmake test       # Run tests\nmake lint       # Run linters\nmake build-all  # Build for all platforms\n```\n\n## License\n\nMIT License - see [LICENSE](LICENSE)\n",
+  "commits": [
+    {
+      "sha": "f367d0a3",
+      "date": "2026-02-15T09:33:34Z",
+      "msg": "Bump version to 1.0.5"
+    },
+    {
+      "sha": "275d880f",
+      "date": "2026-02-15T09:32:25Z",
+      "msg": "Rename binary from rdp-html5 to go-rdp throughout codebase"
+    },
+    {
+      "sha": "7ac03c1f",
+      "date": "2026-02-15T09:28:37Z",
+      "msg": "Improve CLI documentation consistency and thoroughness"
+    },
+    {
+      "sha": "1832e19f",
+      "date": "2026-02-15T09:25:13Z",
+      "msg": "Add audio quality preference: prioritize bandwidth over quality by default"
+    },
+    {
+      "sha": "c5970599",
+      "date": "2026-02-15T09:21:30Z",
+      "msg": "Add AAC audio codec support for better bandwidth efficiency"
+    },
+    {
+      "sha": "0534dfa1",
+      "date": "2026-02-15T09:05:19Z",
+      "msg": "Fix toast close button position: move to top-right"
+    },
+    {
+      "sha": "aba8b775",
+      "date": "2026-02-15T09:01:37Z",
+      "msg": "Fix 32-bit rendering: correct Planar vs RLE codec detection; fix audio sample rate"
+    },
+    {
+      "sha": "8af6a72b",
+      "date": "2026-02-15T00:07:41Z",
+      "msg": "Bump version to 1.0.4"
+    },
+    {
+      "sha": "7ddaeb51",
+      "date": "2026-02-15T00:03:00Z",
+      "msg": "Fix audio: buffer accumulation, format index mapping, context resume"
+    },
+    {
+      "sha": "c924e51e",
+      "date": "2026-02-14T23:44:36Z",
+      "msg": "Fix 32-bit rendering: route surface commands by codec type, raise PDU size limit"
+    },
+    {
+      "sha": "029596cf",
+      "date": "2026-02-14T23:34:59Z",
+      "msg": "Add VERSION file, fix audio scheduling and RFX multifragment size"
+    },
+    {
+      "sha": "5a14be75",
+      "date": "2026-02-14T23:22:33Z",
+      "msg": "Wire up RemoteFX-Image codec end-to-end"
+    },
+    {
+      "sha": "32d908f4",
+      "date": "2026-02-14T22:58:00Z",
+      "msg": "Fix cursor black square, simplify asset embedding, align error messages with CLI flags"
+    },
+    {
+      "sha": "c65a7a25",
+      "date": "2026-02-07T19:26:43Z",
+      "msg": "Bump version to 1.0.3"
+    },
+    {
+      "sha": "ed1b2f2b",
+      "date": "2026-02-07T19:26:28Z",
+      "msg": "fix: resolve all gosec findings and scope CI/CD cleanup actions"
+    },
+    {
+      "sha": "01622d85",
+      "date": "2026-02-07T10:22:31Z",
+      "msg": "Bump version to 1.0.2"
+    },
+    {
+      "sha": "e624bed8",
+      "date": "2026-02-07T10:22:06Z",
+      "msg": "fix(rdp): spec-verified RDP compliance fixes"
+    },
+    {
+      "sha": "c48a9d46",
+      "date": "2026-02-07T10:08:56Z",
+      "msg": "fix: address remaining lower-severity audit findings"
+    },
+    {
+      "sha": "4e4c603b",
+      "date": "2026-02-07T10:04:17Z",
+      "msg": "fix: correct logic errors found during codebase audit"
+    },
+    {
+      "sha": "81c306b4",
+      "date": "2026-02-07T09:55:59Z",
+      "msg": "Bump version to 1.0.1"
+    },
+    {
+      "sha": "b79f1c1a",
+      "date": "2026-02-07T09:55:55Z",
+      "msg": "chore: add bump-patch and push release targets"
+    },
+    {
+      "sha": "11aa25f0",
+      "date": "2026-02-07T09:52:22Z",
+      "msg": "chore: mandate TinyGo for WASM builds"
+    },
+    {
+      "sha": "2dcd13fd",
+      "date": "2026-02-07T09:50:27Z",
+      "msg": "ci: align build pipeline with guerite patterns"
+    },
+    {
+      "sha": "51f106de",
+      "date": "2026-02-07T09:42:05Z",
+      "msg": "fix(audio): correct protocol serialization and WebSocket format negotiation"
+    },
+    {
+      "sha": "26ffd4d8",
+      "date": "2026-01-30T15:56:11Z",
+      "msg": "Add PWA manifest and icons"
+    },
+    {
+      "sha": "db471708",
+      "date": "2026-01-26T21:47:24Z",
+      "msg": "Fix audit issues and proxy CORS"
+    },
+    {
+      "sha": "4b816848",
+      "date": "2026-01-24T20:56:42Z",
+      "msg": "docs: comprehensive documentation audit and updates"
+    },
+    {
+      "sha": "c338246a",
+      "date": "2026-01-24T20:53:06Z",
+      "msg": "docs: update documentation for MP3 audio support"
+    },
+    {
+      "sha": "318f55ae",
+      "date": "2026-01-24T20:50:15Z",
+      "msg": "feat(audio): add MP3 audio format support for WebAudio"
+    },
+    {
+      "sha": "b6b921f2",
+      "date": "2026-01-24T20:38:29Z",
+      "msg": "docs: Improve formatting and consistency in architecture documentation"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "Notes for January 19-25",
+      "date": "2026-01-25",
+      "url": "https://taoofmac.com/space/notes/2026/01/25/2030"
+    },
+    {
+      "title": "Seizing The Means Of Production (Again)",
+      "date": "2026-02-01",
+      "url": "https://taoofmac.com/space/notes/2026/02/01/1940"
+    },
+    {
+      "title": "Notes for February 8-15",
+      "date": "2026-02-15",
+      "url": "https://taoofmac.com/space/notes/2026/02/15/1530"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

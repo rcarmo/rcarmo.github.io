@@ -1,0 +1,113 @@
+{
+  "id": "PhotosExport",
+  "meta": {
+    "name": "PhotosExport",
+    "full_name": "rcarmo/PhotosExport",
+    "description": "Export ALL your data from Apple Photos",
+    "homepage": "",
+    "stars": 280,
+    "forks": 7,
+    "language": "Swift",
+    "created_at": "2025-12-27T14:35:33Z",
+    "pushed_at": "2026-01-11T21:24:05Z",
+    "updated_at": "2026-04-19T07:13:32Z",
+    "topics": [
+      "apple",
+      "macos",
+      "photos",
+      "swift"
+    ]
+  },
+  "readme": "# PhotosExport\n\n![Why I wrote this](docs/PhotosExport-256.png)\n\n`PhotosExport` is a small macOS command-line tool that exports **Apple Photos** library assets to the filesystem, and that I developed out of frustration with Shortcuts’ limited (i.e., non-existent) Photos export capabilities and the brokenness of AppleScript-based solutions.\n\nIt is intentionally opinionated:\n\n- Exports **assets from a complete calendar year** (current year by default).\n- For each asset, exports **all available `PHAssetResource`s** (including originals, `FullSizeRender` resources, Live Photo paired video resources, adjustment data, brush stroke retouches, etc.), when present.\n- Writes into a simple `YYYY/MM` folder hierarchy.\n- Uses a deterministic timestamp-based naming convention.\n\n## Requirements\n\n- macOS 13+\n- Swift (via Xcode / Command Line Tools)\n\n## Permissions (macOS Photos)\n\nThis tool uses the Photos framework and needs permission to read your Photos library.\n\nIf you run it from Terminal, macOS typically associates the Photos permission with **Terminal** (or your terminal app). Enable it in:\n\nSystem Settings → Privacy & Security → Photos\n\nIf permission is denied, the tool will exit before exporting.\n\n## Output location\n\nExports go under:\n\n- `~/Pictures/Exports/YYYY/MM/`\n\nUnless you pass:\n\n- `PhotosExport --export-directory /path/to/export`\n\nAn error log is written to:\n\n- `<export directory>/export_errors.log`\n\n## Filenames\n\nEach exported resource file is named:\n\n- `YYYYMMDDHHMMSSx.ext`\n\nWhere:\n\n- `YYYYMMDDHHMMSS` comes from the asset `creationDate`.\n- `x` is only added **when needed to avoid collisions**; it is a lowercase letter (`a`–`z`) derived from a deterministic hash of the resource’s name plus stable metadata (type/UTI/dimensions/etc.).\n- If multiple resources would still collide, the letter is advanced (`…a`, `…b`, …) until unique.\n- File extensions are always lowercased.\n\n## Metadata sidecars\n\nIf you pass:\n\n- `PhotosExport --metadata`\n\n…the exporter will write a JSON sidecar next to the exported files for each asset.\n\nWhat it contains (high level):\n\n- Asset identifiers and basic properties (type/subtypes, dimensions, duration, favorite/hidden flags, timestamps).\n- Location data (if present) and a best-effort reverse-geocoded place mark.\n- A list of exported resources for that asset (type/UTI/original filename/exported filename/path, plus basic file stats).\n- Where available, additional Photos/AVFoundation metadata and image properties (e.g., EXIF/TIFF/GPS/IPTC/XMP dictionaries).\n\nNotes:\n\n- Sidecar filenames use the same timestamp-based naming scheme and collision handling as exported resources.\n- This can include sensitive data (precise location + place names, camera serials, etc.). Treat the output folder accordingly.\n\n## Logging\n\n- By default, a detailed progress log is written to `stderr` as it:\n  - creates folders,\n  - enumerates assets,\n  - enumerates resources per asset,\n  - and writes each resource to disk.\n\nTo write the progress log to a file instead:\n\n- `PhotosExport --log-file /path/to/export.log`\n\n## Incremental runs\n\nIf you want to avoid re-downloading/re-writing files, use:\n\n- `PhotosExport --incremental`\n\nBy default, the exporter will **overwrite existing files** at the destination path.\n\nWith `--incremental`, the exporter will instead **skip any resource whose destination filename already exists**.\n\n## Year override\n\nBy default, the exporter processes assets from the current calendar year.\n\nTo override:\n\n- `PhotosExport --year 2024`\n\n### Exporting a range of years\n\nYou can export multiple years in a single run by specifying both `--year` (start year) and `--end-year` (end year):\n\n- `PhotosExport --year 2018 --end-year 2025`\n\nNotes:\n\n- `--end-year` **must** be used together with `--year`.\n- The range is inclusive (start and end years are included).\n- If `--year` is greater than `--end-year`, the tool exits with an error.\n\nThe year can be any valid integer. By popular request, we now allow any year—to accommodate researchers, time travelers, and inter-dimensional drift.\n\n## Build / Run\n\nThere’s a `Makefile` with self-documenting targets:\n\n- `make` (shows help)\n- `make build`\n- `make run ARGS='--log-file /tmp/photosexport.log'`\n- `make lint`\n- `make test`\n\nYou can also run via SwiftPM directly:\n\n- `swift build -c release`\n- `./.build/release/PhotosExport`\n\nIf you’re building this with Swift 6 strict concurrency enabled: yes, it can be nearly as unpalatable as AppleScript.\n\n## Notes\n\n- `PHAssetResourceRequestOptions.isNetworkAccessAllowed` is enabled, so items stored in iCloud may be downloaded during export.\n- “True originals” are exported to the extent that Photos exposes them as `PHAssetResource`s; some assets may only have rendered derivatives available.\n",
+  "commits": [
+    {
+      "sha": "d8a9a3c7",
+      "date": "2026-01-11T21:24:02Z",
+      "msg": "feat: merge #1 directly, tweak the logic a bit to ensure we can't point it to a regular file"
+    },
+    {
+      "sha": "5dbd0bac",
+      "date": "2026-01-11T21:16:21Z",
+      "msg": "feat: allow year range (alternative implementation to #2)"
+    },
+    {
+      "sha": "d15ba2e8",
+      "date": "2026-01-11T21:10:15Z",
+      "msg": "fix: hoisted used names to be tracked on a per-folder basis, which should fix #3"
+    },
+    {
+      "sha": "63eb205e",
+      "date": "2025-12-28T12:29:05Z",
+      "msg": "feat: allow any valid integer for year input and update error message"
+    },
+    {
+      "sha": "5c99aad4",
+      "date": "2025-12-27T16:41:10Z",
+      "msg": "icon"
+    },
+    {
+      "sha": "8526bfe0",
+      "date": "2025-12-27T16:20:04Z",
+      "msg": "feat: allow picking year"
+    },
+    {
+      "sha": "0ac6f21c",
+      "date": "2025-12-27T15:56:45Z",
+      "msg": "fix: update exported file path to use last path component"
+    },
+    {
+      "sha": "519c0c81",
+      "date": "2025-12-27T15:54:29Z",
+      "msg": "fix: sidecar filename generation"
+    },
+    {
+      "sha": "bd83f5f5",
+      "date": "2025-12-27T15:51:39Z",
+      "msg": "Enhance metadata extraction by safely accessing live photo pairing identifier and add new test cases for settings and error handling"
+    },
+    {
+      "sha": "9b999a54",
+      "date": "2025-12-27T15:50:26Z",
+      "msg": "Add metadata sidecar feature and corresponding test case"
+    },
+    {
+      "sha": "c698a36e",
+      "date": "2025-12-27T15:47:48Z",
+      "msg": "Add Sendable conformance to AVFoundation types and enhance metadata structures"
+    },
+    {
+      "sha": "6d114f93",
+      "date": "2025-12-27T15:47:10Z",
+      "msg": "Refactor as modules, struggle with Swift concurrency warnings"
+    },
+    {
+      "sha": "b5345cb3",
+      "date": "2025-12-27T15:28:09Z",
+      "msg": "Enhance metadata extraction and JSON handling for exported photos"
+    },
+    {
+      "sha": "b74c4f65",
+      "date": "2025-12-27T14:37:12Z",
+      "msg": "Add MIT License to the project"
+    },
+    {
+      "sha": "b388ee65",
+      "date": "2025-12-27T14:35:28Z",
+      "msg": "Add initial implementation of PhotosExport tool with Makefile and tests"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "We Can't Remember It For You Wholesale",
+      "date": "2016-09-25",
+      "url": "https://taoofmac.com/space/blog/2016/09/25/1050"
+    },
+    {
+      "title": "Renaming and Filing Photos and Videos in the HEIC/HEIF era",
+      "date": "2023-01-14",
+      "url": "https://taoofmac.com/space/blog/2023/01/14/1745"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

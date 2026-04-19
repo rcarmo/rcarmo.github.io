@@ -1,0 +1,152 @@
+[
+  {
+    "sha": "41078033",
+    "date": "2026-04-02T22:16:05Z",
+    "msg": "docs: trim README to user-focused essentials"
+  },
+  {
+    "sha": "81b1a818",
+    "date": "2026-04-02T22:14:27Z",
+    "msg": "docs: comprehensive update of README, SPEC, and API reference"
+  },
+  {
+    "sha": "038771f0",
+    "date": "2026-04-02T22:09:36Z",
+    "msg": "Bump version to 0.6.12"
+  },
+  {
+    "sha": "2802d777",
+    "date": "2026-04-02T21:46:58Z",
+    "msg": "style(editor): hide tab bar in popout window"
+  },
+  {
+    "sha": "c3f48dd5",
+    "date": "2026-04-02T21:43:52Z",
+    "msg": "fix(editor): force popup window instead of tab in Safari"
+  },
+  {
+    "sha": "e022c6cb",
+    "date": "2026-04-02T21:40:18Z",
+    "msg": "Bump version to 0.6.11"
+  },
+  {
+    "sha": "8746913c",
+    "date": "2026-04-02T21:23:03Z",
+    "msg": "fix(editor): make popout open editor-only window and close inner tab"
+  },
+  {
+    "sha": "ef12fa73",
+    "date": "2026-04-02T21:04:20Z",
+    "msg": "Bump version to 0.6.10"
+  },
+  {
+    "sha": "e396f440",
+    "date": "2026-04-02T21:00:28Z",
+    "msg": "refactor(editor): remove redundant header bar"
+  },
+  {
+    "sha": "4f1cdc5c",
+    "date": "2026-04-02T20:55:21Z",
+    "msg": "Bump version to 0.6.9"
+  },
+  {
+    "sha": "b6cd0beb",
+    "date": "2026-04-02T20:53:03Z",
+    "msg": "fix(editor): prevent Safari/WebKit freeze on editor open"
+  },
+  {
+    "sha": "b71e4ef8",
+    "date": "2026-04-02T20:33:31Z",
+    "msg": "Bump version to 0.6.8"
+  },
+  {
+    "sha": "64920937",
+    "date": "2026-04-02T20:32:57Z",
+    "msg": "test(e2e): add Playwright editor/tab UX tests"
+  },
+  {
+    "sha": "2e875c11",
+    "date": "2026-04-02T14:40:08Z",
+    "msg": "Bump version to 0.6.7"
+  },
+  {
+    "sha": "e67071f4",
+    "date": "2026-04-02T14:32:22Z",
+    "msg": "fix(web): make Open in Window actually open editor popouts"
+  },
+  {
+    "sha": "d3a68b79",
+    "date": "2026-04-02T14:28:28Z",
+    "msg": "Bump version to 0.6.6"
+  },
+  {
+    "sha": "068aa6d5",
+    "date": "2026-04-02T14:26:50Z",
+    "msg": "Port Piclaw pane popout/detach UI and attachment preview decoupling"
+  },
+  {
+    "sha": "c032b76a",
+    "date": "2026-03-16T10:01:33Z",
+    "msg": "Bump version to 0.6.5"
+  },
+  {
+    "sha": "9a790bde",
+    "date": "2026-03-16T10:01:22Z",
+    "msg": "Use cached agent avatar in dynamic manifest icons"
+  },
+  {
+    "sha": "332803f8",
+    "date": "2026-03-16T08:21:33Z",
+    "msg": "Bump version to 0.6.4"
+  },
+  {
+    "sha": "ed6e774e",
+    "date": "2026-03-16T08:21:22Z",
+    "msg": "Add shared queue steering UX and expose thinking level control"
+  },
+  {
+    "sha": "c9f76f13",
+    "date": "2026-03-16T08:20:28Z",
+    "msg": "Bump version to 0.6.3"
+  },
+  {
+    "sha": "a041ad9e",
+    "date": "2026-03-16T07:44:23Z",
+    "msg": "Bump version to 0.6.2"
+  },
+  {
+    "sha": "6333efa9",
+    "date": "2026-03-14T00:11:32Z",
+    "msg": "Bump version to 0.6.1"
+  },
+  {
+    "sha": "a20b15a6",
+    "date": "2026-03-14T00:11:20Z",
+    "msg": "Match Piclaw solarized auto light-dark theme behavior"
+  },
+  {
+    "sha": "ca4e4c2e",
+    "date": "2026-03-13T12:54:14Z",
+    "msg": "Bump version to 0.6.0"
+  },
+  {
+    "sha": "835e8e37",
+    "date": "2026-03-13T12:52:04Z",
+    "msg": "Port Piclaw editor UX and expand slash command parity"
+  },
+  {
+    "sha": "a7d7ce55",
+    "date": "2026-03-13T11:47:55Z",
+    "msg": "Bump version to 0.5.3"
+  },
+  {
+    "sha": "839cb4cd",
+    "date": "2026-03-13T08:03:23Z",
+    "msg": "feat: port message refs, scroll-to-message, and theme/tint enhancements from piclaw"
+  },
+  {
+    "sha": "6ebd1f5e",
+    "date": "2026-03-10T23:48:14Z",
+    "msg": "feat: port workspace create/rename/move, drag-drop, inline rename, and meta color from piclaw"
+  }
+]

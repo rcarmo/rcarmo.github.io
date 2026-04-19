@@ -1,0 +1,21 @@
+{
+  "name": "agentbox",
+  "full_name": "rcarmo/agentbox",
+  "description": "Contain your coding agents (literally)",
+  "homepage": "",
+  "stars": 97,
+  "forks": 5,
+  "language": "Dockerfile",
+  "created_at": "2026-01-11T15:57:00Z",
+  "pushed_at": "2026-04-18T19:44:10Z",
+  "updated_at": "2026-04-18T19:38:05Z",
+  "topics": [
+    "agent",
+    "ai",
+    "claude",
+    "codex",
+    "mistral",
+    "opencode",
+    "toad"
+  ]
+}

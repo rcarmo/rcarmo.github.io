@@ -1,0 +1,118 @@
+{
+  "id": "umcp",
+  "meta": {
+    "name": "umcp",
+    "full_name": "rcarmo/umcp",
+    "description": "A micro MCP server for stdio only (asyncio and synchronous)",
+    "homepage": "",
+    "stars": 11,
+    "forks": 2,
+    "language": "Python",
+    "created_at": "2025-05-30T19:33:03Z",
+    "pushed_at": "2025-12-26T19:43:17Z",
+    "updated_at": "2026-02-22T18:44:43Z",
+    "topics": []
+  },
+  "readme": "# 🐚 MicroMCP\n\nA lightweight, zero-overhead implementation of [Model Context Protocol (MCP)](https://modelcontextprotocol.io) in pure Python inspired by the original `bash` implementation by Muthukumaran Navaneethakrishnan.\n\n**Why?** I found the idea of using the simplest possible implementation of MCP in a shell script fascinating, but I wanted to see how it would look in Python with true introspection capabilities.\n\n---\n\n## 📋 Features\n\n- ✅ Full JSON-RPC 2.0 protocol over stdio\n- ✅ Complete MCP protocol implementation\n- ✅ Dynamic tool discovery via function naming convention\n- ✅ Complete introspection of function signatures\n- ✅ Easy to extend with custom tools\n- ✅ Prompt templates for reusable, structured interactions\n- ✅ Both synchronous and asynchronous implementations\n- ✅ Zero third-party dependencies\n\n---\n\n## 🔧 Requirements\n\n- Python 3.7+\n\n---\n\n## 📦 Installation\n\n1. **Clone the repository**\n\n```bash\ngit clone https://github.com/rcarmo/umcp\ncd umcp\n```\n\n2. **Verify installation**\n\n```bash\npython movie_server.py --help\n```\n\nNo additional packages required - MicroMCP uses only the Python standard library!\n\n---\n\n## 🚀 Quick Start\n\n### 1. Try the Example Server\n\n```bash\necho '{\"jsonrpc\": \"2.0\", \"method\": \"tools/call\", \"params\": {\"name\": \"get_movies\"}, \"id\": 1}' | python ./movie_server.py\n```\n\n### 2. List Available Tools\n\n```bash\necho '{\"jsonrpc\": \"2.0\", \"method\": \"tools/list\", \"id\": 1}' | python ./movie_server.py\n```\n\n### 3. Try the Calculator\n\n```bash\necho '{\"jsonrpc\": \"2.0\", \"method\": \"tools/call\", \"params\": {\"name\": \"add\", \"arguments\": {\"a\": 5, \"b\": 3}}, \"id\": 1}' | python ./calculator_server.py\n```\n\n---\n\n## 🏗️ Architecture\n\n```diagram\n┌─────────────┐         ┌───────────────┐\n│ MCP Host    │         │ MCP Server    │\n│ (AI System) │◄──────► │ (myserver.py) │\n└─────────────┘ stdio   └───────────────┘\n                                │\n                      ┌─────────┴──────────┐────────────────────┐\n                      ▼                    ▼                    ▼\n              ┌────────────────┐  ┌────────────────┐  ┌────────────────────┐\n              │ Protocol Layer │  │ Business Logic │  │ Prompt Templates   │\n              │ (umcp.py)      │  │(tool_* methods)│  │ (prompt_* methods) │\n              └────────────────┘  └────────────────┘  └────────────────────┘\n                      │                    │\n                      ▼                    ▼\n              ┌───────────────┐    ┌───────────────┐\n              │ Introspection │    │ External      │\n              └───────────────┘    │ Services/APIs │\n                                   └───────────────┘\n```\n\n---\n\n## 🎯 Getting Started Tutorial\n\n### Creating Your First MCP Server\n\nCreate a file `my_server.py`:\n\n```python\n#!/usr/bin/env python3\nfrom umcp import MCPServer\nfrom typing import Dict, Any, Optional\n\nclass MyServer(MCPServer):\n    \"\"\"A simple example MCP server.\"\"\"\n\n    def tool_greet(self, name: str = \"World\") -> str:\n        \"\"\"Greet someone by name.\n\n        Args:\n            name: The name to greet\n\n        Returns:\n            A friendly greeting message\n        \"\"\"\n        return f\"Hello, {name}!\"\n\n    def tool_add_numbers(self, a: float, b: float) -> float:\n        \"\"\"Add two numbers together.\n\n        Args:\n            a: First number\n            b: Second number\n\n        Returns:\n            The sum of the two numbers\n        \"\"\"\n        return a + b\n\nif __name__ == \"__main__\":\n    server = MyServer()\n    server.run()\n```\n\n### Testing Your Server\n\n```bash\n# Make it executable\nchmod +x my_server.py\n\n# Test the greet tool\necho '{\"jsonrpc\": \"2.0\", \"method\": \"tools/call\", \"params\": {\"name\": \"greet\", \"arguments\": {\"name\": \"Alice\"}}, \"id\": 1}' | ./my_server.py\n\n# Test the add tool\necho '{\"jsonrpc\": \"2.0\", \"method\": \"tools/call\", \"params\": {\"name\": \"add_numbers\", \"arguments\": {\"a\": 10, \"b\": 5}}, \"id\": 2}' | ./my_server.py\n```\n\n### Async Version\n\nCreate `async_server.py`:\n\n```python\n#!/usr/bin/env python3\nimport asyncio\nfrom aioumcp import AsyncMCPServer\n\nclass AsyncMyServer(AsyncMCPServer):\n    \"\"\"An async example MCP server.\"\"\"\n\n    async def tool_fetch_data(self, url: str) -> Dict[str, Any]:\n        \"\"\"Simulate fetching data from a URL.\n\n        Args:\n            url: The URL to fetch from\n\n        Returns:\n            Mock data response\n        \"\"\"\n        await asyncio.sleep(0.1)  # Simulate network delay\n        return {\"url\": url, \"status\": \"success\", \"data\": \"mock response\"}\n\nif __name__ == \"__main__\":\n    server = AsyncMyServer()\n    server.run()\n```\n\n---\n\n## 🔌 Examples\n\nThis implementation includes two example servers that demonstrate how to use the MCP protocol:\n\n### Movie Booking Server (`movie_server.py`)\n\n- Demonstrates CRUD operations\n- Shows parameter validation\n- Includes prompt templates for movie-related tasks\n\n### Calculator Server (`calculator_server.py`)\n\n- Simple mathematical operations\n- Error handling for edge cases\n- Type-safe parameter handling\n\nBoth are supplied in synchronous and asynchronous versions, showcasing how to implement tools and introspection.\n\n### Running the Examples\n\n```bash\n# Synchronous versions\npython movie_server.py\npython calculator_server.py\n\n# Asynchronous versions\npython async_movie_server.py\npython async_calculator_server.py\n```\n\n---\n\n## 📝 Prompt Templates\n\nMicroMCP supports reusable prompt templates using a simple naming convention. See [PROMPTS.md](PROMPTS.md) for detailed documentation.\n\n### Quick Overview\n\n- Any method named `prompt_<name>` is treated as a prompt definition\n- The method docstring becomes the prompt description\n- Function signature is introspected for JSON Schema input definition\n- Optional categories can be embedded in the docstring\n\n### Simple Example\n\n```python\nclass MyServer(MCPServer):\n    def prompt_code_review(self, filename: str, issues: int = 0) -> str:\n        \"\"\"Generate a focused code review instruction.\\nCategories: code, review\"\"\"\n        return f\"Please review '{filename}'. Assume ~{issues} pre-identified issues.\"\n```\n\n### Testing Prompts\n\n```bash\n# List available prompts\necho '{\"jsonrpc\": \"2.0\", \"method\": \"prompts/list\", \"id\": 1}' | python ./movie_server.py\n\n# Get a specific prompt\necho '{\"jsonrpc\": \"2.0\", \"method\": \"prompts/get\", \"params\": {\"name\": \"code_review\", \"arguments\": {\"filename\": \"main.py\"}}, \"id\": 2}' | python ./movie_server.py\n```\n\n---\n\n## 📚 API Reference\n\n### Core Classes\n\n#### `MCPServer`\n\nBase class for synchronous MCP servers.\n\n**Key Methods:**\n\n- `discover_tools()` - Automatically finds all `tool_*` methods\n- `discover_prompts()` - Automatically finds all `prompt_*` methods\n- `handle_tools_call()` - Dispatches tool execution\n- `handle_prompt_get()` - Handles prompt template retrieval\n\n#### `AsyncMCPServer`\n\nBase class for asynchronous MCP servers.\n\n**Key Methods:**\n\n- `discover_tools()` - Automatically finds all `tool_*` methods\n- `discover_prompts()` - Automatically finds all `prompt_*` methods\n- `handle_tools_call()` - Dispatches tool execution (async)\n- `handle_prompt_get()` - Handles prompt template retrieval (async)\n\n### Tool Method Signature\n\n```python\ndef tool_<name>(self, param1: type1, param2: type2 = default) -> return_type:\n    \"\"\"Tool description (first line becomes summary).\n\n    Args:\n        param1: Description of parameter 1\n        param2: Description of paramet\n",
+  "commits": [
+    {
+      "sha": "7a0b035e",
+      "date": "2025-12-26T19:43:13Z",
+      "msg": "chore: update .gitignore and enhance README with prompt templates documentation"
+    },
+    {
+      "sha": "ad306f48",
+      "date": "2025-10-10T21:36:40Z",
+      "msg": "prompt support"
+    },
+    {
+      "sha": "382ad66f",
+      "date": "2025-05-30T19:53:23Z",
+      "msg": "chore: docstrings"
+    },
+    {
+      "sha": "486416e5",
+      "date": "2025-05-30T19:52:07Z",
+      "msg": "chore: README"
+    },
+    {
+      "sha": "14d7013d",
+      "date": "2025-05-30T19:48:55Z",
+      "msg": "chore: tests"
+    },
+    {
+      "sha": "651ea06b",
+      "date": "2025-05-30T19:45:40Z",
+      "msg": "chore: tests"
+    },
+    {
+      "sha": "d124c834",
+      "date": "2025-05-30T19:44:43Z",
+      "msg": "minor tweaks"
+    },
+    {
+      "sha": "25a6125b",
+      "date": "2025-05-30T19:38:38Z",
+      "msg": "README"
+    },
+    {
+      "sha": "a2eac017",
+      "date": "2025-05-30T19:34:22Z",
+      "msg": "Minimal Python version"
+    },
+    {
+      "sha": "1d27d186",
+      "date": "2025-05-30T08:41:48Z",
+      "msg": "removed unwanted"
+    },
+    {
+      "sha": "c710f98c",
+      "date": "2025-05-30T08:36:04Z",
+      "msg": "updated readme"
+    },
+    {
+      "sha": "d858ed90",
+      "date": "2025-05-30T08:35:44Z",
+      "msg": "updated readme"
+    },
+    {
+      "sha": "934793b4",
+      "date": "2025-05-29T18:22:11Z",
+      "msg": "updated readme"
+    },
+    {
+      "sha": "b4ad5453",
+      "date": "2025-05-29T18:21:14Z",
+      "msg": "updated readme"
+    },
+    {
+      "sha": "788019f8",
+      "date": "2025-05-29T18:09:45Z",
+      "msg": "initial thing done"
+    },
+    {
+      "sha": "2f5632ce",
+      "date": "2025-05-29T17:40:38Z",
+      "msg": "initialized"
+    },
+    {
+      "sha": "19f81758",
+      "date": "2025-05-29T16:56:10Z",
+      "msg": "initialized"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "Creating Per-Project MCP Servers",
+      "date": "2025-10-04",
+      "url": "https://taoofmac.com/space/blog/2025/10/04/1111"
+    },
+    {
+      "title": "Notes on SKILL.md vs MCP",
+      "date": "2026-01-14",
+      "url": "https://taoofmac.com/space/notes/2026/01/14/0830"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

@@ -1,0 +1,152 @@
+[
+  {
+    "sha": "392eb76f",
+    "date": "2023-04-20T15:00:49Z",
+    "msg": "Update README.md"
+  },
+  {
+    "sha": "5a08f04e",
+    "date": "2022-12-13T17:26:08Z",
+    "msg": "fix gen2 detection"
+  },
+  {
+    "sha": "58caf1c2",
+    "date": "2022-11-29T13:33:32Z",
+    "msg": ".PHONY targets"
+  },
+  {
+    "sha": "cd6baaaa",
+    "date": "2022-11-29T13:28:07Z",
+    "msg": "cleanup"
+  },
+  {
+    "sha": "909959f0",
+    "date": "2022-11-29T13:27:21Z",
+    "msg": "moved TUI to separate folder"
+  },
+  {
+    "sha": "0ec9bd26",
+    "date": "2022-11-29T13:27:11Z",
+    "msg": "moved TUI to separate folder"
+  },
+  {
+    "sha": "564be911",
+    "date": "2022-11-29T13:24:55Z",
+    "msg": "basic TUI bootstrap"
+  },
+  {
+    "sha": "bd603456",
+    "date": "2022-11-29T11:19:49Z",
+    "msg": "added basic TUI stub"
+  },
+  {
+    "sha": "ba6a8a9b",
+    "date": "2022-11-29T10:20:49Z",
+    "msg": "deprecated az command"
+  },
+  {
+    "sha": "bbf91e75",
+    "date": "2022-11-27T22:42:50Z",
+    "msg": "Update README.md"
+  },
+  {
+    "sha": "a8afec7f",
+    "date": "2022-11-27T18:31:03Z",
+    "msg": "missing text"
+  },
+  {
+    "sha": "9b06e0da",
+    "date": "2022-11-27T18:11:05Z",
+    "msg": "rename model files"
+  },
+  {
+    "sha": "877f2fa9",
+    "date": "2022-11-27T18:08:24Z",
+    "msg": "fix folder name"
+  },
+  {
+    "sha": "5d4fe231",
+    "date": "2022-11-27T17:46:21Z",
+    "msg": "checklist"
+  },
+  {
+    "sha": "c46f1532",
+    "date": "2022-11-27T17:08:48Z",
+    "msg": "SD 2.0 cleanup"
+  },
+  {
+    "sha": "c6f65159",
+    "date": "2022-11-26T20:16:34Z",
+    "msg": "temporarily disable xformers"
+  },
+  {
+    "sha": "f8af81a4",
+    "date": "2022-11-26T18:20:24Z",
+    "msg": "Automatic1111"
+  },
+  {
+    "sha": "648fdda3",
+    "date": "2022-11-26T18:19:32Z",
+    "msg": "Huggingface"
+  },
+  {
+    "sha": "01b054bf",
+    "date": "2022-11-26T18:19:21Z",
+    "msg": "Add experimental variant"
+  },
+  {
+    "sha": "20098807",
+    "date": "2022-11-25T15:49:48Z",
+    "msg": "Fixed Python base, added tailscale"
+  },
+  {
+    "sha": "b558e6a0",
+    "date": "2022-11-25T15:25:50Z",
+    "msg": "Test Python install and cache fix"
+  },
+  {
+    "sha": "da7dc87d",
+    "date": "2022-11-25T15:25:33Z",
+    "msg": "Spot instance changes"
+  },
+  {
+    "sha": "7c528e2d",
+    "date": "2022-11-25T15:25:08Z",
+    "msg": "Spot instance SKUs"
+  },
+  {
+    "sha": "7291f90a",
+    "date": "2022-11-24T20:45:02Z",
+    "msg": "working solution"
+  },
+  {
+    "sha": "85ddfccc",
+    "date": "2022-11-24T20:44:19Z",
+    "msg": "Parameters"
+  },
+  {
+    "sha": "695d6981",
+    "date": "2022-10-17T12:15:20Z",
+    "msg": "First pass at template"
+  },
+  {
+    "sha": "b0a58fcd",
+    "date": "2022-10-17T11:56:08Z",
+    "msg": "first pass at params"
+  },
+  {
+    "sha": "0e049432",
+    "date": "2022-10-17T11:51:00Z",
+    "msg": "first pass at README"
+  },
+  {
+    "sha": "27fee019",
+    "date": "2022-10-17T11:44:05Z",
+    "msg": "initial pass"
+  },
+  {
+    "sha": "52394e22",
+    "date": "2022-10-17T10:58:35Z",
+    "msg": "First pass at cloud-init"
+  }
+]

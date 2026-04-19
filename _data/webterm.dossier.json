@@ -1,0 +1,183 @@
+{
+  "id": "webterm",
+  "meta": {
+    "name": "webterm",
+    "full_name": "rcarmo/webterm",
+    "description": "Yet another web terminal, but with style",
+    "homepage": null,
+    "stars": 106,
+    "forks": 6,
+    "language": "Go",
+    "created_at": "2026-01-18T17:56:04Z",
+    "pushed_at": "2026-03-01T20:28:47Z",
+    "updated_at": "2026-04-19T07:26:41Z",
+    "topics": []
+  },
+  "readme": "# webterm\n\n![Icon](docs/icon-256.png)\n\n`webterm` serves terminal sessions over HTTP/WebSocket, with a dashboard mode for multiple sessions and live-updating terminal tiles that is perfect for running multiple AI coding agents in [`agentbox`](https://github.com/rcarmo/agentbox).\n\nThis repository is the Go port of the original Python implementation, which is preserved in the `python` branch.\n\nhttps://github.com/user-attachments/assets/62c52183-83a3-4fb5-97b1-ed001de4f53a\n\n## Features\n\n- Typeahead find for quickly finding and launching sessions with minimal friction\n- Web terminal with reconnect support\n- Ghostty WebAssembly terminal engine for fast rendering from [`ghostty-web`](https://github.com/rcarmo/ghostty-web)\n- Session dashboard with live PNG (or optional SVG) screenshots from [`go-te`](https://github.com/rcarmo/go-te)\n- Docker watch mode (`webterm-command` / `webterm-theme` labels)\n- Docker compose manifest ingestion (see `prod.compose.yaml`)\n- CPU sparkline tiles for compose services\n- SSE activity updates for fast dashboard refresh\n- Mobile/touch support with virtual keyboard + draggable keybar\n- Theme/font controls for terminal rendering\n- Vendored Nerd Font assets with full glyph/icon support (no external font fetch required)\n\n## Install\n\n### Quick install\n\n```bash\ngo install github.com/rcarmo/webterm/cmd/webterm@latest\n```\n\n### Build from source\n\n```bash\ngit clone https://github.com/rcarmo/webterm.git\ncd webterm\nmkdir -p bin\ngo build -o ./bin/webterm ./cmd/webterm\n```\n\nThe command above produces `bin/webterm`; you can also build it from repo root with `make build-go`.\n\n## Quick start\n\nRun a default shell session:\n\n```bash\ngo run ./cmd/webterm\n```\n\nRun a specific command:\n\n```bash\ngo run ./cmd/webterm -- htop\n```\n\nThen open <http://localhost:8080>.\n\n## Dashboard modes\n\n### Landing manifest\n\n```yaml\n- name: Logs\n  slug: logs\n  command: docker logs -f my-service\n  theme: nord\n```\n\n```bash\ngo run ./cmd/webterm -- --landing-manifest ./landing.yaml\n```\n\n### Docker watch\n\n```bash\ngo run ./cmd/webterm -- --docker-watch\n```\n\nContainers with these labels become tiles:\n\n- `webterm-command`: command string, or `auto` for Docker exec\n- `webterm-theme`: theme name (fallback is `xterm` palette)\n\nAvailable themes: `tango`, `xterm`, `monokai`, `monokai-pro`, `ristretto`, `dark`, `light`, `dracula`, `catppuccin`, `nord`, `gruvbox`, `solarized`, `tokyo`, `miasma`, `github`, `gotham`\n\n### Compose manifest\n\nUse `prod.compose.yaml` as the canonical multi-session compose example:\n\n```bash\ngo run ./cmd/webterm -- --compose-manifest ./prod.compose.yaml\n```\n\n## Environment variables\n\n- `WEBTERM_STATIC_PATH`: override static asset directory\n- `WEBTERM_DOCKER_USERNAME`: user for Docker exec sessions\n- `WEBTERM_DOCKER_AUTO_COMMAND`: override auto command (`/bin/bash` default)\n- `WEBTERM_SCREENSHOT_FORCE_REDRAW`: force redraw before screenshots (`true/1/yes/on`)\n- `WEBTERM_SCREENSHOT_MODE`: screenshot format for dashboard thumbnails (`png` default, set `svg` to use SVG)\n- `DOCKER_HOST`: Docker daemon endpoint override\n\n## Development (Makefile-first)\n\n```bash\nmake install-dev\nmake check\nmake race\nmake test\nmake bump-patch\n```\n\nFrontend bundle tasks:\n\n```bash\nmake build\nmake build-fast\nmake bundle-watch\n```\n\n## Docker\n\n```bash\ndocker build -t webterm .\ndocker run -v /var/run/docker.sock:/var/run/docker.sock -p 8080:8080 webterm --docker-watch\n```\n\nWeb assets are embedded in the Go binary by default (you can still override with `WEBTERM_STATIC_PATH`).\nThe Dockerfile uses a minimal Alpine runtime stage and only installs `ca-certificates` plus `docker-cli`.\n",
+  "commits": [
+    {
+      "sha": "1abc0d04",
+      "date": "2026-03-01T20:28:43Z",
+      "msg": "Bump version to 1.3.39"
+    },
+    {
+      "sha": "5089aedd",
+      "date": "2026-03-01T20:26:05Z",
+      "msg": "fix: bell indicator stuck after returning to terminal tab"
+    },
+    {
+      "sha": "5acb468a",
+      "date": "2026-02-26T20:43:32Z",
+      "msg": "Bump version to 1.3.38"
+    },
+    {
+      "sha": "b6a9231b",
+      "date": "2026-02-26T20:43:19Z",
+      "msg": "deps: update ghostty-web to fcc47d4"
+    },
+    {
+      "sha": "4d381286",
+      "date": "2026-02-26T20:33:59Z",
+      "msg": "Bump version to 1.3.37"
+    },
+    {
+      "sha": "41071f8a",
+      "date": "2026-02-26T20:33:44Z",
+      "msg": "fix: sync bell state on all dashboard tiles when tab regains focus"
+    },
+    {
+      "sha": "571d0c0b",
+      "date": "2026-02-26T20:31:15Z",
+      "msg": "Bump version to 1.3.36"
+    },
+    {
+      "sha": "b0321940",
+      "date": "2026-02-26T20:31:02Z",
+      "msg": "deps: update ghostty-web to a5d8c7b"
+    },
+    {
+      "sha": "bc3fac9a",
+      "date": "2026-02-26T20:29:20Z",
+      "msg": "fix: refresh all dashboard thumbnails on tab return and add periodic fallback"
+    },
+    {
+      "sha": "8496b139",
+      "date": "2026-02-26T20:17:57Z",
+      "msg": "Bump version to 1.3.35"
+    },
+    {
+      "sha": "f68904d5",
+      "date": "2026-02-26T20:17:44Z",
+      "msg": "Merge branch 'main' of github.com:rcarmo/textual-webterm"
+    },
+    {
+      "sha": "c88f01cb",
+      "date": "2026-02-26T20:16:55Z",
+      "msg": "Bump version to 1.3.34"
+    },
+    {
+      "sha": "982a68ea",
+      "date": "2026-02-26T20:16:40Z",
+      "msg": "deps: update ghostty-web to bbdea28 (fixes stale selection highlight on click)"
+    },
+    {
+      "sha": "73414acd",
+      "date": "2026-02-26T19:58:33Z",
+      "msg": "Bump version to 1.3.33"
+    },
+    {
+      "sha": "82ccfeb6",
+      "date": "2026-02-26T19:57:43Z",
+      "msg": "perf: reduce input tarpitting and speed up large-display rendering"
+    },
+    {
+      "sha": "3d83b4b1",
+      "date": "2026-02-26T19:56:58Z",
+      "msg": "Bump version to 1.3.32"
+    },
+    {
+      "sha": "2d9cb7f0",
+      "date": "2026-02-22T11:30:51Z",
+      "msg": "docs"
+    },
+    {
+      "sha": "df0a6ae1",
+      "date": "2026-02-20T13:27:22Z",
+      "msg": "Bump version to 1.3.31"
+    },
+    {
+      "sha": "0d8cf7d4",
+      "date": "2026-02-20T13:26:19Z",
+      "msg": "Increase thumbnail refresh cadence"
+    },
+    {
+      "sha": "bb0bc779",
+      "date": "2026-02-20T09:53:43Z",
+      "msg": "Bump version to 1.3.30"
+    },
+    {
+      "sha": "671778a1",
+      "date": "2026-02-19T15:59:33Z",
+      "msg": "Bump version to 1.3.29"
+    },
+    {
+      "sha": "ce624f29",
+      "date": "2026-02-19T15:59:26Z",
+      "msg": "Bump ghostty-web to 0.4.2"
+    },
+    {
+      "sha": "8dfe86e4",
+      "date": "2026-02-18T17:54:17Z",
+      "msg": "Bump version to 1.3.28"
+    },
+    {
+      "sha": "7a2a7877",
+      "date": "2026-02-18T17:53:33Z",
+      "msg": "Default dashboard thumbnails to PNG"
+    },
+    {
+      "sha": "25049dd1",
+      "date": "2026-02-18T15:59:29Z",
+      "msg": "Bump version to 1.3.27"
+    },
+    {
+      "sha": "cdcc9bfc",
+      "date": "2026-02-18T15:56:41Z",
+      "msg": "Always download SVG screenshots"
+    },
+    {
+      "sha": "b5f35349",
+      "date": "2026-02-18T15:50:59Z",
+      "msg": "Bump version to 1.3.26"
+    },
+    {
+      "sha": "a6ada31a",
+      "date": "2026-02-18T15:45:22Z",
+      "msg": "Add optional PNG screenshot mode"
+    },
+    {
+      "sha": "8d54de64",
+      "date": "2026-02-18T15:24:40Z",
+      "msg": "Bump version to 1.3.25"
+    },
+    {
+      "sha": "52c52f84",
+      "date": "2026-02-18T15:24:13Z",
+      "msg": "Reconnect terminals on visibility restore"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "Seizing The Means Of Production (Again)",
+      "date": "2026-02-01",
+      "url": "https://taoofmac.com/space/notes/2026/02/01/1940"
+    },
+    {
+      "title": "Notes for February 8-15",
+      "date": "2026-02-15",
+      "url": "https://taoofmac.com/space/notes/2026/02/15/1530"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

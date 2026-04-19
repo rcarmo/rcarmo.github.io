@@ -1,0 +1,183 @@
+{
+  "id": "pve-microvm",
+  "meta": {
+    "name": "pve-microvm",
+    "full_name": "rcarmo/pve-microvm",
+    "description": "OCI microVMs for Proxmox VE",
+    "homepage": "",
+    "stars": 3,
+    "forks": 0,
+    "language": "Shell",
+    "created_at": "2026-04-18T14:02:56Z",
+    "pushed_at": "2026-04-19T14:30:47Z",
+    "updated_at": "2026-04-19T14:30:49Z",
+    "topics": [
+      "homelab",
+      "microvm",
+      "proxmox",
+      "sandboxing"
+    ]
+  },
+  "readme": "# pve-microvm\n\n<p align=\"center\">\n  <img src=\"docs/pve-microvm-demo.gif\" alt=\"pve-microvm in the Proxmox web UI\" width=\"720\">\n</p>\n\nA Debian package that adds QEMU `microvm` machine type support to Proxmox VE.\n\n> **⚠️ Highly experimental.** This project patches `qemu-server` internals and\n> has not been tested in production. Use at your own risk. The patches are\n> fully reversible — uninstalling the package restores the original files.\n\n---\n\n## Motivation\n\nWe needed something between LXC containers and full QEMU VMs for running\ncoding agents and other semi-trusted workloads.\n\n| | LXC | microvm | Standard VM |\n|---|---|---|---|\n| Isolation | Namespace (shared kernel) | **KVM (own kernel)** | KVM (own kernel) |\n| Boot time | ~50 ms | **< 200 ms** | 2–10 s |\n| Overhead | Minimal | **Minimal** | Moderate |\n| Attack surface | Broad (host kernel) | **Minimal (virtio-mmio)** | Broad (emulated PC) |\n| Untrusted code | ⚠️ risky | **✅ safe** | ✅ safe |\n\n**Hardware-isolated VMs with container-like speed**, managed through the same\nProxmox tools you already use. No new runtime — QEMU's `microvm` machine type\nis already on every PVE node. This package just unlocks it.\n\n## Prior art\n\nAs of April 2026, **nobody has done this** — no Proxmox patches, packages,\nor integrations exist for the QEMU microvm machine type.\n\n---\n\n## Quick start\n\n```bash\n# Install\ndpkg -i pve-microvm_0.1.4-1_all.deb\n\n# Create a template from debian:trixie-slim (28 MB)\npve-microvm-template\n\n# Clone and boot\nqm clone 9000 901 --name my-sandbox --full\nqm start 901\nqm terminal 901\n\nroot@microvm:~#\n```\n\nOr manually:\n\n```bash\nqm create 900 --machine microvm --memory 256 --cores 1 \\\n  --name my-microvm --net0 virtio,bridge=vmbr0 \\\n  --serial0 socket --vga serial0\n\npve-oci-import --image alpine:latest --vmid 900 --configure\n\nqm start 900\nqm terminal 900\n```\n\n---\n\n## What's included\n\n| Component | Description |\n|---|---|\n| **`PVE::QemuServer::MicroVM`** | Perl module — microvm QEMU command generation |\n| **`pve-microvm-patch`** | Safe apply/revert of qemu-server patches |\n| **`pve-microvm-template`** | Create PVE templates from OCI images for instant cloning |\n| **`pve-oci-import`** | Convert any OCI image to a bootable microvm disk |\n| **`microvm-init`** | Minimal init for images without one (e.g., `debian:trixie-slim`) |\n| **`vmlinuz-microvm`** | Pre-built 6.12 LTS kernel (all virtio built-in, no initrd needed) |\n| **Web UI extension** | `microvm` in machine dropdown, ⚡ icon, xterm.js serial console |\n\n## Tested on\n\n| Component | Version |\n|---|---|\n| Proxmox VE | 9.1.7 |\n| QEMU | 10.1.2 |\n| Host kernel | 6.17.13-2-pve |\n| Guest kernel | 6.12.22 LTS |\n| Storage | LVM-thin |\n\n---\n\n## Documentation\n\n- **[Installation](docs/installation.md)** — install, verify, uninstall\n- **[Usage Guide](docs/usage.md)** — templates, OCI import, console, networking, guest agent\n- **[Configuration](docs/configuration.md)** — supported/unsupported options, example config\n- **[Architecture](docs/architecture.md)** — how it works, QEMU command line, storage backends\n- **[Kernel Guide](kernel/README.md)** — build config, why Firecracker's config, PVE overlay\n- **[Limitations](docs/limitations.md)** — what doesn't work (yet)\n- **[Troubleshooting](docs/troubleshooting.md)** — common issues and fixes\n- **[Development](docs/development.md)** — repo structure, building, testing, references\n\n---\n\n## Roadmap\n\n### Shipped\n\n- [x] `qm create/start/stop/destroy` with microvm\n- [x] Serial console via `qm terminal` and PVE web UI\n- [x] OCI image import and template cloning\n- [x] All PVE storage backends (LVM, ZFS, Ceph, NFS)\n- [x] Pre-built microvm kernel (6.12 LTS)\n- [x] Web UI machine type dropdown\n- [x] Balloon device for memory reporting\n- [x] Guest agent channel (virtio-serial-device)\n- [x] Networking (tap, bridge, VLAN)\n- [x] `microvm-init` for minimal OCI images\n- [x] GitHub Actions CI/CD with kernel build\n\n### Planned\n\n| | Feature | Priority | Impact | Effort |\n|---|---|---|---|---|\n| [x] | **Cloud-init / user-data** — inject SSH keys, hostname, network config at clone time | Critical | High | Medium |\n| [ ] | **Linked clones** — verify LVM snapshot clones work for instant VM creation | Critical | High | Low |\n| [ ] | **dpkg trigger** — auto-reapply patches after `qemu-server` upgrades | Critical | High | Low |\n| [ ] | **SSH agent forwarding** — forward host SSH agent into guest via vsock (git clone without exposing keys) | High | High | Medium |\n| [ ] | **vsock (host↔guest sockets)** — fast communication without networking | High | High | Medium |\n| [ ] | **virtiofs (shared folders)** — mount host workspace into guest without network | High | High | High |\n| [ ] | **`qm shutdown` without agent** — lightweight shutdown via QMP or serial | High | Medium | Low |\n| [ ] | **Disk resize** — verify `qm disk resize` + guest `resize2fs` | High | Medium | Low |\n| [ ] | **vzdump backup** — validate snapshot and agent-based backup | High | Medium | Medium |\n| [ ] | **Firewall integration** — verify PVE firewall rules on microvm tap devices | High | Medium | Low |\n| [ ] | **Network off by default** — microvm boots with no network unless explicitly enabled (safer for sandboxes) | Medium | Medium | Low |\n| [ ] | **Egress allow-list** — restrict outbound network to specific hosts via PVE firewall or guest nftables | Medium | Medium | Medium |\n| [ ] | **Suppress SeaBIOS banner** — use `bios-microvm.bin` or qboot for cleaner boot | Medium | Low | Low |\n| [ ] | **GUI: conditional panel hiding** — hide BIOS/EFI/USB/PCI tabs for microvm | Medium | Medium | Medium |\n| [ ] | **GUI: kernel path field** — dedicated field instead of raw `args` | Medium | Medium | Medium |\n| [ ] | **GUI: one-click clone** — \"Create microvm\" button that clones from template | Medium | Medium | Medium |\n| [ ] | **Snapshots** — verify `qm snapshot` with microvm guests | Medium | Medium | Medium |\n| [ ] | **Migration** — test live migration with reduced device model | Medium | Medium | Medium |\n| [ ] | **HA (High Availability)** — test with PVE HA manager | Medium | Medium | Medium |\n| [ ] | **Resource accounting** — verify I/O metrics report correctly | Medium | Low | Low |\n| [ ] | **`onboot` / startup order** — verify PVE boot ordering works | Medium | Low | Low |\n| [ ] | **Nested virtualization** — run Docker/containers inside microvm | Medium | Medium | Low |\n| [ ] | **GPU passthrough (exploratory)** — investigate virtio-gpu on mmio for ML workloads | Low | Medium | High |\n| [ ] | **Ephemeral VMs** — single-command run-and-destroy workflow like `smolvm machine run` | Medium | High | Medium |\n| [ ] | **Volume mounts** — attach host directories into guest at create time (virtiofs or 9p) | High | High | High |\n| [ ] | **Pre-baked images** — ship ready-to-boot qcow2 templates (avoid chroot build at install) | Medium | Medium | Medium |\n| [ ] | **systemd-networkd auto-enable** — ensure DHCP works on first boot without manual config | High | High | Low |\n| [ ] | **Guest agent on virtio-mmio** — fix udev/device path for qemu-ga on mmio bus | High | High | Low |\n| [ ] | **9p filesystem sharing** — alternative to virtiofs for host↔guest files | Low | Medium | Medium |\n| [ ] | **CPU/memory hotplug** — dynamic scaling for agent workloads | Low | Medium | Medium |\n| [ ] | **Multiple kernel management** — ship/manage multiple kernel versions | Low | Low | Low |\n| [ ] | **Custom icon persistence** — ensure ⚡ icon works across all browsers/reloads | Low | Low | Low |\n| [ ] | **Performance benchmarking** — document boot time, memory overhead, I/O throughput | Low | Medium | Medium |\n| [ ] | **Upstream proposal** — RFC patch series for Proxmox pve-devel mailing list | Low | High | High |\n| [ ] | **Declarative VM config (Smolfile-style)** — TOML file describing image, resources, mounts, network for reproducible VMs | Low | Medium | Medium |\n| [ ] | **Plan 9 / 9Front micro\n",
+  "commits": [
+    {
+      "sha": "5babdfed",
+      "date": "2026-04-19T14:30:45Z",
+      "msg": "v0.1.13: fix initrd busybox, auto-inject initrd, guest agent support"
+    },
+    {
+      "sha": "59ce059e",
+      "date": "2026-04-19T14:06:32Z",
+      "msg": "v0.1.12: ship minimal initrd with virtio modules"
+    },
+    {
+      "sha": "1009b3ce",
+      "date": "2026-04-19T13:37:17Z",
+      "msg": "v0.1.11: use host kernel+initrd fallback, document known issues"
+    },
+    {
+      "sha": "47f66805",
+      "date": "2026-04-19T13:36:13Z",
+      "msg": "Document known issues: virtio-mmio discovery and serial buffering"
+    },
+    {
+      "sha": "cedac7ad",
+      "date": "2026-04-19T13:19:55Z",
+      "msg": "v0.1.10: fix kernel build — verify and force virtio configs after olddefconfig"
+    },
+    {
+      "sha": "9803c58c",
+      "date": "2026-04-19T13:07:29Z",
+      "msg": "v0.1.9: fix kernel — force virtio_net/balloon/console in overlay"
+    },
+    {
+      "sha": "466f8b70",
+      "date": "2026-04-19T12:35:48Z",
+      "msg": "v0.1.8: fix virtio discovery for net/serial/balloon"
+    },
+    {
+      "sha": "5cf795eb",
+      "date": "2026-04-19T12:35:35Z",
+      "msg": "Fix virtio device discovery: enable ACPI + auto-kernel-cmdline + mmio cmdline devices"
+    },
+    {
+      "sha": "e93dfca0",
+      "date": "2026-04-19T11:50:01Z",
+      "msg": "Roadmap: add gaps from testing and smolvm comparison"
+    },
+    {
+      "sha": "6a09c92c",
+      "date": "2026-04-19T11:21:48Z",
+      "msg": "v0.1.7: fix cloud-init — add iso9660/vfat to kernel, agent to template"
+    },
+    {
+      "sha": "52f862e5",
+      "date": "2026-04-19T10:50:08Z",
+      "msg": "v0.1.6: cloud-init, qemu-agent, Docker first-boot setup"
+    },
+    {
+      "sha": "24ee0506",
+      "date": "2026-04-19T10:48:55Z",
+      "msg": "Roadmap: add SSH agent forwarding, network isolation, egress allow-list, declarative config"
+    },
+    {
+      "sha": "5f43707a",
+      "date": "2026-04-19T10:44:47Z",
+      "msg": "Roadmap: add AArch64/ARM64 support as low-priority exploratory item"
+    },
+    {
+      "sha": "0e7bce13",
+      "date": "2026-04-19T10:44:32Z",
+      "msg": "Roadmap: add Plan 9 / 9Front microVM support as low-priority nice-to-have"
+    },
+    {
+      "sha": "d95f7ccf",
+      "date": "2026-04-19T10:44:05Z",
+      "msg": "Roadmap: check off cloud-init"
+    },
+    {
+      "sha": "907ef58e",
+      "date": "2026-04-19T10:43:55Z",
+      "msg": "Cloud-init + qemu-agent + Docker first-boot setup"
+    },
+    {
+      "sha": "f1e3e6aa",
+      "date": "2026-04-19T10:35:27Z",
+      "msg": "Add comprehensive roadmap with priorities, impact, and effort"
+    },
+    {
+      "sha": "258ec8b1",
+      "date": "2026-04-18T18:37:41Z",
+      "msg": "Fix CI: update oras to 1.3.2 (1.2.2 tarball broken)"
+    },
+    {
+      "sha": "220ef777",
+      "date": "2026-04-18T18:23:35Z",
+      "msg": "v0.1.5: docs restructure, GUI, init, balloon"
+    },
+    {
+      "sha": "83e6ed9c",
+      "date": "2026-04-18T18:09:26Z",
+      "msg": "Restructure docs: concise README with demo GIF, split into docs/"
+    },
+    {
+      "sha": "d40690a8",
+      "date": "2026-04-18T18:03:17Z",
+      "msg": "GUI extension, proper init, balloon device"
+    },
+    {
+      "sha": "44c4aca6",
+      "date": "2026-04-18T17:53:46Z",
+      "msg": "Use qboot for instant kernel loading, disable balloon in config"
+    },
+    {
+      "sha": "e1931a4a",
+      "date": "2026-04-18T17:49:07Z",
+      "msg": "Fix: allow vga=serial0 (PVE serial console redirect)"
+    },
+    {
+      "sha": "4baa8426",
+      "date": "2026-04-18T17:35:16Z",
+      "msg": "v0.1.4: serial console in PVE UI, trixie-slim default, end-to-end tested"
+    },
+    {
+      "sha": "b61f1091",
+      "date": "2026-04-18T17:29:18Z",
+      "msg": "Default to debian:trixie-slim, support systemd images"
+    },
+    {
+      "sha": "28db86d0",
+      "date": "2026-04-18T17:22:51Z",
+      "msg": "Add pve-microvm-template: OCI image to PVE template workflow"
+    },
+    {
+      "sha": "00595a8e",
+      "date": "2026-04-18T17:20:05Z",
+      "msg": "Fix runtime issues from live testing"
+    },
+    {
+      "sha": "efb5912b",
+      "date": "2026-04-18T17:17:41Z",
+      "msg": "Fix network: correct bridge script path (/usr/libexec/qemu-server/)"
+    },
+    {
+      "sha": "ad6d2769",
+      "date": "2026-04-18T16:50:38Z",
+      "msg": "Fix runtime: proper Perl module imports, args quoting, get_vm_machine"
+    },
+    {
+      "sha": "7f723bfc",
+      "date": "2026-04-18T15:49:58Z",
+      "msg": "v0.1.3: publish .deb to GitHub Packages via ORAS"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "Seizing The Means Of Production (Again)",
+      "date": "2026-02-01",
+      "url": "https://taoofmac.com/space/notes/2026/02/01/1940"
+    }
+  ],
+  "dossier_generated": "2026-04-19"
+}

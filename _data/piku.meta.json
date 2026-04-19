@@ -1,0 +1,22 @@
+{
+  "name": "piku",
+  "full_name": "piku/piku",
+  "description": "The tiniest PaaS you've ever seen. Piku allows you to do git push deployments to your own servers.",
+  "homepage": "http://piku.github.io",
+  "stars": 6569,
+  "forks": 155,
+  "language": "Python",
+  "created_at": "2016-03-26T12:53:50Z",
+  "pushed_at": "2026-01-31T07:12:10Z",
+  "updated_at": "2026-04-19T04:07:37Z",
+  "topics": [
+    "arm",
+    "heroku",
+    "nodejs",
+    "paas",
+    "python",
+    "raspberry-pi",
+    "raspbian",
+    "ubuntu"
+  ]
+}

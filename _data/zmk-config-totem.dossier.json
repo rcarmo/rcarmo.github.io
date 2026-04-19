@@ -1,0 +1,172 @@
+{
+  "id": "zmk-config-totem",
+  "meta": {
+    "name": "zmk-config-totem",
+    "full_name": "rcarmo/zmk-config-totem",
+    "description": "Totem ZMK with Studio support",
+    "homepage": null,
+    "stars": 2,
+    "forks": 7,
+    "language": null,
+    "created_at": "2025-11-08T14:31:06Z",
+    "pushed_at": "2025-11-21T15:18:49Z",
+    "updated_at": "2026-04-14T07:15:49Z",
+    "topics": []
+  },
+  "readme": "# Totem Keyboard - ZMK Firmware Configuration\n\nCustom ZMK firmware configuration for the [GEIST Totem](https://github.com/GEIGEIGEIST/TOTEM) split keyboard with Seeeduino XIAO BLE controllers.\n\n## Features\n\n- **Mouse Support** - Full pointer device support with mouse movement, clicking, and scrolling\n- **ZMK Studio** - Live keymap editing without reflashing (with locking enabled for security)\n- **NKRO** - N-key rollover enabled for better gaming and typing performance\n- **4 Layers** - Base (QWERTY), Symbol, Navigation, and Adjust layers\n- **Sticky Keys** - One-shot modifiers for ergonomic modifier usage\n- **Caps Word** - Smart capitalization mode\n- **Bluetooth** - Multi-device pairing support\n\n## Layout Overview\n\n- **Base Layer**: Standard QWERTY layout\n- **Symbol Layer**: Brackets, operators, and special characters (activated via left thumb)\n- **Navigation Layer**: Arrow keys, mouse controls, and number pad (activated via right thumb)  \n- **Adjust Layer**: Media controls, Bluetooth settings, and function keys (both thumbs)\n\n## Customizing the Keymap\n\n1. Edit the `config/totem.keymap` file\n   - Find available keycodes in the [ZMK documentation](https://zmk.dev/docs/keymaps/list-of-keycodes)\n2. Commit and push your changes to GitHub\n3. GitHub Actions will automatically build the firmware\n4. Download the `firmware.zip` artifact from the Actions tab\n\n## Flashing Instructions\n\n### Left Half\n1. Connect the left half of the keyboard to your computer via USB\n2. Press the reset button twice quickly to enter bootloader mode\n3. The keyboard will appear as a USB mass storage device\n4. Drag and drop `totem_left-seeeduino_xiao_ble-zmk.uf2` onto the drive\n5. The keyboard will automatically reboot with the new firmware\n\n### Right Half\n1. Repeat the same process with the right half\n2. Use the `totem_right-seeeduino_xiao_ble-zmk.uf2` file\n\n### Troubleshooting\nIf you encounter any issues, flash the settings reset firmware first, then flash the normal firmware again.\n\n## ZMK Studio\n\nWith ZMK Studio enabled, you can edit your keymap in real-time using the [ZMK Studio web interface](https://zmk.studio) without needing to reflash the firmware.\n",
+  "commits": [
+    {
+      "sha": "ddbddedc",
+      "date": "2025-11-21T15:18:45Z",
+      "msg": "fix jumble"
+    },
+    {
+      "sha": "c45775e7",
+      "date": "2025-11-16T18:23:40Z",
+      "msg": "fix: update keymap bindings for left GUI key"
+    },
+    {
+      "sha": "08f61848",
+      "date": "2025-11-16T17:42:05Z",
+      "msg": "more adjustments"
+    },
+    {
+      "sha": "6d722468",
+      "date": "2025-11-15T16:11:41Z",
+      "msg": "mod twaks"
+    },
+    {
+      "sha": "0801c9be",
+      "date": "2025-11-15T15:53:54Z",
+      "msg": "tweaks"
+    },
+    {
+      "sha": "6e6ff451",
+      "date": "2025-11-15T15:26:52Z",
+      "msg": "test"
+    },
+    {
+      "sha": "117c4ee7",
+      "date": "2025-11-15T15:23:41Z",
+      "msg": "media key fixes"
+    },
+    {
+      "sha": "c5c3feb0",
+      "date": "2025-11-15T15:16:33Z",
+      "msg": "use command"
+    },
+    {
+      "sha": "3799b238",
+      "date": "2025-11-15T15:16:04Z",
+      "msg": "fix typos"
+    },
+    {
+      "sha": "8be4246b",
+      "date": "2025-11-15T15:09:51Z",
+      "msg": "more tweaks"
+    },
+    {
+      "sha": "baef5f9c",
+      "date": "2025-11-15T15:03:19Z",
+      "msg": "use key combos for macOS"
+    },
+    {
+      "sha": "8c9b9166",
+      "date": "2025-11-15T14:57:55Z",
+      "msg": "hid"
+    },
+    {
+      "sha": "da28c461",
+      "date": "2025-11-15T14:53:34Z",
+      "msg": "tweaks"
+    },
+    {
+      "sha": "1eb75193",
+      "date": "2025-11-15T14:48:20Z",
+      "msg": "tweaks"
+    },
+    {
+      "sha": "a5aa61e8",
+      "date": "2025-11-15T14:39:53Z",
+      "msg": "fixes"
+    },
+    {
+      "sha": "5e39518a",
+      "date": "2025-11-15T14:14:57Z",
+      "msg": "Mac media keys"
+    },
+    {
+      "sha": "739a8522",
+      "date": "2025-11-15T13:59:56Z",
+      "msg": "Merge branch 'main' of github.com:rcarmo/zmk-config-totem"
+    },
+    {
+      "sha": "0f74932c",
+      "date": "2025-11-15T13:55:40Z",
+      "msg": "add studio_unlock binding"
+    },
+    {
+      "sha": "b5f0ebc0",
+      "date": "2025-11-15T13:50:35Z",
+      "msg": "Update key bindings in totem.keymap"
+    },
+    {
+      "sha": "1ce873bc",
+      "date": "2025-11-14T20:10:01Z",
+      "msg": "comments"
+    },
+    {
+      "sha": "ea2e9358",
+      "date": "2025-11-14T18:58:44Z",
+      "msg": "refactor layout, update build files"
+    },
+    {
+      "sha": "3e2147ec",
+      "date": "2025-11-14T18:49:24Z",
+      "msg": "Enable additional ZMK configuration options"
+    },
+    {
+      "sha": "ae57f21f",
+      "date": "2025-11-14T18:48:55Z",
+      "msg": "Add initial totem configuration file"
+    },
+    {
+      "sha": "115f8352",
+      "date": "2025-11-14T18:48:02Z",
+      "msg": "Refactor keymap definitions and bindings"
+    },
+    {
+      "sha": "ff812e36",
+      "date": "2025-11-14T17:50:17Z",
+      "msg": "Fix indentation for seeeduino_xiao_ble entry"
+    },
+    {
+      "sha": "61cb13fa",
+      "date": "2025-11-14T17:50:06Z",
+      "msg": "Added reset image"
+    },
+    {
+      "sha": "9718b0eb",
+      "date": "2025-11-08T14:33:46Z",
+      "msg": "Enhance README with ZMK Studio setup instructions"
+    },
+    {
+      "sha": "ba00380b",
+      "date": "2025-08-06T05:17:39Z",
+      "msg": "fix map value being on the wrong side"
+    },
+    {
+      "sha": "7c09909c",
+      "date": "2025-08-06T02:24:38Z",
+      "msg": "Create README.md"
+    },
+    {
+      "sha": "a0d69efa",
+      "date": "2025-08-06T01:59:47Z",
+      "msg": "try chaning the map"
+    }
+  ],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-19"
+}

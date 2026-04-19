@@ -1,0 +1,172 @@
+{
+  "id": "ghostty-web",
+  "meta": {
+    "name": "ghostty-web",
+    "full_name": "rcarmo/ghostty-web",
+    "description": "Ghostty for the web with xterm.js API compatibility",
+    "homepage": "",
+    "stars": 5,
+    "forks": 2,
+    "language": "TypeScript",
+    "created_at": "2026-01-28T10:18:45Z",
+    "pushed_at": "2026-02-26T20:42:56Z",
+    "updated_at": "2026-04-07T01:30:48Z",
+    "topics": []
+  },
+  "readme": "# Ghostty Web\n\nA web-based terminal emulator that integrates [Ghostty's](https://github.com/ghostty-org/ghostty) VT100 parser via WebAssembly.\n\n## Installation\n\n```bash\nnpm install @coder/ghostty-web\n```\n\nOr install directly from GitHub (includes pre-built dist files):\n\n```bash\n# Latest from main branch\nnpm install github:coder/ghostty-web\n\n# Specific commit or branch\nnpm install github:coder/ghostty-web#commit-sha\nnpm install github:rcarmo/ghostty-web  # fork\n```\n\n> **Note:** GitHub installs work without requiring Zig because the repository includes pre-built `dist/` files and `ghostty-vt.wasm`.\n\n## Quick Start\n\n```typescript\nimport { Terminal } from '@coder/ghostty-web';\n\nconst term = new Terminal({ cols: 80, rows: 24 });\nawait term.open(document.getElementById('terminal'));\nterm.write('Hello, World!\\r\\n');\n```\n\nSee [INSTALL.md](./INSTALL.md) for complete usage guide.\n\n## Features\n\n- ✅ Full xterm.js-compatible API\n- ✅ Production-tested VT100 parser (via Ghostty)\n- ✅ ANSI colors (16, 256, RGB true color)\n- ✅ Canvas rendering at 60 FPS\n- ✅ Scrollback buffer\n- ✅ Text selection & clipboard\n- ✅ FitAddon for responsive sizing\n- ✅ TypeScript declarations included\n\n## Development & Demos\n\n### Shell Terminal Demo\n\n**Requires server**\n\n```bash\n# Terminal 1: Start PTY shell server\ncd demo/server\nbun install\nbun run start\n\n# Terminal 2: Start web server (from project root)\nbun run dev\n\n# Open: http://localhost:8000/demo/\n```\n\nThis provides a **real persistent shell session**! You can:\n\n- Use `cd` and it persists between commands\n- Run interactive programs like `vim`, `nano`, `top`, `htop`\n- Use tab completion and command history (↑/↓)\n- Use pipes, redirects, and background jobs\n- Access all your shell aliases and environment\n\n**Alternative: Command-by-Command Mode**\n\nFor the original file browser (executes each command separately):\n\n```bash\ncd demo/server\nbun run file-browser\n```\n\n**Remote Access:** If you're accessing via a forwarded hostname (e.g., `mux.coder`), make sure to forward both ports:\n\n- Port 8000 (web server - Vite)\n- Port 3001 (WebSocket server)\n\nThe terminal will automatically connect to the WebSocket using the same hostname you're accessing the page from.\n\n**Colors Demo** (no server needed)\n\n```bash\nbun run dev\n# Open: http://localhost:8000/demo/colors-demo.html\n```\n\nSee all ANSI colors (16, 256, RGB) and text styles in action.\n\n## Usage\n\n### Basic Terminal\n\n```typescript\nimport { Terminal } from './lib/index.ts';\nimport { FitAddon } from './lib/addons/fit.ts';\n\n// Create terminal\nconst term = new Terminal({\n  cols: 80,\n  rows: 24,\n  cursorBlink: true,\n  theme: {\n    background: '#1e1e1e',\n    foreground: '#d4d4d4',\n  },\n});\n\n// Add FitAddon for responsive sizing\nconst fitAddon = new FitAddon();\nterm.loadAddon(fitAddon);\n\n// Open in container\nawait term.open(document.getElementById('terminal'));\nfitAddon.fit();\n\n// Write output (supports ANSI colors)\nterm.write('Hello, World!\\r\\n');\nterm.write('\\x1b[1;32mGreen bold text\\x1b[0m\\r\\n');\n\n// Handle user input\nterm.onData((data) => {\n  console.log('User typed:', data);\n  // Send to backend, echo, etc.\n});\n```\n\n### WebSocket Integration\n\n```typescript\nconst ws = new WebSocket('ws://localhost:3001/ws');\n\n// Send user input to backend\nterm.onData((data) => {\n  ws.send(JSON.stringify({ type: 'input', data }));\n});\n\n// Display backend output\nws.onmessage = (event) => {\n  const msg = JSON.parse(event.data);\n  term.write(msg.data);\n};\n```\n\n### URL Detection\n\nGhostty-web automatically detects and makes clickable:\n\n- **OSC 8 hyperlinks** - Explicit terminal escape sequences (e.g., from `ls --hyperlink`)\n- **Plain text URLs** - Common protocols detected via regex (https, http, mailto, ssh, git, ftp, tel, magnet)\n\nURLs are detected on hover and can be opened with Ctrl/Cmd+Click.\n\n```typescript\n// URL detection works automatically after opening terminal\nawait term.open(container);\n\n// URLs in output become clickable automatically\nterm.write('Visit https://github.com for code\\r\\n');\nterm.write('Contact mailto:support@example.com\\r\\n');\n```\n\n**Custom Link Providers**\n\nRegister custom providers to detect additional link types:\n\n```typescript\nimport { UrlRegexProvider } from '@coder/ghostty-web';\n\n// Create custom provider\nconst myProvider = {\n  provideLinks(y, callback) {\n    // Your detection logic here\n    const links = detectCustomLinks(y);\n    callback(links);\n  },\n};\n\n// Register after opening terminal\nterm.registerLinkProvider(myProvider);\n```\n\nSee [AGENTS.md](AGENTS.md) for development guide and code patterns.\n\n### Custom Fonts\n\nGhostty-web supports custom font families. Font families with spaces are automatically quoted for proper CSS handling.\n\n```typescript\nconst term = new Terminal({\n  fontFamily: 'Fira Code, Consolas, monospace',\n  fontSize: 14,\n});\n\nawait term.open(container);\n```\n\n**Loading Web Fonts**\n\nWhen using web fonts (e.g., Google Fonts, local `.woff2` files), you must wait for the font to load before the terminal can measure it correctly:\n\n```typescript\n// Option 1: Wait for specific font\nawait document.fonts.load('14px \"Fira Code\"');\nterm.loadFonts();\n\n// Option 2: Wait for all fonts to be ready\nawait document.fonts.ready;\nterm.loadFonts();\n\n// Option 3: Use FontFace API\nconst font = new FontFace('Fira Code', 'url(/fonts/FiraCode.woff2)');\nawait font.load();\ndocument.fonts.add(font);\nterm.loadFonts();\n```\n\n**Changing Fonts at Runtime**\n\n```typescript\n// Change font family\nterm.options.fontFamily = 'JetBrains Mono, monospace';\n\n// Change font size\nterm.options.fontSize = 16;\n\n// If using a web font, wait for it to load\nawait document.fonts.load('16px \"JetBrains Mono\"');\nterm.loadFonts();\n```\n\n### Snapshot API (Playback Mode)\n\nThe Terminal supports a snapshot API for playback mode, enabling direct terminal state injection without re-parsing VT100 sequences. This is useful for terminal recordings and time-travel debugging.\n\n```typescript\nimport { Terminal, GhosttyCell } from '@coder/ghostty-web';\n\n// Create cells array (flat row-major order: rows * cols cells)\nconst cells: GhosttyCell[] = recordedFrame.cells;\nconst cursor = { x: 10, y: 5 };\n\n// Set snapshot - renderer will use this instead of WASM terminal\nterminal.setSnapshot(cells, cursor);\n\n// Check if in snapshot mode\nif (terminal.hasSnapshot()) {\n  console.log('Playback mode active');\n}\n\n// Clear snapshot and return to normal rendering\nterminal.clearSnapshot();\n```\n\nEach `GhosttyCell` contains:\n\n- `codepoint`: Unicode codepoint (number)\n- `fg_r`, `fg_g`, `fg_b`: Foreground RGB (0-255)\n- `bg_r`, `bg_g`, `bg_b`: Background RGB (0-255)\n- `flags`: Style flags (bold, italic, etc.)\n- `width`: Character width (1 or 2 for wide chars)\n\n## Why This Approach?\n\n**DON'T** re-implement VT100 parsing from scratch (years of work, thousands of edge cases).\n\n**DO** use Ghostty's proven parser:\n\n- ✅ Battle-tested by thousands of users\n- ✅ Handles all VT100/ANSI quirks correctly\n- ✅ Modern features (RGB colors, Kitty keyboard protocol)\n- ✅ Get bug fixes and updates for free\n\n**You build**: Screen buffer, rendering, UI (the \"easy\" parts in TypeScript)  \n**Ghostty handles**: VT100 parsing (the hard part via WASM)\n\n## Architecture\n\n```\n┌─────────────────────────────────────────┐\n│  Terminal (lib/terminal.ts)             │\n│  - Public xterm.js-compatible API       │\n│  - Event handling (onData, onResize)    │\n└───────────┬─────────────────────────────┘\n            │\n            ├─► ScreenBuffer (lib/buffer.ts)\n            │   - 2D grid, cursor, scrollback\n            │\n            ├─► VTParser (lib/vt-parser.ts)\n            │   - ANSI escape sequence parsing\n            │   └─► Ghostty WASM (SGR parser)\n            │\n            ├─► CanvasRenderer (lib/renderer.ts)\n            │   - Canvas-based rendering\n          \n",
+  "commits": [
+    {
+      "sha": "fcc47d42",
+      "date": "2026-02-26T20:42:33Z",
+      "msg": "Bump package patch version to 0.4.5"
+    },
+    {
+      "sha": "2f144d68",
+      "date": "2026-02-26T20:40:19Z",
+      "msg": "Mitigate repeated single-cell click artifacts"
+    },
+    {
+      "sha": "a5d8c7bc",
+      "date": "2026-02-26T20:29:00Z",
+      "msg": "Bump package patch version to 0.4.4"
+    },
+    {
+      "sha": "44475c0c",
+      "date": "2026-02-26T20:27:51Z",
+      "msg": "Hide native caret to prevent ghost cursor"
+    },
+    {
+      "sha": "4de25b6b",
+      "date": "2026-02-26T20:24:57Z",
+      "msg": "Fix residual click selection across rows"
+    },
+    {
+      "sha": "bbdea28c",
+      "date": "2026-02-26T20:14:17Z",
+      "msg": "Bump package patch version to 0.4.3"
+    },
+    {
+      "sha": "bbb3fac5",
+      "date": "2026-02-26T20:10:53Z",
+      "msg": "Fix stale single-click selection highlight"
+    },
+    {
+      "sha": "1fb87bdb",
+      "date": "2026-02-19T15:51:53Z",
+      "msg": "chore: bump version to 0.4.2"
+    },
+    {
+      "sha": "8a94ebc2",
+      "date": "2026-02-19T15:50:26Z",
+      "msg": "build: rebuild dist artifacts"
+    },
+    {
+      "sha": "fcb66311",
+      "date": "2026-02-19T15:48:26Z",
+      "msg": "fix: clear canvas before filling to support transparent backgrounds (#116)"
+    },
+    {
+      "sha": "e1733649",
+      "date": "2026-02-19T15:43:52Z",
+      "msg": "fix: prevent clipboard overwrite on single click without selection"
+    },
+    {
+      "sha": "b0aa99e8",
+      "date": "2026-02-17T16:11:24Z",
+      "msg": "fix: wrap render loop in try/catch to prevent canvas freeze on exception"
+    },
+    {
+      "sha": "f3b10f61",
+      "date": "2026-02-09T18:25:41Z",
+      "msg": "Merge pull request #1 from slang25/demo-updates"
+    },
+    {
+      "sha": "ef244c4e",
+      "date": "2026-01-29T23:08:56Z",
+      "msg": "chore: update compiled dist files with renderer improvements"
+    },
+    {
+      "sha": "585be457",
+      "date": "2026-01-29T23:01:45Z",
+      "msg": "fix: enable selection and hyperlink visual rendering in tests"
+    },
+    {
+      "sha": "eeb6d5d7",
+      "date": "2026-01-29T22:54:25Z",
+      "msg": "fix: render powerline glyphs as vector shapes for pixel-perfect alignment"
+    },
+    {
+      "sha": "48154aa0",
+      "date": "2026-01-29T22:26:17Z",
+      "msg": "fix: match baseline canvas CSS size to current canvas for visual comparison"
+    },
+    {
+      "sha": "a753fc5e",
+      "date": "2026-01-29T22:14:28Z",
+      "msg": "fix: ensure current and baseline canvases display at same size"
+    },
+    {
+      "sha": "5f736ed5",
+      "date": "2026-01-29T22:12:10Z",
+      "msg": "fix: use 2-column layout for test cases, keep current/baseline stacked"
+    },
+    {
+      "sha": "514a509d",
+      "date": "2026-01-29T22:09:51Z",
+      "msg": "fix: use two-column grid layout for render test comparisons"
+    },
+    {
+      "sha": "f4dc9527",
+      "date": "2026-01-29T22:06:56Z",
+      "msg": "feat: increase visual render test resolution to 2x"
+    },
+    {
+      "sha": "acc65d73",
+      "date": "2026-01-29T22:03:18Z",
+      "msg": "fix: read cursor style from buffer in visual render tests"
+    },
+    {
+      "sha": "b292fc9c",
+      "date": "2026-01-29T22:01:42Z",
+      "msg": "fix: render block drawing characters as pixel-perfect rectangles"
+    },
+    {
+      "sha": "55ae7199",
+      "date": "2026-01-29T21:56:56Z",
+      "msg": "feat: add colorscript ASCII art visual render test"
+    },
+    {
+      "sha": "17563b12",
+      "date": "2026-01-29T21:48:17Z",
+      "msg": "feat: add powerline prompt visual test and fix cell height rendering"
+    },
+    {
+      "sha": "29a9fb7b",
+      "date": "2026-01-29T21:13:37Z",
+      "msg": "fix: correct cell structure and font loading in visual render tests"
+    },
+    {
+      "sha": "ec6192a7",
+      "date": "2026-01-29T19:23:52Z",
+      "msg": "fix: correct URL in usage note (serve uses clean URLs)"
+    },
+    {
+      "sha": "c24f05b0",
+      "date": "2026-01-29T19:22:38Z",
+      "msg": "fix: remove SPA flag from test:render:web server"
+    },
+    {
+      "sha": "76e190c3",
+      "date": "2026-01-29T19:21:24Z",
+      "msg": "docs: add full URL to render test usage note"
+    },
+    {
+      "sha": "a1002aff",
+      "date": "2026-01-29T18:10:36Z",
+      "msg": "refactor: simplify render test web page - remove IndexedDB"
+    }
+  ],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-19"
+}
