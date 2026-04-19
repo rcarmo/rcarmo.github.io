@@ -183,8 +183,8 @@ footer { max-width: 900px; margin: 0 auto; padding: 1.5rem var(--gap); border-to
 .foot-r { display: flex; gap: 1.5rem; font-size: .75rem; }
 .foot-r a { color: var(--text-dim); } .foot-r a:hover { color: var(--text); }
 </style>
-<script type="module">
-import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+<script src="/assets/js/mermaid.min.js"></script>
+<script>
 const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 mermaid.initialize({
   startOnLoad: true,

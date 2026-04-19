@@ -571,9 +571,9 @@ function ghSvg() {
 function esc(s: string) { return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
 function mermaidScript(): string {
-  // visual-explainer libraries.md: use theme:'base' + themeVariables for deep theming
-  return `<script type="module">
-import mermaid from 'https://cdn.jsdelivr.net/npm/mermaid@11/dist/mermaid.esm.min.mjs';
+  // Vendored UMD build — works offline and in local file preview
+  return `<script src="/assets/js/mermaid.min.js"></script>
+<script>
 const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
 mermaid.initialize({
   startOnLoad: true,
