@@ -4,105 +4,347 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>macemu — Rui Carmo</title>
+<meta name="description" content="Basilisk II and SheepShaver Macintosh emulators">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0d1117; --surface: #161b22; --border: #30363d;
-    --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff; --accent2: #f78166;
-    --tag-bg: #21262d; --tag-text: #79c0ff; --star: #e3b341; --radius: 8px; --gap: 1.5rem;
+    --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+    --border: #30363d; --text: #e6edf3; --muted: #8b949e;
+    --accent: #58a6ff; --accent2: #f78166; --tag-bg: #21262d;
+    --tag-text: #79c0ff; --star: #e3b341; --radius: 8px; --gap: 1.5rem;
+    --max: 860px;
   }
   @media (prefers-color-scheme: light) {
     :root {
-      --bg: #f6f8fa; --surface: #ffffff; --border: #d0d7de;
-      --text: #1f2328; --muted: #656d76; --accent: #0969da;
+      --bg: #f6f8fa; --surface: #ffffff; --surface2: #f0f3f6;
+      --border: #d0d7de; --text: #1f2328; --muted: #656d76;
+      --accent: #0969da; --accent2: #cf222e;
       --tag-bg: #ddf4ff; --tag-text: #0550ae; --star: #9a6700;
     }
   }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.7; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px; line-height: 1.7; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .wrap { max-width: 860px; margin: 0 auto; padding: var(--gap); }
-  nav { border-bottom: 1px solid var(--border); padding: 0.75rem var(--gap); display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; color: var(--muted); }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; font-size: 0.875em; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gap); }
+  /* Nav */
+  nav { border-bottom: 1px solid var(--border); padding: 0.7rem 0; font-size: 0.875rem; color: var(--muted); }
+  nav .wrap { display: flex; align-items: center; gap: 0.6rem; }
   nav a { color: var(--muted); } nav a:hover { color: var(--accent); }
-  nav span { color: var(--border); }
-  .hero { padding: 2.5rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-  .hero h1 { font-size: 2rem; font-weight: 700; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  nav .sep { opacity: 0.4; }
+  /* Hero */
+  .hero { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--border); }
+  .hero h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; }
   .hero h1 a { color: var(--text); } .hero h1 a:hover { color: var(--accent); text-decoration: none; }
-  .hero .tagline { color: var(--muted); font-size: 1.05rem; margin: 0.6rem 0 1rem; }
-  .stats { display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
-  .stars { color: var(--star); font-weight: 600; }
-  .lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-  .lang-TypeScript { background: #3178c6; } .lang-Python { background: #3572A5; }
-  .lang-Go { background: #00ADD8; } .lang-Swift { background: #F05138; }
-  .lang-C { background: #555555; } .lang-Cpp { background: #f34b7d; }
-  .lang-Dockerfile { background: #384d54; } .lang-Shell { background: #89e051; }
-  .lang-OpenSCAD { background: #e5cd31; } .lang-misc { background: #8b949e; }
-  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .tag { display: inline-block; background: var(--tag-bg); color: var(--tag-text); font-size: 0.75rem; padding: 0.15rem 0.55rem; border-radius: 2em; }
-  section { margin: 2rem 0; }
-  section h2 { font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
-  .desc-text { color: var(--text); max-width: 680px; }
-  .post-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
-  .post-list li { display: flex; align-items: baseline; gap: 0.75rem; font-size: 0.9rem; }
-  .post-list .date { color: var(--muted); font-size: 0.8rem; white-space: nowrap; min-width: 6rem; }
-  .gh-link { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: var(--text); transition: border-color 0.15s; }
-  .gh-link:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
-  footer { text-align: center; color: var(--muted); font-size: 0.825rem; padding: 2.5rem var(--gap) 1.5rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+  .hero .tagline { font-size: 1.1rem; color: var(--muted); margin: 0.5rem 0 1.25rem; max-width: 640px; }
+  .stats { display: flex; flex-wrap: wrap; gap: 1.2rem; font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
+  .stat-stars { color: var(--star); font-weight: 600; }
+  .lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 3px; }
+  .lang-TypeScript{background:#3178c6} .lang-Python{background:#3572A5}
+  .lang-Go{background:#00ADD8} .lang-Swift{background:#F05138}
+  .lang-C{background:#555555} .lang-Cpp{background:#f34b7d}
+  .lang-Dockerfile{background:#384d54} .lang-Shell{background:#89e051}
+  .lang-misc{background:#8b949e}
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+  .tag { background: var(--tag-bg); color: var(--tag-text); font-size: 0.75rem; padding: 0.15rem 0.55rem; border-radius: 2em; }
+  .status-badge { font-size: 0.75rem; padding: 0.2rem 0.65rem; border-radius: 2em; font-weight: 600; }
+  .status-active { background: #1a3e1a; color: #56d364; }
+  .status-stable { background: #1a2e3e; color: #58a6ff; }
+  .status-maintained { background: #2e1a3e; color: #bc8cff; }
+  .status-archived { background: #2e2010; color: #e3b341; }
+  @media (prefers-color-scheme: light) {
+    .status-active { background: #dafbe1; color: #1a7f37; }
+    .status-stable { background: #ddf4ff; color: #0969da; }
+    .status-maintained { background: #fbefff; color: #8250df; }
+    .status-archived { background: #fff8c5; color: #9a6700; }
+  }
+  .cta-links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem;
+    font-size: 0.875rem; font-weight: 500; color: var(--text); transition: border-color 0.15s; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+  /* TOC */
+  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem 1.25rem; margin: 2rem 0; display: inline-block; min-width: 200px; }
+  .toc h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.6rem; }
+  .toc ol { padding-left: 1.25rem; font-size: 0.875rem; line-height: 2; }
+  .toc a { color: var(--muted); } .toc a:hover { color: var(--accent); }
+  /* Sections */
+  section { padding: 2.5rem 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  .section-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--muted); margin-bottom: 1rem; }
+  section h2 { font-size: 1.35rem; font-weight: 600; margin-bottom: 1rem; }
+  section p { max-width: 680px; color: var(--text); margin-bottom: 0.75rem; }
+  section ul { max-width: 680px; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+  section li { margin-bottom: 0.35rem; }
+  /* Highlights */
+  .highlights { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 0.75rem; margin-top: 0.5rem; }
+  .highlight { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 0.85rem 1rem; font-size: 0.9rem; }
+  .highlight::before { content: "→"; color: var(--accent); margin-right: 0.5rem; }
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 0; margin-top: 0.5rem; }
+  .tl-item { display: grid; grid-template-columns: 9rem 1fr; gap: 1rem; padding: 0.6rem 0;
+    border-top: 1px solid var(--border); font-size: 0.875rem; }
+  .tl-item:first-child { border-top: none; }
+  .tl-date { color: var(--muted); white-space: nowrap; font-size: 0.8rem; padding-top: 0.1rem; }
+  .tl-msg { color: var(--text); word-break: break-word; }
+  .tl-msg .sha { font-family: ui-monospace, monospace; font-size: 0.75em; color: var(--muted); margin-left: 0.5rem; }
+  /* Posts */
+  .post-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .post-item { display: grid; grid-template-columns: 6rem 1fr; gap: 0.75rem; font-size: 0.9rem; }
+  .post-date { color: var(--muted); font-size: 0.8rem; padding-top: 0.15rem; }
+  /* Releases */
+  .release-list { display: flex; flex-direction: column; gap: 1rem; }
+  .release { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+  .release-header { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.4rem; }
+  .release-tag { font-weight: 600; font-family: ui-monospace, monospace; color: var(--accent); }
+  .release-name { color: var(--text); }
+  .release-date { color: var(--muted); font-size: 0.8rem; margin-left: auto; }
+  .release-body { font-size: 0.85rem; color: var(--muted); white-space: pre-wrap; word-break: break-word; }
+  /* Footer */
+  footer { text-align: center; color: var(--muted); font-size: 0.825rem;
+    padding: 2.5rem var(--gap) 1.5rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+  footer a { color: var(--muted); } footer a:hover { color: var(--accent); }
 </style>
 </head>
 <body>
+
 <nav>
-  <div class="wrap" style="display:flex;align-items:center;gap:1rem;padding-top:0;padding-bottom:0;max-width:860px">
+  <div class="wrap">
     <a href="/">rcarmo.github.io</a>
-    <span>/</span>
+    <span class="sep">/</span>
     <span>macemu</span>
   </div>
 </nav>
-<div class="wrap">
-  <div class="hero">
-    <h1>
-      <a href="https://github.com/rcarmo/macemu" target="_blank">macemu</a>
-    </h1>
-    <p class="tagline">Basilisk II and SheepShaver Macintosh emulators.</p>
+
+<div class="hero">
+  <div class="wrap">
+    <h1><a href="https://github.com/rcarmo/macemu" target="_blank" rel="noopener">macemu</a></h1>
+    <p class="tagline">Basilisk II and SheepShaver Macintosh emulators</p>
     <div class="stats">
-      <span class="stars">★ 3</span>
+      <span class="stat-stars">★ 3</span>
       
-      <span><span class="lang-dot lang-Cpp"></span> C++</span>
-      <span>First released 2023</span>
+      <span><span class="lang-dot lang-Cpp"></span>C++</span>
+      <span class="mono">2025-12</span>
+      <span class="status-badge status-maintained">maintained</span>
     </div>
-    <div class="tags" style="margin-bottom:1.25rem">
-      <span class="tag">emulation</span> <span class="tag">mac</span> <span class="tag">68k</span> <span class="tag">powerpc</span> <span class="tag">c++</span>
-    </div>
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
-      <a class="gh-link" href="https://github.com/rcarmo/macemu" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        View on GitHub
-      </a>
+    <div class="tags">
       
+    </div>
+    <div class="cta-links">
+      <a class="btn" href="https://github.com/rcarmo/macemu" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub</a>
+      
+    </div>
+    <div class="toc">
+      <h3>On this page</h3>
+      <ol><li><a href="#motivation">Motivation</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#highlights">Highlights</a></li>
+        <li><a href="#history">History</a></li>
+        <li><a href="#posts">Posts</a></li></ol>
     </div>
   </div>
+</div>
 
-  <section>
-    <h2>About</h2>
-    <p class="desc-text">My working fork of Basilisk II (68k) and SheepShaver (PowerPC) Macintosh<br>emulators, with networking support and minor fixes for building on modern systems.<br>Used to run classic Mac software on current hardware — the direct ancestor of<br>the Maclock and mini Mac projects documented on taoofmac.com.</p>
+
+  <section id="motivation">
+    <div class="wrap">
+      <div class="section-label">Why it exists</div>
+      <h2>Motivation</h2>
+      <p>I wanted to run classic Mac software for writing and nostalgia. The canonical Basilisk II and SheepShaver builds have build system issues on modern macOS and Linux. This fork keeps a working build that compiles cleanly and includes networking support.</p>
+    </div>
   </section>
 
-  <section>
-      <h2>Related posts on taoofmac.com</h2>
-      <ul class="post-list">
-        <li><span class="date">2024-07-21</span><a href="https://taoofmac.com/space/notes/2024/07/21/1800" target="_blank">Notes for July 2024</a></li>
-        <li><span class="date">2025-12-31</span><a href="https://taoofmac.com/space/notes/2025/12/31/1830" target="_blank">Notes, 2025-12-31</a></li>
-        <li><span class="date">2026-03-29</span><a href="https://taoofmac.com/space/notes/2026/03/29/1300" target="_blank">Notes for March 23-29</a></li>
-        <li><span class="date">2026-04-05</span><a href="https://taoofmac.com/space/notes/2026/04/05/1700" target="_blank">Notes for March 30 – April 5</a></li>
-      </ul>
-    </section>
-</div>
+  <section id="architecture">
+    <div class="wrap">
+      <div class="section-label">How it works</div>
+      <h2>Architecture</h2>
+      <p>A C++ codebase implementing 68k (Basilisk II) and PowerPC (SheepShaver) CPU emulation on top of modern host systems. This fork adds a CMake build, fixes several macOS 14+ compile issues, and enables the slirp networking backend for internet access from inside the emulator.</p>
+    </div>
+  </section>
+
+  <section id="highlights">
+    <div class="wrap">
+      <div class="section-label">Notable features</div>
+      <h2>Highlights</h2>
+      <div class="highlights">
+        <div class="highlight">Builds cleanly on macOS 14+ (arm64 and x86_64) and modern Linux</div>
+        <div class="highlight">Networking via slirp — no tun/tap or root required</div>
+        <div class="highlight">Used as the Mac emulation layer in the Maclock mini-Mac project</div>
+        <div class="highlight">Maintained alongside drawterm as part of a retro-computing toolkit</div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="history">
+    <div class="wrap">
+      <div class="section-label">Chronology (most recent 30 commits)</div>
+      <h2>History</h2>
+      <div class="timeline">
+        
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">jit: rom-harness forces optlev=2 + force-translate exclusively<span class="sha">afbc6b31</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">fix: VNC mouse click/release — direct ADB injection from VNC thread<span class="sha">e9f74f6b</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">jit: headless Mac ROM harness — no display server needed<span class="sha">d2864b24</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">fix: VNC keyboard/mouse input now reaches Mac OS event loop<span class="sha">5ac40bca</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">jit: add ROM boot harness — headless JIT exercise via Xvfb<span class="sha">1f20629f</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">docs: update README, JIT plan, and screenshot for ROM harness + JIT boot milestone<span class="sha">a7acfcf2</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">Update JIT-STATUS.md: SheepShaver JIT boots Mac OS, ROM harness added<span class="sha">9f590ecf</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT: remove n_insns limit, JIT boots Mac OS to splash screen<span class="sha">895cd82e</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT: ROM harness + fix 5 bugs found by it<span class="sha">4fbe2006</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">jit: add 16 vectors for remaining call_helper opcodes — 293/293 pass<span class="sha">5b08e8af</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT: fix callee-saved register save/restore, NOP-default fixes<span class="sha">5e5f010c</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver: stable desktop boot with VNC + JIT gated behind SS_USE_JIT<span class="sha">88b6d82e</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver: fix VNC server, prefs registration, ignoreillegal for stable boot<span class="sha">015bf5c8</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT harness: comprehensive fuzzing for all opcode classes — 209 vectors<span class="sha">1a7c1627</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT harness: add AltiVec + FP load/store vectors — 175 total, 100%<span class="sha">7d25384f</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT harness: expand to 161 vectors — 100% coverage across all opcode classes<span class="sha">29c2f45d</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">docs: update all documentation to final JIT coverage — 321 handlers, 113 vectors, zero fallbacks<span class="sha">18c3ccd9</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT: eliminate all interpreter fallbacks — 321 return-true, 2 return-false<span class="sha">02c1dac4</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">jit: inline SR paths — eliminate flush+call_helper for MV2SR/ORSR/ANDSR/EORSR word<span class="sha">81e944f8</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">jit: convert 7 more opcodes to native codegen, hybrid CCR/SR split for 4<span class="sha">6915e803</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT: implement remaining AltiVec ops — 311 return-true, zero NOP fallbacks<span class="sha">9cad5730</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">jit: convert 13 opcodes from call_helper to native ARM64 codegen<span class="sha">1cd4aa65</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT: massive AltiVec expansion — 301 return-true paths<span class="sha">9be47150</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">jit: wire up 30+ native helpers in gencomp — 82/105 opcodes native (78%)<span class="sha">b20f464e</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">jit: native helpers for 30+ fallback opcodes + 50 fuzz vectors (277/277 pass)<span class="sha">42825d5c</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">docs: revised JIT design leadership document — compressed timeline, paraphrased architectural inputs<span class="sha">23d94c1b</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">docs: add JIT design leadership and decision log (HTML presentation)<span class="sha">1b28cd99</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT: rename ppc-jit-aarch64 → ppc-jit + add ~70 more AltiVec NEON ops<span class="sha">c621b857</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT: implement ~60 AltiVec ops via ARM64 NEON<span class="sha">bace08e5</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">SheepShaver JIT: implement AltiVec via ARM64 NEON — ~60 vector ops<span class="sha">799b45c6</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="posts">
+    <div class="wrap">
+      <div class="section-label">On taoofmac.com</div>
+      <h2>Related Posts</h2>
+      <div class="post-list">
+        
+        <div class="post-item">
+          <span class="post-date">2024-07-21</span>
+          <a href="https://taoofmac.com/space/notes/2024/07/21/1800" target="_blank" rel="noopener">Notes for July 2024</a>
+        </div>
+        <div class="post-item">
+          <span class="post-date">2025-12-31</span>
+          <a href="https://taoofmac.com/space/notes/2025/12/31/1830" target="_blank" rel="noopener">Notes, 2025-12-31</a>
+        </div>
+        <div class="post-item">
+          <span class="post-date">2026-03-29</span>
+          <a href="https://taoofmac.com/space/notes/2026/03/29/1300" target="_blank" rel="noopener">Notes for March 23-29</a>
+        </div>
+        <div class="post-item">
+          <span class="post-date">2026-04-05</span>
+          <a href="https://taoofmac.com/space/notes/2026/04/05/1700" target="_blank" rel="noopener">Notes for March 30 – April 5</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
 <footer>
   <a href="/">← All projects</a> &nbsp;·&nbsp;
-  <a href="https://taoofmac.com" target="_blank">taoofmac.com</a> &nbsp;·&nbsp;
-  <a href="https://github.com/rcarmo" target="_blank">github.com/rcarmo</a>
+  <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a> &nbsp;·&nbsp;
+  <a href="https://github.com/rcarmo" target="_blank" rel="noopener">github.com/rcarmo</a>
+  <br><br>Last indexed 2026-04
 </footer>
+
 </body>
 </html>

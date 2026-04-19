@@ -4,105 +4,499 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>piclaw — Rui Carmo</title>
+<meta name="description" content="I'm going to build my own OpenClaw, with blackjack... and bun!">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0d1117; --surface: #161b22; --border: #30363d;
-    --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff; --accent2: #f78166;
-    --tag-bg: #21262d; --tag-text: #79c0ff; --star: #e3b341; --radius: 8px; --gap: 1.5rem;
+    --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+    --border: #30363d; --text: #e6edf3; --muted: #8b949e;
+    --accent: #58a6ff; --accent2: #f78166; --tag-bg: #21262d;
+    --tag-text: #79c0ff; --star: #e3b341; --radius: 8px; --gap: 1.5rem;
+    --max: 860px;
   }
   @media (prefers-color-scheme: light) {
     :root {
-      --bg: #f6f8fa; --surface: #ffffff; --border: #d0d7de;
-      --text: #1f2328; --muted: #656d76; --accent: #0969da;
+      --bg: #f6f8fa; --surface: #ffffff; --surface2: #f0f3f6;
+      --border: #d0d7de; --text: #1f2328; --muted: #656d76;
+      --accent: #0969da; --accent2: #cf222e;
       --tag-bg: #ddf4ff; --tag-text: #0550ae; --star: #9a6700;
     }
   }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.7; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px; line-height: 1.7; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .wrap { max-width: 860px; margin: 0 auto; padding: var(--gap); }
-  nav { border-bottom: 1px solid var(--border); padding: 0.75rem var(--gap); display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; color: var(--muted); }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; font-size: 0.875em; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gap); }
+  /* Nav */
+  nav { border-bottom: 1px solid var(--border); padding: 0.7rem 0; font-size: 0.875rem; color: var(--muted); }
+  nav .wrap { display: flex; align-items: center; gap: 0.6rem; }
   nav a { color: var(--muted); } nav a:hover { color: var(--accent); }
-  nav span { color: var(--border); }
-  .hero { padding: 2.5rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-  .hero h1 { font-size: 2rem; font-weight: 700; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  nav .sep { opacity: 0.4; }
+  /* Hero */
+  .hero { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--border); }
+  .hero h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; }
   .hero h1 a { color: var(--text); } .hero h1 a:hover { color: var(--accent); text-decoration: none; }
-  .hero .tagline { color: var(--muted); font-size: 1.05rem; margin: 0.6rem 0 1rem; }
-  .stats { display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
-  .stars { color: var(--star); font-weight: 600; }
-  .lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-  .lang-TypeScript { background: #3178c6; } .lang-Python { background: #3572A5; }
-  .lang-Go { background: #00ADD8; } .lang-Swift { background: #F05138; }
-  .lang-C { background: #555555; } .lang-Cpp { background: #f34b7d; }
-  .lang-Dockerfile { background: #384d54; } .lang-Shell { background: #89e051; }
-  .lang-OpenSCAD { background: #e5cd31; } .lang-misc { background: #8b949e; }
-  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .tag { display: inline-block; background: var(--tag-bg); color: var(--tag-text); font-size: 0.75rem; padding: 0.15rem 0.55rem; border-radius: 2em; }
-  section { margin: 2rem 0; }
-  section h2 { font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
-  .desc-text { color: var(--text); max-width: 680px; }
-  .post-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
-  .post-list li { display: flex; align-items: baseline; gap: 0.75rem; font-size: 0.9rem; }
-  .post-list .date { color: var(--muted); font-size: 0.8rem; white-space: nowrap; min-width: 6rem; }
-  .gh-link { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: var(--text); transition: border-color 0.15s; }
-  .gh-link:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
-  footer { text-align: center; color: var(--muted); font-size: 0.825rem; padding: 2.5rem var(--gap) 1.5rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+  .hero .tagline { font-size: 1.1rem; color: var(--muted); margin: 0.5rem 0 1.25rem; max-width: 640px; }
+  .stats { display: flex; flex-wrap: wrap; gap: 1.2rem; font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
+  .stat-stars { color: var(--star); font-weight: 600; }
+  .lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 3px; }
+  .lang-TypeScript{background:#3178c6} .lang-Python{background:#3572A5}
+  .lang-Go{background:#00ADD8} .lang-Swift{background:#F05138}
+  .lang-C{background:#555555} .lang-Cpp{background:#f34b7d}
+  .lang-Dockerfile{background:#384d54} .lang-Shell{background:#89e051}
+  .lang-misc{background:#8b949e}
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+  .tag { background: var(--tag-bg); color: var(--tag-text); font-size: 0.75rem; padding: 0.15rem 0.55rem; border-radius: 2em; }
+  .status-badge { font-size: 0.75rem; padding: 0.2rem 0.65rem; border-radius: 2em; font-weight: 600; }
+  .status-active { background: #1a3e1a; color: #56d364; }
+  .status-stable { background: #1a2e3e; color: #58a6ff; }
+  .status-maintained { background: #2e1a3e; color: #bc8cff; }
+  .status-archived { background: #2e2010; color: #e3b341; }
+  @media (prefers-color-scheme: light) {
+    .status-active { background: #dafbe1; color: #1a7f37; }
+    .status-stable { background: #ddf4ff; color: #0969da; }
+    .status-maintained { background: #fbefff; color: #8250df; }
+    .status-archived { background: #fff8c5; color: #9a6700; }
+  }
+  .cta-links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem;
+    font-size: 0.875rem; font-weight: 500; color: var(--text); transition: border-color 0.15s; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+  /* TOC */
+  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem 1.25rem; margin: 2rem 0; display: inline-block; min-width: 200px; }
+  .toc h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.6rem; }
+  .toc ol { padding-left: 1.25rem; font-size: 0.875rem; line-height: 2; }
+  .toc a { color: var(--muted); } .toc a:hover { color: var(--accent); }
+  /* Sections */
+  section { padding: 2.5rem 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  .section-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--muted); margin-bottom: 1rem; }
+  section h2 { font-size: 1.35rem; font-weight: 600; margin-bottom: 1rem; }
+  section p { max-width: 680px; color: var(--text); margin-bottom: 0.75rem; }
+  section ul { max-width: 680px; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+  section li { margin-bottom: 0.35rem; }
+  /* Highlights */
+  .highlights { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 0.75rem; margin-top: 0.5rem; }
+  .highlight { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 0.85rem 1rem; font-size: 0.9rem; }
+  .highlight::before { content: "→"; color: var(--accent); margin-right: 0.5rem; }
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 0; margin-top: 0.5rem; }
+  .tl-item { display: grid; grid-template-columns: 9rem 1fr; gap: 1rem; padding: 0.6rem 0;
+    border-top: 1px solid var(--border); font-size: 0.875rem; }
+  .tl-item:first-child { border-top: none; }
+  .tl-date { color: var(--muted); white-space: nowrap; font-size: 0.8rem; padding-top: 0.1rem; }
+  .tl-msg { color: var(--text); word-break: break-word; }
+  .tl-msg .sha { font-family: ui-monospace, monospace; font-size: 0.75em; color: var(--muted); margin-left: 0.5rem; }
+  /* Posts */
+  .post-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .post-item { display: grid; grid-template-columns: 6rem 1fr; gap: 0.75rem; font-size: 0.9rem; }
+  .post-date { color: var(--muted); font-size: 0.8rem; padding-top: 0.15rem; }
+  /* Releases */
+  .release-list { display: flex; flex-direction: column; gap: 1rem; }
+  .release { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+  .release-header { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.4rem; }
+  .release-tag { font-weight: 600; font-family: ui-monospace, monospace; color: var(--accent); }
+  .release-name { color: var(--text); }
+  .release-date { color: var(--muted); font-size: 0.8rem; margin-left: auto; }
+  .release-body { font-size: 0.85rem; color: var(--muted); white-space: pre-wrap; word-break: break-word; }
+  /* Footer */
+  footer { text-align: center; color: var(--muted); font-size: 0.825rem;
+    padding: 2.5rem var(--gap) 1.5rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+  footer a { color: var(--muted); } footer a:hover { color: var(--accent); }
 </style>
 </head>
 <body>
+
 <nav>
-  <div class="wrap" style="display:flex;align-items:center;gap:1rem;padding-top:0;padding-bottom:0;max-width:860px">
+  <div class="wrap">
     <a href="/">rcarmo.github.io</a>
-    <span>/</span>
+    <span class="sep">/</span>
     <span>piclaw</span>
   </div>
 </nav>
-<div class="wrap">
-  <div class="hero">
-    <h1>
-      <a href="https://github.com/rcarmo/piclaw" target="_blank">piclaw</a>
-    </h1>
-    <p class="tagline">I'm going to build my own OpenClaw, with blackjack… and bun!</p>
+
+<div class="hero">
+  <div class="wrap">
+    <h1><a href="https://github.com/rcarmo/piclaw" target="_blank" rel="noopener">piclaw</a></h1>
+    <p class="tagline">I'm going to build my own OpenClaw, with blackjack... and bun!</p>
     <div class="stats">
-      <span class="stars">★ 526</span>
-      <span>⑂ 37 forks</span>
-      <span><span class="lang-dot lang-TypeScript"></span> TypeScript</span>
-      <span>First released 2026</span>
+      <span class="stat-stars">★ 526</span>
+      <span>⑂ 37</span>
+      <span><span class="lang-dot lang-TypeScript"></span>TypeScript</span>
+      <span class="mono">2026-02</span>
+      <span class="status-badge status-active">active</span>
     </div>
-    <div class="tags" style="margin-bottom:1.25rem">
-      <span class="tag">ai</span> <span class="tag">agents</span> <span class="tag">bun</span> <span class="tag">typescript</span> <span class="tag">docker</span> <span class="tag">self-hosted</span>
+    <div class="tags">
+      <span class="tag">adaptive-cards</span> <span class="tag">ai-agent</span> <span class="tag">bun</span> <span class="tag">coding-agent</span> <span class="tag">docker</span> <span class="tag">llm</span> <span class="tag">pi-agent</span> <span class="tag">self-hosted</span> <span class="tag">typescript</span> <span class="tag">vnc</span> <span class="tag">web-ui</span> <span class="tag">workspace</span>
     </div>
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
-      <a class="gh-link" href="https://github.com/rcarmo/piclaw" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        View on GitHub
-      </a>
+    <div class="cta-links">
+      <a class="btn" href="https://github.com/rcarmo/piclaw" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub</a>
       
     </div>
+    <div class="toc">
+      <h3>On this page</h3>
+      <ol><li><a href="#motivation">Motivation</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#highlights">Highlights</a></li>
+        <li><a href="#releases">Releases</a></li>
+        <li><a href="#history">History</a></li>
+        <li><a href="#posts">Posts</a></li></ol>
+    </div>
   </div>
+</div>
 
-  <section>
-    <h2>About</h2>
-    <p class="desc-text">A self-hosted AI agent sandbox built on Bun and TypeScript.<br>Piclaw packages a personal coding agent into a Docker container with a web UI,<br>WhatsApp integration, a terminal, VNC, and a rich skill/extension system.<br>It is the runtime that runs this very portfolio and powers day-to-day AI workflows.</p>
+
+  <section id="motivation">
+    <div class="wrap">
+      <div class="section-label">Why it exists</div>
+      <h2>Motivation</h2>
+      <p>When the OpenClaw wave hit in early 2026 I wanted a self-hosted, practical agent workspace that wasn't just a thin wrapper around an API. Piclaw started as a Friday night experiment with Bun and TypeScript and turned into a daily driver within a week.</p>
+    </div>
   </section>
 
-  <section>
-      <h2>Related posts on taoofmac.com</h2>
-      <ul class="post-list">
-        <li><span class="date">2026-02-01</span><a href="https://taoofmac.com/space/notes/2026/02/01/2100" target="_blank">Vibing with the Agent Control Protocol</a></li>
-        <li><span class="date">2026-02-01</span><a href="https://taoofmac.com/space/notes/2026/02/01/1940" target="_blank">Seizing The Means Of Production (Again)</a></li>
-        <li><span class="date">2026-02-01</span><a href="https://taoofmac.com/space/notes/2026/02/01/2130" target="_blank">Thoughts on AI-Assisted Software Development in 2026</a></li>
-        <li><span class="date">2026-03-08</span><a href="https://taoofmac.com/space/blog/2026/03/08/2130" target="_blank">So You Want To Do Agentic Development</a></li>
-      </ul>
-    </section>
-</div>
+  <section id="architecture">
+    <div class="wrap">
+      <div class="section-label">How it works</div>
+      <h2>Architecture</h2>
+      <p>Piclaw packages the pi-mono agent runtime into a Docker container with Supervisor managing three services: the Bun-based agent process, an optional VNC server, and an optional web terminal. State — sessions, skills, keychain — lives on a bind-mounted workspace volume. Extensions are hot-loaded TypeScript modules; skills are Markdown-described scripts.</p>
+    </div>
+  </section>
+
+  <section id="highlights">
+    <div class="wrap">
+      <div class="section-label">Notable features</div>
+      <h2>Highlights</h2>
+      <div class="highlights">
+        <div class="highlight">Multi-provider LLM support (Anthropic, OpenAI, Gemini, Ollama, Azure)</div>
+        <div class="highlight">Web UI with branching conversation tree and Adaptive Card support</div>
+        <div class="highlight">Built-in terminal, VNC, and file editor — no separate tooling needed</div>
+        <div class="highlight">Skill system: agent learns new capabilities from SKILL.md files at runtime</div>
+        <div class="highlight">Dream memory consolidation keeps long-running sessions coherent</div>
+        <div class="highlight">Ships as ghcr.io/rcarmo/piclaw with nightly signed releases</div>
+      </div>
+    </div>
+  </section>
+
+  <section id="releases">
+    <div class="wrap">
+      <div class="section-label">Versions</div>
+      <h2>Releases</h2>
+      <div class="release-list">
+        
+        <div class="release">
+          <div class="release-header">
+            <span class="release-tag">v1.7.10</span>
+            <span class="release-name">PiClaw v1.7.10 — Microserfs</span>
+            <span class="release-date">2026-04-10</span>
+          </div>
+          <div class="release-body"># PiClaw v1.7.10 — "Microserfs"
+
+A patch release about office software, experimental integrations, and the ongoing effort to make modern work feel slightly less like a badly managed group project with sockets.
+
+## Features
+
+- **Experimental Microsoft 365 extension now ships in the bundle** — PiClaw can now package an env-gated M365 integration for Teams, Microsoft Graph, OneDrive, SharePoint, cale</div>
+        </div>
+        <div class="release">
+          <div class="release-header">
+            <span class="release-tag">v1.8.2</span>
+            <span class="release-name">PiClaw v1.8.2 — Sliding Doors</span>
+            <span class="release-date">2026-04-19</span>
+          </div>
+          <div class="release-body"># PiClaw v1.8.2 — "Sliding Doors"
+
+A patch release about interrupted turns, restored model state, and swipe navigation finally behaving like someone thought through what happens on phones after 2023.
+
+## Features
+
+- **Automatic turn recovery now has a proper user-facing shape** — interrupted turns can recover more deliberately, recovered replies carry an explicit marker in the timeline, stale in-f</div>
+        </div>
+        <div class="release">
+          <div class="release-header">
+            <span class="release-tag">v1.8.1</span>
+            <span class="release-name">PiClaw v1.8.1 — Heat</span>
+            <span class="release-date">2026-04-18</span>
+          </div>
+          <div class="release-body"># PiClaw v1.8.1 — "Heat"
+
+A point release about hardening the doors, slimming the startup path, and finally teaching the web client how to do push notifications without embarrassing itself in public.
+
+## Platform news
+
+- **Startup has been put on a stricter diet** — Azure bootstrap work, web viewer routes, bundled browser tooling, and office tooling have been shoved off the cold path so PiClaw can</div>
+        </div>
+        <div class="release">
+          <div class="release-header">
+            <span class="release-tag">v1.8.0</span>
+            <span class="release-name">PiClaw v1.8.0 — This Is Spinal Tap</span>
+            <span class="release-date">2026-04-16</span>
+          </div>
+          <div class="release-body"># PiClaw v1.8.0 - "This Is Spinal Tap"
+
+A hefty point release about making the web UI faster, the discovery surface smarter, the image pipeline unexpectedly ambitious, and the upstream model stack current enough to suggest someone has been feeding the amplifier after midnight.
+
+## Features
+
+- **PiClaw now picks up support for Anthropic Opus 4.7 via the upstream Pi core package updates** — the upst</div>
+        </div>
+        <div class="release">
+          <div class="release-header">
+            <span class="release-tag">v1.7.15</span>
+            <span class="release-name">PiClaw v1.7.15 — Blow-Up</span>
+            <span class="release-date">2026-04-15</span>
+          </div>
+          <div class="release-body"># PiClaw v1.7.15 — "Blow-Up"
+
+A release about seeing what the system is actually doing, surviving iPhone PWA melodrama, and giving operators better answers than a blank stare and a quietly compromised log file.
+
+## Features
+
+- **The `messages` tool grew into a proper audit surface** — it now supports `grep`, `extract`, and checkpoint `diff`, which makes chat-history forensics much less dependent o</div>
+        </div>
+        <div class="release">
+          <div class="release-header">
+            <span class="release-tag">v1.7.14</span>
+            <span class="release-name">PiClaw v1.7.14 — Brazil</span>
+            <span class="release-date">2026-04-14</span>
+          </div>
+          <div class="release-body"># PiClaw v1.7.14 — "Brazil"
+
+A patch release about making the operator surface clearer under pressure: better status hints, better timeout behavior, better terminal and compose ergonomics, and fewer situations where provider failures vanish into the wallpaper like a procedural memo nobody meant to approve.
+
+## Features
+
+- **Added `/effort` as an alias for `/thinking`, with provider-native level la</div>
+        </div>
+        <div class="release">
+          <div class="release-header">
+            <span class="release-tag">v1.7.13</span>
+            <span class="release-name">PiClaw v1.7.13 — The Paper Chase</span>
+            <span class="release-date">2026-04-13</span>
+          </div>
+          <div class="release-body"># PiClaw v1.7.13 — "The Paper Chase"
+
+A release about operator ergonomics, search behaving properly, and giving the M365 extension enough actual skills to justify its paperwork — which feels especially on-brand for a Monday the 13th, a date apparently engineered to combine bureaucracy with menace.
+
+## Features
+
+- **The experimental M365 extension now ships eleven operator-facing skills** — which m</div>
+        </div>
+        <div class="release">
+          <div class="release-header">
+            <span class="release-tag">v1.7.12</span>
+            <span class="release-name">PiClaw v1.7.12 — The Conversation</span>
+            <span class="release-date">2026-04-12</span>
+          </div>
+          <div class="release-body"># PiClaw v1.7.12 — "The Conversation"
+
+A release about seeing more, guessing less, and making the web UI slightly less likely to surprise you in ways nobody ordered.
+
+## Features
+
+- **The session tree viewer is now properly useful instead of merely promising to be** — `/tree` gained a search/filter box, more compact rows, theme-derived role tags, fuller sidebar detail, human-readable tool argument</div>
+        </div>
+        <div class="release">
+          <div class="release-header">
+            <span class="release-tag">v1.7.11</span>
+            <span class="release-name">PiClaw v1.7.11 — Inception</span>
+            <span class="release-date">2026-04-12</span>
+          </div>
+          <div class="release-body"># PiClaw v1.7.11 — "Inception"
+
+A release about trees, widgets, previews, Azure behaving slightly less like an expensive practical joke, and the experimental M365 auth stack becoming just a touch less feral.
+
+## Features
+
+- **Added an interactive session tree viewer for the web UI** — `/tree` now opens a proper in-app widget for exploring chat branches, active leaves, tool calls, outputs, and mess</div>
+        </div>
+        <div class="release">
+          <div class="release-header">
+            <span class="release-tag">v1.7.9</span>
+            <span class="release-name">PiClaw v1.7.9 — The Player</span>
+            <span class="release-date">2026-04-08</span>
+          </div>
+          <div class="release-body"># PiClaw v1.7.9 — "The Player"
+
+A patch release about visibility, polish, previews, and the general business of making the UI look more intentional than accidental.
+
+## Features
+
+- **Workspace index status and reindex controls** — the workspace UI now exposes indexing state and lets you kick a reindex when search feels stale, which is rather better than treating uncertainty as an advanced feature.</div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="history">
+    <div class="wrap">
+      <div class="section-label">Chronology (most recent 30 commits)</div>
+      <h2>History</h2>
+      <div class="timeline">
+        
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">build: rebuild dist for session timeout defaults + update release docs<span class="sha">abce3fda</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">Increase default compaction idle wait to 300s<span class="sha">c130922f</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">Make session idle wait timeouts configurable via env vars<span class="sha">53f7011f</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">build: rebuild dist for recovery chip styling<span class="sha">6c949b95</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">fix(web): recovery chip — smaller font, human-readable tooltip<span class="sha">84286ea9</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">fix(web): tone down recovery chip — use theme colors, subtler label<span class="sha">8214bf6b</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">build: rebuild dist for Windows path hotfix<span class="sha">b520399d</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">Consolidate path-safety helpers; fix Windows editor-vendor 403<span class="sha">d11eeb95</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">build: rebuild dist bundles and sync workitems for v1.8.2<span class="sha">6e9e564f</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">fix(ci): replace second silent catch in stamp-cache-buster with explicit log<span class="sha">990d4b6f</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">build: refresh generated dist for v1.8.2 retag<span class="sha">eb0cd082</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">Return provider usage for branch chats without live sessions<span class="sha">00679f94</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">Use content-hash cache busters instead of epoch timestamps<span class="sha">e0773282</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">Reset model/context state on chat switch to prevent stale display<span class="sha">8e80c85c</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">fix(ci): replace silent catch in stamp-cache-buster with explicit warning log<span class="sha">941eb4c7</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">fix(web): bust stale vendor bundle cache — stamp importmap URL + fix broken cache-buster regex<span class="sha">877971d5</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">fix(web): exclude Apple Pencil from chat swipe navigation<span class="sha">7a1fda17</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">fix(web): don't overwrite cached context usage with null API response<span class="sha">4d529520</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">Update generated dist for branch recovery skip-replay<span class="sha">8ef6f186</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">Skip replay for branch chats on startup/stale recovery (no session context)<span class="sha">1056abfd</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">build: refresh generated dist for automatic-recovery context-pressure path<span class="sha">5a3f80e4</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">fix(editor): pin @codemirror/commands in overrides to enforce singleton resolution<span class="sha">789e0f7a</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">fix(editor): pin CodeMirror commands singleton dependency<span class="sha">a261c485</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">Allow compaction recovery despite tool activity for context-pressure failures<span class="sha">c2443826</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">build: refresh dist, config tests, and github collate script for v1.8.2 retag<span class="sha">ccdb7dc2</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">build: rebuild web bundles with singleton CodeMirror + VNC touch fix<span class="sha">4d3122ad</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">fix(editor): enforce singleton CodeMirror instances to prevent extension errors<span class="sha">8097226c</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">build: refresh dist for v1.8.2 retag<span class="sha">747af0b3</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-19</span>
+          <span class="tl-msg">fix(vnc): iPad touch/pen stuck clicks — skip setPointerCapture for non-mouse, add cross-pointer release, reduce idle timer<span class="sha">a3acb6bc</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-04-18</span>
+          <span class="tl-msg">Add session line-count cap to auto-rotation (default 8000)<span class="sha">b307d920</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="posts">
+    <div class="wrap">
+      <div class="section-label">On taoofmac.com</div>
+      <h2>Related Posts</h2>
+      <div class="post-list">
+        
+        <div class="post-item">
+          <span class="post-date">2026-02-01</span>
+          <a href="https://taoofmac.com/space/notes/2026/02/01/2100" target="_blank" rel="noopener">Vibing with the Agent Control Protocol</a>
+        </div>
+        <div class="post-item">
+          <span class="post-date">2026-02-01</span>
+          <a href="https://taoofmac.com/space/notes/2026/02/01/1940" target="_blank" rel="noopener">Seizing The Means Of Production (Again)</a>
+        </div>
+        <div class="post-item">
+          <span class="post-date">2026-02-01</span>
+          <a href="https://taoofmac.com/space/notes/2026/02/01/2130" target="_blank" rel="noopener">Thoughts on AI-Assisted Software Development in 2026</a>
+        </div>
+        <div class="post-item">
+          <span class="post-date">2026-03-08</span>
+          <a href="https://taoofmac.com/space/blog/2026/03/08/2130" target="_blank" rel="noopener">So You Want To Do Agentic Development</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
 <footer>
   <a href="/">← All projects</a> &nbsp;·&nbsp;
-  <a href="https://taoofmac.com" target="_blank">taoofmac.com</a> &nbsp;·&nbsp;
-  <a href="https://github.com/rcarmo" target="_blank">github.com/rcarmo</a>
+  <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a> &nbsp;·&nbsp;
+  <a href="https://github.com/rcarmo" target="_blank" rel="noopener">github.com/rcarmo</a>
+  <br><br>Last indexed 2026-04
 </footer>
+
 </body>
 </html>

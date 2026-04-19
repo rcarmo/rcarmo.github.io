@@ -4,103 +4,339 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>webterm — Rui Carmo</title>
+<meta name="description" content="Yet another web terminal, but with style">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
   :root {
-    --bg: #0d1117; --surface: #161b22; --border: #30363d;
-    --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff; --accent2: #f78166;
-    --tag-bg: #21262d; --tag-text: #79c0ff; --star: #e3b341; --radius: 8px; --gap: 1.5rem;
+    --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
+    --border: #30363d; --text: #e6edf3; --muted: #8b949e;
+    --accent: #58a6ff; --accent2: #f78166; --tag-bg: #21262d;
+    --tag-text: #79c0ff; --star: #e3b341; --radius: 8px; --gap: 1.5rem;
+    --max: 860px;
   }
   @media (prefers-color-scheme: light) {
     :root {
-      --bg: #f6f8fa; --surface: #ffffff; --border: #d0d7de;
-      --text: #1f2328; --muted: #656d76; --accent: #0969da;
+      --bg: #f6f8fa; --surface: #ffffff; --surface2: #f0f3f6;
+      --border: #d0d7de; --text: #1f2328; --muted: #656d76;
+      --accent: #0969da; --accent2: #cf222e;
       --tag-bg: #ddf4ff; --tag-text: #0550ae; --star: #9a6700;
     }
   }
-  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.7; }
+  html { scroll-behavior: smooth; }
+  body { background: var(--bg); color: var(--text);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
+    font-size: 15px; line-height: 1.7; }
   a { color: var(--accent); text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .wrap { max-width: 860px; margin: 0 auto; padding: var(--gap); }
-  nav { border-bottom: 1px solid var(--border); padding: 0.75rem var(--gap); display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; color: var(--muted); }
+  code, .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; font-size: 0.875em; }
+  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gap); }
+  /* Nav */
+  nav { border-bottom: 1px solid var(--border); padding: 0.7rem 0; font-size: 0.875rem; color: var(--muted); }
+  nav .wrap { display: flex; align-items: center; gap: 0.6rem; }
   nav a { color: var(--muted); } nav a:hover { color: var(--accent); }
-  nav span { color: var(--border); }
-  .hero { padding: 2.5rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
-  .hero h1 { font-size: 2rem; font-weight: 700; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  nav .sep { opacity: 0.4; }
+  /* Hero */
+  .hero { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--border); }
+  .hero h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; }
   .hero h1 a { color: var(--text); } .hero h1 a:hover { color: var(--accent); text-decoration: none; }
-  .hero .tagline { color: var(--muted); font-size: 1.05rem; margin: 0.6rem 0 1rem; }
-  .stats { display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
-  .stars { color: var(--star); font-weight: 600; }
-  .lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
-  .lang-TypeScript { background: #3178c6; } .lang-Python { background: #3572A5; }
-  .lang-Go { background: #00ADD8; } .lang-Swift { background: #F05138; }
-  .lang-C { background: #555555; } .lang-Cpp { background: #f34b7d; }
-  .lang-Dockerfile { background: #384d54; } .lang-Shell { background: #89e051; }
-  .lang-OpenSCAD { background: #e5cd31; } .lang-misc { background: #8b949e; }
-  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
-  .tag { display: inline-block; background: var(--tag-bg); color: var(--tag-text); font-size: 0.75rem; padding: 0.15rem 0.55rem; border-radius: 2em; }
-  section { margin: 2rem 0; }
-  section h2 { font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
-  .desc-text { color: var(--text); max-width: 680px; }
-  .post-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
-  .post-list li { display: flex; align-items: baseline; gap: 0.75rem; font-size: 0.9rem; }
-  .post-list .date { color: var(--muted); font-size: 0.8rem; white-space: nowrap; min-width: 6rem; }
-  .gh-link { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: var(--text); transition: border-color 0.15s; }
-  .gh-link:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
-  footer { text-align: center; color: var(--muted); font-size: 0.825rem; padding: 2.5rem var(--gap) 1.5rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+  .hero .tagline { font-size: 1.1rem; color: var(--muted); margin: 0.5rem 0 1.25rem; max-width: 640px; }
+  .stats { display: flex; flex-wrap: wrap; gap: 1.2rem; font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
+  .stat-stars { color: var(--star); font-weight: 600; }
+  .lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 3px; }
+  .lang-TypeScript{background:#3178c6} .lang-Python{background:#3572A5}
+  .lang-Go{background:#00ADD8} .lang-Swift{background:#F05138}
+  .lang-C{background:#555555} .lang-Cpp{background:#f34b7d}
+  .lang-Dockerfile{background:#384d54} .lang-Shell{background:#89e051}
+  .lang-misc{background:#8b949e}
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
+  .tag { background: var(--tag-bg); color: var(--tag-text); font-size: 0.75rem; padding: 0.15rem 0.55rem; border-radius: 2em; }
+  .status-badge { font-size: 0.75rem; padding: 0.2rem 0.65rem; border-radius: 2em; font-weight: 600; }
+  .status-active { background: #1a3e1a; color: #56d364; }
+  .status-stable { background: #1a2e3e; color: #58a6ff; }
+  .status-maintained { background: #2e1a3e; color: #bc8cff; }
+  .status-archived { background: #2e2010; color: #e3b341; }
+  @media (prefers-color-scheme: light) {
+    .status-active { background: #dafbe1; color: #1a7f37; }
+    .status-stable { background: #ddf4ff; color: #0969da; }
+    .status-maintained { background: #fbefff; color: #8250df; }
+    .status-archived { background: #fff8c5; color: #9a6700; }
+  }
+  .cta-links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
+  .btn { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--surface);
+    border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem;
+    font-size: 0.875rem; font-weight: 500; color: var(--text); transition: border-color 0.15s; }
+  .btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+  /* TOC */
+  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 1rem 1.25rem; margin: 2rem 0; display: inline-block; min-width: 200px; }
+  .toc h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.6rem; }
+  .toc ol { padding-left: 1.25rem; font-size: 0.875rem; line-height: 2; }
+  .toc a { color: var(--muted); } .toc a:hover { color: var(--accent); }
+  /* Sections */
+  section { padding: 2.5rem 0; border-bottom: 1px solid var(--border); }
+  section:last-of-type { border-bottom: none; }
+  .section-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
+    letter-spacing: 0.07em; color: var(--muted); margin-bottom: 1rem; }
+  section h2 { font-size: 1.35rem; font-weight: 600; margin-bottom: 1rem; }
+  section p { max-width: 680px; color: var(--text); margin-bottom: 0.75rem; }
+  section ul { max-width: 680px; padding-left: 1.5rem; margin-bottom: 0.75rem; }
+  section li { margin-bottom: 0.35rem; }
+  /* Highlights */
+  .highlights { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 0.75rem; margin-top: 0.5rem; }
+  .highlight { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
+    padding: 0.85rem 1rem; font-size: 0.9rem; }
+  .highlight::before { content: "→"; color: var(--accent); margin-right: 0.5rem; }
+  /* Timeline */
+  .timeline { display: flex; flex-direction: column; gap: 0; margin-top: 0.5rem; }
+  .tl-item { display: grid; grid-template-columns: 9rem 1fr; gap: 1rem; padding: 0.6rem 0;
+    border-top: 1px solid var(--border); font-size: 0.875rem; }
+  .tl-item:first-child { border-top: none; }
+  .tl-date { color: var(--muted); white-space: nowrap; font-size: 0.8rem; padding-top: 0.1rem; }
+  .tl-msg { color: var(--text); word-break: break-word; }
+  .tl-msg .sha { font-family: ui-monospace, monospace; font-size: 0.75em; color: var(--muted); margin-left: 0.5rem; }
+  /* Posts */
+  .post-list { display: flex; flex-direction: column; gap: 0.5rem; }
+  .post-item { display: grid; grid-template-columns: 6rem 1fr; gap: 0.75rem; font-size: 0.9rem; }
+  .post-date { color: var(--muted); font-size: 0.8rem; padding-top: 0.15rem; }
+  /* Releases */
+  .release-list { display: flex; flex-direction: column; gap: 1rem; }
+  .release { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+  .release-header { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.4rem; }
+  .release-tag { font-weight: 600; font-family: ui-monospace, monospace; color: var(--accent); }
+  .release-name { color: var(--text); }
+  .release-date { color: var(--muted); font-size: 0.8rem; margin-left: auto; }
+  .release-body { font-size: 0.85rem; color: var(--muted); white-space: pre-wrap; word-break: break-word; }
+  /* Footer */
+  footer { text-align: center; color: var(--muted); font-size: 0.825rem;
+    padding: 2.5rem var(--gap) 1.5rem; border-top: 1px solid var(--border); margin-top: 1rem; }
+  footer a { color: var(--muted); } footer a:hover { color: var(--accent); }
 </style>
 </head>
 <body>
+
 <nav>
-  <div class="wrap" style="display:flex;align-items:center;gap:1rem;padding-top:0;padding-bottom:0;max-width:860px">
+  <div class="wrap">
     <a href="/">rcarmo.github.io</a>
-    <span>/</span>
+    <span class="sep">/</span>
     <span>webterm</span>
   </div>
 </nav>
-<div class="wrap">
-  <div class="hero">
-    <h1>
-      <a href="https://github.com/rcarmo/webterm" target="_blank">webterm</a>
-    </h1>
-    <p class="tagline">Yet another web terminal, but with style.</p>
+
+<div class="hero">
+  <div class="wrap">
+    <h1><a href="https://github.com/rcarmo/webterm" target="_blank" rel="noopener">webterm</a></h1>
+    <p class="tagline">Yet another web terminal, but with style</p>
     <div class="stats">
-      <span class="stars">★ 106</span>
-      <span>⑂ 6 forks</span>
-      <span><span class="lang-dot lang-Go"></span> Go</span>
-      <span>First released 2026</span>
+      <span class="stat-stars">★ 106</span>
+      <span>⑂ 6</span>
+      <span><span class="lang-dot lang-Go"></span>Go</span>
+      <span class="mono">2026-01</span>
+      <span class="status-badge status-active">active</span>
     </div>
-    <div class="tags" style="margin-bottom:1.25rem">
-      <span class="tag">go</span> <span class="tag">terminal</span> <span class="tag">websocket</span> <span class="tag">xterm</span>
-    </div>
-    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
-      <a class="gh-link" href="https://github.com/rcarmo/webterm" target="_blank">
-        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
-        View on GitHub
-      </a>
+    <div class="tags">
       
     </div>
+    <div class="cta-links">
+      <a class="btn" href="https://github.com/rcarmo/webterm" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub</a>
+      
+    </div>
+    <div class="toc">
+      <h3>On this page</h3>
+      <ol><li><a href="#motivation">Motivation</a></li>
+        <li><a href="#architecture">Architecture</a></li>
+        <li><a href="#highlights">Highlights</a></li>
+        <li><a href="#history">History</a></li>
+        <li><a href="#posts">Posts</a></li></ol>
+    </div>
   </div>
+</div>
 
-  <section>
-    <h2>About</h2>
-    <p class="desc-text">A Go-based web terminal server that drives a full xterm-compatible terminal<br>emulator in the browser over WebSockets. Designed to be embedded in larger systems<br>like the agent sandbox stack. Built with correctness and low resource usage in mind.</p>
+
+  <section id="motivation">
+    <div class="wrap">
+      <div class="section-label">Why it exists</div>
+      <h2>Motivation</h2>
+      <p>Every web terminal project is either too heavy (full Node stack, webpack, five dependencies) or too fragile (raw xterm.js with no proper server). Webterm started as the terminal component inside the piclaw container and was split out when it became clear other projects needed it too.</p>
+    </div>
   </section>
 
-  <section>
-      <h2>Related posts on taoofmac.com</h2>
-      <ul class="post-list">
-        <li><span class="date">2026-02-01</span><a href="https://taoofmac.com/space/notes/2026/02/01/1940" target="_blank">Seizing The Means Of Production (Again)</a></li>
-        <li><span class="date">2026-02-15</span><a href="https://taoofmac.com/space/notes/2026/02/15/1530" target="_blank">Notes for February 8-15</a></li>
-      </ul>
-    </section>
-</div>
+  <section id="architecture">
+    <div class="wrap">
+      <div class="section-label">How it works</div>
+      <h2>Architecture</h2>
+      <p>A Go HTTP server that upgrades connections to WebSocket and pipes them to a PTY. The frontend is a single HTML file with xterm.js. go-te provides the server-side terminal state; the client renders escape sequences natively. TLS termination is handled by the caller (nginx or the embedding application).</p>
+    </div>
+  </section>
+
+  <section id="highlights">
+    <div class="wrap">
+      <div class="section-label">Notable features</div>
+      <h2>Highlights</h2>
+      <div class="highlights">
+        <div class="highlight">Single Go binary with zero runtime dependencies</div>
+        <div class="highlight">go-te for correct VT100/VT220/xterm sequence handling</div>
+        <div class="highlight">Configurable shell, working directory, and environment</div>
+        <div class="highlight">Used as the terminal backend inside piclaw and ghostty-web</div>
+      </div>
+    </div>
+  </section>
+
+
+  <section id="history">
+    <div class="wrap">
+      <div class="section-label">Chronology (most recent 30 commits)</div>
+      <h2>History</h2>
+      <div class="timeline">
+        
+        <div class="tl-item">
+          <span class="tl-date">2026-03-01</span>
+          <span class="tl-msg">Bump version to 1.3.39<span class="sha">1abc0d04</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-03-01</span>
+          <span class="tl-msg">fix: bell indicator stuck after returning to terminal tab<span class="sha">5089aedd</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">Bump version to 1.3.38<span class="sha">5acb468a</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">deps: update ghostty-web to fcc47d4<span class="sha">b6a9231b</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">Bump version to 1.3.37<span class="sha">4d381286</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">fix: sync bell state on all dashboard tiles when tab regains focus<span class="sha">41071f8a</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">Bump version to 1.3.36<span class="sha">571d0c0b</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">deps: update ghostty-web to a5d8c7b<span class="sha">b0321940</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">fix: refresh all dashboard thumbnails on tab return and add periodic fallback<span class="sha">bc3fac9a</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">Bump version to 1.3.35<span class="sha">8496b139</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">Merge branch 'main' of github.com:rcarmo/textual-webterm<span class="sha">f68904d5</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">Bump version to 1.3.34<span class="sha">c88f01cb</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">deps: update ghostty-web to bbdea28 (fixes stale selection highlight on click)<span class="sha">982a68ea</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">Bump version to 1.3.33<span class="sha">73414acd</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">perf: reduce input tarpitting and speed up large-display rendering<span class="sha">82ccfeb6</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-26</span>
+          <span class="tl-msg">Bump version to 1.3.32<span class="sha">3d83b4b1</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-22</span>
+          <span class="tl-msg">docs<span class="sha">2d9cb7f0</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-20</span>
+          <span class="tl-msg">Bump version to 1.3.31<span class="sha">df0a6ae1</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-20</span>
+          <span class="tl-msg">Increase thumbnail refresh cadence<span class="sha">0d8cf7d4</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-20</span>
+          <span class="tl-msg">Bump version to 1.3.30<span class="sha">bb0bc779</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-19</span>
+          <span class="tl-msg">Bump version to 1.3.29<span class="sha">671778a1</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-19</span>
+          <span class="tl-msg">Bump ghostty-web to 0.4.2<span class="sha">ce624f29</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-18</span>
+          <span class="tl-msg">Bump version to 1.3.28<span class="sha">8dfe86e4</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-18</span>
+          <span class="tl-msg">Default dashboard thumbnails to PNG<span class="sha">7a2a7877</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-18</span>
+          <span class="tl-msg">Bump version to 1.3.27<span class="sha">25049dd1</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-18</span>
+          <span class="tl-msg">Always download SVG screenshots<span class="sha">cdcc9bfc</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-18</span>
+          <span class="tl-msg">Bump version to 1.3.26<span class="sha">b5f35349</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-18</span>
+          <span class="tl-msg">Add optional PNG screenshot mode<span class="sha">a6ada31a</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-18</span>
+          <span class="tl-msg">Bump version to 1.3.25<span class="sha">8d54de64</span></span>
+        </div>
+        <div class="tl-item">
+          <span class="tl-date">2026-02-18</span>
+          <span class="tl-msg">Reconnect terminals on visibility restore<span class="sha">52c52f84</span></span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section id="posts">
+    <div class="wrap">
+      <div class="section-label">On taoofmac.com</div>
+      <h2>Related Posts</h2>
+      <div class="post-list">
+        
+        <div class="post-item">
+          <span class="post-date">2026-02-01</span>
+          <a href="https://taoofmac.com/space/notes/2026/02/01/1940" target="_blank" rel="noopener">Seizing The Means Of Production (Again)</a>
+        </div>
+        <div class="post-item">
+          <span class="post-date">2026-02-15</span>
+          <a href="https://taoofmac.com/space/notes/2026/02/15/1530" target="_blank" rel="noopener">Notes for February 8-15</a>
+        </div>
+      </div>
+    </div>
+  </section>
 
 <footer>
   <a href="/">← All projects</a> &nbsp;·&nbsp;
-  <a href="https://taoofmac.com" target="_blank">taoofmac.com</a> &nbsp;·&nbsp;
-  <a href="https://github.com/rcarmo" target="_blank">github.com/rcarmo</a>
+  <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a> &nbsp;·&nbsp;
+  <a href="https://github.com/rcarmo" target="_blank" rel="noopener">github.com/rcarmo</a>
+  <br><br>Last indexed 2026-03
 </footer>
+
 </body>
 </html>
