@@ -159,32 +159,30 @@ a:hover { text-decoration: underline; }
 }
 .card {
   background: var(--surface);
-  display: flex; flex-direction: column;
+  display: flex; flex-direction: row; align-items: stretch;
   transition: background .15s;
   text-decoration: none; color: inherit;
   overflow: hidden;
 }
 .card:hover { background: var(--surface2); text-decoration: none; }
 
-/* Logo area — takes up about 35% of card height when present */
+/* Logo area — fixed width column on the left */
 .card-logo-wrap {
-  width: 100%;
-  height: 120px;
+  width: 88px;
+  flex-shrink: 0;
   background: var(--surface2);
   display: flex; align-items: center; justify-content: center;
-  border-bottom: 1px solid var(--border);
-  padding: 1rem;
+  border-right: 1px solid var(--border);
+  padding: .75rem;
 }
 .card-logo {
-  max-width: 80px;
-  max-height: 80px;
-  width: auto; height: auto;
+  width: 52px; height: 52px;
   object-fit: contain;
-  border-radius: 14px;
+  border-radius: 10px;
   display: block;
 }
 
-.card-body { padding: 1.1rem 1.2rem; flex: 1; display: flex; flex-direction: column; gap: .4rem; }
+.card-body { padding: 1rem 1.1rem; flex: 1; display: flex; flex-direction: column; gap: .35rem; }
 .card-name { font-size: .88rem; font-weight: 600; color: var(--text); font-family: var(--font-mono); }
 .card:hover .card-name { color: var(--accent); }
 .card-desc { font-size: .8rem; color: var(--text-dim); line-height: 1.55; flex: 1; }
