@@ -502,78 +502,84 @@ scene.add(new THREE.AmbientLight(0xfff4d0, 0.45));
 
 // ── Utility: make canvas billboard texture ─────────────────────────────────
 function makeBillboardTexture(proj, accent, logoImg) {
-  // Larger canvas for readable text at distance
   const W = 768, H = 384, cv = document.createElement('canvas');
   cv.width = W; cv.height = H;
   const ctx = cv.getContext('2d');
-  const hex = '#' + accent.toString(16).padStart(6, '0');
+  // Derive a DARK readable version of accent for text (never use pastel on cream)
+  const r = (accent >> 16) & 0xff, g = (accent >> 8) & 0xff, b = accent & 0xff;
+  const darkHex = '#' + [
+    Math.round(r * 0.45), Math.round(g * 0.45), Math.round(b * 0.45)
+  ].map(v => v.toString(16).padStart(2,'0')).join('');
+  // Saturated mid-tone for accent band and dividers
+  const midHex = '#' + [
+    Math.round(r * 0.65), Math.round(g * 0.65), Math.round(b * 0.65)
+  ].map(v => v.toString(16).padStart(2,'0')).join('');
 
-  // Paper background
-  ctx.fillStyle = '#faf6ee';
+  // Warm cream background
+  ctx.fillStyle = '#f8f4ee';
   ctx.fillRect(0, 0, W, H);
 
-  // Accent band top
-  ctx.fillStyle = hex;
-  ctx.fillRect(0, 0, W, 10);
+  // Accent band top (darker version — readable over cream)
+  ctx.fillStyle = darkHex;
+  ctx.fillRect(0, 0, W, 8);
 
-  // Ink border
-  ctx.strokeStyle = '#1a1410';
-  ctx.lineWidth = 4;
-  ctx.strokeRect(2, 2, W - 4, H - 4);
+  // Strong ink border
+  ctx.strokeStyle = '#18120c';
+  ctx.lineWidth = 5;
+  ctx.strokeRect(2.5, 2.5, W - 5, H - 5);
 
-  const hasLogo = !!logoImg;
-  // Logo column: 140px wide if logo present
-  const logoW = 140, pad = 16;
+  const hasLogo = logoImg && logoImg.complete && logoImg.naturalWidth > 0;
+  const logoW = 140, pad = 18;
   const textX = hasLogo ? logoW + pad * 2 : pad * 2;
   const textW = W - textX - pad;
 
-  // Logo
+  // Logo box
   if (hasLogo) {
-    ctx.fillStyle = '#f0ebe0';
-    ctx.fillRect(pad, pad + 10, logoW - pad, H - pad * 2 - 10);
-    ctx.strokeStyle = hex;
+    ctx.fillStyle = '#ece7d8';
+    ctx.fillRect(pad, pad + 8, logoW - pad, H - pad * 2 - 8);
+    ctx.strokeStyle = midHex;
     ctx.lineWidth = 2;
-    ctx.strokeRect(pad, pad + 10, logoW - pad, H - pad * 2 - 10);
-    const ls = 100;
-    const lx = pad + (logoW - pad - ls) / 2;
-    const ly = (H - ls) / 2;
-    ctx.drawImage(logoImg, lx, ly, ls, ls);
+    ctx.strokeRect(pad, pad + 8, logoW - pad, H - pad * 2 - 8);
+    const ls = 96, lx = pad + (logoW - pad - ls) / 2, ly = (H - ls) / 2;
+    try { ctx.drawImage(logoImg, lx, ly, ls, ls); } catch(e) {}
   }
 
-  // Name — large, bold
-  ctx.fillStyle = '#100c06';
-  ctx.font = 'bold 52px ui-monospace, "SF Mono", monospace';
+  // Project name — very dark, high contrast
+  ctx.fillStyle = '#0e0a06';
+  ctx.font = 'bold 52px ui-monospace, "SF Mono", Menlo, Consolas, monospace';
   const nameStr = proj.name.length > 14 ? proj.name.slice(0, 13) + '…' : proj.name;
-  ctx.fillText(nameStr, textX, 78);
+  ctx.fillText(nameStr, textX, 76);
 
-  // Stars + language
-  ctx.fillStyle = hex;
-  ctx.font = 'bold 30px ui-monospace, monospace';
-  ctx.fillText('★ ' + proj.stars.toLocaleString() + '  ' + proj.lang, textX, 120);
+  // Stars + lang — dark accent (not pastel)
+  ctx.fillStyle = darkHex;
+  ctx.font = 'bold 29px ui-monospace, monospace';
+  ctx.fillText('★ ' + proj.stars.toLocaleString() + '   ' + proj.lang, textX, 116);
 
   // Divider
-  ctx.strokeStyle = '#ccc4b0';
+  ctx.strokeStyle = '#bab0a0';
   ctx.lineWidth = 1.5;
-  ctx.beginPath(); ctx.moveTo(textX, 136); ctx.lineTo(W - pad, 136); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(textX, 132); ctx.lineTo(W - pad, 132); ctx.stroke();
 
-  // Description — word-wrap with comfortable line height
-  ctx.fillStyle = '#3a2e28';
-  ctx.font = '26px -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif';
+  // Description — strong dark body text
+  ctx.fillStyle = '#1c160e';
+  ctx.font = '25px -apple-system, "Helvetica Neue", Helvetica, Arial, sans-serif';
   const words = proj.desc.split(' ');
-  let line = '', y = 172;
+  let line = '', y = 168;
   for (const w of words) {
     const test = line ? line + ' ' + w : w;
     if (ctx.measureText(test).width > textW && line) {
-      ctx.fillText(line, textX, y); y += 34; line = w;
-      if (y > H - 50) break;
+      ctx.fillText(line, textX, y); y += 32; line = w;
+      if (y > H - 52) break;
     } else { line = test; }
   }
-  if (line && y <= H - 50) ctx.fillText(line, textX, y);
+  if (line && y <= H - 52) ctx.fillText(line, textX, y);
 
-  // Click prompt
-  ctx.fillStyle = hex;
-  ctx.font = 'bold 22px ui-monospace, monospace';
-  ctx.fillText('→ click to open', W - 220, H - 18);
+  // Click prompt — dark accent
+  ctx.fillStyle = darkHex;
+  ctx.font = 'bold 20px ui-monospace, monospace';
+  ctx.textAlign = 'right';
+  ctx.fillText('→ click to open', W - pad, H - 18);
+  ctx.textAlign = 'left';
 
   return new THREE.CanvasTexture(cv);
 }
@@ -882,22 +888,7 @@ function buildCluster(clusterKey, cluster) {
     scene.add(panel);
     billboards.push(panel);
 
-    // Frame border — parented to panel so it follows lookAt rotation
-    const frameMat = new THREE.LineBasicMaterial({ color: color, linewidth: 3 });
-    const half = { w: panelW/2 + .06, h: panelH/2 + .06 };
-    const fpts = [
-      new THREE.Vector3(-half.w, -half.h, 0.01),
-      new THREE.Vector3( half.w, -half.h, 0.01),
-      new THREE.Vector3( half.w,  half.h, 0.01),
-      new THREE.Vector3(-half.w,  half.h, 0.01),
-      new THREE.Vector3(-half.w, -half.h, 0.01),
-    ];
-    const frame = new THREE.Line(
-      new THREE.BufferGeometry().setFromPoints(fpts),
-      frameMat
-    );
-    // Position is local to panel — stays at origin, inherits panel's lookAt
-    panel.add(frame);
+    // (no Line frame — border is drawn on the canvas texture)
   });
 
   // Cluster label painted on the ground
@@ -933,6 +924,13 @@ function makeFloorLabel(key, pos, color) {
 
 // Build all clusters
 Object.entries(CLUSTERS).forEach(([key, cluster]) => buildCluster(key, cluster));
+
+// Classify layers: non-billboard meshes → layer 0 only; billboards already on layer 1
+scene.traverse(obj => {
+  if (obj.isMesh && !billboards.includes(obj)) {
+    obj.layers.set(0);  // only layer 0: never seen by billboard camera pass
+  }
+});
 
 // ── Floating star for piclaw (hero) ────────────────────────────────────────
 const heroGeo = new THREE.IcosahedronGeometry(1.1, 1);
@@ -1135,6 +1133,7 @@ renderer.domElement.addEventListener('touchend', e => {
     ((t.clientX - rect.left) / rect.width)  * 2 - 1,
     -((t.clientY - rect.top)  / rect.height) * 2 + 1
   );
+  raycaster.layers.enableAll();
   raycaster.setFromCamera(mouse, camera);
   const hits = raycaster.intersectObjects(billboards);
   if (hits.length) { flyToBillboard(hits[0].object); openFocus(hits[0].object); }
@@ -1276,9 +1275,8 @@ function animate() {
   }
 
   // Moebius: hide billboards → render scene → Moebius → render billboards on top unshaded
-  // Hide layer 1 (billboards) from Moebius passes
-  camera.layers.disable(1);
-
+  // Pass 1: Moebius — camera sees only layer 0 (no billboards)
+  camera.layers.set(0);
   renderer.setRenderTarget(normalBuf);
   const prevOverride = scene.overrideMaterial;
   scene.overrideMaterial = normalMat;
@@ -1287,14 +1285,16 @@ function animate() {
   renderer.setRenderTarget(null);
   moebiusPass.material.uniforms.uNormals.value = normalBuf.texture;
 
-  composer.render();  // Moebius on layer 0 only
+  composer.render();
 
-  // Now render layer 1 (billboards) unshaded on top
+  // Pass 2: billboard overlay — camera sees only layer 1 (only billboards)
   camera.layers.set(1);
   renderer.autoClear = false;
   renderer.render(scene, camera);
   renderer.autoClear = true;
-  camera.layers.enableAll();  // restore
+
+  // Restore full visibility for controls / raycasting
+  camera.layers.enableAll();
 }
 animate();
 </script>
