@@ -160,7 +160,7 @@
   <button class="nav-btn" data-cluster="infra">Infrastructure</button>
 </nav>
 
-<div id="hint">drag to look around · click a billboard to visit · tap cluster buttons to navigate</div>
+<div id="hint">drag or WASD/arrows to look around · scroll or Q/E to zoom · space to pause · 1–7 jump to cluster · click a sign to focus</div>
 
 <script type="module">
 import * as THREE from 'three';
@@ -601,6 +601,21 @@ gridHelper.material.opacity = 0.35;
 gridHelper.material.transparent = true;
 scene.add(gridHelper);
 
+// Sky dome — fills empty pixels with bright geometry so the Moebius shader
+// doesn't crosshatch the sky (sky luma must stay above 0.80)
+const skyDome = new THREE.Mesh(
+  new THREE.SphereGeometry(180, 32, 16),
+  new THREE.MeshStandardMaterial({
+    color:   0xa8c0e8,
+    emissive:0xa8c0e8,
+    emissiveIntensity: 0.92,  // very bright → luma ~0.88, above all hatch thresholds
+    side: THREE.BackSide,
+    roughness: 1.0,
+    metalness: 0.0,
+  })
+);
+scene.add(skyDome);
+
 // ── Billboard objects for raycasting ──────────────────────────────────────
 const billboards = [];
 
@@ -619,7 +634,8 @@ function buildCluster(clusterKey, cluster) {
     makeTree(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r);
   }
 
-  // Billboards for each project
+  // Billboards for each project (skip for single-item hero cluster)
+  if (clusterKey === 'highlight') return;
   const N = projects.length;
   projects.forEach((proj, i) => {
     const angle = (N === 1) ? 0 : (i / N) * Math.PI * 2;
@@ -736,7 +752,34 @@ controls.minDistance = 4;
 controls.maxDistance = 120;
 controls.autoRotate = true;
 controls.autoRotateSpeed = 0.4;
+controls.enableKeys = false;   // we handle keys manually below
 controls.update();
+
+// Stop auto-rotate the moment user grabs the mouse
+controls.addEventListener('start', () => { controls.autoRotate = false; });
+
+// ── Keyboard navigation ────────────────────────────────────────────────────
+const keysHeld = new Set();
+
+window.addEventListener('keydown', e => {
+  // Escape: close focus panel
+  if (e.key === 'Escape') { closeFocus(); return; }
+  // Space: toggle auto-rotate
+  if (e.code === 'Space')  { e.preventDefault(); controls.autoRotate = !controls.autoRotate; return; }
+  // Any movement key stops auto-rotate
+  if (['KeyW','KeyA','KeyS','KeyD','ArrowUp','ArrowDown','ArrowLeft','ArrowRight',
+       'Equal','Minus','KeyQ','KeyE'].includes(e.code)) {
+    controls.autoRotate = false;
+    keysHeld.add(e.code);
+    e.preventDefault();
+  }
+  // Cluster shortcuts 1-6
+  const clusterMap = {'Digit1':'overview','Digit2':'highlight','Digit3':'piku',
+                      'Digit4':'ai','Digit5':'terminal','Digit6':'macos','Digit7':'infra'};
+  if (clusterMap[e.code]) flyTo(clusterMap[e.code]);
+});
+window.addEventListener('keyup', e => keysHeld.delete(e.code));
+
 
 // ── Camera fly-to animation ────────────────────────────────────────────────
 let targetCamPos  = CLUSTER_CAMERAS.overview.pos.clone();
@@ -891,6 +934,42 @@ function animate() {
       camera.position.lerp(targetCamPos, 0.04);
       controls.target.lerp(targetCamLook, 0.04);
     }
+  }
+
+  // Keyboard camera movement
+  if (keysHeld.size > 0 && !flying) {
+    const orbitSpeed = 0.025;
+    const zoomSpeed  = 0.96;
+    const up = new THREE.Vector3(0, 1, 0);
+    const toCamera = camera.position.clone().sub(controls.target);
+
+    if (keysHeld.has('KeyA') || keysHeld.has('ArrowLeft'))
+      toCamera.applyAxisAngle(up, orbitSpeed);
+    if (keysHeld.has('KeyD') || keysHeld.has('ArrowRight'))
+      toCamera.applyAxisAngle(up, -orbitSpeed);
+
+    // Vertical orbit (clamp polar angle)
+    if (keysHeld.has('KeyW') || keysHeld.has('ArrowUp')) {
+      const right = new THREE.Vector3().crossVectors(toCamera, up).normalize();
+      toCamera.applyAxisAngle(right, -orbitSpeed);
+    }
+    if (keysHeld.has('KeyS') || keysHeld.has('ArrowDown')) {
+      const right = new THREE.Vector3().crossVectors(toCamera, up).normalize();
+      toCamera.applyAxisAngle(right, orbitSpeed);
+    }
+
+    // Zoom
+    if (keysHeld.has('Equal') || keysHeld.has('KeyQ'))
+      toCamera.multiplyScalar(zoomSpeed);
+    if (keysHeld.has('Minus') || keysHeld.has('KeyE'))
+      toCamera.multiplyScalar(1 / zoomSpeed);
+
+    // Clamp min/max distance
+    const dist = toCamera.length();
+    if (dist < controls.minDistance) toCamera.setLength(controls.minDistance);
+    if (dist > controls.maxDistance) toCamera.setLength(controls.maxDistance);
+
+    camera.position.copy(controls.target).add(toCamera);
   }
 
   controls.update();
