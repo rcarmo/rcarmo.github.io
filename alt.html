@@ -121,13 +121,13 @@
 <script>
 // ── Data ────────────────────────────────────────────────────────────────
 const CLUSTERS = {
-  highlight: { pos: [0,0,0],     col: '#88ddd5', projects: [
+  highlight: { pos: [0,0,0],     col: '#7ab8c0', projects: [
     { id:'piclaw', name:'piclaw', stars:526, lang:'TypeScript', desc:'Self-hosted AI agent workspace — streaming UI, persistent state, built-in tools.', url:'/projects/piclaw.html' }
   ]},
-  piku:      { pos: [-22,0,-8],  col: '#e8c870', projects: [
+  piku:      { pos: [-22,0,-8],  col: '#c4a850', projects: [
     { id:'piku', name:'piku/piku', stars:6569, lang:'Python', desc:'The tiniest PaaS — git push deployments to your own server.', url:'/projects/piku.html' }
   ]},
-  ai:        { pos: [20,0,-12],  col: '#88d4a8', projects: [
+  ai:        { pos: [20,0,-12],  col: '#7aaa88', projects: [
     { id:'vibes',        name:'vibes',        stars:142, lang:'Python',     desc:'Mobile-first web UI for AI agents — ACP and Pi over RPC.', url:'/projects/vibes.html' },
     { id:'agentbox',     name:'agentbox',     stars:97,  lang:'Dockerfile', desc:'Docker sandbox for coding agents — opt-in services, DinD.', url:'/projects/agentbox.html' },
     { id:'umcp',         name:'umcp',         stars:11,  lang:'Python',     desc:'Micro MCP server — zero deps, decorator-based.', url:'/projects/umcp.html' },
@@ -135,20 +135,20 @@ const CLUSTERS = {
     { id:'feed-summarizer', name:'feed-summarizer', stars:27, lang:'Python', desc:'LLM-powered RSS digest — powers feeds.carmo.io.', url:'/projects/feed-summarizer.html' },
     { id:'pve-microvm',  name:'pve-microvm',  stars:3,   lang:'Shell',      desc:'QEMU microvm for Proxmox — KVM isolation, <200ms boot.', url:'/projects/pve-microvm.html' },
   ]},
-  terminal:  { pos: [22,0,14],   col: '#b8a0e0', projects: [
+  terminal:  { pos: [22,0,14],   col: '#9880c0', projects: [
     { id:'webterm',      name:'webterm',      stars:106, lang:'Go',         desc:'Go web terminal — multi-session dashboard for AI agents.', url:'/projects/webterm.html' },
     { id:'ghostty-web',  name:'ghostty-web',  stars:5,   lang:'TypeScript', desc:'Ghostty terminal sessions in a browser.', url:'/projects/ghostty-web.html' },
     { id:'go-rdp',       name:'go-rdp',       stars:9,   lang:'Go',         desc:'Browser-based RDP client — full MS-RDPBCGR spec.', url:'/projects/go-rdp.html' },
     { id:'go-te',        name:'go-te',        stars:7,   lang:'Go',         desc:'VT100/VT520 terminal library for Go — pyte-faithful.', url:'/projects/go-te.html' },
     { id:'gotel',        name:'gotel',        stars:5,   lang:'Go',         desc:'Self-contained OTel collector — SQLite + built-in viewer.', url:'/projects/gotel.html' },
   ]},
-  macos:     { pos: [-18,0,16],  col: '#e8aa80', projects: [
+  macos:     { pos: [-18,0,16],  col: '#c48860', projects: [
     { id:'PhotosExport', name:'PhotosExport', stars:280, lang:'Swift',      desc:'Export your complete Apple Photos library.', url:'/projects/PhotosExport.html' },
     { id:'drawterm',     name:'drawterm',     stars:26,  lang:'C',          desc:'Plan 9 drawterm — HiDPI, Metal rendering, clipboard bridge.', url:'/projects/drawterm.html' },
     { id:'homekit-steam-user-switcher', name:'homekit-steam', stars:41, lang:'Python', desc:'Switch Steam accounts via HomeKit.', url:'/projects/homekit-steam-user-switcher.html' },
     { id:'macemu',       name:'macemu',       stars:3,   lang:'C++',        desc:'Basilisk II / SheepShaver for Raspberry Pi.', url:'/projects/macemu.html' },
   ]},
-  infra:     { pos: [2,0,26],    col: '#e890a0', projects: [
+  infra:     { pos: [2,0,26],    col: '#c07080', projects: [
     { id:'piku2',        name:'piku/piku',    stars:6569, lang:'Python',    desc:'See the piku garden — listed here for routing.', url:'/projects/piku.html' },
     { id:'ground-init',  name:'ground-init',  stars:64,  lang:'Python',     desc:'Idempotent Linux bootstrap — YAML-driven, zero deps.', url:'/projects/ground-init.html' },
     { id:'azure-stable-diffusion', name:'azure-SD', stars:44, lang:'Makefile', desc:'One-command Stable Diffusion on Azure GPU spot.', url:'/projects/azure-stable-diffusion.html' },
@@ -217,7 +217,7 @@ function nearestClusterKey(x, z) {
 const canvas = document.getElementById('cv');
 const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer:true });
 const scene  = new BABYLON.Scene(engine);
-scene.clearColor = new BABYLON.Color4(0xa1/255, 0xb3/255, 0xf0/255, 1);
+scene.clearColor = new BABYLON.Color4(0xc8/255, 0xd8/255, 0xf4/255, 1);  // soft sky
 
 // Camera (ArcRotateCamera — orbit built in)
 const camera = new BABYLON.ArcRotateCamera('cam',
@@ -232,11 +232,11 @@ camera.attachControl(canvas, true);
 
 // Lights
 const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.4, -0.8, -0.3), scene);
-sun.intensity = 1.4;
+sun.intensity = 0.55;  // very soft key light
 const fill = new BABYLON.HemisphericLight('fill', new BABYLON.Vector3(0, 1, 0), scene);
-fill.intensity     = 0.9;
-fill.diffuse       = new BABYLON.Color3(1, 0.97, 0.9);
-fill.groundColor   = new BABYLON.Color3(0.3, 0.25, 0.2);
+fill.intensity     = 1.6;  // strong warm fill — nearly flat lighting
+fill.diffuse       = new BABYLON.Color3(0.98, 0.96, 0.88);
+fill.groundColor   = new BABYLON.Color3(0.55, 0.50, 0.42);  // warmer ground bounce
 
 // ── Material helpers ──────────────────────────────────────────────────────
 function hex3(h) {
@@ -250,7 +250,7 @@ function darkHex(h) {
 function toonMat(name, hexCol, emFactor) {
   const m = new BABYLON.StandardMaterial(name, scene);
   m.diffuseColor  = hex3(hexCol);
-  m.emissiveColor = hex3(hexCol).scale(emFactor || 0.12);
+  m.emissiveColor = hex3(hexCol).scale(emFactor || 0.08);
   m.specularColor = BABYLON.Color3.Black();
   return m;
 }
@@ -262,7 +262,7 @@ function outlineOn(mesh, hexCol, width) {
 
 // ── Ground ────────────────────────────────────────────────────────────────
 const ground = BABYLON.MeshBuilder.CreateGround('ground', {width:160, height:160, subdivisions:2}, scene);
-ground.material = toonMat('gmat', '#88dd44', 0.06);
+ground.material = toonMat('gmat', '#8aaa6a', 0.06);  // sage
 
 // ── Cluster disc ─────────────────────────────────────────────────────────
 function makeDisc(pos, col) {
@@ -274,24 +274,59 @@ function makeDisc(pos, col) {
 }
 
 // ── Path strip ────────────────────────────────────────────────────────────
-function makePath(ax, az, bx, bz, trimA, trimB) {
+function makePath(edgeKey, ax, az, bx, bz, trimA, trimB) {
   const dx = bx-ax, dz = bz-az;
   const len = Math.hypot(dx, dz);
   if (len < trimA+trimB+1) return;
   const u = dx/len, v = dz/len;
+  // Trim both ends to stay outside garden perimeters
   const sx = ax+u*trimA, sz = az+v*trimA;
   const ex = bx-u*trimB, ez = bz-v*trimB;
-  const newLen = Math.hypot(ex-sx, ez-sz);
-  const cx = (sx+ex)/2, cz = (sz+ez)/2;
-  const path = BABYLON.MeshBuilder.CreateGround('path', {width:2.8, height:newLen}, scene);
-  path.position.set(cx, 0.06, cz);
-  path.rotation.y = Math.atan2(-(ex-sx), ez-sz);
-  path.material   = toonMat('pmat', '#e8d09a', 0.08);
+
+  // Build a smooth quadratic Bézier with a slight organic offset at midpoint
+  // Perpendicular to path direction: adds gentle curve rather than ruler-straight
+  const perpX = -v, perpZ = u;   // rotate 90°
+  const sway  = (Math.random()-0.5) * Math.hypot(ex-sx, ez-sz) * 0.08;
+  const mx = (sx+ex)*0.5 + perpX*sway;
+  const mz = (sz+ez)*0.5 + perpZ*sway;
+
+  const N = 24;   // curve segments
+  const pts = [];
+  for (let i=0; i<=N; i++) {
+    const t = i/N;
+    const mt = 1-t;
+    // Quadratic Bézier: B(t) = (1-t)²·P0 + 2(1-t)t·P1 + t²·P2
+    pts.push([
+      mt*mt*sx + 2*mt*t*mx + t*t*ex,
+      mt*mt*sz + 2*mt*t*mz + t*t*ez,
+    ]);
+  }
+
+  // Build ribbon: two edge paths offset perpendicular to the curve tangent
+  const hw = 1.4;  // half-width
+  const left = [], right = [];
+  for (let i=0; i<pts.length; i++) {
+    const p = pts[i];
+    // Tangent at this point
+    const ip = Math.max(0, i-1), in_ = Math.min(pts.length-1, i+1);
+    const tx = pts[in_][0]-pts[ip][0], tz = pts[in_][1]-pts[ip][1];
+    const tl = Math.hypot(tx,tz)||1;
+    const nx = -tz/tl, nz = tx/tl;  // normal (perpendicular)
+    left.push( new BABYLON.Vector3(p[0]+nx*hw, 0.06, p[1]+nz*hw));
+    right.push(new BABYLON.Vector3(p[0]-nx*hw, 0.06, p[1]-nz*hw));
+  }
+
+  const ribbon = BABYLON.MeshBuilder.CreateRibbon('path', {
+    pathArray: [left, right], sideOrientation: BABYLON.Mesh.DOUBLESIDE
+  }, scene);
+  ribbon.material = toonMat('pmat', '#c8aa78', 0.07);
+  // Store curve for camera path-following
+  if (edgeKey) PATH_CURVES[edgeKey] = pts;
 }
 
 // ── Bush (stacked cubes facing centre) ────────────────────────────────────
 const bushMats = [
-  toonMat('b0','#2eaa2e',0.07), toonMat('b1','#228822',0.05), toonMat('b2','#3dc83d',0.09)
+  toonMat('b0','#4a7a3a',0.06), toonMat('b1','#3d6a2e',0.04), toonMat('b2','#557a3a',0.07)
 ];
 function makeBush(x, z, scale, cx, cz) {
   const angle  = Math.atan2(cz-z, cx-x);
@@ -307,7 +342,7 @@ function makeBush(x, z, scale, cx, cz) {
     box.material  = bushMats[Math.floor(Math.random()*3)];
     box.rotation.y = angle + (Math.random()-0.5)*0.45 + i*0.15;
     box.position.set(x+(Math.random()-0.5)*0.12*scale, yBase+h*0.5, z+(Math.random()-0.5)*0.12*scale);
-    outlineOn(box, '#228822', 0.025);
+    outlineOn(box, '#2a5020', 0.022);
     yBase += h*0.75;
   }
 }
@@ -390,13 +425,14 @@ function makeBillboard(x, z, proj, accentHex, logoImg) {
 
 // ── Build scene ───────────────────────────────────────────────────────────
 // Paths
+const PATH_CURVES = {};  // edgeKey → [[x,z], ...] (trimmed Bézier points)
 PATH_EDGES.forEach(e => {
   const [k,j] = e.split('--');
   const a=CLUSTERS[k].pos, b=CLUSTERS[j].pos;
   const rK=CLUSTERS[k].projects.length<=2?5:9;
   const rJ=CLUSTERS[j].projects.length<=2?5:9;
   const dKJ=Math.hypot(a[0]-b[0],a[2]-b[2]);
-  makePath(a[0],a[2],b[0],b[2], Math.min(rK+3,dKJ*0.40), Math.min(rJ+3,dKJ*0.40));
+  makePath(e, a[0],a[2],b[0],b[2], Math.min(rK+3,dKJ*0.40), Math.min(rJ+3,dKJ*0.40));
 });
 
 // Clusters
@@ -484,15 +520,15 @@ Object.entries(CLUSTERS).forEach(([key,cluster]) => {
 
 // piclaw hero icosahedron
 const heroMesh = BABYLON.MeshBuilder.CreateIcoSphere('hero',{radius:1.2,subdivisions:1},scene);
-heroMesh.material=toonMat('hmat','#88ddd5',0.18);
+heroMesh.material=toonMat('hmat','#7ab8c0',0.18);
 heroMesh.position.set(0,5.5,0);
-outlineOn(heroMesh,'#44aa99',0.06);
+outlineOn(heroMesh,'#3a7878',0.06);
 
 // piku obelisk
 const mono = BABYLON.MeshBuilder.CreateBox('mono',{width:0.8,height:7,depth:0.8},scene);
-mono.material=toonMat('mmat','#e8c870',0.15);
+mono.material=toonMat('mmat','#c4a850',0.15);
 mono.position.set(-22,3,-8);
-outlineOn(mono,'#aa8830',0.05);
+outlineOn(mono,'#886820',0.05);
 
 // Animations
 scene.registerBeforeRender(()=>{
@@ -541,39 +577,74 @@ function flyToBillboard(bill) {
   const startKey = nearestClusterKey(camera.target.x, camera.target.z);
   const route = bfsPath(startKey, clusterKey);
 
-  // Build waypoint sequence following BFS cluster route
-  const PATH_H=5, ease=new BABYLON.SineEase();
+  const ease=new BABYLON.SineEase();
   ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
 
+  // ArcRotateCamera final state:
+  //   target = the billboard itself
+  //   alpha  = angle pointing FROM billboard TOWARD cluster centre
+  //            → camera sits inward from the sign, looking outward at it
+  //   radius = comfortable reading distance
+  //   beta   = slight upward look
   const cpos = CLUSTERS[clusterKey].pos;
-  const inX = x + (cpos[0]-x)/(Math.hypot(cpos[0]-x,cpos[2]-z)||1)*5;
-  const inZ = z + (cpos[2]-z)/(Math.hypot(cpos[0]-x,cpos[2]-z)||1)*5;
+  const dx = cpos[0]-x, dz = cpos[2]-z, dist = Math.hypot(dx,dz)||1;
+  const endAlpha  = Math.atan2(dz/dist, dx/dist);   // inward direction
+  const endTarget = new BABYLON.Vector3(x, bill.position.y*0.6, z);
+  const endRadius = 7;
+  const endBeta   = Math.PI / 3.8;
 
-  // Animate target along cluster centres, then to billboard
-  const totalFrames=80+route.length*50;
-  const tKeys=[{frame:0,value:camera.target.clone()}];
-  route.forEach((k,i)=>{
-    const cp=CLUSTERS[k].pos;
-    tKeys.push({frame:40+i*50,value:new BABYLON.Vector3(cp[0],0,cp[2])});
-  });
-  tKeys.push({frame:totalFrames,value:new BABYLON.Vector3(inX,bill.position.y,inZ)});
+  // Gather world positions by following the actual stored Bézier curves
+  const worldPts = [{ x:camera.target.x, y:0, z:camera.target.z }];
+
+  for (let i = 0; i < route.length-1; i++) {
+    const fromKey = route[i], toKey = route[i+1];
+    const edgeKey = [fromKey,toKey].sort().join('--');
+    const curve   = PATH_CURVES[edgeKey];
+    if (curve && curve.length) {
+      // Determine traversal direction: pts[0] is near the alphabetically-first cluster
+      const [ek0,ek1] = edgeKey.split('--');
+      const forward   = fromKey === ek0;
+      const pts = forward ? curve : [...curve].reverse();
+      // Skip every 3rd point to reduce keyframe count (still smooth)
+      pts.forEach((p,j) => { if (j%3===0 || j===pts.length-1) worldPts.push({x:p[0],y:0,z:p[1]}); });
+    } else {
+      const cp = CLUSTERS[toKey].pos;
+      worldPts.push({x:cp[0],y:0,z:cp[2]});
+    }
+  }
+  // Final approach to billboard
+  const cposV = CLUSTERS[clusterKey].pos;
+  worldPts.push({x:cposV[0], y:0,        z:cposV[2]});
+  worldPts.push({x:endTarget.x, y:endTarget.y, z:endTarget.z});
+
+  // Build keyframes: ~10 frames per world point
+  const framesPerPt = 10;
+  const totalFrames = Math.max(80, (worldPts.length-1) * framesPerPt);
+  const tKeys = worldPts.map((p,i) => ({
+    frame: Math.round(i * (totalFrames/(worldPts.length-1))),
+    value: new BABYLON.Vector3(p.x, p.y, p.z)
+  }));
 
   const tAnim=new BABYLON.Animation('ft_target','target',60,
     BABYLON.Animation.ANIMATIONTYPE_VECTOR3, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-  tAnim.setEasingFunction(ease);
-  tAnim.setKeys(tKeys);
+  tAnim.setEasingFunction(ease); tAnim.setKeys(tKeys);
 
   const rAnim=new BABYLON.Animation('ft_radius','radius',60,
     BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
   rAnim.setEasingFunction(ease);
-  rAnim.setKeys([{frame:0,value:camera.radius},{frame:totalFrames,value:10}]);
+  rAnim.setKeys([{frame:0,value:camera.radius},{frame:totalFrames,value:endRadius}]);
+
+  const aAnim=new BABYLON.Animation('ft_alpha','alpha',60,
+    BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+  aAnim.setEasingFunction(ease);
+  aAnim.setKeys([{frame:0,value:camera.alpha},{frame:totalFrames,value:endAlpha}]);
 
   const bAnim=new BABYLON.Animation('ft_beta','beta',60,
     BABYLON.Animation.ANIMATIONTYPE_FLOAT, BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
   bAnim.setEasingFunction(ease);
-  bAnim.setKeys([{frame:0,value:camera.beta},{frame:totalFrames,value:Math.PI/5}]);
+  bAnim.setKeys([{frame:0,value:camera.beta},{frame:totalFrames,value:endBeta}]);
 
-  camera.animations = [tAnim, rAnim, bAnim];
+  camera.animations = [tAnim, rAnim, aAnim, bAnim];
   scene.beginAnimation(camera,0,totalFrames,false,1,()=>{
     camera.animations.length=0;
     openFocus(bill);
