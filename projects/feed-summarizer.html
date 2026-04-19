@@ -4,254 +4,296 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>feed-summarizer — Rui Carmo</title>
-<meta name="description" content="The feed summarizer that powers feeds.carmo.io">
+<meta name="description" content="LLM-powered RSS digest — powers feeds.carmo.io.">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
-  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+:root {
+  --bg: #08090a;
+  --card: #111214;
+  --border: #1e2024;
+  --border2: #2a2d33;
+  --text: #f0f2f5;
+  --muted: #7a8190;
+  --dim: #464c5a;
+  --accent: #4f8ef7;
+  --accent-glow: rgba(79,142,247,.15);
+  --green: #34d399;
+  --amber: #fbbf24;
+  --red: #f87171;
+  --purple: #a78bfa;
+  --radius: 10px;
+  --radius-lg: 16px;
+  --gap: clamp(1rem, 4vw, 2rem);
+  --max: 960px;
+  --feature-grid: repeat(auto-fill, minmax(260px, 1fr));
+}
+@media (prefers-color-scheme: light) {
   :root {
-    --bg: #0d1117; --surface: #161b22; --surface2: #21262d;
-    --border: #30363d; --text: #e6edf3; --muted: #8b949e;
-    --accent: #58a6ff; --accent2: #f78166; --tag-bg: #21262d;
-    --tag-text: #79c0ff; --star: #e3b341; --radius: 8px; --gap: 1.5rem;
-    --max: 860px;
+    --bg: #f8f9fb;
+    --card: #ffffff;
+    --border: #e4e7ed;
+    --border2: #d1d5db;
+    --text: #111827;
+    --muted: #6b7280;
+    --dim: #9ca3af;
+    --accent: #2563eb;
+    --accent-glow: rgba(37,99,235,.08);
+    --green: #059669;
+    --amber: #d97706;
+    --red: #dc2626;
+    --purple: #7c3aed;
   }
-  @media (prefers-color-scheme: light) {
-    :root {
-      --bg: #f6f8fa; --surface: #ffffff; --surface2: #f0f3f6;
-      --border: #d0d7de; --text: #1f2328; --muted: #656d76;
-      --accent: #0969da; --accent2: #cf222e;
-      --tag-bg: #ddf4ff; --tag-text: #0550ae; --star: #9a6700;
-    }
-  }
-  html { scroll-behavior: smooth; }
-  body { background: var(--bg); color: var(--text);
-    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-    font-size: 15px; line-height: 1.7; }
-  a { color: var(--accent); text-decoration: none; }
-  a:hover { text-decoration: underline; }
-  code, .mono { font-family: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace; font-size: 0.875em; }
-  .wrap { max-width: var(--max); margin: 0 auto; padding: 0 var(--gap); }
-  /* Nav */
-  nav { border-bottom: 1px solid var(--border); padding: 0.7rem 0; font-size: 0.875rem; color: var(--muted); }
-  nav .wrap { display: flex; align-items: center; gap: 0.6rem; }
-  nav a { color: var(--muted); } nav a:hover { color: var(--accent); }
-  nav .sep { opacity: 0.4; }
-  /* Hero */
-  .hero { padding: 3rem 0 2.5rem; border-bottom: 1px solid var(--border); }
-  .hero h1 { font-size: 2.2rem; font-weight: 700; letter-spacing: -0.02em; }
-  .hero h1 a { color: var(--text); } .hero h1 a:hover { color: var(--accent); text-decoration: none; }
-  .hero .tagline { font-size: 1.1rem; color: var(--muted); margin: 0.5rem 0 1.25rem; max-width: 640px; }
-  .stats { display: flex; flex-wrap: wrap; gap: 1.2rem; font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
-  .stat-stars { color: var(--star); font-weight: 600; }
-  .lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 3px; }
-  .lang-TypeScript{background:#3178c6} .lang-Python{background:#3572A5}
-  .lang-Go{background:#00ADD8} .lang-Swift{background:#F05138}
-  .lang-C{background:#555555} .lang-Cpp{background:#f34b7d}
-  .lang-Dockerfile{background:#384d54} .lang-Shell{background:#89e051}
-  .lang-misc{background:#8b949e}
-  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; margin-bottom: 1.25rem; }
-  .tag { background: var(--tag-bg); color: var(--tag-text); font-size: 0.75rem; padding: 0.15rem 0.55rem; border-radius: 2em; }
-  .status-badge { font-size: 0.75rem; padding: 0.2rem 0.65rem; border-radius: 2em; font-weight: 600; }
-  .status-active { background: #1a3e1a; color: #56d364; }
-  .status-stable { background: #1a2e3e; color: #58a6ff; }
-  .status-maintained { background: #2e1a3e; color: #bc8cff; }
-  .status-archived { background: #2e2010; color: #e3b341; }
-  @media (prefers-color-scheme: light) {
-    .status-active { background: #dafbe1; color: #1a7f37; }
-    .status-stable { background: #ddf4ff; color: #0969da; }
-    .status-maintained { background: #fbefff; color: #8250df; }
-    .status-archived { background: #fff8c5; color: #9a6700; }
-  }
-  .cta-links { display: flex; flex-wrap: wrap; gap: 0.75rem; }
-  .btn { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--surface);
-    border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem;
-    font-size: 0.875rem; font-weight: 500; color: var(--text); transition: border-color 0.15s; }
-  .btn:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
-  /* TOC */
-  .toc { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 1rem 1.25rem; margin: 2rem 0; display: inline-block; min-width: 200px; }
-  .toc h3 { font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 0.6rem; }
-  .toc ol { padding-left: 1.25rem; font-size: 0.875rem; line-height: 2; }
-  .toc a { color: var(--muted); } .toc a:hover { color: var(--accent); }
-  /* Sections */
-  section { padding: 2.5rem 0; border-bottom: 1px solid var(--border); }
-  section:last-of-type { border-bottom: none; }
-  .section-label { font-size: 0.8rem; font-weight: 600; text-transform: uppercase;
-    letter-spacing: 0.07em; color: var(--muted); margin-bottom: 1rem; }
-  section h2 { font-size: 1.35rem; font-weight: 600; margin-bottom: 1rem; }
-  section p { max-width: 680px; color: var(--text); margin-bottom: 0.75rem; }
-  section ul { max-width: 680px; padding-left: 1.5rem; margin-bottom: 0.75rem; }
-  section li { margin-bottom: 0.35rem; }
-  /* Highlights */
-  .highlights { display: grid; grid-template-columns: repeat(auto-fill, minmax(260px,1fr)); gap: 0.75rem; margin-top: 0.5rem; }
-  .highlight { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius);
-    padding: 0.85rem 1rem; font-size: 0.9rem; }
-  .highlight::before { content: "→"; color: var(--accent); margin-right: 0.5rem; }
-  /* Timeline */
-  .timeline { display: flex; flex-direction: column; gap: 0; margin-top: 0.5rem; }
-  .tl-item { display: grid; grid-template-columns: 9rem 1fr; gap: 1rem; padding: 0.6rem 0;
-    border-top: 1px solid var(--border); font-size: 0.875rem; }
-  .tl-item:first-child { border-top: none; }
-  .tl-date { color: var(--muted); white-space: nowrap; font-size: 0.8rem; padding-top: 0.1rem; }
-  .tl-msg { color: var(--text); word-break: break-word; }
-  .tl-msg .sha { font-family: ui-monospace, monospace; font-size: 0.75em; color: var(--muted); margin-left: 0.5rem; }
-  /* Posts */
-  .post-list { display: flex; flex-direction: column; gap: 0.5rem; }
-  .post-item { display: grid; grid-template-columns: 6rem 1fr; gap: 0.75rem; font-size: 0.9rem; }
-  .post-date { color: var(--muted); font-size: 0.8rem; padding-top: 0.15rem; }
-  /* Releases */
-  .release-list { display: flex; flex-direction: column; gap: 1rem; }
-  .release { background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
-  .release-header { display: flex; align-items: baseline; gap: 0.75rem; margin-bottom: 0.4rem; }
-  .release-tag { font-weight: 600; font-family: ui-monospace, monospace; color: var(--accent); }
-  .release-name { color: var(--text); }
-  .release-date { color: var(--muted); font-size: 0.8rem; margin-left: auto; }
-  .release-body { font-size: 0.85rem; color: var(--muted); white-space: pre-wrap; word-break: break-word; }
-  /* Footer */
-  footer { text-align: center; color: var(--muted); font-size: 0.825rem;
-    padding: 2.5rem var(--gap) 1.5rem; border-top: 1px solid var(--border); margin-top: 1rem; }
-  footer a { color: var(--muted); } footer a:hover { color: var(--accent); }
+}
+html { scroll-behavior: smooth; }
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Helvetica, Arial, sans-serif;
+  font-size: 15px;
+  line-height: 1.65;
+  -webkit-font-smoothing: antialiased;
+}
+a { color: var(--accent); text-decoration: none; }
+a:hover { text-decoration: underline; }
+code { font-family: ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: .875em; background: var(--border); padding: .15em .35em; border-radius: 4px; }
+/* ── Topbar ── */
+.topbar { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+.topbar-inner { max-width: var(--max); margin: 0 auto; padding: .75rem var(--gap); display: flex; align-items: center; gap: .75rem; font-size: .8rem; color: var(--muted); }
+.topbar-inner a { color: var(--muted); font-weight: 500; } .topbar-inner a:hover { color: var(--text); text-decoration: none; }
+.topbar-inner .sep { color: var(--border2); }
+.topbar-inner .current { color: var(--text); font-weight: 600; }
+/* ── Hero ── */
+.hero { padding: 3.5rem var(--gap) 2.5rem; max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; }
+@media (max-width: 600px) { .hero { grid-template-columns: 1fr; } .hero-logo { display: none; } }
+.hero-logo img { width: 80px; height: 80px; border-radius: 18px; box-shadow: 0 0 0 1px var(--border), 0 8px 24px rgba(0,0,0,.3); }
+.hero h1 { font-size: clamp(1.6rem, 5vw, 2.6rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.15; }
+.hero h1 a { color: var(--text); } .hero h1 a:hover { color: var(--accent); text-decoration: none; }
+.hero .tagline { font-size: clamp(.95rem, 2.5vw, 1.2rem); color: var(--muted); margin: .6rem 0 1.5rem; max-width: 540px; line-height: 1.5; }
+.meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem 1.1rem; font-size: .82rem; color: var(--muted); margin-bottom: 1.5rem; }
+.meta-stars { color: var(--amber); font-weight: 700; }
+.meta-lang { display: inline-flex; align-items: center; gap: .35rem; }
+.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
+.dot-TypeScript{background:#3178c6}.dot-Python{background:#3572A5}.dot-Go{background:#00ADD8}
+.dot-Swift{background:#F05138}.dot-C{background:#555}.dot-Cpp{background:#f34b7d}
+.dot-Dockerfile{background:#384d54}.dot-Shell{background:#89e051}.dot-misc{background:#7a8190}
+.badge { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .65rem; border-radius: 2em; font-size: .72rem; font-weight: 600; letter-spacing: .02em; }
+.badge-active   { background: rgba(52,211,153,.12); color: #34d399; border: 1px solid rgba(52,211,153,.25); }
+.badge-stable   { background: rgba(79,142,247,.12); color: #4f8ef7; border: 1px solid rgba(79,142,247,.25); }
+.badge-maintained{background: rgba(167,139,250,.12); color: #a78bfa; border: 1px solid rgba(167,139,250,.25); }
+.badge-archived { background: rgba(251,191,36,.12); color: #fbbf24; border: 1px solid rgba(251,191,36,.25); }
+@media (prefers-color-scheme: light) {
+  .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
+  .badge-stable{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
+  .badge-maintained{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd}
+  .badge-archived{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+}
+.topic-list { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.5rem; }
+.topic { font-size: .72rem; background: var(--card); border: 1px solid var(--border2); color: var(--muted); padding: .18rem .6rem; border-radius: 2em; }
+.cta-row { display: flex; flex-wrap: wrap; gap: .65rem; }
+.btn { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem 1.1rem; border-radius: var(--radius); font-size: .85rem; font-weight: 500; transition: all .15s; }
+.btn-primary { background: var(--accent); color: #fff; border: none; } .btn-primary:hover { opacity: .9; text-decoration: none; filter: brightness(1.1); }
+.btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border2); } .btn-ghost:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+/* ── Divider ── */
+.divider { border: none; border-top: 1px solid var(--border); max-width: var(--max); margin: 0 auto; }
+/* ── Content wrap ── */
+.wrap { max-width: var(--max); margin: 0 auto; padding: 2.5rem var(--gap); }
+/* ── About ── */
+.about-text { font-size: 1.05rem; line-height: 1.75; color: var(--text); max-width: 680px; }
+/* ── Features ── */
+.section-eyebrow { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: .5rem; }
+.section-title { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 1.75rem; }
+.features-grid { display: grid; grid-template-columns: var(--feature-grid); gap: 1px; background: var(--border); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
+.feature { background: var(--card); padding: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
+.feature-icon { font-size: 1.4rem; line-height: 1; }
+.feature-title { font-size: .9rem; font-weight: 600; color: var(--text); }
+.feature-body { font-size: .85rem; color: var(--muted); line-height: 1.6; }
+/* ── Architecture ── */
+.arch-text { font-size: .95rem; color: var(--muted); max-width: 680px; line-height: 1.75; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
+/* ── Releases ── */
+.releases { display: flex; flex-direction: column; gap: .75rem; }
+.release { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
+.release-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: .6rem; margin-bottom: .3rem; }
+.release-tag { font-family: ui-monospace, monospace; font-size: .82rem; font-weight: 700; color: var(--accent); background: var(--accent-glow); padding: .1rem .45rem; border-radius: 4px; }
+.release-name { font-weight: 500; font-size: .9rem; }
+.release-date { color: var(--dim); font-size: .78rem; margin-left: auto; }
+.release-body { font-size: .82rem; color: var(--muted); white-space: pre-wrap; word-break: break-word; max-height: 200px; overflow: hidden; }
+/* ── History ── */
+.history { display: flex; flex-direction: column; }
+.commit { display: grid; grid-template-columns: 7rem 1fr auto; gap: .75rem; padding: .55rem 0; border-bottom: 1px solid var(--border); font-size: .82rem; align-items: start; }
+.commit:last-child { border-bottom: none; }
+.commit-date { color: var(--dim); white-space: nowrap; padding-top: .05rem; }
+.commit-msg { color: var(--muted); word-break: break-word; }
+.commit-sha { font-family: ui-monospace, monospace; font-size: .72rem; color: var(--dim); white-space: nowrap; }
+/* ── Posts ── */
+.posts { display: flex; flex-direction: column; gap: .5rem; }
+.post { display: grid; grid-template-columns: 6.5rem 1fr; gap: .75rem; font-size: .875rem; }
+.post-date { color: var(--dim); white-space: nowrap; padding-top: .1rem; font-size: .78rem; }
+.post-title { color: var(--text); }
+.post-title:hover { color: var(--accent); }
+/* ── Stats bar ── */
+.stats-bar { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2.5rem; }
+.stat { background: var(--card); padding: 1.1rem 1.25rem; }
+.stat-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: .25rem; }
+.stat-value { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; color: var(--text); }
+.stat-sub { font-size: .75rem; color: var(--muted); margin-top: .1rem; }
+/* ── Footer ── */
+footer { max-width: var(--max); margin: 0 auto; padding: 2rem var(--gap); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
+footer .left { font-size: .8rem; color: var(--dim); }
+footer .right { display: flex; gap: 1.5rem; font-size: .8rem; }
+footer .right a { color: var(--muted); } footer .right a:hover { color: var(--text); }
 </style>
 </head>
 <body>
 
-<nav>
-  <div class="wrap">
+<header class="topbar">
+  <div class="topbar-inner">
     <a href="/">rcarmo.github.io</a>
     <span class="sep">/</span>
-    <span>feed-summarizer</span>
+    <span class="current">feed-summarizer</span>
   </div>
-</nav>
+</header>
 
-<div class="hero">
+<main>
+  <div class="hero">
+    <div class="hero-content">
+      <h1><a href="https://github.com/rcarmo/feed-summarizer" target="_blank" rel="noopener">feed-summarizer</a></h1>
+      <p class="tagline">LLM-powered RSS digest — powers feeds.carmo.io.</p>
+      <div class="meta-row">
+        <span class="meta-stars">★ 27</span>
+        <span>⑂ 2</span>
+        <span class="meta-lang"><span class="dot dot-Python"></span>Python</span>
+        <span class="badge badge-active">active</span>
+      </div>
+      
+      <div class="cta-row">
+        <a class="btn btn-primary" href="https://github.com/rcarmo/feed-summarizer" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> View on GitHub</a>
+        
+      </div>
+    </div>
+    <div class="hero-logo"><img src="../assets/logos/feed-summarizer.png" alt="feed-summarizer logo"></div>
+  </div>
+
+  <hr class="divider">
+
   <div class="wrap">
-    <h1><a href="https://github.com/rcarmo/feed-summarizer" target="_blank" rel="noopener">feed-summarizer</a></h1>
-    <p class="tagline">The feed summarizer that powers feeds.carmo.io</p>
-    <div class="stats">
-      <span class="stat-stars">★ 27</span>
-      <span>⑂ 2</span>
-      <span><span class="lang-dot lang-Python"></span>Python</span>
-      <span class="mono">2025-11</span>
-      <span class="status-badge status-active">active</span>
-    </div>
-    <div class="tags">
+    <div class="section-eyebrow">About</div>
+    <p class="about-text">A daily RSS/Atom summarizer that fetches feeds, extracts full article text, and generates concise summaries using a local or cloud LLM. The output is the daily digest at feeds.carmo.io. Designed to run on a low-power ARM server as a cron job — no daemon, no queue, no database.</p>
+  </div>
+
+  <div class="wrap">
+  <div class="stats-bar">
+    <div class="stat"><div class="stat-label">Stars</div><div class="stat-value">27</div><div class="stat-sub">on GitHub</div></div>
+    <div class="stat"><div class="stat-label">Forks</div><div class="stat-value">2</div><div class="stat-sub">public forks</div></div>
+    <div class="stat"><div class="stat-label">Language</div><div class="stat-value" style="font-size:1rem;padding-top:.35rem"><span class="dot dot-Python"></span> Python</div></div>
+    <div class="stat"><div class="stat-label">First release</div><div class="stat-value" style="font-size:1.1rem;padding-top:.25rem">2025</div></div>
+    <div class="stat"><div class="stat-label">Last active</div><div class="stat-value" style="font-size:.95rem;padding-top:.3rem">2026-01-01</div></div>
+  </div></div>
+
+  
+  <div class="wrap">
+    <div class="section-eyebrow">Features</div>
+    <div class="section-title">What it does</div>
+    <div class="features-grid">
       
-    </div>
-    <div class="cta-links">
-      <a class="btn" href="https://github.com/rcarmo/feed-summarizer" target="_blank" rel="noopener"><svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor" aria-hidden="true"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub</a>
-      
-    </div>
-    <div class="toc">
-      <h3>On this page</h3>
-      <ol><li><a href="#motivation">Motivation</a></li>
-        <li><a href="#architecture">Architecture</a></li>
-        <li><a href="#highlights">Highlights</a></li>
-        <li><a href="#history">History</a></li>
-        <li><a href="#posts">Posts</a></li></ol>
+      <div class="feature">
+        <div class="feature-icon">📰</div>
+        <div class="feature-title">Full-text extraction</div>
+        <div class="feature-body">Uses trafilatura to extract the actual article body, not just the RSS description snippet. Summaries are based on what the article actually says.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🤖</div>
+        <div class="feature-title">Local + cloud LLM</div>
+        <div class="feature-body">Supports Ollama for local inference (runs on a Raspberry Pi 4) and OpenAI/Anthropic for higher quality. Switch with one env var.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">⏰</div>
+        <div class="feature-title">Cron-friendly</div>
+        <div class="feature-body">A single Python script. No daemon, no database, no message queue. Runs as a cron job, outputs static HTML and JSON.</div>
+      </div>
+      <div class="feature">
+        <div class="feature-icon">🌐</div>
+        <div class="feature-title">Powers feeds.carmo.io</div>
+        <div class="feature-body">The live daily digest at feeds.carmo.io is generated by this script, running on a low-power ARM server.</div>
+      </div>
     </div>
   </div>
-</div>
-
-
-  <section id="motivation">
-    <div class="wrap">
-      <div class="section-label">Why it exists</div>
-      <h2>Motivation</h2>
-      <p>I read a lot of RSS feeds but can't keep up with volume. A nightly summary of what was actually interesting, generated by a local LLM, meant I could skim 50 feeds in 5 minutes instead of 50. This is the script that powers feeds.carmo.io.</p>
-    </div>
-  </section>
-
-  <section id="architecture">
-    <div class="wrap">
-      <div class="section-label">How it works</div>
-      <h2>Architecture</h2>
-      <p>Python script that fetches RSS/Atom feeds with feedparser, extracts full article text with trafilatura, and sends batched prompts to a local or cloud LLM. Outputs a static HTML digest page and a JSON summary. Runs as a cron job.</p>
-    </div>
-  </section>
-
-  <section id="highlights">
-    <div class="wrap">
-      <div class="section-label">Notable features</div>
-      <h2>Highlights</h2>
-      <div class="highlights">
-        <div class="highlight">Runs on a low-power ARM server — minimal resource requirements</div>
-        <div class="highlight">Full article extraction, not just RSS description snippets</div>
-        <div class="highlight">Supports local (Ollama) and cloud (OpenAI, Anthropic) LLMs</div>
-        <div class="highlight">Powers the public feeds.carmo.io daily digest</div>
+  
+  
+  
+  <div class="wrap">
+    <div class="section-eyebrow">History</div>
+    <div class="section-title">Recent commits</div>
+    <div class="history">
+      
+      <div class="commit">
+        <span class="commit-date">2026-01-01</span>
+        <span class="commit-msg">sync with private branch, reviewed duplicate logic</span>
+        <span class="commit-sha">4870d834</span>
+      </div>
+      <div class="commit">
+        <span class="commit-date">2025-12-20</span>
+        <span class="commit-msg">docs</span>
+        <span class="commit-sha">103328da</span>
+      </div>
+      <div class="commit">
+        <span class="commit-date">2025-12-20</span>
+        <span class="commit-msg">sync with private branch; refactoring</span>
+        <span class="commit-sha">9f490d05</span>
+      </div>
+      <div class="commit">
+        <span class="commit-date">2025-12-16</span>
+        <span class="commit-msg">item merging improvements</span>
+        <span class="commit-sha">3c65b572</span>
+      </div>
+      <div class="commit">
+        <span class="commit-date">2025-12-03</span>
+        <span class="commit-msg">cleanup</span>
+        <span class="commit-sha">7ea046ee</span>
+      </div>
+      <div class="commit">
+        <span class="commit-date">2025-11-29</span>
+        <span class="commit-msg">prompt</span>
+        <span class="commit-sha">55eccfaf</span>
+      </div>
+      <div class="commit">
+        <span class="commit-date">2025-11-29</span>
+        <span class="commit-msg">simhash merging and various fixes</span>
+        <span class="commit-sha">a2620ccf</span>
+      </div>
+      <div class="commit">
+        <span class="commit-date">2025-11-21</span>
+        <span class="commit-msg">import private repo</span>
+        <span class="commit-sha">aa8be7c7</span>
+      </div>
+      <div class="commit">
+        <span class="commit-date">2025-11-21</span>
+        <span class="commit-msg">Initial commit</span>
+        <span class="commit-sha">feee24bd</span>
       </div>
     </div>
-  </section>
-
-
-  <section id="history">
-    <div class="wrap">
-      <div class="section-label">Chronology (most recent 9 commits)</div>
-      <h2>History</h2>
-      <div class="timeline">
-        
-        <div class="tl-item">
-          <span class="tl-date">2026-01-01</span>
-          <span class="tl-msg">sync with private branch, reviewed duplicate logic<span class="sha">4870d834</span></span>
-        </div>
-        <div class="tl-item">
-          <span class="tl-date">2025-12-20</span>
-          <span class="tl-msg">docs<span class="sha">103328da</span></span>
-        </div>
-        <div class="tl-item">
-          <span class="tl-date">2025-12-20</span>
-          <span class="tl-msg">sync with private branch; refactoring<span class="sha">9f490d05</span></span>
-        </div>
-        <div class="tl-item">
-          <span class="tl-date">2025-12-16</span>
-          <span class="tl-msg">item merging improvements<span class="sha">3c65b572</span></span>
-        </div>
-        <div class="tl-item">
-          <span class="tl-date">2025-12-03</span>
-          <span class="tl-msg">cleanup<span class="sha">7ea046ee</span></span>
-        </div>
-        <div class="tl-item">
-          <span class="tl-date">2025-11-29</span>
-          <span class="tl-msg">prompt<span class="sha">55eccfaf</span></span>
-        </div>
-        <div class="tl-item">
-          <span class="tl-date">2025-11-29</span>
-          <span class="tl-msg">simhash merging and various fixes<span class="sha">a2620ccf</span></span>
-        </div>
-        <div class="tl-item">
-          <span class="tl-date">2025-11-21</span>
-          <span class="tl-msg">import private repo<span class="sha">aa8be7c7</span></span>
-        </div>
-        <div class="tl-item">
-          <span class="tl-date">2025-11-21</span>
-          <span class="tl-msg">Initial commit<span class="sha">feee24bd</span></span>
-        </div>
+  </div>
+  
+  <div class="wrap">
+    <div class="section-eyebrow">Writing</div>
+    <div class="section-title">On taoofmac.com</div>
+    <div class="posts">
+      
+      <div class="post">
+        <span class="post-date">2026-01-17</span>
+        <a class="post-title" href="https://taoofmac.com/space/blog/2026/01/17/2130" target="_blank" rel="noopener">My Rube Goldberg RSS Pipeline</a>
       </div>
     </div>
-  </section>
-
-  <section id="posts">
-    <div class="wrap">
-      <div class="section-label">On taoofmac.com</div>
-      <h2>Related Posts</h2>
-      <div class="post-list">
-        
-        <div class="post-item">
-          <span class="post-date">2026-01-17</span>
-          <a href="https://taoofmac.com/space/blog/2026/01/17/2130" target="_blank" rel="noopener">My Rube Goldberg RSS Pipeline</a>
-        </div>
-        <div class="post-item">
-          <span class="post-date">2026-02-01</span>
-          <a href="https://taoofmac.com/space/notes/2026/02/01/1940" target="_blank" rel="noopener">Seizing The Means Of Production (Again)</a>
-        </div>
-      </div>
-    </div>
-  </section>
+  </div>
+</main>
 
 <footer>
-  <a href="/">← All projects</a> &nbsp;·&nbsp;
-  <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a> &nbsp;·&nbsp;
-  <a href="https://github.com/rcarmo" target="_blank" rel="noopener">github.com/rcarmo</a>
-  <br><br>Last indexed 2026-01
+  <div class="left">Last indexed 2026-01-01</div>
+  <div class="right">
+    <a href="/">← All projects</a>
+    <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
+    <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
+  </div>
 </footer>
 
 </body>
