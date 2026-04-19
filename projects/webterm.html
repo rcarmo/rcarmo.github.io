@@ -2,150 +2,111 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>webterm — Rui Carmo</title>
-<meta name="description" content="A Go web terminal built for running AI coding agents.">
+<meta name="description" content="A Go web terminal with multi-session dashboard mode for AI agent workflows.">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #08090a;
-  --card: #111214;
-  --border: #1e2024;
-  --border2: #2a2d33;
-  --text: #f0f2f5;
-  --muted: #7a8190;
-  --dim: #464c5a;
-  --accent: #4f8ef7;
-  --accent-glow: rgba(79,142,247,.15);
-  --green: #34d399;
-  --amber: #fbbf24;
-  --red: #f87171;
-  --purple: #a78bfa;
-  --radius: 10px;
-  --radius-lg: 16px;
-  --gap: clamp(1rem, 4vw, 2rem);
-  --max: 960px;
-  --feature-grid: repeat(auto-fill, minmax(260px, 1fr));
+  --bg: #08090a; --card: #111214; --border: #1e2024; --border2: #2a2d33;
+  --text: #f0f2f5; --muted: #7a8190; --dim: #464c5a;
+  --accent: #4f8ef7; --accent-glow: rgba(79,142,247,.12);
+  --green: #34d399; --amber: #fbbf24;
+  --radius: 10px; --radius-lg: 16px;
+  --gap: clamp(1rem, 4vw, 2rem); --max: 960px;
 }
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f8f9fb;
-    --card: #ffffff;
-    --border: #e4e7ed;
-    --border2: #d1d5db;
-    --text: #111827;
-    --muted: #6b7280;
-    --dim: #9ca3af;
-    --accent: #2563eb;
-    --accent-glow: rgba(37,99,235,.08);
-    --green: #059669;
-    --amber: #d97706;
-    --red: #dc2626;
-    --purple: #7c3aed;
+    --bg: #f5f7fb; --card: #fff; --border: #e2e6ed; --border2: #ced3db;
+    --text: #0f1319; --muted: #5c6370; --dim: #9ca3af;
+    --accent: #1e6ef4; --accent-glow: rgba(30,110,244,.08);
+    --green: #10b981; --amber: #d97706;
   }
 }
 html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Helvetica, Arial, sans-serif;
-  font-size: 15px;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-}
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-code { font-family: ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: .875em; background: var(--border); padding: .15em .35em; border-radius: 4px; }
-/* ── Topbar ── */
-.topbar { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-.topbar-inner { max-width: var(--max); margin: 0 auto; padding: .75rem var(--gap); display: flex; align-items: center; gap: .75rem; font-size: .8rem; color: var(--muted); }
-.topbar-inner a { color: var(--muted); font-weight: 500; } .topbar-inner a:hover { color: var(--text); text-decoration: none; }
-.topbar-inner .sep { color: var(--border2); }
-.topbar-inner .current { color: var(--text); font-weight: 600; }
-/* ── Hero ── */
-.hero { padding: 3.5rem var(--gap) 2.5rem; max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; }
-@media (max-width: 600px) { .hero { grid-template-columns: 1fr; } .hero-logo { display: none; } }
-.hero-logo img { width: 80px; height: 80px; border-radius: 18px; box-shadow: 0 0 0 1px var(--border), 0 8px 24px rgba(0,0,0,.3); }
-.hero h1 { font-size: clamp(1.6rem, 5vw, 2.6rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.15; }
-.hero h1 a { color: var(--text); } .hero h1 a:hover { color: var(--accent); text-decoration: none; }
-.hero .tagline { font-size: clamp(.95rem, 2.5vw, 1.2rem); color: var(--muted); margin: .6rem 0 1.5rem; max-width: 540px; line-height: 1.5; }
-.meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem 1.1rem; font-size: .82rem; color: var(--muted); margin-bottom: 1.5rem; }
-.meta-stars { color: var(--amber); font-weight: 700; }
-.meta-lang { display: inline-flex; align-items: center; gap: .35rem; }
-.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-.dot-TypeScript{background:#3178c6}.dot-Python{background:#3572A5}.dot-Go{background:#00ADD8}
-.dot-Swift{background:#F05138}.dot-C{background:#555}.dot-Cpp{background:#f34b7d}
-.dot-Dockerfile{background:#384d54}.dot-Shell{background:#89e051}.dot-misc{background:#7a8190}
-.badge { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .65rem; border-radius: 2em; font-size: .72rem; font-weight: 600; letter-spacing: .02em; }
-.badge-active   { background: rgba(52,211,153,.12); color: #34d399; border: 1px solid rgba(52,211,153,.25); }
-.badge-stable   { background: rgba(79,142,247,.12); color: #4f8ef7; border: 1px solid rgba(79,142,247,.25); }
-.badge-maintained{background: rgba(167,139,250,.12); color: #a78bfa; border: 1px solid rgba(167,139,250,.25); }
-.badge-archived { background: rgba(251,191,36,.12); color: #fbbf24; border: 1px solid rgba(251,191,36,.25); }
-@media (prefers-color-scheme: light) {
+body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; font-size:.875em; background:var(--border); padding:.1em .35em; border-radius:4px; }
+/* Topbar */
+.topbar { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:1px solid var(--border); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:var(--max); margin:0 auto; padding:.7rem var(--gap); display:flex; align-items:center; gap:.6rem; font-size:.8rem; color:var(--muted); }
+.topbar-inner a { color:var(--muted); font-weight:500; } .topbar-inner a:hover { color:var(--text); text-decoration:none; }
+.sep { color:var(--border2); }
+.current { color:var(--text); font-weight:600; }
+/* Hero */
+.hero-wrap { max-width:var(--max); margin:0 auto; padding:3rem var(--gap) 2rem; }
+.hero-inner { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
+@media(max-width:560px){ .hero-inner { grid-template-columns:1fr; } .hero-logo { display:none; } }
+.hero-logo img { width:88px; height:88px; border-radius:20px; box-shadow:0 0 0 1px var(--border2), 0 12px 32px rgba(0,0,0,.5); }
+.hero h1 { font-size:clamp(1.8rem,5vw,2.8rem); font-weight:700; letter-spacing:-.03em; line-height:1.1; }
+.hero h1 a { color:var(--text); } .hero h1 a:hover { color:var(--accent); text-decoration:none; }
+.tagline { font-size:clamp(1rem,2.5vw,1.2rem); color:var(--muted); margin:.6rem 0 1.4rem; max-width:580px; line-height:1.5; }
+.meta { display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1.1rem; font-size:.82rem; color:var(--muted); margin-bottom:1.25rem; }
+.meta-stars { color:var(--amber); font-weight:700; font-size:.9rem; }
+.dot { width:9px; height:9px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:3px; flex-shrink:0; }
+.dot-TypeScript{background:#3178c6} .dot-Python{background:#3572A5} .dot-Go{background:#00ADD8}
+.dot-Swift{background:#F05138} .dot-C{background:#555} .dot-Cpp{background:#f34b7d}
+.dot-Dockerfile{background:#384d54} .dot-Shell{background:#89e051} .dot-misc{background:#7a8190}
+.badge { display:inline-flex; align-items:center; padding:.2rem .6rem; border-radius:2em; font-size:.7rem; font-weight:700; letter-spacing:.03em; }
+.badge-active   { background:rgba(52,211,153,.1); color:#34d399; border:1px solid rgba(52,211,153,.2); }
+.badge-stable   { background:rgba(79,142,247,.1); color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
+.badge-maintained { background:rgba(167,139,250,.1); color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
+.badge-archived { background:rgba(251,191,36,.1); color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
+@media(prefers-color-scheme:light){
   .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
   .badge-stable{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
   .badge-maintained{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd}
   .badge-archived{background:#fef3c7;color:#92400e;border-color:#fcd34d}
 }
-.topic-list { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.5rem; }
-.topic { font-size: .72rem; background: var(--card); border: 1px solid var(--border2); color: var(--muted); padding: .18rem .6rem; border-radius: 2em; }
-.cta-row { display: flex; flex-wrap: wrap; gap: .65rem; }
-.btn { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem 1.1rem; border-radius: var(--radius); font-size: .85rem; font-weight: 500; transition: all .15s; }
-.btn-primary { background: var(--accent); color: #fff; border: none; } .btn-primary:hover { opacity: .9; text-decoration: none; filter: brightness(1.1); }
-.btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border2); } .btn-ghost:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
-/* ── Divider ── */
-.divider { border: none; border-top: 1px solid var(--border); max-width: var(--max); margin: 0 auto; }
-/* ── Content wrap ── */
-.wrap { max-width: var(--max); margin: 0 auto; padding: 2.5rem var(--gap); }
-/* ── About ── */
-.about-text { font-size: 1.05rem; line-height: 1.75; color: var(--text); max-width: 680px; }
-/* ── Features ── */
-.section-eyebrow { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: .5rem; }
-.section-title { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 1.75rem; }
-.features-grid { display: grid; grid-template-columns: var(--feature-grid); gap: 1px; background: var(--border); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
-.feature { background: var(--card); padding: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
-.feature-icon { font-size: 1.4rem; line-height: 1; }
-.feature-title { font-size: .9rem; font-weight: 600; color: var(--text); }
-.feature-body { font-size: .85rem; color: var(--muted); line-height: 1.6; }
-/* ── Architecture ── */
-.arch-text { font-size: .95rem; color: var(--muted); max-width: 680px; line-height: 1.75; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
-/* ── Releases ── */
-.releases { display: flex; flex-direction: column; gap: .75rem; }
-.release { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
-.release-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: .6rem; margin-bottom: .3rem; }
-.release-tag { font-family: ui-monospace, monospace; font-size: .82rem; font-weight: 700; color: var(--accent); background: var(--accent-glow); padding: .1rem .45rem; border-radius: 4px; }
-.release-name { font-weight: 500; font-size: .9rem; }
-.release-date { color: var(--dim); font-size: .78rem; margin-left: auto; }
-.release-body { font-size: .82rem; color: var(--muted); white-space: pre-wrap; word-break: break-word; max-height: 200px; overflow: hidden; }
-/* ── History ── */
-.history { display: flex; flex-direction: column; }
-.commit { display: grid; grid-template-columns: 7rem 1fr auto; gap: .75rem; padding: .55rem 0; border-bottom: 1px solid var(--border); font-size: .82rem; align-items: start; }
-.commit:last-child { border-bottom: none; }
-.commit-date { color: var(--dim); white-space: nowrap; padding-top: .05rem; }
-.commit-msg { color: var(--muted); word-break: break-word; }
-.commit-sha { font-family: ui-monospace, monospace; font-size: .72rem; color: var(--dim); white-space: nowrap; }
-/* ── Posts ── */
-.posts { display: flex; flex-direction: column; gap: .5rem; }
-.post { display: grid; grid-template-columns: 6.5rem 1fr; gap: .75rem; font-size: .875rem; }
-.post-date { color: var(--dim); white-space: nowrap; padding-top: .1rem; font-size: .78rem; }
-.post-title { color: var(--text); }
-.post-title:hover { color: var(--accent); }
-/* ── Stats bar ── */
-.stats-bar { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2.5rem; }
-.stat { background: var(--card); padding: 1.1rem 1.25rem; }
-.stat-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: .25rem; }
-.stat-value { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; color: var(--text); }
-.stat-sub { font-size: .75rem; color: var(--muted); margin-top: .1rem; }
-/* ── Footer ── */
-footer { max-width: var(--max); margin: 0 auto; padding: 2rem var(--gap); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-footer .left { font-size: .8rem; color: var(--dim); }
-footer .right { display: flex; gap: 1.5rem; font-size: .8rem; }
-footer .right a { color: var(--muted); } footer .right a:hover { color: var(--text); }
+.topics { display:flex; flex-wrap:wrap; gap:.35rem; margin-bottom:1.25rem; }
+.topic { font-size:.72rem; background:var(--card); border:1px solid var(--border2); color:var(--muted); padding:.15rem .55rem; border-radius:2em; }
+.cta { display:flex; flex-wrap:wrap; gap:.6rem; }
+.btn { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem 1.1rem; border-radius:var(--radius); font-size:.85rem; font-weight:500; transition:all .15s; }
+.btn-p { background:var(--accent); color:#fff; } .btn-p:hover { filter:brightness(1.1); text-decoration:none; }
+.btn-g { background:transparent; color:var(--text); border:1px solid var(--border2); } .btn-g:hover { border-color:var(--accent); color:var(--accent); text-decoration:none; }
+/* Stats */
+.stats-wrap { max-width:var(--max); margin:0 auto; padding:0 var(--gap) 2rem; }
+.stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+.stat { background:var(--card); padding:1rem 1.2rem; }
+.stat-l { font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:.2rem; }
+.stat-v { font-size:1.45rem; font-weight:700; letter-spacing:-.02em; }
+.stat-sub { font-size:.7rem; color:var(--muted); margin-top:.1rem; }
+/* Sections */
+.section { max-width:var(--max); margin:0 auto; padding:2.5rem var(--gap); border-top:1px solid var(--border); }
+.eyebrow { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:.4rem; }
+.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.5rem; }
+/* About */
+.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:680px; }
+/* Feature grid */
+.features { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+.feat { background:var(--card); padding:1.4rem; display:flex; flex-direction:column; gap:.45rem; }
+.feat-icon { font-size:1.3rem; line-height:1; }
+.feat-title { font-size:.88rem; font-weight:600; color:var(--text); }
+.feat-body { font-size:.82rem; color:var(--muted); line-height:1.6; }
+/* Diagram */
+.diagram-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; padding:1.5rem; }
+.diagram-wrap svg { width:100%; height:auto; display:block; }
+/* Releases */
+.releases { display:flex; flex-direction:column; gap:.6rem; }
+.release { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1.1rem; }
+.rel-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:.5rem; margin-bottom:.25rem; }
+.rel-tag { font-family:ui-monospace,monospace; font-size:.8rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; }
+.rel-name { font-weight:500; font-size:.88rem; }
+.rel-date { color:var(--dim); font-size:.75rem; margin-left:auto; }
+.rel-body { font-size:.8rem; color:var(--muted); white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:hidden; }
+/* Posts */
+.posts { display:flex; flex-direction:column; gap:.45rem; }
+.post { display:grid; grid-template-columns:6rem 1fr; gap:.75rem; font-size:.875rem; }
+.post-date { color:var(--dim); font-size:.75rem; padding-top:.12rem; white-space:nowrap; }
+/* Footer */
+footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+.foot-l { font-size:.78rem; color:var(--dim); }
+.foot-r { display:flex; gap:1.5rem; font-size:.78rem; }
+.foot-r a { color:var(--muted); } .foot-r a:hover { color:var(--text); }
 </style>
 </head>
 <body>
-
 <header class="topbar">
   <div class="topbar-inner">
     <a href="/">rcarmo.github.io</a>
@@ -153,212 +114,137 @@ footer .right a { color: var(--muted); } footer .right a:hover { color: var(--te
     <span class="current">webterm</span>
   </div>
 </header>
-
 <main>
-  <div class="hero">
-    <div class="hero-content">
-      <h1><a href="https://github.com/rcarmo/webterm" target="_blank" rel="noopener">webterm</a></h1>
-      <p class="tagline">A Go web terminal built for running AI coding agents.</p>
-      <div class="meta-row">
-        <span class="meta-stars">★ 106</span>
-        <span>⑂ 6</span>
-        <span class="meta-lang"><span class="dot dot-Go"></span>Go</span>
-        <span class="badge badge-active">active</span>
-      </div>
-      
-      <div class="cta-row">
-        <a class="btn btn-primary" href="https://github.com/rcarmo/webterm" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> View on GitHub</a>
+  <div class="hero-wrap">
+    <div class="hero-inner">
+      <div class="hero">
+        <h1><a href="https://github.com/rcarmo/webterm" target="_blank" rel="noopener">webterm</a></h1>
+        <p class="tagline">A Go web terminal with multi-session dashboard mode for AI agent workflows.</p>
+        <div class="meta">
+          <span class="meta-stars">★ 106</span>
+          <span>⑂ 6</span>
+          <span><span class="dot dot-Go"></span>Go</span>
+          <span class="badge badge-active">active</span>
+        </div>
         
+        <div class="cta">
+          <a class="btn btn-p" href="https://github.com/rcarmo/webterm" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub</a>
+          
+        </div>
       </div>
+      <div class="hero-logo"><img src="data:image/png;base64,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" alt="webterm logo" loading="lazy"></div>
     </div>
-    <div class="hero-logo"><img src="../assets/logos/webterm.png" alt="webterm logo"></div>
   </div>
-
-  <hr class="divider">
-
-  <div class="wrap">
-    <div class="section-eyebrow">About</div>
-    <p class="about-text">webterm serves terminal sessions over HTTP/WebSocket with a dashboard mode for watching multiple agent sessions side-by-side in live-updating tiles. It's the terminal layer used by both agentbox and ghostty-web, and was ported from Python to Go for lower resource use and better concurrency.</p>
-  </div>
-
-  <div class="wrap">
-  <div class="stats-bar">
-    <div class="stat"><div class="stat-label">Stars</div><div class="stat-value">106</div><div class="stat-sub">on GitHub</div></div>
-    <div class="stat"><div class="stat-label">Forks</div><div class="stat-value">6</div><div class="stat-sub">public forks</div></div>
-    <div class="stat"><div class="stat-label">Language</div><div class="stat-value" style="font-size:1rem;padding-top:.35rem"><span class="dot dot-Go"></span> Go</div></div>
-    <div class="stat"><div class="stat-label">First release</div><div class="stat-value" style="font-size:1.1rem;padding-top:.25rem">2026</div></div>
-    <div class="stat"><div class="stat-label">Last active</div><div class="stat-value" style="font-size:.95rem;padding-top:.3rem">2026-03-01</div></div>
+  <div class="stats-wrap"><div class="stats">
+    <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">106</div><div class="stat-sub">on GitHub</div></div>
+    <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">6</div></div>
+    <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-Go"></span>Go</div></div>
+    <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2026</div></div>
+    <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2026-03</div></div>
   </div></div>
-
-  
-  <div class="wrap">
-    <div class="section-eyebrow">Features</div>
+  <div class="section">
+    <div class="eyebrow">About</div>
+    <p class="about">webterm serves PTY sessions over HTTP/WebSocket with a dashboard view that tiles multiple active terminals in a single browser tab — built specifically for monitoring several AI coding agents in parallel. The frontend uses a WebAssembly terminal renderer for correct VT100/xterm handling. A sticky mobile keybar (Esc, Ctrl, Shift, arrows) makes it usable from a phone for real work. Go port of an earlier Python implementation.</p>
+  </div>
+  <div class="section">
+    <div class="eyebrow">Features</div>
     <div class="section-title">What it does</div>
-    <div class="features-grid">
-      
-      <div class="feature">
-        <div class="feature-icon">🖥</div>
-        <div class="feature-title">Dashboard mode</div>
-        <div class="feature-body">Watch multiple terminal sessions as live-updating tiles. Built for the use case of running several AI agents in parallel without switching windows.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">⚡</div>
-        <div class="feature-title">WebAssembly rendering</div>
-        <div class="feature-body">The terminal renderer is a WebAssembly module — low overhead, correct xterm escape handling, no heavy JS framework.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">📱</div>
-        <div class="feature-title">Mobile-ready keybar</div>
-        <div class="feature-body">Draggable sticky-key bar for Esc, Ctrl, Shift, Tab, and arrow keys. Makes the terminal usable from a phone for real work, not just `htop` screenshots.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🔌</div>
-        <div class="feature-title">Embedded-first</div>
-        <div class="feature-body">Designed to be imported as a library, not just run standalone. Powers the terminal layer in agentbox, piclaw, and ghostty-web.</div>
-      </div>
+    <div class="features">
+      <div class="feat"><div class="feat-icon">🖥</div><div class="feat-title">Multi-session dashboard</div><div class="feat-body">Tile N agent terminals side-by-side in one browser tab. Watch them run in parallel without switching windows or SSH sessions.</div></div><div class="feat"><div class="feat-icon">⚡</div><div class="feat-title">WASM renderer</div><div class="feat-body">Terminal rendering via WebAssembly — correct xterm/VT100 escape handling, low overhead, no heavy JS framework dependency.</div></div><div class="feat"><div class="feat-icon">📱</div><div class="feat-title">Mobile keybar</div><div class="feat-body">Draggable sticky keybar with Esc, Ctrl, Shift, Tab, and arrow keys. Sticky combos for Ctrl+C, Ctrl+Z, and common sequences.</div></div><div class="feat"><div class="feat-icon">🔌</div><div class="feat-title">Library-first</div><div class="feat-body">Designed to be imported as a Go library and embedded in other services. Powers the terminal layer in agentbox, piclaw, and ghostty-web.</div></div>
     </div>
   </div>
   
-  <div class="wrap">
-    <div class="section-eyebrow">Under the hood</div>
-    <div class="section-title">Architecture</div>
-    <p class="arch-text">A Go HTTP server that upgrades connections to WebSocket, pipes them to a PTY, and streams encoded terminal frames to the browser. go-te handles server-side VT100/xterm state. The frontend is a single HTML file with an xterm.js-compatible canvas renderer.</p>
+  <div class="section">
+    <div class="eyebrow">Architecture</div>
+    <div class="section-title">How it works</div>
+    <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 200" width="520" height="200">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #1a1e24; }
+      .box { fill: #21262d; stroke: #30363d; }
+      .box-accent { fill: #0d2340; stroke: #2b6cb0; }
+      .box-green { fill: #0d2a1f; stroke: #2a7a3a; }
+      .box-warm { fill: #2a1e18; stroke: #c87020; }
+      .label { fill: #e8d8d0; }
+      .sublabel { fill: #705848; }
+      .arrow { stroke: #705848; }
+      .arrow-accent { stroke: #2b6cb0; }
+      .line { stroke: #30363d; }
+    }
+    @media (prefers-color-scheme: light) {
+      .bg { fill: #f0f4fa; }
+      .box { fill: #ffffff; stroke: #d0d7de; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; }
+      .box-green { fill: #d1fae5; stroke: #059669; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; }
+      .label { fill: #1a2a40; }
+      .sublabel { fill: #4a6480; }
+      .arrow { stroke: #90a8c0; }
+      .arrow-accent { stroke: #3b82f6; }
+      .line { stroke: #d0d7de; }
+    }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sublabel { font-size: 11px; }
+    .arrow { stroke-width: 1.5; fill: none; marker-end: url(#arr); }
+    .arrow-accent { stroke-width: 1.5; fill: none; marker-end: url(#arr-accent); }
+    .line { stroke-width: 1; fill: none; }
+  </style>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" class="arrow" style="fill:currentColor;stroke:none"/>
+    </marker>
+    <marker id="arr-accent" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" class="arrow-accent" style="fill:currentColor;stroke:none"/>
+    </marker>
+  </defs>
+  <rect width="520" height="200" class="bg" rx="8"/>
+  
+  <rect x="20" y="60" width="110" height="80" rx="6" class="box-accent" stroke-width="1.5"/>
+    <text x="75" y="96" text-anchor="middle" class="label">Browser</text>
+    <text x="75" y="109" text-anchor="middle" class="sublabel">xterm canvas</text>
+  <line x1="130" y1="100" x2="170" y2="100" class="arrow-accent"/>
+  <text x="150" y="90" text-anchor="middle" class="sublabel">WebSocket</text>
+  <rect x="170" y="60" width="110" height="80" rx="6" class="box-green" stroke-width="1.5"/>
+    <text x="225" y="96" text-anchor="middle" class="label">Go server</text>
+    <text x="225" y="109" text-anchor="middle" class="sublabel">go-te state</text>
+  <line x1="280" y1="80" x2="320" y2="80" class="arrow"/>
+  <line x1="280" y1="120" x2="320" y2="120" class="arrow"/>
+  <rect x="320" y="60" width="110" height="38" rx="6" class="box" stroke-width="1.5"/>
+    <text x="375" y="75" text-anchor="middle" class="label">PTY</text>
+    <text x="375" y="88" text-anchor="middle" class="sublabel">shell process</text>
+  <rect x="320" y="102" width="110" height="38" rx="6" class="box" stroke-width="1.5"/>
+    <text x="375" y="117" text-anchor="middle" class="label">WASM renderer</text>
+    <text x="375" y="130" text-anchor="middle" class="sublabel">vt100 parser</text>
+  <text x="260" y="185" text-anchor="middle" class="sublabel">Multi-session dashboard: tile N terminals side-by-side</text>
+
+</svg></div>
   </div>
   
   
-  <div class="wrap">
-    <div class="section-eyebrow">History</div>
-    <div class="section-title">Recent commits</div>
-    <div class="history">
-      
-      <div class="commit">
-        <span class="commit-date">2026-03-01</span>
-        <span class="commit-msg">Bump version to 1.3.39</span>
-        <span class="commit-sha">1abc0d04</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-03-01</span>
-        <span class="commit-msg">fix: bell indicator stuck after returning to terminal tab</span>
-        <span class="commit-sha">5089aedd</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">Bump version to 1.3.38</span>
-        <span class="commit-sha">5acb468a</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">deps: update ghostty-web to fcc47d4</span>
-        <span class="commit-sha">b6a9231b</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">Bump version to 1.3.37</span>
-        <span class="commit-sha">4d381286</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">fix: sync bell state on all dashboard tiles when tab regains focus</span>
-        <span class="commit-sha">41071f8a</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">Bump version to 1.3.36</span>
-        <span class="commit-sha">571d0c0b</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">deps: update ghostty-web to a5d8c7b</span>
-        <span class="commit-sha">b0321940</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">fix: refresh all dashboard thumbnails on tab return and add periodic fallback</span>
-        <span class="commit-sha">bc3fac9a</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">Bump version to 1.3.35</span>
-        <span class="commit-sha">8496b139</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">Merge branch 'main' of github.com:rcarmo/textual-webterm</span>
-        <span class="commit-sha">f68904d5</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">Bump version to 1.3.34</span>
-        <span class="commit-sha">c88f01cb</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">deps: update ghostty-web to bbdea28 (fixes stale selection highlight on click)</span>
-        <span class="commit-sha">982a68ea</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">Bump version to 1.3.33</span>
-        <span class="commit-sha">73414acd</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">perf: reduce input tarpitting and speed up large-display rendering</span>
-        <span class="commit-sha">82ccfeb6</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-26</span>
-        <span class="commit-msg">Bump version to 1.3.32</span>
-        <span class="commit-sha">3d83b4b1</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-22</span>
-        <span class="commit-msg">docs</span>
-        <span class="commit-sha">2d9cb7f0</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-20</span>
-        <span class="commit-msg">Bump version to 1.3.31</span>
-        <span class="commit-sha">df0a6ae1</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-20</span>
-        <span class="commit-msg">Increase thumbnail refresh cadence</span>
-        <span class="commit-sha">0d8cf7d4</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-20</span>
-        <span class="commit-msg">Bump version to 1.3.30</span>
-        <span class="commit-sha">bb0bc779</span>
-      </div>
-    </div>
-  </div>
-  
-  <div class="wrap">
-    <div class="section-eyebrow">Writing</div>
+  <div class="section">
+    <div class="eyebrow">Writing</div>
     <div class="section-title">On taoofmac.com</div>
     <div class="posts">
       
       <div class="post">
         <span class="post-date">2026-02-01</span>
-        <a class="post-title" href="https://taoofmac.com/space/notes/2026/02/01/1940" target="_blank" rel="noopener">Seizing The Means Of Production (Again)</a>
+        <a href="https://taoofmac.com/space/notes/2026/02/01/1940" target="_blank" rel="noopener">Seizing The Means Of Production (Again)</a>
       </div>
       <div class="post">
         <span class="post-date">2026-02-01</span>
-        <a class="post-title" href="https://taoofmac.com/space/notes/2026/02/01/2130" target="_blank" rel="noopener">Thoughts on AI-Assisted Software Development in 2026</a>
+        <a href="https://taoofmac.com/space/notes/2026/02/01/2130" target="_blank" rel="noopener">Thoughts on AI-Assisted Software Development in 2026</a>
       </div>
     </div>
   </div>
 </main>
-
 <footer>
-  <div class="left">Last indexed 2026-03-01</div>
-  <div class="right">
+  <div class="foot-l">Last indexed 2026-03-01</div>
+  <div class="foot-r">
     <a href="/">← All projects</a>
     <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
     <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
-
 </body>
 </html>

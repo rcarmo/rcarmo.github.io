@@ -2,150 +2,111 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>go-rdp — Rui Carmo</title>
-<meta name="description" content="RDP in a browser tab — no client install required.">
+<meta name="description" content="Browser-based RDP client in Go — full MS-RDPBCGR spec, WASM frontend.">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #08090a;
-  --card: #111214;
-  --border: #1e2024;
-  --border2: #2a2d33;
-  --text: #f0f2f5;
-  --muted: #7a8190;
-  --dim: #464c5a;
-  --accent: #4f8ef7;
-  --accent-glow: rgba(79,142,247,.15);
-  --green: #34d399;
-  --amber: #fbbf24;
-  --red: #f87171;
-  --purple: #a78bfa;
-  --radius: 10px;
-  --radius-lg: 16px;
-  --gap: clamp(1rem, 4vw, 2rem);
-  --max: 960px;
-  --feature-grid: repeat(auto-fill, minmax(260px, 1fr));
+  --bg: #08090a; --card: #111214; --border: #1e2024; --border2: #2a2d33;
+  --text: #f0f2f5; --muted: #7a8190; --dim: #464c5a;
+  --accent: #4f8ef7; --accent-glow: rgba(79,142,247,.12);
+  --green: #34d399; --amber: #fbbf24;
+  --radius: 10px; --radius-lg: 16px;
+  --gap: clamp(1rem, 4vw, 2rem); --max: 960px;
 }
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f8f9fb;
-    --card: #ffffff;
-    --border: #e4e7ed;
-    --border2: #d1d5db;
-    --text: #111827;
-    --muted: #6b7280;
-    --dim: #9ca3af;
-    --accent: #2563eb;
-    --accent-glow: rgba(37,99,235,.08);
-    --green: #059669;
-    --amber: #d97706;
-    --red: #dc2626;
-    --purple: #7c3aed;
+    --bg: #f5f7fb; --card: #fff; --border: #e2e6ed; --border2: #ced3db;
+    --text: #0f1319; --muted: #5c6370; --dim: #9ca3af;
+    --accent: #1e6ef4; --accent-glow: rgba(30,110,244,.08);
+    --green: #10b981; --amber: #d97706;
   }
 }
 html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Helvetica, Arial, sans-serif;
-  font-size: 15px;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-}
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-code { font-family: ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: .875em; background: var(--border); padding: .15em .35em; border-radius: 4px; }
-/* ── Topbar ── */
-.topbar { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-.topbar-inner { max-width: var(--max); margin: 0 auto; padding: .75rem var(--gap); display: flex; align-items: center; gap: .75rem; font-size: .8rem; color: var(--muted); }
-.topbar-inner a { color: var(--muted); font-weight: 500; } .topbar-inner a:hover { color: var(--text); text-decoration: none; }
-.topbar-inner .sep { color: var(--border2); }
-.topbar-inner .current { color: var(--text); font-weight: 600; }
-/* ── Hero ── */
-.hero { padding: 3.5rem var(--gap) 2.5rem; max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; }
-@media (max-width: 600px) { .hero { grid-template-columns: 1fr; } .hero-logo { display: none; } }
-.hero-logo img { width: 80px; height: 80px; border-radius: 18px; box-shadow: 0 0 0 1px var(--border), 0 8px 24px rgba(0,0,0,.3); }
-.hero h1 { font-size: clamp(1.6rem, 5vw, 2.6rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.15; }
-.hero h1 a { color: var(--text); } .hero h1 a:hover { color: var(--accent); text-decoration: none; }
-.hero .tagline { font-size: clamp(.95rem, 2.5vw, 1.2rem); color: var(--muted); margin: .6rem 0 1.5rem; max-width: 540px; line-height: 1.5; }
-.meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem 1.1rem; font-size: .82rem; color: var(--muted); margin-bottom: 1.5rem; }
-.meta-stars { color: var(--amber); font-weight: 700; }
-.meta-lang { display: inline-flex; align-items: center; gap: .35rem; }
-.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-.dot-TypeScript{background:#3178c6}.dot-Python{background:#3572A5}.dot-Go{background:#00ADD8}
-.dot-Swift{background:#F05138}.dot-C{background:#555}.dot-Cpp{background:#f34b7d}
-.dot-Dockerfile{background:#384d54}.dot-Shell{background:#89e051}.dot-misc{background:#7a8190}
-.badge { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .65rem; border-radius: 2em; font-size: .72rem; font-weight: 600; letter-spacing: .02em; }
-.badge-active   { background: rgba(52,211,153,.12); color: #34d399; border: 1px solid rgba(52,211,153,.25); }
-.badge-stable   { background: rgba(79,142,247,.12); color: #4f8ef7; border: 1px solid rgba(79,142,247,.25); }
-.badge-maintained{background: rgba(167,139,250,.12); color: #a78bfa; border: 1px solid rgba(167,139,250,.25); }
-.badge-archived { background: rgba(251,191,36,.12); color: #fbbf24; border: 1px solid rgba(251,191,36,.25); }
-@media (prefers-color-scheme: light) {
+body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; font-size:.875em; background:var(--border); padding:.1em .35em; border-radius:4px; }
+/* Topbar */
+.topbar { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:1px solid var(--border); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:var(--max); margin:0 auto; padding:.7rem var(--gap); display:flex; align-items:center; gap:.6rem; font-size:.8rem; color:var(--muted); }
+.topbar-inner a { color:var(--muted); font-weight:500; } .topbar-inner a:hover { color:var(--text); text-decoration:none; }
+.sep { color:var(--border2); }
+.current { color:var(--text); font-weight:600; }
+/* Hero */
+.hero-wrap { max-width:var(--max); margin:0 auto; padding:3rem var(--gap) 2rem; }
+.hero-inner { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
+@media(max-width:560px){ .hero-inner { grid-template-columns:1fr; } .hero-logo { display:none; } }
+.hero-logo img { width:88px; height:88px; border-radius:20px; box-shadow:0 0 0 1px var(--border2), 0 12px 32px rgba(0,0,0,.5); }
+.hero h1 { font-size:clamp(1.8rem,5vw,2.8rem); font-weight:700; letter-spacing:-.03em; line-height:1.1; }
+.hero h1 a { color:var(--text); } .hero h1 a:hover { color:var(--accent); text-decoration:none; }
+.tagline { font-size:clamp(1rem,2.5vw,1.2rem); color:var(--muted); margin:.6rem 0 1.4rem; max-width:580px; line-height:1.5; }
+.meta { display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1.1rem; font-size:.82rem; color:var(--muted); margin-bottom:1.25rem; }
+.meta-stars { color:var(--amber); font-weight:700; font-size:.9rem; }
+.dot { width:9px; height:9px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:3px; flex-shrink:0; }
+.dot-TypeScript{background:#3178c6} .dot-Python{background:#3572A5} .dot-Go{background:#00ADD8}
+.dot-Swift{background:#F05138} .dot-C{background:#555} .dot-Cpp{background:#f34b7d}
+.dot-Dockerfile{background:#384d54} .dot-Shell{background:#89e051} .dot-misc{background:#7a8190}
+.badge { display:inline-flex; align-items:center; padding:.2rem .6rem; border-radius:2em; font-size:.7rem; font-weight:700; letter-spacing:.03em; }
+.badge-active   { background:rgba(52,211,153,.1); color:#34d399; border:1px solid rgba(52,211,153,.2); }
+.badge-stable   { background:rgba(79,142,247,.1); color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
+.badge-maintained { background:rgba(167,139,250,.1); color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
+.badge-archived { background:rgba(251,191,36,.1); color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
+@media(prefers-color-scheme:light){
   .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
   .badge-stable{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
   .badge-maintained{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd}
   .badge-archived{background:#fef3c7;color:#92400e;border-color:#fcd34d}
 }
-.topic-list { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.5rem; }
-.topic { font-size: .72rem; background: var(--card); border: 1px solid var(--border2); color: var(--muted); padding: .18rem .6rem; border-radius: 2em; }
-.cta-row { display: flex; flex-wrap: wrap; gap: .65rem; }
-.btn { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem 1.1rem; border-radius: var(--radius); font-size: .85rem; font-weight: 500; transition: all .15s; }
-.btn-primary { background: var(--accent); color: #fff; border: none; } .btn-primary:hover { opacity: .9; text-decoration: none; filter: brightness(1.1); }
-.btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border2); } .btn-ghost:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
-/* ── Divider ── */
-.divider { border: none; border-top: 1px solid var(--border); max-width: var(--max); margin: 0 auto; }
-/* ── Content wrap ── */
-.wrap { max-width: var(--max); margin: 0 auto; padding: 2.5rem var(--gap); }
-/* ── About ── */
-.about-text { font-size: 1.05rem; line-height: 1.75; color: var(--text); max-width: 680px; }
-/* ── Features ── */
-.section-eyebrow { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: .5rem; }
-.section-title { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 1.75rem; }
-.features-grid { display: grid; grid-template-columns: var(--feature-grid); gap: 1px; background: var(--border); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
-.feature { background: var(--card); padding: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
-.feature-icon { font-size: 1.4rem; line-height: 1; }
-.feature-title { font-size: .9rem; font-weight: 600; color: var(--text); }
-.feature-body { font-size: .85rem; color: var(--muted); line-height: 1.6; }
-/* ── Architecture ── */
-.arch-text { font-size: .95rem; color: var(--muted); max-width: 680px; line-height: 1.75; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
-/* ── Releases ── */
-.releases { display: flex; flex-direction: column; gap: .75rem; }
-.release { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
-.release-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: .6rem; margin-bottom: .3rem; }
-.release-tag { font-family: ui-monospace, monospace; font-size: .82rem; font-weight: 700; color: var(--accent); background: var(--accent-glow); padding: .1rem .45rem; border-radius: 4px; }
-.release-name { font-weight: 500; font-size: .9rem; }
-.release-date { color: var(--dim); font-size: .78rem; margin-left: auto; }
-.release-body { font-size: .82rem; color: var(--muted); white-space: pre-wrap; word-break: break-word; max-height: 200px; overflow: hidden; }
-/* ── History ── */
-.history { display: flex; flex-direction: column; }
-.commit { display: grid; grid-template-columns: 7rem 1fr auto; gap: .75rem; padding: .55rem 0; border-bottom: 1px solid var(--border); font-size: .82rem; align-items: start; }
-.commit:last-child { border-bottom: none; }
-.commit-date { color: var(--dim); white-space: nowrap; padding-top: .05rem; }
-.commit-msg { color: var(--muted); word-break: break-word; }
-.commit-sha { font-family: ui-monospace, monospace; font-size: .72rem; color: var(--dim); white-space: nowrap; }
-/* ── Posts ── */
-.posts { display: flex; flex-direction: column; gap: .5rem; }
-.post { display: grid; grid-template-columns: 6.5rem 1fr; gap: .75rem; font-size: .875rem; }
-.post-date { color: var(--dim); white-space: nowrap; padding-top: .1rem; font-size: .78rem; }
-.post-title { color: var(--text); }
-.post-title:hover { color: var(--accent); }
-/* ── Stats bar ── */
-.stats-bar { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2.5rem; }
-.stat { background: var(--card); padding: 1.1rem 1.25rem; }
-.stat-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: .25rem; }
-.stat-value { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; color: var(--text); }
-.stat-sub { font-size: .75rem; color: var(--muted); margin-top: .1rem; }
-/* ── Footer ── */
-footer { max-width: var(--max); margin: 0 auto; padding: 2rem var(--gap); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-footer .left { font-size: .8rem; color: var(--dim); }
-footer .right { display: flex; gap: 1.5rem; font-size: .8rem; }
-footer .right a { color: var(--muted); } footer .right a:hover { color: var(--text); }
+.topics { display:flex; flex-wrap:wrap; gap:.35rem; margin-bottom:1.25rem; }
+.topic { font-size:.72rem; background:var(--card); border:1px solid var(--border2); color:var(--muted); padding:.15rem .55rem; border-radius:2em; }
+.cta { display:flex; flex-wrap:wrap; gap:.6rem; }
+.btn { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem 1.1rem; border-radius:var(--radius); font-size:.85rem; font-weight:500; transition:all .15s; }
+.btn-p { background:var(--accent); color:#fff; } .btn-p:hover { filter:brightness(1.1); text-decoration:none; }
+.btn-g { background:transparent; color:var(--text); border:1px solid var(--border2); } .btn-g:hover { border-color:var(--accent); color:var(--accent); text-decoration:none; }
+/* Stats */
+.stats-wrap { max-width:var(--max); margin:0 auto; padding:0 var(--gap) 2rem; }
+.stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+.stat { background:var(--card); padding:1rem 1.2rem; }
+.stat-l { font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:.2rem; }
+.stat-v { font-size:1.45rem; font-weight:700; letter-spacing:-.02em; }
+.stat-sub { font-size:.7rem; color:var(--muted); margin-top:.1rem; }
+/* Sections */
+.section { max-width:var(--max); margin:0 auto; padding:2.5rem var(--gap); border-top:1px solid var(--border); }
+.eyebrow { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:.4rem; }
+.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.5rem; }
+/* About */
+.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:680px; }
+/* Feature grid */
+.features { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+.feat { background:var(--card); padding:1.4rem; display:flex; flex-direction:column; gap:.45rem; }
+.feat-icon { font-size:1.3rem; line-height:1; }
+.feat-title { font-size:.88rem; font-weight:600; color:var(--text); }
+.feat-body { font-size:.82rem; color:var(--muted); line-height:1.6; }
+/* Diagram */
+.diagram-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; padding:1.5rem; }
+.diagram-wrap svg { width:100%; height:auto; display:block; }
+/* Releases */
+.releases { display:flex; flex-direction:column; gap:.6rem; }
+.release { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1.1rem; }
+.rel-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:.5rem; margin-bottom:.25rem; }
+.rel-tag { font-family:ui-monospace,monospace; font-size:.8rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; }
+.rel-name { font-weight:500; font-size:.88rem; }
+.rel-date { color:var(--dim); font-size:.75rem; margin-left:auto; }
+.rel-body { font-size:.8rem; color:var(--muted); white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:hidden; }
+/* Posts */
+.posts { display:flex; flex-direction:column; gap:.45rem; }
+.post { display:grid; grid-template-columns:6rem 1fr; gap:.75rem; font-size:.875rem; }
+.post-date { color:var(--dim); font-size:.75rem; padding-top:.12rem; white-space:nowrap; }
+/* Footer */
+footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+.foot-l { font-size:.78rem; color:var(--dim); }
+.foot-r { display:flex; gap:1.5rem; font-size:.78rem; }
+.foot-r a { color:var(--muted); } .foot-r a:hover { color:var(--text); }
 </style>
 </head>
 <body>
-
 <header class="topbar">
   <div class="topbar-inner">
     <a href="/">rcarmo.github.io</a>
@@ -153,187 +114,56 @@ footer .right a { color: var(--muted); } footer .right a:hover { color: var(--te
     <span class="current">go-rdp</span>
   </div>
 </header>
-
 <main>
-  <div class="hero">
-    <div class="hero-content">
-      <h1><a href="https://github.com/rcarmo/go-rdp" target="_blank" rel="noopener">go-rdp</a></h1>
-      <p class="tagline">RDP in a browser tab — no client install required.</p>
-      <div class="meta-row">
-        <span class="meta-stars">★ 9</span>
-        <span>⑂ 1</span>
-        <span class="meta-lang"><span class="dot dot-Go"></span>Go</span>
-        <span class="badge badge-active">active</span>
-      </div>
-      
-      <div class="cta-row">
-        <a class="btn btn-primary" href="https://github.com/rcarmo/go-rdp" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> View on GitHub</a>
+  <div class="hero-wrap">
+    <div class="hero-inner">
+      <div class="hero">
+        <h1><a href="https://github.com/rcarmo/go-rdp" target="_blank" rel="noopener">go-rdp</a></h1>
+        <p class="tagline">Browser-based RDP client in Go — full MS-RDPBCGR spec, WASM frontend.</p>
+        <div class="meta">
+          <span class="meta-stars">★ 9</span>
+          <span>⑂ 1</span>
+          <span><span class="dot dot-Go"></span>Go</span>
+          <span class="badge badge-active">active</span>
+        </div>
         
+        <div class="cta">
+          <a class="btn btn-p" href="https://github.com/rcarmo/go-rdp" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub</a>
+          
+        </div>
       </div>
+      <div class="hero-logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAQAAAAEACAMAAABrrFhUAAAAAXNSR0IArs4c6QAAAwBQTFRFR3BMTDgpOTw9Oz0+QElHOjgwLSYgUysNaDcQe0QVj1AZnlsfq2UjtWsmvnIqw3ouzH0v1IQ124s55JRA6ZxKnnM/yoM2WYR7UL3FZrnuS6fjO57fNpnaMZTWLo/SKozQJ4jNJYTJI4HFI4HEIn7AHHzCy8KvzLuD0s/BL21cjUkWcjkNikkUzE0Oy0QJ22Ek3VEU3l4f4lwb5GAd5mQg6Gcj6Won624s7XMw73g18Xw784A+9IRC9olH945N+JRV+Zte9KVm+7J6/L+Kquqq8vHn8O7k7evh6ejd5eTa4uLX4N/U3dvR2tjN19XK09LG0M7CzMq9xsS3wL6xu7iqs7KkrKubn6SWnpqHj454cHFifH5zX2FZNCkeRioRUi8PQisYYDgVNCsZPCwfSEpK+cIh978d+dt4+tZV+tJI+c9C+Mw+9sk59cYz9MMu8sAq8L0l7bog67Yc6LMZ5rEZ77UT5qkS57Qh3aAN0pUJ3qYU460a8b9B77o57LUyX9TiXNHfXM7bWszZWcrXV8jUVcbSVMTQUcLOUcDMT7/KTbzITLrFSrjDSrbAR7S9RbG8Q665Qau2PqizPKWwOqKsOJ+pNpymNJmjM5afMZOcMJCYLo2VLYqRKYaNJ4KJKH+BJ3p8JXZ3JHJyI21sIGhnIWRhIFxXK2JZJltTIiEfK01CCUVNF3R+SG9oPq26RLTCRLjISLzLsszIhb/DRrC2Q62xQaitPqWnPaGiOp2dN5qfPpmWNpSSNo+JL4aDMIOELnJqKnNnM4qHInCjDmGXJnqwIXa/Jn3JKInTKpHaNJ2/OaWvOJSYNZGqOJbBcJGM3owx6IE04HUs8XYxLYgvJIovJo8xKZI0LJU1Lpg4MZw6NaA+OaVBPKlEQK1HRLFLSbZRULxXX8NhbM9wOrVLOpc9FHUnHX4sLY00Jps9OqJEZodjeHNTxGAhdoFYL3dqM4uNMomKQEJELTAxPjw1SEpHT1JRFhcUMDU5JCMaJScnNS0dRjsoSzYkUUo3R0k8irNrlwAAAQB0Uk5TAAK3iMKjwf7//f///v///v///////v///////////////////4ttMLCfs4vbe/5U/o3///////////////////////////////////////7//////////v///v/9UT83KiMbZObo5v/////////////////+fv5V/vzGm////v/////////////////////////////////////////////////////+zf///////////////////////////v/ZQi5Rfv/U8OznyafOk3E6BkF7r9rb////////////////////mz/+/LuMdB8L0BRjue39/f/+/TD5IP0SDAcEAXOpBfwAACJmSURBVHja7Jv/b11lHcffn+fc23ZfABlMJfviYIwy5jo24g8SXTThByNGQQ1RZKOsBZkIMTHERPQPMEqiGLOVLcEY0ZDgLyb+ppCNoYF96daNrXPd3LqVAbth2G237c45n7fnPud7uRXovZre9bzOt+f0Puk57/fzeT7PJ+ktCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCgoKCv4bDLDn8A5kdOQAYLtZQDDc03vYRu532XZ0R7tnW7Y7kByW+Nl2T5/7v0LHepyWoKdno4dmoz2mWq2WSiVT2wJKZoYSvGPvpWqpx0Uz6emtmp4HvYrva4io9gdov0qIbUwNo3PaTH9Ce0NJISlM2vEdZQq0dqj2+xq8kV/xvYmecm+v46FZdJeqTnegXtECUNT3PXdTT2/vBjSHDQ+Uuj1fBS0DJbDgoXLVaU74P+C4nhCtBcXzeprhgGwI9FcUrQcrgQM9aJTuatn1iVaEnutUu9EYUiq5nqA1YcXtNURD9FQ3tqx+UN2N1Q0NBkC5omhZxHdNiWiAwMBMAPhrBgYG9iNh/1M/fupHFcS8+86ZM2dGMJMQd8OlCUwfOr1ekgH50ME7P79+/fqBWPJTP/3JY489+kgnQkZOnq5xRjBzEM/t7UEdBB8KlmU8CaGKfBUETOmZLtR4soMQsOL/bAECzl20PQWyGDMHn3PqFrAGHwqObhTEfPFuEID6j++3GVYgAshC52kE6IRDBBA8h5mDQDdh+ga4cImY5xG2VQwA+TkirreCD4wjhCBmDs579z/jTd8ABUTj9iKBhUSA3I+YDgWQiXti5sBrBf70DQD6HEGIgBI2GKo0iPiYE5oVQcEMQvqgjRiwObHP3HWZsPgbQp0CAQTwCGDhZY1ngIuZxGagEQPgIIK3e6EZ+ud9CFgjlwUQ4vJ9qLHoMkFQtH0RZj4G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" alt="go-rdp logo" loading="lazy"></div>
     </div>
-    <div class="hero-logo"><img src="../assets/logos/go-rdp.png" alt="go-rdp logo"></div>
   </div>
-
-  <hr class="divider">
-
-  <div class="wrap">
-    <div class="section-eyebrow">About</div>
-    <p class="about-text">A Go HTTP/WebSocket server that proxies RDP sessions to a browser-based canvas client. Connect to Windows VMs from any modern browser without installing a native client. Part of the same Go terminal family as webterm, go-te, and ghostty-web.</p>
-  </div>
-
-  <div class="wrap">
-  <div class="stats-bar">
-    <div class="stat"><div class="stat-label">Stars</div><div class="stat-value">9</div><div class="stat-sub">on GitHub</div></div>
-    <div class="stat"><div class="stat-label">Forks</div><div class="stat-value">1</div><div class="stat-sub">public forks</div></div>
-    <div class="stat"><div class="stat-label">Language</div><div class="stat-value" style="font-size:1rem;padding-top:.35rem"><span class="dot dot-Go"></span> Go</div></div>
-    <div class="stat"><div class="stat-label">First release</div><div class="stat-value" style="font-size:1.1rem;padding-top:.25rem">2026</div></div>
-    <div class="stat"><div class="stat-label">Last active</div><div class="stat-value" style="font-size:.95rem;padding-top:.3rem">2026-02-15</div></div>
+  <div class="stats-wrap"><div class="stats">
+    <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">9</div><div class="stat-sub">on GitHub</div></div>
+    <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">1</div></div>
+    <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-Go"></span>Go</div></div>
+    <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2026</div></div>
+    <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2026-02</div></div>
   </div></div>
-
-  
-  <div class="wrap">
-    <div class="section-eyebrow">Features</div>
+  <div class="section">
+    <div class="eyebrow">About</div>
+    <p class="about">go-rdp is a browser-based RDP client with a Go backend and a WebAssembly frontend. The Go implementation is a complete rewrite targeting the full MS-RDPBCGR specification rather than just the common subset — intended as a reference implementation for RDP in Go. Functional with known limitations; connect to Windows VMs from any browser without a native client.</p>
+  </div>
+  <div class="section">
+    <div class="eyebrow">Features</div>
     <div class="section-title">What it does</div>
-    <div class="features-grid">
-      
-      <div class="feature">
-        <div class="feature-icon">🌐</div>
-        <div class="feature-title">Browser-based RDP</div>
-        <div class="feature-body">Full RDP session in a browser tab. Canvas rendering, keyboard forwarding, mouse support. Works from any device with a modern browser.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🔒</div>
-        <div class="feature-title">No client install</div>
-        <div class="feature-body">No RDP client, no VPN client, no plugins. Just a browser and a URL — useful for tablet access to Windows VMs.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">⚙</div>
-        <div class="feature-title">Go backend</div>
-        <div class="feature-body">Pure Go, no CGO on Linux. Single binary deployment. Shares the go-te terminal state engine with webterm and ghostty-web.</div>
-      </div>
+    <div class="features">
+      <div class="feat"><div class="feat-icon">🌐</div><div class="feat-title">No native client</div><div class="feat-body">Full RDP session rendered to a browser canvas via WebAssembly. Works from any device with a modern browser.</div></div><div class="feat"><div class="feat-icon">📋</div><div class="feat-title">MS-RDPBCGR reference</div><div class="feat-body">Rewritten from scratch against the full Microsoft RDP protocol specification. Passes the reference test suite included in the repo.</div></div><div class="feat"><div class="feat-icon">⚙</div><div class="feat-title">Go + WASM</div><div class="feat-body">Go backend handles the RDP protocol. TinyGo compiles the frontend to WASM. Docker image available for one-command deployment.</div></div>
     </div>
   </div>
   
   
-  
-  <div class="wrap">
-    <div class="section-eyebrow">History</div>
-    <div class="section-title">Recent commits</div>
-    <div class="history">
-      
-      <div class="commit">
-        <span class="commit-date">2026-02-15</span>
-        <span class="commit-msg">Bump version to 1.0.5</span>
-        <span class="commit-sha">f367d0a3</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-15</span>
-        <span class="commit-msg">Rename binary from rdp-html5 to go-rdp throughout codebase</span>
-        <span class="commit-sha">275d880f</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-15</span>
-        <span class="commit-msg">Improve CLI documentation consistency and thoroughness</span>
-        <span class="commit-sha">7ac03c1f</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-15</span>
-        <span class="commit-msg">Add audio quality preference: prioritize bandwidth over quality by default</span>
-        <span class="commit-sha">1832e19f</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-15</span>
-        <span class="commit-msg">Add AAC audio codec support for better bandwidth efficiency</span>
-        <span class="commit-sha">c5970599</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-15</span>
-        <span class="commit-msg">Fix toast close button position: move to top-right</span>
-        <span class="commit-sha">0534dfa1</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-15</span>
-        <span class="commit-msg">Fix 32-bit rendering: correct Planar vs RLE codec detection; fix audio sample rate</span>
-        <span class="commit-sha">aba8b775</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-15</span>
-        <span class="commit-msg">Bump version to 1.0.4</span>
-        <span class="commit-sha">8af6a72b</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-15</span>
-        <span class="commit-msg">Fix audio: buffer accumulation, format index mapping, context resume</span>
-        <span class="commit-sha">7ddaeb51</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-14</span>
-        <span class="commit-msg">Fix 32-bit rendering: route surface commands by codec type, raise PDU size limit</span>
-        <span class="commit-sha">c924e51e</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-14</span>
-        <span class="commit-msg">Add VERSION file, fix audio scheduling and RFX multifragment size</span>
-        <span class="commit-sha">029596cf</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-14</span>
-        <span class="commit-msg">Wire up RemoteFX-Image codec end-to-end</span>
-        <span class="commit-sha">5a14be75</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-14</span>
-        <span class="commit-msg">Fix cursor black square, simplify asset embedding, align error messages with CLI flags</span>
-        <span class="commit-sha">32d908f4</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-07</span>
-        <span class="commit-msg">Bump version to 1.0.3</span>
-        <span class="commit-sha">c65a7a25</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-07</span>
-        <span class="commit-msg">fix: resolve all gosec findings and scope CI/CD cleanup actions</span>
-        <span class="commit-sha">ed1b2f2b</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-07</span>
-        <span class="commit-msg">Bump version to 1.0.2</span>
-        <span class="commit-sha">01622d85</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-07</span>
-        <span class="commit-msg">fix(rdp): spec-verified RDP compliance fixes</span>
-        <span class="commit-sha">e624bed8</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-07</span>
-        <span class="commit-msg">fix: address remaining lower-severity audit findings</span>
-        <span class="commit-sha">c48a9d46</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-07</span>
-        <span class="commit-msg">fix: correct logic errors found during codebase audit</span>
-        <span class="commit-sha">4e4c603b</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2026-02-07</span>
-        <span class="commit-msg">Bump version to 1.0.1</span>
-        <span class="commit-sha">81c306b4</span>
-      </div>
-    </div>
-  </div>
   
 </main>
-
 <footer>
-  <div class="left">Last indexed 2026-02-15</div>
-  <div class="right">
+  <div class="foot-l">Last indexed 2026-02-15</div>
+  <div class="foot-r">
     <a href="/">← All projects</a>
     <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
     <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
-
 </body>
 </html>

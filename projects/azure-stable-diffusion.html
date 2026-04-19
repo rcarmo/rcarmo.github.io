@@ -2,150 +2,111 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <title>azure-stable-diffusion — Rui Carmo</title>
-<meta name="description" content="Run Stable Diffusion on Azure spot instances — one command, a few cents an hour.">
+<meta name="description" content="One-command Stable Diffusion on Azure GPU spot instances.">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 :root {
-  --bg: #08090a;
-  --card: #111214;
-  --border: #1e2024;
-  --border2: #2a2d33;
-  --text: #f0f2f5;
-  --muted: #7a8190;
-  --dim: #464c5a;
-  --accent: #4f8ef7;
-  --accent-glow: rgba(79,142,247,.15);
-  --green: #34d399;
-  --amber: #fbbf24;
-  --red: #f87171;
-  --purple: #a78bfa;
-  --radius: 10px;
-  --radius-lg: 16px;
-  --gap: clamp(1rem, 4vw, 2rem);
-  --max: 960px;
-  --feature-grid: repeat(auto-fill, minmax(260px, 1fr));
+  --bg: #08090a; --card: #111214; --border: #1e2024; --border2: #2a2d33;
+  --text: #f0f2f5; --muted: #7a8190; --dim: #464c5a;
+  --accent: #4f8ef7; --accent-glow: rgba(79,142,247,.12);
+  --green: #34d399; --amber: #fbbf24;
+  --radius: 10px; --radius-lg: 16px;
+  --gap: clamp(1rem, 4vw, 2rem); --max: 960px;
 }
 @media (prefers-color-scheme: light) {
   :root {
-    --bg: #f8f9fb;
-    --card: #ffffff;
-    --border: #e4e7ed;
-    --border2: #d1d5db;
-    --text: #111827;
-    --muted: #6b7280;
-    --dim: #9ca3af;
-    --accent: #2563eb;
-    --accent-glow: rgba(37,99,235,.08);
-    --green: #059669;
-    --amber: #d97706;
-    --red: #dc2626;
-    --purple: #7c3aed;
+    --bg: #f5f7fb; --card: #fff; --border: #e2e6ed; --border2: #ced3db;
+    --text: #0f1319; --muted: #5c6370; --dim: #9ca3af;
+    --accent: #1e6ef4; --accent-glow: rgba(30,110,244,.08);
+    --green: #10b981; --amber: #d97706;
   }
 }
 html { scroll-behavior: smooth; }
-body {
-  background: var(--bg);
-  color: var(--text);
-  font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Helvetica, Arial, sans-serif;
-  font-size: 15px;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-}
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-code { font-family: ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace; font-size: .875em; background: var(--border); padding: .15em .35em; border-radius: 4px; }
-/* ── Topbar ── */
-.topbar { position: sticky; top: 0; z-index: 100; background: var(--bg); border-bottom: 1px solid var(--border); backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
-.topbar-inner { max-width: var(--max); margin: 0 auto; padding: .75rem var(--gap); display: flex; align-items: center; gap: .75rem; font-size: .8rem; color: var(--muted); }
-.topbar-inner a { color: var(--muted); font-weight: 500; } .topbar-inner a:hover { color: var(--text); text-decoration: none; }
-.topbar-inner .sep { color: var(--border2); }
-.topbar-inner .current { color: var(--text); font-weight: 600; }
-/* ── Hero ── */
-.hero { padding: 3.5rem var(--gap) 2.5rem; max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 1fr auto; gap: 2rem; align-items: start; }
-@media (max-width: 600px) { .hero { grid-template-columns: 1fr; } .hero-logo { display: none; } }
-.hero-logo img { width: 80px; height: 80px; border-radius: 18px; box-shadow: 0 0 0 1px var(--border), 0 8px 24px rgba(0,0,0,.3); }
-.hero h1 { font-size: clamp(1.6rem, 5vw, 2.6rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.15; }
-.hero h1 a { color: var(--text); } .hero h1 a:hover { color: var(--accent); text-decoration: none; }
-.hero .tagline { font-size: clamp(.95rem, 2.5vw, 1.2rem); color: var(--muted); margin: .6rem 0 1.5rem; max-width: 540px; line-height: 1.5; }
-.meta-row { display: flex; flex-wrap: wrap; align-items: center; gap: .65rem 1.1rem; font-size: .82rem; color: var(--muted); margin-bottom: 1.5rem; }
-.meta-stars { color: var(--amber); font-weight: 700; }
-.meta-lang { display: inline-flex; align-items: center; gap: .35rem; }
-.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; flex-shrink: 0; }
-.dot-TypeScript{background:#3178c6}.dot-Python{background:#3572A5}.dot-Go{background:#00ADD8}
-.dot-Swift{background:#F05138}.dot-C{background:#555}.dot-Cpp{background:#f34b7d}
-.dot-Dockerfile{background:#384d54}.dot-Shell{background:#89e051}.dot-misc{background:#7a8190}
-.badge { display: inline-flex; align-items: center; gap: .3rem; padding: .2rem .65rem; border-radius: 2em; font-size: .72rem; font-weight: 600; letter-spacing: .02em; }
-.badge-active   { background: rgba(52,211,153,.12); color: #34d399; border: 1px solid rgba(52,211,153,.25); }
-.badge-stable   { background: rgba(79,142,247,.12); color: #4f8ef7; border: 1px solid rgba(79,142,247,.25); }
-.badge-maintained{background: rgba(167,139,250,.12); color: #a78bfa; border: 1px solid rgba(167,139,250,.25); }
-.badge-archived { background: rgba(251,191,36,.12); color: #fbbf24; border: 1px solid rgba(251,191,36,.25); }
-@media (prefers-color-scheme: light) {
+body { background:var(--bg); color:var(--text); font-family:-apple-system,BlinkMacSystemFont,"Segoe UI","Inter",Helvetica,Arial,sans-serif; font-size:15px; line-height:1.65; -webkit-font-smoothing:antialiased; }
+a { color:var(--accent); text-decoration:none; } a:hover { text-decoration:underline; }
+code { font-family:ui-monospace,"SF Mono","Fira Code",Menlo,Consolas,monospace; font-size:.875em; background:var(--border); padding:.1em .35em; border-radius:4px; }
+/* Topbar */
+.topbar { position:sticky; top:0; z-index:100; background:var(--bg); border-bottom:1px solid var(--border); backdrop-filter:blur(12px); }
+.topbar-inner { max-width:var(--max); margin:0 auto; padding:.7rem var(--gap); display:flex; align-items:center; gap:.6rem; font-size:.8rem; color:var(--muted); }
+.topbar-inner a { color:var(--muted); font-weight:500; } .topbar-inner a:hover { color:var(--text); text-decoration:none; }
+.sep { color:var(--border2); }
+.current { color:var(--text); font-weight:600; }
+/* Hero */
+.hero-wrap { max-width:var(--max); margin:0 auto; padding:3rem var(--gap) 2rem; }
+.hero-inner { display:grid; grid-template-columns:1fr auto; gap:2rem; align-items:start; }
+@media(max-width:560px){ .hero-inner { grid-template-columns:1fr; } .hero-logo { display:none; } }
+.hero-logo img { width:88px; height:88px; border-radius:20px; box-shadow:0 0 0 1px var(--border2), 0 12px 32px rgba(0,0,0,.5); }
+.hero h1 { font-size:clamp(1.8rem,5vw,2.8rem); font-weight:700; letter-spacing:-.03em; line-height:1.1; }
+.hero h1 a { color:var(--text); } .hero h1 a:hover { color:var(--accent); text-decoration:none; }
+.tagline { font-size:clamp(1rem,2.5vw,1.2rem); color:var(--muted); margin:.6rem 0 1.4rem; max-width:580px; line-height:1.5; }
+.meta { display:flex; flex-wrap:wrap; align-items:center; gap:.6rem 1.1rem; font-size:.82rem; color:var(--muted); margin-bottom:1.25rem; }
+.meta-stars { color:var(--amber); font-weight:700; font-size:.9rem; }
+.dot { width:9px; height:9px; border-radius:50%; display:inline-block; vertical-align:middle; margin-right:3px; flex-shrink:0; }
+.dot-TypeScript{background:#3178c6} .dot-Python{background:#3572A5} .dot-Go{background:#00ADD8}
+.dot-Swift{background:#F05138} .dot-C{background:#555} .dot-Cpp{background:#f34b7d}
+.dot-Dockerfile{background:#384d54} .dot-Shell{background:#89e051} .dot-misc{background:#7a8190}
+.badge { display:inline-flex; align-items:center; padding:.2rem .6rem; border-radius:2em; font-size:.7rem; font-weight:700; letter-spacing:.03em; }
+.badge-active   { background:rgba(52,211,153,.1); color:#34d399; border:1px solid rgba(52,211,153,.2); }
+.badge-stable   { background:rgba(79,142,247,.1); color:#4f8ef7; border:1px solid rgba(79,142,247,.2); }
+.badge-maintained { background:rgba(167,139,250,.1); color:#a78bfa; border:1px solid rgba(167,139,250,.2); }
+.badge-archived { background:rgba(251,191,36,.1); color:#fbbf24; border:1px solid rgba(251,191,36,.2); }
+@media(prefers-color-scheme:light){
   .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
   .badge-stable{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
   .badge-maintained{background:#ede9fe;color:#5b21b6;border-color:#c4b5fd}
   .badge-archived{background:#fef3c7;color:#92400e;border-color:#fcd34d}
 }
-.topic-list { display: flex; flex-wrap: wrap; gap: .4rem; margin-bottom: 1.5rem; }
-.topic { font-size: .72rem; background: var(--card); border: 1px solid var(--border2); color: var(--muted); padding: .18rem .6rem; border-radius: 2em; }
-.cta-row { display: flex; flex-wrap: wrap; gap: .65rem; }
-.btn { display: inline-flex; align-items: center; gap: .4rem; padding: .5rem 1.1rem; border-radius: var(--radius); font-size: .85rem; font-weight: 500; transition: all .15s; }
-.btn-primary { background: var(--accent); color: #fff; border: none; } .btn-primary:hover { opacity: .9; text-decoration: none; filter: brightness(1.1); }
-.btn-ghost { background: transparent; color: var(--text); border: 1px solid var(--border2); } .btn-ghost:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
-/* ── Divider ── */
-.divider { border: none; border-top: 1px solid var(--border); max-width: var(--max); margin: 0 auto; }
-/* ── Content wrap ── */
-.wrap { max-width: var(--max); margin: 0 auto; padding: 2.5rem var(--gap); }
-/* ── About ── */
-.about-text { font-size: 1.05rem; line-height: 1.75; color: var(--text); max-width: 680px; }
-/* ── Features ── */
-.section-eyebrow { font-size: .72rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: .5rem; }
-.section-title { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 1.75rem; }
-.features-grid { display: grid; grid-template-columns: var(--feature-grid); gap: 1px; background: var(--border); border-radius: var(--radius-lg); overflow: hidden; border: 1px solid var(--border); }
-.feature { background: var(--card); padding: 1.5rem; display: flex; flex-direction: column; gap: .5rem; }
-.feature-icon { font-size: 1.4rem; line-height: 1; }
-.feature-title { font-size: .9rem; font-weight: 600; color: var(--text); }
-.feature-body { font-size: .85rem; color: var(--muted); line-height: 1.6; }
-/* ── Architecture ── */
-.arch-text { font-size: .95rem; color: var(--muted); max-width: 680px; line-height: 1.75; background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1.25rem 1.5rem; }
-/* ── Releases ── */
-.releases { display: flex; flex-direction: column; gap: .75rem; }
-.release { background: var(--card); border: 1px solid var(--border); border-radius: var(--radius); padding: 1rem 1.25rem; }
-.release-head { display: flex; align-items: baseline; flex-wrap: wrap; gap: .6rem; margin-bottom: .3rem; }
-.release-tag { font-family: ui-monospace, monospace; font-size: .82rem; font-weight: 700; color: var(--accent); background: var(--accent-glow); padding: .1rem .45rem; border-radius: 4px; }
-.release-name { font-weight: 500; font-size: .9rem; }
-.release-date { color: var(--dim); font-size: .78rem; margin-left: auto; }
-.release-body { font-size: .82rem; color: var(--muted); white-space: pre-wrap; word-break: break-word; max-height: 200px; overflow: hidden; }
-/* ── History ── */
-.history { display: flex; flex-direction: column; }
-.commit { display: grid; grid-template-columns: 7rem 1fr auto; gap: .75rem; padding: .55rem 0; border-bottom: 1px solid var(--border); font-size: .82rem; align-items: start; }
-.commit:last-child { border-bottom: none; }
-.commit-date { color: var(--dim); white-space: nowrap; padding-top: .05rem; }
-.commit-msg { color: var(--muted); word-break: break-word; }
-.commit-sha { font-family: ui-monospace, monospace; font-size: .72rem; color: var(--dim); white-space: nowrap; }
-/* ── Posts ── */
-.posts { display: flex; flex-direction: column; gap: .5rem; }
-.post { display: grid; grid-template-columns: 6.5rem 1fr; gap: .75rem; font-size: .875rem; }
-.post-date { color: var(--dim); white-space: nowrap; padding-top: .1rem; font-size: .78rem; }
-.post-title { color: var(--text); }
-.post-title:hover { color: var(--accent); }
-/* ── Stats bar ── */
-.stats-bar { display: grid; grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2.5rem; }
-.stat { background: var(--card); padding: 1.1rem 1.25rem; }
-.stat-label { font-size: .7rem; text-transform: uppercase; letter-spacing: .08em; color: var(--dim); margin-bottom: .25rem; }
-.stat-value { font-size: 1.4rem; font-weight: 700; letter-spacing: -.02em; color: var(--text); }
-.stat-sub { font-size: .75rem; color: var(--muted); margin-top: .1rem; }
-/* ── Footer ── */
-footer { max-width: var(--max); margin: 0 auto; padding: 2rem var(--gap); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-footer .left { font-size: .8rem; color: var(--dim); }
-footer .right { display: flex; gap: 1.5rem; font-size: .8rem; }
-footer .right a { color: var(--muted); } footer .right a:hover { color: var(--text); }
+.topics { display:flex; flex-wrap:wrap; gap:.35rem; margin-bottom:1.25rem; }
+.topic { font-size:.72rem; background:var(--card); border:1px solid var(--border2); color:var(--muted); padding:.15rem .55rem; border-radius:2em; }
+.cta { display:flex; flex-wrap:wrap; gap:.6rem; }
+.btn { display:inline-flex; align-items:center; gap:.4rem; padding:.5rem 1.1rem; border-radius:var(--radius); font-size:.85rem; font-weight:500; transition:all .15s; }
+.btn-p { background:var(--accent); color:#fff; } .btn-p:hover { filter:brightness(1.1); text-decoration:none; }
+.btn-g { background:transparent; color:var(--text); border:1px solid var(--border2); } .btn-g:hover { border-color:var(--accent); color:var(--accent); text-decoration:none; }
+/* Stats */
+.stats-wrap { max-width:var(--max); margin:0 auto; padding:0 var(--gap) 2rem; }
+.stats { display:grid; grid-template-columns:repeat(auto-fill,minmax(130px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+.stat { background:var(--card); padding:1rem 1.2rem; }
+.stat-l { font-size:.68rem; text-transform:uppercase; letter-spacing:.08em; color:var(--dim); margin-bottom:.2rem; }
+.stat-v { font-size:1.45rem; font-weight:700; letter-spacing:-.02em; }
+.stat-sub { font-size:.7rem; color:var(--muted); margin-top:.1rem; }
+/* Sections */
+.section { max-width:var(--max); margin:0 auto; padding:2.5rem var(--gap); border-top:1px solid var(--border); }
+.eyebrow { font-size:.7rem; font-weight:700; text-transform:uppercase; letter-spacing:.1em; color:var(--accent); margin-bottom:.4rem; }
+.section-title { font-size:1.35rem; font-weight:700; letter-spacing:-.02em; margin-bottom:1.5rem; }
+/* About */
+.about { font-size:1rem; line-height:1.8; color:var(--muted); max-width:680px; }
+/* Feature grid */
+.features { display:grid; grid-template-columns:repeat(auto-fill,minmax(240px,1fr)); gap:1px; background:var(--border); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; }
+.feat { background:var(--card); padding:1.4rem; display:flex; flex-direction:column; gap:.45rem; }
+.feat-icon { font-size:1.3rem; line-height:1; }
+.feat-title { font-size:.88rem; font-weight:600; color:var(--text); }
+.feat-body { font-size:.82rem; color:var(--muted); line-height:1.6; }
+/* Diagram */
+.diagram-wrap { background:var(--card); border:1px solid var(--border); border-radius:var(--radius-lg); overflow:hidden; padding:1.5rem; }
+.diagram-wrap svg { width:100%; height:auto; display:block; }
+/* Releases */
+.releases { display:flex; flex-direction:column; gap:.6rem; }
+.release { background:var(--card); border:1px solid var(--border); border-radius:var(--radius); padding:.9rem 1.1rem; }
+.rel-head { display:flex; align-items:baseline; flex-wrap:wrap; gap:.5rem; margin-bottom:.25rem; }
+.rel-tag { font-family:ui-monospace,monospace; font-size:.8rem; font-weight:700; color:var(--accent); background:var(--accent-glow); padding:.1rem .4rem; border-radius:4px; }
+.rel-name { font-weight:500; font-size:.88rem; }
+.rel-date { color:var(--dim); font-size:.75rem; margin-left:auto; }
+.rel-body { font-size:.8rem; color:var(--muted); white-space:pre-wrap; word-break:break-word; max-height:180px; overflow:hidden; }
+/* Posts */
+.posts { display:flex; flex-direction:column; gap:.45rem; }
+.post { display:grid; grid-template-columns:6rem 1fr; gap:.75rem; font-size:.875rem; }
+.post-date { color:var(--dim); font-size:.75rem; padding-top:.12rem; white-space:nowrap; }
+/* Footer */
+footer { max-width:var(--max); margin:0 auto; padding:1.75rem var(--gap); border-top:1px solid var(--border); display:flex; align-items:center; justify-content:space-between; flex-wrap:wrap; gap:1rem; }
+.foot-l { font-size:.78rem; color:var(--dim); }
+.foot-r { display:flex; gap:1.5rem; font-size:.78rem; }
+.foot-r a { color:var(--muted); } .foot-r a:hover { color:var(--text); }
 </style>
 </head>
 <body>
-
 <header class="topbar">
   <div class="topbar-inner">
     <a href="/">rcarmo.github.io</a>
@@ -153,207 +114,71 @@ footer .right a { color: var(--muted); } footer .right a:hover { color: var(--te
     <span class="current">azure-stable-diffusion</span>
   </div>
 </header>
-
 <main>
-  <div class="hero">
-    <div class="hero-content">
-      <h1><a href="https://github.com/rcarmo/azure-stable-diffusion" target="_blank" rel="noopener">azure-stable-diffusion</a></h1>
-      <p class="tagline">Run Stable Diffusion on Azure spot instances — one command, a few cents an hour.</p>
-      <div class="meta-row">
-        <span class="meta-stars">★ 44</span>
-        <span>⑂ 6</span>
-        <span class="meta-lang"><span class="dot dot-Makefile"></span>Makefile</span>
-        <span class="badge badge-stable">stable</span>
-      </div>
-      
-      <div class="cta-row">
-        <a class="btn btn-primary" href="https://github.com/rcarmo/azure-stable-diffusion" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> View on GitHub</a>
+  <div class="hero-wrap">
+    <div class="hero-inner">
+      <div class="hero">
+        <h1><a href="https://github.com/rcarmo/azure-stable-diffusion" target="_blank" rel="noopener">azure-stable-diffusion</a></h1>
+        <p class="tagline">One-command Stable Diffusion on Azure GPU spot instances.</p>
+        <div class="meta">
+          <span class="meta-stars">★ 44</span>
+          <span>⑂ 6</span>
+          <span><span class="dot dot-Makefile"></span>Makefile</span>
+          <span class="badge badge-stable">stable</span>
+        </div>
         
+        <div class="cta">
+          <a class="btn btn-p" href="https://github.com/rcarmo/azure-stable-diffusion" target="_blank" rel="noopener"><svg width="14" height="14" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub</a>
+          
+        </div>
       </div>
+      
     </div>
-    
   </div>
-
-  <hr class="divider">
-
-  <div class="wrap">
-    <div class="section-eyebrow">About</div>
-    <p class="about-text">Built in September 2022 when Stable Diffusion first dropped and everyone wanted GPU time they didn't own. A Makefile wrapping Azure Bicep that spins up an NC-series spot VM, pre-installs AUTOMATIC1111, and tears it down when you're done. Still useful for occasional large batch runs.</p>
-  </div>
-
-  <div class="wrap">
-  <div class="stats-bar">
-    <div class="stat"><div class="stat-label">Stars</div><div class="stat-value">44</div><div class="stat-sub">on GitHub</div></div>
-    <div class="stat"><div class="stat-label">Forks</div><div class="stat-value">6</div><div class="stat-sub">public forks</div></div>
-    <div class="stat"><div class="stat-label">Language</div><div class="stat-value" style="font-size:1rem;padding-top:.35rem"><span class="dot dot-Makefile"></span> Makefile</div></div>
-    <div class="stat"><div class="stat-label">First release</div><div class="stat-value" style="font-size:1.1rem;padding-top:.25rem">2022</div></div>
-    <div class="stat"><div class="stat-label">Last active</div><div class="stat-value" style="font-size:.95rem;padding-top:.3rem">2023-04-20</div></div>
+  <div class="stats-wrap"><div class="stats">
+    <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">44</div><div class="stat-sub">on GitHub</div></div>
+    <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">6</div></div>
+    <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.95rem;padding-top:.4rem"><span class="dot dot-Makefile"></span>Makefile</div></div>
+    <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.1rem;padding-top:.3rem">2022</div></div>
+    <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">2023-04</div></div>
   </div></div>
-
-  
-  <div class="wrap">
-    <div class="section-eyebrow">Features</div>
+  <div class="section">
+    <div class="eyebrow">About</div>
+    <p class="about">Built in September 2022 when Stable Diffusion first dropped. A Makefile wrapping Azure Bicep provisions an NC-series GPU spot VM, installs CUDA and AUTOMATIC1111 WebUI, and exposes it via SSH tunnel. make deploy, make open, make destroy. Spot pricing keeps it under $0.10/hour for an NC6s_v3. Models and outputs live on an attached data disk that survives spot interruptions.</p>
+  </div>
+  <div class="section">
+    <div class="eyebrow">Features</div>
     <div class="section-title">What it does</div>
-    <div class="features-grid">
-      
-      <div class="feature">
-        <div class="feature-icon">⚡</div>
-        <div class="feature-title">One command</div>
-        <div class="feature-body">`make deploy` provisions the VM. `make open` forwards the web UI. `make destroy` deletes everything. Total setup time: ~8 minutes.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">💰</div>
-        <div class="feature-title">Spot pricing</div>
-        <div class="feature-body">NC6s_v3 spot instances run for under $0.10/hour. Batch 200 images for a few dollars, then tear it down.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">💾</div>
-        <div class="feature-title">Persistent state</div>
-        <div class="feature-body">Models and outputs live on an attached data disk that survives spot interruptions and `make destroy`/`deploy` cycles.</div>
-      </div>
-      <div class="feature">
-        <div class="feature-icon">🎨</div>
-        <div class="feature-title">AUTOMATIC1111 ready</div>
-        <div class="feature-body">WebUI pre-configured and accessible via SSH tunnel on first boot. Bring your own models or download from the VM.</div>
-      </div>
+    <div class="features">
+      <div class="feat"><div class="feat-icon">⚡</div><div class="feat-title">make deploy / make open / make destroy</div><div class="feat-body">Three commands. Eight minutes from nothing to AUTOMATIC1111 WebUI. Zero to teardown is two minutes.</div></div><div class="feat"><div class="feat-icon">💰</div><div class="feat-title">Spot instance pricing</div><div class="feat-body">NC6s_v3 spot: typically under $0.10/hour. Batch 200 images for a few dollars, then destroy the VM.</div></div><div class="feat"><div class="feat-icon">💾</div><div class="feat-title">Persistent model storage</div><div class="feat-body">Models and outputs live on an attached data disk — survive spot preemptions and make destroy / make deploy cycles.</div></div>
     </div>
   </div>
   
   
   
-  <div class="wrap">
-    <div class="section-eyebrow">History</div>
-    <div class="section-title">Recent commits</div>
-    <div class="history">
-      
-      <div class="commit">
-        <span class="commit-date">2023-04-20</span>
-        <span class="commit-msg">Update README.md</span>
-        <span class="commit-sha">392eb76f</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-12-13</span>
-        <span class="commit-msg">fix gen2 detection</span>
-        <span class="commit-sha">5a08f04e</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-29</span>
-        <span class="commit-msg">.PHONY targets</span>
-        <span class="commit-sha">58caf1c2</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-29</span>
-        <span class="commit-msg">cleanup</span>
-        <span class="commit-sha">cd6baaaa</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-29</span>
-        <span class="commit-msg">moved TUI to separate folder</span>
-        <span class="commit-sha">909959f0</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-29</span>
-        <span class="commit-msg">moved TUI to separate folder</span>
-        <span class="commit-sha">0ec9bd26</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-29</span>
-        <span class="commit-msg">basic TUI bootstrap</span>
-        <span class="commit-sha">564be911</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-29</span>
-        <span class="commit-msg">added basic TUI stub</span>
-        <span class="commit-sha">bd603456</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-29</span>
-        <span class="commit-msg">deprecated az command</span>
-        <span class="commit-sha">ba6a8a9b</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-27</span>
-        <span class="commit-msg">Update README.md</span>
-        <span class="commit-sha">bbf91e75</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-27</span>
-        <span class="commit-msg">missing text</span>
-        <span class="commit-sha">a8afec7f</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-27</span>
-        <span class="commit-msg">rename model files</span>
-        <span class="commit-sha">9b06e0da</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-27</span>
-        <span class="commit-msg">fix folder name</span>
-        <span class="commit-sha">877f2fa9</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-27</span>
-        <span class="commit-msg">checklist</span>
-        <span class="commit-sha">5d4fe231</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-27</span>
-        <span class="commit-msg">SD 2.0 cleanup</span>
-        <span class="commit-sha">c46f1532</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-26</span>
-        <span class="commit-msg">temporarily disable xformers</span>
-        <span class="commit-sha">c6f65159</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-26</span>
-        <span class="commit-msg">Automatic1111</span>
-        <span class="commit-sha">f8af81a4</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-26</span>
-        <span class="commit-msg">Huggingface</span>
-        <span class="commit-sha">648fdda3</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-26</span>
-        <span class="commit-msg">Add experimental variant</span>
-        <span class="commit-sha">01b054bf</span>
-      </div>
-      <div class="commit">
-        <span class="commit-date">2022-11-25</span>
-        <span class="commit-msg">Fixed Python base, added tailscale</span>
-        <span class="commit-sha">20098807</span>
-      </div>
-    </div>
-  </div>
-  
-  <div class="wrap">
-    <div class="section-eyebrow">Writing</div>
+  <div class="section">
+    <div class="eyebrow">Writing</div>
     <div class="section-title">On taoofmac.com</div>
     <div class="posts">
       
       <div class="post">
         <span class="post-date">2022-09-03</span>
-        <a class="post-title" href="https://taoofmac.com/space/blog/2022/09/03/1400" target="_blank" rel="noopener">Very Stable Diffusion</a>
+        <a href="https://taoofmac.com/space/blog/2022/09/03/1400" target="_blank" rel="noopener">Very Stable Diffusion</a>
       </div>
       <div class="post">
         <span class="post-date">2022-11-27</span>
-        <a class="post-title" href="https://taoofmac.com/space/blog/2022/11/27/1800" target="_blank" rel="noopener">A Diffuse Return</a>
+        <a href="https://taoofmac.com/space/blog/2022/11/27/1800" target="_blank" rel="noopener">A Diffuse Return</a>
       </div>
     </div>
   </div>
 </main>
-
 <footer>
-  <div class="left">Last indexed 2023-04-20</div>
-  <div class="right">
+  <div class="foot-l">Last indexed 2023-04-20</div>
+  <div class="foot-r">
     <a href="/">← All projects</a>
     <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
     <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
-
 </body>
 </html>
