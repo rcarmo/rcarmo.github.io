@@ -174,7 +174,7 @@ import { GammaCorrectionShader } from 'three/addons/shaders/GammaCorrectionShade
 const CLUSTERS = {
   highlight: {
     pos: new THREE.Vector3(0, 0, 0),
-    color: 0x00ffee,
+    color: 0x88ddd5,
     projects: [
       { id:'piclaw', name:'piclaw', stars:526, lang:'TypeScript',
         desc:'Self-hosted AI agent workspace — streaming UI, persistent state, built-in tools.',
@@ -183,7 +183,7 @@ const CLUSTERS = {
   },
   piku: {
     pos: new THREE.Vector3(-22, 0, -8),
-    color: 0xffdd00,
+    color: 0xe8c870,
     projects: [
       { id:'piku', name:'piku/piku', stars:6569, lang:'Python',
         desc:'The tiniest PaaS — git push deployments to your own server.',
@@ -192,7 +192,7 @@ const CLUSTERS = {
   },
   ai: {
     pos: new THREE.Vector3(20, 0, -12),
-    color: 0x00ff88,
+    color: 0x88d4a8,
     projects: [
       { id:'vibes',  name:'vibes', stars:142, lang:'Python',
         desc:'Mobile-first web UI for AI agents — ACP and Pi over RPC.',
@@ -216,7 +216,7 @@ const CLUSTERS = {
   },
   terminal: {
     pos: new THREE.Vector3(22, 0, 14),
-    color: 0xbb44ff,
+    color: 0xb8a0e0,
     projects: [
       { id:'webterm', name:'webterm', stars:106, lang:'Go',
         desc:'Go web terminal — multi-session dashboard for AI agents.',
@@ -237,7 +237,7 @@ const CLUSTERS = {
   },
   macos: {
     pos: new THREE.Vector3(-18, 0, 16),
-    color: 0xff6600,
+    color: 0xe8aa80,
     projects: [
       { id:'PhotosExport', name:'PhotosExport', stars:280, lang:'Swift',
         desc:'Export your complete Apple Photos library.',
@@ -255,7 +255,7 @@ const CLUSTERS = {
   },
   infra: {
     pos: new THREE.Vector3(2, 0, 26),
-    color: 0xff2255,
+    color: 0xe890a0,
     projects: [
       { id:'ground-init', name:'ground-init', stars:64, lang:'Python',
         desc:'Idempotent Linux bootstrap — YAML-driven, zero deps.',
@@ -397,9 +397,14 @@ const MOEBIUS_FRAG = `
 
   void main(){
     vec4 localDiff = texture2D(tDiffuse, vUv);
-    vec3 inkRgb      = sat(localDiff.rgb, 2.5) * 0.35;
-    vec4 inkColor    = vec4(inkRgb, 1.0);
-    vec4 outlineColor= vec4(sat(localDiff.rgb, 2.8) * 0.22, 1.0);
+    // Direct brightness levels — no saturation extrapolation that pushes values to black
+    // Each level is clearly visible as a coloured shadow, not a near-black tint
+    vec3 base     = localDiff.rgb;
+    vec4 outlineColor = vec4(base * 0.20, 1.0);   // darkest: ink outline
+    vec4 inkColor     = vec4(base * 0.30, 1.0);   // deep shadow fill
+    vec4 hatchDark    = vec4(base * 0.38, 1.0);   // dense cross-hatch
+    vec4 hatchMid     = vec4(base * 0.50, 1.0);   // medium hatch
+    vec4 hatchLight   = vec4(base * 0.65, 1.0);   // lightest hatch (clearly visible)
 
     float sv=smoothstep(0.008,0.025,sobel());
     if(sv>0.1){ gl_FragColor=outlineColor; return; }
@@ -420,34 +425,37 @@ const MOEBIUS_FRAG = `
     float pl=luma(texture2D(tDiffuse,nuv));
     float rx=uResolution.x; float ry=uResolution.y;
 
-    vec4 hatchLight = vec4(mix(inkRgb, vec3(0.82,0.78,0.68), 0.28), 1.0);
-    vec4 hatchMid   = vec4(inkRgb * 1.1, 1.0);
+    // hatchLight and hatchMid defined above
 
-    if(pl<=0.80){
+    // Layer 1 — light shadow: wide-spaced diagonal, clearly coloured
+    if(pl<=0.85){
       float xd2=randD(vUv.x,vUv.y,rx,ry,1.5/rx,vec4(timerRandoms[0],timerRandoms[1],timerRandoms[2],timerRandoms[3]));
       float yd2=randD(vUv.y,vUv.x,ry,rx,1.5/ry,vec4(timerRandoms[4],timerRandoms[5],timerRandoms[6],timerRandoms[7]));
       vec2 sv2=vUv+vec2(xd2,yd2);
-      if(mod(sv2.y*ry+sv2.x*rx,14.0)<=1.8) gl_FragColor=hatchLight;
+      if(mod(sv2.y*ry+sv2.x*rx,12.0)<=2.0) gl_FragColor=hatchLight;
     }
-    if(pl<=0.60){
+    // Layer 2 — medium shadow: perpendicular lines
+    if(pl<=0.65){
       float xd2=randD(vUv.x,vUv.y,rx,ry,1.5/rx,vec4(timerRandoms[8],timerRandoms[9],timerRandoms[10],timerRandoms[11]));
       float yd2=randD(vUv.y,vUv.x,ry,rx,1.5/ry,vec4(timerRandoms[12],timerRandoms[13],timerRandoms[14],timerRandoms[15]));
       vec2 sv2=vUv+vec2(xd2,yd2);
-      if(mod(sv2.x*rx,11.0)<=2.0) gl_FragColor=hatchMid;
+      if(mod(sv2.x*rx,10.0)<=2.2) gl_FragColor=hatchMid;
     }
-    if(pl<=0.42){
+    // Layer 3 — deep shadow: cross-hatch at tighter period
+    if(pl<=0.45){
       float xd2=randD(vUv.x,vUv.y,rx,ry,1.5/rx,vec4(timerRandoms[16],timerRandoms[17],timerRandoms[18],timerRandoms[19]));
       float yd2=randD(vUv.y,vUv.x,ry,rx,1.5/ry,vec4(timerRandoms[20],timerRandoms[21],timerRandoms[22],timerRandoms[23]));
       vec2 sv2=vUv+vec2(xd2,yd2);
-      if(mod(-sv2.y*ry+sv2.x*rx,8.0)<=2.2) gl_FragColor=inkColor;
+      if(mod(-sv2.y*ry+sv2.x*rx,7.5)<=2.4) gl_FragColor=hatchDark;
     }
+    // Layer 4 — very deep: dense fill
     if(pl<=0.28){
       float xd2=randD(vUv.x,vUv.y,rx,ry,1.5/rx,vec4(timerRandoms[24],timerRandoms[25],timerRandoms[26],timerRandoms[27]));
       float yd2=randD(vUv.y,vUv.x,ry,rx,1.5/ry,vec4(timerRandoms[28],timerRandoms[29],timerRandoms[30],timerRandoms[31]));
       vec2 sv2=vUv+vec2(xd2,yd2);
-      if(mod(sv2.y*ry+sv2.x*rx,6.0)<=2.5) gl_FragColor=inkColor;
+      if(mod(sv2.y*ry+sv2.x*rx,5.5)<=2.8) gl_FragColor=inkColor;
     }
-    if(pl<=0.15){ gl_FragColor=inkColor; }
+    if(pl<=0.14){ gl_FragColor=inkColor; }
   }`;
 
 // ── Composer setup ─────────────────────────────────────────────────────────
@@ -681,20 +689,38 @@ function buildCluster(clusterKey, cluster) {
   const clusterR = projects.length <= 2 ? 5 : 9;
   makeClusterGround(pos, color, clusterR * 0.85);
 
-  // Ring of bushes around cluster perimeter
-  const bushCount = 6 + projects.length * 2;
-  const perimR    = clusterR + 1.2;
-  for (let i = 0; i < bushCount; i++) {
-    const a   = (i / bushCount) * Math.PI * 2 + Math.random() * 0.3;
-    const r   = perimR + (Math.random() - 0.5) * 1.5;
-    const bsc = 0.6 + Math.random() * 0.7;
-    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, bsc);
+  // THREE concentric rings of shrubbery — dense hedgerow feel
+  const innerR = clusterR + 0.4;
+  const midR   = clusterR + 1.5;
+  const outerR = clusterR + 2.8;
+
+  // Outer hedge row — largest bushes, tightly packed
+  const outerCount = Math.round(outerR * Math.PI * 1.4);
+  for (let i = 0; i < outerCount; i++) {
+    const a = (i / outerCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.15;
+    const r = outerR + (Math.random() - 0.5) * 0.6;
+    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.9 + Math.random() * 0.6);
   }
-  // A few inner accent bushes for depth
-  for (let i = 0; i < 3; i++) {
+  // Mid ring — medium bushes, slight stagger
+  const midCount = Math.round(midR * Math.PI * 1.1);
+  for (let i = 0; i < midCount; i++) {
+    const a = (i / midCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.25;
+    const r = midR + (Math.random() - 0.5) * 0.5;
+    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.55 + Math.random() * 0.4);
+  }
+  // Inner ring — smaller filler bushes
+  const innerCount = Math.round(innerR * Math.PI * 0.9);
+  for (let i = 0; i < innerCount; i++) {
+    const a = (i / innerCount) * Math.PI * 2 + (Math.random() - 0.5) * 0.3;
+    const r = innerR + (Math.random() - 0.5) * 0.4;
+    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.3 + Math.random() * 0.3);
+  }
+  // Random scatter inside garden for depth
+  const scatterCount = 4 + projects.length;
+  for (let i = 0; i < scatterCount; i++) {
     const a = Math.random() * Math.PI * 2;
-    const r = clusterR * 0.5 * Math.random();
-    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.4);
+    const r = Math.random() * clusterR * 0.6;
+    makeBush(pos.x + Math.cos(a) * r, pos.z + Math.sin(a) * r, 0.25 + Math.random() * 0.25);
   }
 
   // Billboards for each project (skip for single-item hero cluster)
@@ -757,28 +783,35 @@ function buildCluster(clusterKey, cluster) {
     panel.add(frame);
   });
 
-  // Cluster label floating above platform
-  const label = makeLabel(clusterKey, cluster, color);
-  label.position.set(pos.x, 6, pos.z);
-  scene.add(label);
+  // Cluster label painted on the ground
+  makeFloorLabel(clusterKey, pos, color);
 }
 
-function makeLabel(key, cluster, color) {
-  const W = 320, H = 64, cv = document.createElement('canvas');
+function makeFloorLabel(key, pos, color) {
+  // Pastel, slightly darker than the ground disc so it reads without glare
+  const W = 512, H = 128, cv = document.createElement('canvas');
   cv.width = W; cv.height = H;
   const ctx = cv.getContext('2d');
   ctx.clearRect(0, 0, W, H);
-  const hex = '#' + color.toString(16).padStart(6, '0');
-  ctx.fillStyle = hex;
-  ctx.font = 'bold 36px ui-monospace, "SF Mono", monospace';
+  // Desaturate and darken the accent colour for a painted-on look
+  const r = (color >> 16) & 0xff;
+  const g = (color >>  8) & 0xff;
+  const b =  color        & 0xff;
+  const dr = Math.round(r * 0.52), dg = Math.round(g * 0.52), db = Math.round(b * 0.52);
+  ctx.fillStyle = `rgb(${dr},${dg},${db})`;
+  ctx.font = 'bold 64px ui-monospace, "SF Mono", monospace';
   ctx.textAlign = 'center';
-  ctx.fillText(key.toUpperCase(), W/2, 46);
+  ctx.textBaseline = 'middle';
+  ctx.fillText(key.toUpperCase(), W/2, H/2);
   const tex = new THREE.CanvasTexture(cv);
+  // Flat plane lying on the ground, rotated to be readable from above
   const mesh = new THREE.Mesh(
-    new THREE.PlaneGeometry(4, .8),
-    new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false, side: THREE.DoubleSide })
+    new THREE.PlaneGeometry(8, 2),
+    new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false })
   );
-  return mesh;
+  mesh.rotation.x = -Math.PI / 2;
+  mesh.position.set(pos.x, -0.44, pos.z);
+  scene.add(mesh);
 }
 
 // Build all clusters
@@ -787,7 +820,7 @@ Object.entries(CLUSTERS).forEach(([key, cluster]) => buildCluster(key, cluster))
 // ── Floating star for piclaw (hero) ────────────────────────────────────────
 const heroGeo = new THREE.IcosahedronGeometry(1.1, 1);
 const heroMat = new THREE.MeshStandardMaterial({
-  color: 0x00ffee, emissive: 0x00cccc, emissiveIntensity: 0.1,
+  color: 0x88ddd5, emissive: 0x66c4bb, emissiveIntensity: 0.1,
   roughness: 0.4, metalness: 0.3
 });
 const heroMesh = new THREE.Mesh(heroGeo, heroMat);
@@ -797,7 +830,7 @@ scene.add(heroMesh);
 
 // ── piku monolith (most starred) ───────────────────────────────────────────
 const monolithMat = new THREE.MeshStandardMaterial({
-  color: 0xffdd00, emissive: 0xffdd00, emissiveIntensity: 0.1,
+  color: 0xe8c870, emissive: 0xd4a840, emissiveIntensity: 0.1,
   roughness: 0.6, metalness: 0.2
 });
 const monolith = new THREE.Mesh(new THREE.BoxGeometry(0.8, 7, 0.8), monolithMat);
@@ -909,6 +942,7 @@ function flyToBillboard(bill) {
   bezierLookB.copy(bPos);
   bezierT = 0; bezierActive = true; flying = false;
   controls.autoRotate = false;
+  controls.enabled = false;  // prevent damping from fighting the arc
   targetCamLook = bPos;
 }
 
@@ -1003,7 +1037,7 @@ function animate() {
   // Camera fly-to
   if (bezierActive) {
     bezierT += 1 / bezierFrames;
-    if (bezierT >= 1) { bezierT = 1; bezierActive = false; }
+    if (bezierT >= 1) { bezierT = 1; bezierActive = false; controls.enabled = true; }
     const e = bezierT < 0.5 ? 2*bezierT*bezierT : -1+(4-2*bezierT)*bezierT;
     camera.position.copy(bezierCurve.getPoint(e));
     controls.target.lerpVectors(bezierLookA, bezierLookB, e * e);
