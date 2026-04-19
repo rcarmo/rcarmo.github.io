@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PhotosExport — Rui Carmo</title>
+<link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+  :root {
+    --bg: #0d1117; --surface: #161b22; --border: #30363d;
+    --text: #e6edf3; --muted: #8b949e; --accent: #58a6ff; --accent2: #f78166;
+    --tag-bg: #21262d; --tag-text: #79c0ff; --star: #e3b341; --radius: 8px; --gap: 1.5rem;
+  }
+  @media (prefers-color-scheme: light) {
+    :root {
+      --bg: #f6f8fa; --surface: #ffffff; --border: #d0d7de;
+      --text: #1f2328; --muted: #656d76; --accent: #0969da;
+      --tag-bg: #ddf4ff; --tag-text: #0550ae; --star: #9a6700;
+    }
+  }
+  body { background: var(--bg); color: var(--text); font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif; font-size: 15px; line-height: 1.7; }
+  a { color: var(--accent); text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .wrap { max-width: 860px; margin: 0 auto; padding: var(--gap); }
+  nav { border-bottom: 1px solid var(--border); padding: 0.75rem var(--gap); display: flex; align-items: center; gap: 1rem; font-size: 0.875rem; color: var(--muted); }
+  nav a { color: var(--muted); } nav a:hover { color: var(--accent); }
+  nav span { color: var(--border); }
+  .hero { padding: 2.5rem 0 2rem; border-bottom: 1px solid var(--border); margin-bottom: 2rem; }
+  .hero h1 { font-size: 2rem; font-weight: 700; display: flex; align-items: center; gap: 0.75rem; flex-wrap: wrap; }
+  .hero h1 a { color: var(--text); } .hero h1 a:hover { color: var(--accent); text-decoration: none; }
+  .hero .tagline { color: var(--muted); font-size: 1.05rem; margin: 0.6rem 0 1rem; }
+  .stats { display: flex; flex-wrap: wrap; gap: 1.25rem; font-size: 0.875rem; color: var(--muted); margin-bottom: 1rem; }
+  .stars { color: var(--star); font-weight: 600; }
+  .lang-dot { width: 10px; height: 10px; border-radius: 50%; display: inline-block; }
+  .lang-TypeScript { background: #3178c6; } .lang-Python { background: #3572A5; }
+  .lang-Go { background: #00ADD8; } .lang-Swift { background: #F05138; }
+  .lang-C { background: #555555; } .lang-Cpp { background: #f34b7d; }
+  .lang-Dockerfile { background: #384d54; } .lang-Shell { background: #89e051; }
+  .lang-OpenSCAD { background: #e5cd31; } .lang-misc { background: #8b949e; }
+  .tags { display: flex; flex-wrap: wrap; gap: 0.4rem; }
+  .tag { display: inline-block; background: var(--tag-bg); color: var(--tag-text); font-size: 0.75rem; padding: 0.15rem 0.55rem; border-radius: 2em; }
+  section { margin: 2rem 0; }
+  section h2 { font-size: 0.875rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; color: var(--muted); margin-bottom: 1rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .desc-text { color: var(--text); max-width: 680px; }
+  .post-list { list-style: none; display: flex; flex-direction: column; gap: 0.6rem; }
+  .post-list li { display: flex; align-items: baseline; gap: 0.75rem; font-size: 0.9rem; }
+  .post-list .date { color: var(--muted); font-size: 0.8rem; white-space: nowrap; min-width: 6rem; }
+  .gh-link { display: inline-flex; align-items: center; gap: 0.4rem; background: var(--surface); border: 1px solid var(--border); border-radius: var(--radius); padding: 0.5rem 1rem; font-size: 0.875rem; font-weight: 500; color: var(--text); transition: border-color 0.15s; }
+  .gh-link:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
+  footer { text-align: center; color: var(--muted); font-size: 0.825rem; padding: 2.5rem var(--gap) 1.5rem; border-top: 1px solid var(--border); margin-top: 3rem; }
+</style>
+</head>
+<body>
+<nav>
+  <div class="wrap" style="display:flex;align-items:center;gap:1rem;padding-top:0;padding-bottom:0;max-width:860px">
+    <a href="/">rcarmo.github.io</a>
+    <span>/</span>
+    <span>PhotosExport</span>
+  </div>
+</nav>
+<div class="wrap">
+  <div class="hero">
+    <h1>
+      <a href="https://github.com/rcarmo/PhotosExport" target="_blank">PhotosExport</a>
+    </h1>
+    <p class="tagline">Export ALL your data from Apple Photos.</p>
+    <div class="stats">
+      <span class="stars">★ 280</span>
+      <span>⑂ 7 forks</span>
+      <span><span class="lang-dot lang-Swift"></span> Swift</span>
+      <span>First released 2025</span>
+    </div>
+    <div class="tags" style="margin-bottom:1.25rem">
+      <span class="tag">macos</span> <span class="tag">swift</span> <span class="tag">apple-photos</span> <span class="tag">export</span> <span class="tag">data-liberation</span>
+    </div>
+    <div style="display:flex;gap:0.75rem;flex-wrap:wrap">
+      <a class="gh-link" href="https://github.com/rcarmo/PhotosExport" target="_blank">
+        <svg width="16" height="16" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>
+        View on GitHub
+      </a>
+      
+    </div>
+  </div>
+
+  <section>
+    <h2>About</h2>
+    <p class="desc-text">A macOS command-line tool that exports every photo, video, album, and <br>metadata from your Apple Photos library — including Live Photos, edited versions, <br>and all EXIF data. Written in Swift, it uses the PhotoKit framework directly to <br>ensure nothing is missed. Built because Photos export UI is notoriously incomplete <br>and third-party tools missed edge cases.</p>
+  </section>
+
+  
+</div>
+
+<footer>
+  <a href="/">← All projects</a> &nbsp;·&nbsp;
+  <a href="https://taoofmac.com" target="_blank">taoofmac.com</a> &nbsp;·&nbsp;
+  <a href="https://github.com/rcarmo" target="_blank">github.com/rcarmo</a>
+</footer>
+</body>
+</html>
