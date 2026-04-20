@@ -1,0 +1,33 @@
+{
+  "id": "python-office-mcp-server",
+  "meta": {
+    "name": "python-office-mcp-server",
+    "full_name": "rcarmo/python-office-mcp-server",
+    "description": "MCP server for Microsoft Office automation \u2014 read, write, and manipulate Word, Excel, and PowerPoint files.",
+    "homepage": "",
+    "stars": 3,
+    "forks": 1,
+    "language": "Python",
+    "created_at": "2026-03-12T00:00:00Z",
+    "pushed_at": "2026-04-16T00:00:00Z",
+    "updated_at": "2026-04-16T00:00:00Z",
+    "topics": [
+      "mcp",
+      "office",
+      "python",
+      "word",
+      "excel",
+      "powerpoint"
+    ]
+  },
+  "readme": "",
+  "commits": [],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-20T10:00:00Z",
+  "logo": null,
+  "logo_data_uri": null,
+  "logo_ext": null,
+  "diagram": null,
+  "diagram_inline": null
+}

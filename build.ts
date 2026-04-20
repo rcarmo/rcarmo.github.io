@@ -838,7 +838,7 @@ let built = 0, skipped = 0;
 for (const f of (readdirSync(DATA) as string[]).filter(f => f.endsWith(".dossier.json"))) {
   const proj = f.replace(".dossier.json","");
   const d: Dossier = JSON.parse(readFileSync(join(DATA, f), "utf-8"));
-  const c = C[proj];
+  const c = C[proj] ?? readContent(proj);
   if (!c) { skipped++; continue; }
   writeFileSync(join(OUT, `${proj}.html`), page(d, c));
   console.log(`  ✓ ${proj}`);
@@ -866,6 +866,37 @@ function readFrontmatter(proj: string): { section: string; status: string; tagli
     const tagline = text.match(/^tagline:\s*(.+)$/m)?.[1]?.trim() ?? "";
     return { section, status, tagline };
   } catch { return { section: "infrastructure", status: "active", tagline: "" }; }
+}
+
+function readContent(proj: string): Content | null {
+  try {
+    const text = readFileSync(join(ROOT, "_content", `${proj}.md`), "utf-8");
+    const tagline = text.match(/^tagline:\s*(.+)$/m)?.[1]?.trim() ?? "";
+    const status  = (text.match(/^status:\s*(\w+)$/m)?.[1]?.trim() ?? "active") as Content["status"];
+
+    // Extract sections: ## About, ## How it works, ## Features
+    const stripFm = text.replace(/^---[\s\S]+?---\n/, "");
+    const aboutM  = stripFm.match(/## About\n([\s\S]+?)(?=\n## |$)/);
+    const howM    = stripFm.match(/## How it works\n([\s\S]+?)(?=\n## |$)/);
+    const featM   = stripFm.match(/## Features\n([\s\S]+?)(?=\n## |$)/);
+
+    const about = aboutM?.[1]?.trim() ?? tagline;
+    const how   = howM?.[1]?.trim() ?? "";
+
+    // Parse ### icon title\nbody feature blocks
+    const features: Feature[] = [];
+    if (featM?.[1]) {
+      const blocks = featM[1].matchAll(/###\s+(.+?)\n([\s\S]+?)(?=\n###|$)/g);
+      for (const [, header, body] of blocks) {
+        const iconMatch = header.match(/^(\p{Emoji_Presentation}|\p{Emoji}\uFE0F|[^\s])/u);
+        const icon  = iconMatch?.[0] ?? "•";
+        const title = header.replace(icon, "").trim();
+        features.push({ icon, title, body: body.trim() });
+      }
+    }
+
+    return { tagline, about, how, features, status };
+  } catch { return null; }
 }
 
 const INDEX_CSS = `

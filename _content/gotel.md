@@ -1,5 +1,5 @@
 ---
-section: terminal
+section: infrastructure
 status: active
 tagline: Self-contained OTel collector — SQLite storage, built-in trace viewer.
 ---
