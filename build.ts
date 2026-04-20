@@ -283,6 +283,7 @@ function buildProjectPage(project: Project): string {
           <a class="btn btn-primary" href="${ghUrl}" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
+      <div id="hero-related" class="hero-related"></div>
     </div>
   </header>
 
@@ -330,13 +331,6 @@ ${posts.length ? `      <section class="sec" id="s-posts">
         <div class="sec-label">Posts</div>
         <div class="posts">${postsHtml}</div>
       </section>` : ""}
-
-      <section class="sec" id="s-related">
-        <div class="sec-label">Related</div>
-        <div id="related-island-${id}" data-section="${esc(fm.section)}">
-          <!-- populated client-side or at build time -->
-        </div>
-      </section>
     </main>
   </div>
 
@@ -539,28 +533,24 @@ function injectRelated(html: string, project: Project, allProjects: Project[]): 
     if (related.length >= 5) break;
   }
 
+  const placeholder = '<div id="hero-related" class="hero-related"></div>';
+
   if (!related.length) {
-    return html.replace(
-      `<div id="hero-related-${project.id}" class="hero-related">`,
-      `<div id="hero-related-${project.id}" class="hero-related" style="display:none">`
-    );
+    return html.replace(placeholder, '<div id="hero-related" class="hero-related" hidden></div>');
   }
 
-  const relatedHtml = related.map(r => {
+  const links = related.map(r => {
     const logo = logoDataUri(r);
-    const logoImg = logo ? `<img src="${logo}" alt="" class="related-logo">` : "";
-    return `<a href="/projects/${r.id}.html" class="related-link">${logoImg}<span>${esc(r.id)}</span></a>`;
-  }).join("\n          ");
+    const img = logo ? `<img src="${logo}" alt="" class="related-logo">` : "";
+    return `<a href="/projects/${r.id}.html" class="related-link">${img}<span>${esc(r.id)}</span></a>`;
+  }).join("\n        ");
 
-  return html.replace(
-    `<div id="hero-related-${project.id}" class="hero-related">
-        <!-- injected at build time -->
-      </div>`,
-    `<div id="hero-related-${project.id}" class="hero-related">
+  const replacement = `<div id="hero-related" class="hero-related">
         <div class="related-label">Related</div>
-        ${relatedHtml}
-      </div>`
-  );
+        ${links}
+      </div>`;
+
+  return html.replace(placeholder, replacement);
 }
 
 // ── Main ─────────────────────────────────────────────────────────────────────
