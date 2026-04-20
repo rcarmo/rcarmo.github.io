@@ -3,7 +3,6 @@ section: terminal
 status: active
 created: 2026-01-28
 tagline: Ghostty terminal sessions in a browser — xterm.js compatibility.
-logo: assets/logos-opt/ghostty-web.png
 ---
 
 ## About

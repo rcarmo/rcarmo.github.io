@@ -60,12 +60,13 @@
 
       <section class="sec" id="s-about">
         <div class="sec-label">Overview</div>
-        <p>Agentbox is a Debian Trixie container with Copilot CLI, Codex, and Pi preinstalled alongside git, gh, Bun, uv, and Homebrew. Docker, SSH, and RDP disabled by default, enabled via env vars. GUI image with XFCE and XRDP available. Workspace skeleton with SKILL.md templates.</p>
+        <p>Agentbox is a Debian Trixie container with Copilot CLI, Claude, Codex, and Pi preinstalled alongside <code>git</code>, <code>gh</code>, <code>bun</code>, <code>uv</code>, and <code>brew</code>.</p>
+<p>It provides Docker, <code>ssh</code>, and a GUI image with RDP (disabled by default, enabled via env vars) and an XFCE desktop environment, as well as a workspace skeleton with <code>SKILL.md</code> templates to help coding harnesses feel at home.</p>
       </section>
 
       <section class="sec" id="s-how">
         <div class="sec-label">How it works</div>
-        <p>The entrypoint checks ENABLE_DOCKER, ENABLE_SSH, and ENABLE_RDP and starts only what you asked for — all three default to off. When ENABLE_DOCKER=true, dockerd starts inside the container for Docker-in-Docker. The agent user gets passwordless sudo. The workspace skeleton at /home/agent/workspace-skel copies into /workspace on first use without overwriting files.</p>
+        <p>The entrypoint checks <code>ENABLE_DOCKER</code>, <code>ENABLE_SSH</code>, and <code>ENABLE_RDP</code> and starts only what you asked for — all three default to off. The agent user gets passwordless sudo, and the workspace skeleton at <code>/home/agent/workspace-skel</code> copies into <code>/workspace</code> on first use without overwriting files.</p>
       </section>
 
       <section class="sec" id="s-features">
@@ -76,7 +77,7 @@
       <div class="feature-icon">🤖</div>
       <div>
         <div class="feature-title">Agents preinstalled</div>
-        <div class="feature-body"><p>Copilot CLI, Codex, Pi ready. toad, opencode, gemini via make targets.</p></div>
+        <div class="feature-body"><p>Copilot CLI, Claude, Codex, Pi baked in. Toad, OpenCode and Gemini via <code>make</code> targets.</p></div>
       </div>
     </div>
 
@@ -92,7 +93,7 @@
       <div class="feature-icon">🖥</div>
       <div>
         <div class="feature-title">CLI and GUI images</div>
-        <div class="feature-body"><p>:latest is headless. :gui adds XFCE, XRDP, VS Code.</p></div>
+        <div class="feature-body"><p><code>:latest</code> is headless. <code>:gui</code> adds XFCE, XRDP, VS Code.</p></div>
       </div>
     </div>
 
@@ -100,7 +101,7 @@
       <div class="feature-icon">📘</div>
       <div>
         <div class="feature-title">Workspace skeleton</div>
-        <div class="feature-body"><p>SKILL.md templates without overwriting existing files.</p></div>
+        <div class="feature-body"><p><code>SKILL.md</code> templates without overwriting existing files.</p></div>
       </div>
     </div>
 

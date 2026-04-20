@@ -3,7 +3,6 @@ section: macos
 status: stable
 created: 2025-08-09
 tagline: Switch Steam accounts on a shared PC via HomeKit.
-logo: assets/logos-opt/homekit-steam-user-switcher.png
 ---
 
 ## About
