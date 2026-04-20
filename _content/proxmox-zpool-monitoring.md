@@ -2,6 +2,7 @@
 section: infrastructure
 status: stable
 tagline: ZFS pool metrics for Proxmox — exported to Graphite, cron only.
+logo: assets/logos-opt/proxmox-zpool-monitoring.png
 ---
 
 ## About
@@ -19,3 +20,6 @@ One script, one endpoint. No daemon.
 
 ### 🔌 Graphite plaintext
 Compatible with Carbon, InfluxDB, and others.
+
+## Posts
+- [Proxmox VE on the FriendlyELEC CM3588 NAS](https://taoofmac.com/space/notes/2024/11/09/1940) — 2024-11-09

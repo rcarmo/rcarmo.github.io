@@ -2,6 +2,7 @@
 section: macos
 status: maintained
 tagline: Basilisk II and SheepShaver for Raspberry Pi — SDL2 framebuffer, pre-built .deb.
+logo: assets/logos-opt/macemu-jit.png
 ---
 
 ## About
@@ -22,3 +23,9 @@ Basilisk II for System 6–8. SheepShaver for Mac OS 8.6–9.0.4.
 
 ### 🖥 Direct framebuffer
 Lower latency than X11.
+
+## Posts
+- [Notes for July 2024](https://taoofmac.com/space/notes/2024/07/21/1800) — 2024-07-21
+- [Notes, 2025-12-31](https://taoofmac.com/space/notes/2025/12/31/1830) — 2025-12-31
+- [Notes for March 23-29](https://taoofmac.com/space/notes/2026/03/29/1300) — 2026-03-29
+- [Notes for March 30 – April 5](https://taoofmac.com/space/notes/2026/04/05/1700) — 2026-04-05

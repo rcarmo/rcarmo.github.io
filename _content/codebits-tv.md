@@ -2,6 +2,7 @@
 section: infrastructure
 status: maintained
 tagline: Digital signage for hackathons and events — multicast video streaming to any screen on the LAN, the ghetto way.
+logo: assets/logos-opt/codebits-tv.png
 ---
 
 ## About

@@ -2,6 +2,7 @@
 section: terminal
 status: active
 tagline: Go web terminal with multi-session dashboard mode — built for AI agent workflows.
+logo: assets/logos-opt/webterm.png
 ---
 
 ## About
@@ -22,3 +23,7 @@ Sticky Esc/Ctrl/Shift/Tab/arrows with sticky combos.
 
 ### 🔌 Library-first
 Powers the terminal in agentbox, piclaw, and ghostty-web.
+
+## Posts
+- [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
+- [Notes for February 8-15](https://taoofmac.com/space/notes/2026/02/15/1530) — 2026-02-15

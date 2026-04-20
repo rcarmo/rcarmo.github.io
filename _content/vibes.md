@@ -2,6 +2,7 @@
 section: ai-agents
 status: active
 tagline: Mobile-first web UI for AI agents — ACP and Pi over RPC, zero build step.
+logo: assets/logos-opt/vibes.png
 ---
 
 ## About
@@ -22,3 +23,7 @@ Live token streaming. No polling, no spinners.
 
 ### 🔩 Zero build step
 One Python file. One HTML file. Clone and run.
+
+## Posts
+- [Vibing with the Agent Control Protocol](https://taoofmac.com/space/notes/2026/02/01/2100) — 2026-02-01
+- [Notes for February 2-7](https://taoofmac.com/space/notes/2026/02/07/2000) — 2026-02-07

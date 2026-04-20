@@ -2,6 +2,7 @@
 section: macos
 status: stable
 tagline: Switch Steam accounts on a shared PC via HomeKit.
+logo: assets/logos-opt/homekit-steam-user-switcher.png
 ---
 
 ## About
@@ -19,3 +20,6 @@ Local --login flag only. No Valve network calls.
 
 ### 🐧 macOS and Linux
 Runs as systemd service.
+
+## Posts
+- [Notes, 2025-12-24](https://taoofmac.com/space/notes/2025/12/24/1400) — 2025-12-24

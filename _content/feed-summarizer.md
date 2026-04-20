@@ -2,6 +2,7 @@
 section: ai-agents
 status: active
 tagline: LLM-powered RSS digest — full-text extraction, runs on a Raspberry Pi.
+logo: assets/logos-opt/feed-summarizer.png
 ---
 
 ## About
@@ -19,3 +20,7 @@ Ollama on Raspberry Pi 4, or any OpenAI-compatible API.
 
 ### ⏰ Cron-friendly
 One Python script, no daemon.
+
+## Posts
+- [My Rube Goldberg RSS Pipeline](https://taoofmac.com/space/blog/2026/01/17/2130) — 2026-01-17
+- [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01

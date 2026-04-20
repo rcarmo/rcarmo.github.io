@@ -2,6 +2,7 @@
 section: infrastructure
 status: active
 tagline: Coding kata practice environment with AI-assisted feedback — repetition makes perfect.
+logo: assets/logos-opt/kata.png
 ---
 
 ## About

@@ -2,6 +2,7 @@
 section: ai-agents
 status: active
 tagline: Micro MCP server — zero deps, decorator-based, stdio only.
+logo: assets/logos-opt/umcp.png
 ---
 
 ## About
@@ -19,3 +20,7 @@ Pure Python 3 stdlib. Copy one file.
 
 ### 🎯 Decorator registration
 Docstring → description. Annotations → JSON Schema.
+
+## Posts
+- [Creating Per-Project MCP Servers](https://taoofmac.com/space/blog/2025/10/04/1111) — 2025-10-04
+- [Notes on SKILL.md vs MCP](https://taoofmac.com/space/notes/2026/01/14/0830) — 2026-01-14

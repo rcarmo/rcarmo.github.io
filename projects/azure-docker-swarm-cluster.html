@@ -3,384 +3,136 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>azure-docker-swarm-cluster — Rui Carmo</title>
+<title>azure-docker-swarm-cluster — rcarmo</title>
 <meta name="description" content="Auto-scaling Docker Swarm cluster for Azure — ARM template plus Makefile, manager and worker VMSS included.">
-<meta property="og:image" content="/assets/banners/azure-docker-swarm-cluster.png">
-<link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
-<style>
-@font-face {
-  font-family:'Inter';font-style:normal;font-display:swap;font-weight:100 900;
-  src:url('/assets/fonts/inter-var.woff2') format('woff2');
-  unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,
-    U+0304,U+0308,U+0329,U+2000-206F,U+2074,U+20AC,U+2122,U+2191,U+2193,U+2212,
-    U+2215,U+FEFF,U+FFFD;
-}
-*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
-:root{
-  --bg:#ffffff;--surface:#f8fafc;--surface2:#f1f5f9;--border:#e2e8f0;--border2:#cbd5e1;
-  --text:#0f172a;--muted:#475569;--dim:#94a3b8;--subtle:#cbd5e1;
-  --accent:#2563eb;--accent-dim:#eff6ff;--accent-muted:#bfdbfe;
-  --amber:#d97706;--green:#16a34a;--red:#dc2626;
-  --radius:8px;--radius-lg:12px;--gap:clamp(1rem,4vw,2rem);--max:960px;
-  --font:'Inter',system-ui,-apple-system,sans-serif;
-  --mono:ui-monospace,'SF Mono',Menlo,Consolas,monospace;
-  --shadow-sm:0 1px 2px rgba(0,0,0,.06);
-  --shadow:0 4px 12px rgba(0,0,0,.08);
-  --shadow-lg:0 12px 40px rgba(0,0,0,.12);
-}
-@media(prefers-color-scheme:dark){
-  :root{
-    --bg:#0c0e14;--surface:#111520;--surface2:#181e2c;--border:rgba(255,255,255,.07);
-    --border2:rgba(255,255,255,.13);--text:#e8edf5;--muted:#7089b0;--dim:#3f5070;
-    --subtle:#2a3550;--accent:#4f8ef7;--accent-dim:rgba(79,142,247,.1);
-    --accent-muted:rgba(79,142,247,.3);--amber:#f59e0b;--green:#34d399;--red:#f87171;
-    --shadow-sm:0 1px 2px rgba(0,0,0,.3);--shadow:0 4px 12px rgba(0,0,0,.4);
-    --shadow-lg:0 12px 40px rgba(0,0,0,.6);
-  }
-}
-html{scroll-behavior:smooth;}
-body{background:var(--bg);color:var(--text);font-family:var(--font);
-  font-size:15px;line-height:1.6;-webkit-font-smoothing:antialiased;
-  font-feature-settings:'cv05','cv08','cv10','tnum';font-optical-sizing:auto;}
-a{color:var(--accent);text-decoration:none;}a:hover{text-decoration:underline;}
-code,kbd{font-family:var(--mono);font-size:.875em;background:var(--surface2);
-  padding:.1em .35em;border-radius:4px;border:1px solid var(--border);}
-
-/* ── Topbar ── */
-.topbar{position:sticky;top:0;z-index:200;background:rgba(255,255,255,.88);
-  backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border);box-shadow:var(--shadow-sm);}
-@media(prefers-color-scheme:dark){.topbar{background:rgba(12,14,20,.9);}}
-.topbar-inner{max-width:var(--max);margin:0 auto;padding:.6rem var(--gap);
-  display:flex;align-items:center;gap:.6rem;font-size:.75rem;font-family:var(--mono);color:var(--muted);}
-.topbar-inner a{color:var(--muted);}.topbar-inner a:hover{color:var(--text);text-decoration:none;}
-.sep{color:var(--subtle)}.current{color:var(--text);font-weight:600;}
-
-/* ── Hero banner (project pages) ── */
-.hero-banner{position:relative;overflow:hidden;height:320px;background:var(--surface2);}
-.hero-bg{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
-.hero-overlay{position:absolute;inset:0;
-  background:linear-gradient(to right,rgba(6,8,18,.92) 0%,rgba(6,8,18,.7) 52%,rgba(6,8,18,.15) 100%);}
-.hero-content{position:absolute;inset:0;display:flex;flex-direction:row;align-items:center;
-  justify-content:space-between;padding:3.5rem var(--gap);
-  max-width:var(--max);margin:0 auto;left:0;right:0;gap:2rem;overflow:hidden;}
-.hero-text{display:flex;flex-direction:column;justify-content:flex-start;
-  flex:1;min-width:0;gap:.4rem;max-height:100%;overflow:hidden;}
-.hero-logo{flex-shrink:0;width:160px;height:160px;object-fit:contain;
-  filter:drop-shadow(0 4px 32px rgba(0,0,0,.6));}
-.hero-content h1{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:700;
-  letter-spacing:-.03em;line-height:1.1;color:#fff;}
-.hero-content h1 a{color:#fff;}.hero-content h1 a:hover{opacity:.8;text-decoration:none;}
-.tagline{font-size:clamp(.88rem,2vw,1.05rem);color:rgba(255,255,255,.75);line-height:1.5;max-width:520px;}
-.hero-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem .8rem;font-size:.78rem;
-  color:rgba(255,255,255,.6);}
-.stars{color:#fcd34d;font-weight:700;}
-.dot{width:9px;height:9px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:3px;}
-.dot-TypeScript{background:#3178c6}.dot-Python{background:#3572A5}.dot-Go{background:#00ADD8}
-.dot-Swift{background:#F05138}.dot-C{background:#555}.dot-Cpp{background:#f34b7d}
-.dot-Dockerfile{background:#384d54}.dot-Shell{background:#89e051}.dot-misc{background:#94a3b8}
-.badge{display:inline-flex;align-items:center;padding:.15rem .5rem;border-radius:2em;
-  font-size:.68rem;font-weight:600;letter-spacing:.03em;}
-.badge-active{background:#dcfce7;color:#166534;border:1px solid #bbf7d0;}
-.badge-stable{background:#dbeafe;color:#1e40af;border:1px solid #bfdbfe;}
-.badge-maintained{background:#fef3c7;color:#92400e;border:1px solid #fde68a;}
-.badge-archived{background:#fee2e2;color:#991b1b;border:1px solid #fecaca;}
-@media(prefers-color-scheme:dark){
-  .badge-active{background:rgba(52,211,153,.1);color:#34d399;border-color:rgba(52,211,153,.2);}
-  .badge-stable{background:rgba(79,142,247,.1);color:#4f8ef7;border-color:rgba(79,142,247,.2);}
-  .badge-maintained{background:rgba(251,191,36,.1);color:#fbbf24;border-color:rgba(251,191,36,.2);}
-  .badge-archived{background:rgba(248,113,113,.1);color:#f87171;border-color:rgba(248,113,113,.2);}
-}
-.topics{display:flex;flex-wrap:wrap;gap:.3rem;margin-top:.4rem;}
-.topic{font-size:.68rem;background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.2);
-  color:rgba(255,255,255,.7);padding:.12rem .45rem;border-radius:2em;font-family:var(--mono);}
-.cta{display:flex;flex-wrap:wrap;gap:.5rem;margin-top:.8rem;}
-.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.42rem .95rem;border-radius:var(--radius);
-  font-size:.8rem;font-weight:500;font-family:var(--font);transition:all .15s;letter-spacing:-.01em;}
-.btn-p{background:var(--accent);color:#fff;box-shadow:0 1px 3px rgba(37,99,235,.25);}
-.btn-p:hover{filter:brightness(1.1);text-decoration:none;}
-.btn-g{background:var(--surface);color:var(--text);border:1px solid var(--border2);}
-.btn-g:hover{border-color:var(--accent);color:var(--accent);text-decoration:none;}
-@media(prefers-color-scheme:dark){
-  .btn-g{background:rgba(255,255,255,.06);}
-}
-@media(max-width:860px){
-  .hero-banner{height:260px;}.hero-content{flex-direction:column;}.hero-logo{display:none;}
-}
-
-/* ── Page layout ── */
-.outer{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:156px 1fr;
-  gap:0 36px;padding:2.5rem var(--gap) 4rem;}
-.main{min-width:0;}
-.toc{position:sticky;top:56px;align-self:start;padding:12px 0;
-  grid-row:1/-1;max-height:calc(100dvh - 80px);overflow-y:auto;}
-.toc::-webkit-scrollbar{width:3px;}.toc::-webkit-scrollbar-thumb{background:var(--border);border-radius:2px;}
-.toc-title{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
-  color:var(--dim);padding:0 0 10px;margin-bottom:6px;border-bottom:1px solid var(--border);
-  font-family:var(--mono);}
-.toc a{display:block;font-size:.75rem;color:var(--muted);text-decoration:none;padding:4px 8px;
-  border-radius:5px;border-left:2px solid transparent;transition:all .15s;margin-bottom:1px;}
-.toc a:hover{color:var(--text);background:var(--surface);}
-.toc a.active{color:var(--accent);border-left-color:var(--accent);background:var(--accent-dim);}
-@media(max-width:860px){
-  .outer{grid-template-columns:1fr;padding-top:0;}
-  .toc{position:sticky;top:44px;z-index:100;display:flex;gap:4px;overflow-x:auto;max-height:none;
-    background:var(--bg);border-bottom:1px solid var(--border);padding:8px var(--gap);
-    margin:0 calc(-1*var(--gap));grid-row:auto;-webkit-overflow-scrolling:touch;}
-  .toc::-webkit-scrollbar{display:none;}.toc-title{display:none;}
-  .toc a{white-space:nowrap;flex-shrink:0;border-left:none;border-bottom:2px solid transparent;
-    border-radius:4px 4px 0 0;padding:5px 10px;font-size:.72rem;}
-  .toc a.active{border-left:none;border-bottom-color:var(--accent);background:var(--accent-dim);}
-}
-
-/* ── Stats bar ── */
-.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));max-width:640px;
-  gap:1px;background:var(--border);border:1px solid var(--border2);
-  border-radius:var(--radius-lg);overflow:hidden;margin-bottom:2rem;box-shadow:var(--shadow-sm);}
-.stat{background:var(--surface);padding:.8rem 1rem;}
-.stat-l{font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);
-  margin-bottom:.2rem;font-family:var(--mono);}
-.stat-v{font-size:1.3rem;font-weight:700;letter-spacing:-.02em;color:var(--text);}
-
-/* ── Sections ── */
-.sec{padding:2.5rem 0;border-top:1px solid var(--border);}
-.eyebrow{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
-  color:var(--accent);margin-bottom:.35rem;font-family:var(--mono);}
-.sec-title{font-size:1.2rem;font-weight:700;letter-spacing:-.02em;margin-bottom:1rem;color:var(--text);}
-.about{font-size:.97rem;line-height:1.8;color:var(--text);max-width:680px;}
-.how{display:flex;flex-direction:column;gap:.9rem;max-width:680px;}
-.how p{font-size:.92rem;line-height:1.8;color:var(--muted);}
-
-/* ── Feature grid ── */
-.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;
-  background:var(--border);border:1px solid var(--border2);
-  border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);}
-.ve-card{background:var(--bg);padding:1.3rem;display:flex;flex-direction:column;gap:.4rem;
-  transition:background .15s;}
-.ve-card:hover{background:var(--surface);}
-.ve-icon{font-size:1.25rem;line-height:1;}
-.ve-title{font-size:.85rem;font-weight:600;color:var(--text);}
-.ve-body{font-size:.78rem;color:var(--muted);line-height:1.6;}
-
-/* ── Architecture diagram ── */
-.diagram-wrap{background:var(--surface);border:1px solid var(--border2);
-  border-radius:var(--radius-lg);overflow:hidden;padding:1.5rem;box-shadow:var(--shadow-sm);}
-.diagram-wrap svg{width:100%;height:auto;display:block;}
-
-/* ── Release chart ── */
-.release-chart{width:100%;height:220px;margin-bottom:.5rem;}
-.release-legend{font-size:.73rem;color:var(--muted);margin-top:.5rem;}
-
-/* ── Posts ── */
-.posts{display:flex;flex-direction:column;gap:.4rem;}
-.post{display:grid;grid-template-columns:5.5rem 1fr;gap:.7rem;font-size:.875rem;}
-.post-date{color:var(--dim);font-size:.72rem;padding-top:.1rem;
-  white-space:nowrap;font-family:var(--mono);}
-
-/* ── Skeleton pulse ── */
-@keyframes pulse{0%,100%{opacity:1;}50%{opacity:.4;}}
-
-/* ── Footer ── */
-footer{max-width:var(--max);margin:0 auto;padding:1.5rem var(--gap);
-  border-top:1px solid var(--border);display:flex;align-items:center;
-  justify-content:space-between;flex-wrap:wrap;gap:1rem;}
-.foot-l{font-size:.73rem;color:var(--dim);font-family:var(--mono);}
-.foot-r{display:flex;gap:1.5rem;font-size:.73rem;}
-.foot-r a{color:var(--muted);}.foot-r a:hover{color:var(--text);}
-</style>
-<script src="/assets/js/mermaid.min.js"></script>
-<script>
-const dark=window.matchMedia('(prefers-color-scheme:dark)').matches;
-mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:{
-  primaryColor:dark?'#134e4a':'#ccfbf1',primaryBorderColor:dark?'#14b8a6':'#0d9488',
-  primaryTextColor:dark?'#f0fdfa':'#134e4a',lineColor:dark?'#4a6285':'#94a3b8',fontSize:'13px'}});
-</script>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet" href="/assets/css/style.css">
+<link rel="canonical" href="https://rcarmo.github.io/projects/azure-docker-swarm-cluster.html">
 </head>
 <body>
-<header class="topbar">
-  <div class="topbar-inner">
-    <a href="/">rcarmo.github.io</a>
-    <span class="sep">/</span>
-    <span class="current">azure-docker-swarm-cluster</span>
-  </div>
-</header>
-
-<!-- Hero banner -->
-<div class="hero-banner">
-  <img class="hero-bg" src="/assets/banners/azure-docker-swarm-cluster.png" alt="" loading="eager" aria-hidden="true">
-  <div class="hero-overlay"></div>
-  <div class="hero-content">
-    <div class="hero-text">
-    <h1><a href="https://github.com/rcarmo/azure-docker-swarm-cluster" target="_blank" rel="noopener">azure-docker-swarm-cluster</a></h1>
-    <p class="tagline">Auto-scaling Docker Swarm cluster for Azure — ARM template plus Makefile, manager and worker VMSS included.</p>
-    <div id="hero-meta-island-azure-docker-swarm-cluster">
-      <div class="hero-meta">
-        <span class="stars">★ 47</span>
-        <span>⑂ 11</span>
-        
-        <span class="badge badge-archived">archived</span>
-      </div>
-    </div>
-    <div class="topics"><span class="topic">azure</span><span class="topic">docker</span><span class="topic">swarm</span><span class="topic">arm-template</span><span class="topic">autoscaling</span><span class="topic">containers</span></div>
-    <div class="cta">
-      <a class="btn btn-p" href="https://github.com/rcarmo/azure-docker-swarm-cluster" target="_blank" rel="noopener"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub</a>
-      
-    </div>
-    </div>
-    <img class="hero-logo" src="data:image/png;base64,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" alt="azure-docker-swarm-cluster logo">
-  </div>
-</div>
-
-<div class="outer">
-  <!-- TOC -->
-  <nav class="toc" id="toc">
-    <div class="toc-title">Contents</div>
-    <a href="#s-about">Overview</a>
-    <a href="#s-how">How it works</a>
-    <a href="#s-features">Features</a>
-    <a href="#s-diagram">Diagram</a>
+  <nav class="topnav">
+    <a href="/" class="nav-home">rcarmo</a>
+    <a href="https://github.com/rcarmo/azure-docker-swarm-cluster" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
-  <!-- Main content -->
-  <div class="main">
-    <!-- Stats bar — Preact island, live from GitHub API -->
-    <div id="stats-island-azure-docker-swarm-cluster" style="margin-top:1.5rem">
-      <div class="stats">
-        <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">47</div></div>
-        <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">11</div></div>
-        <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">—</div></div>
-        <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.05rem;padding-top:.3rem">2016</div></div>
-      </div>
-    </div>>
-
-    <div class="sec" id="s-about">
-      <div class="eyebrow">Overview</div>
-      <p class="about">azure-docker-swarm-cluster provisions a production-grade Docker Swarm cluster on Azure using ARM templates, with separate VM Scale Sets for manager and worker nodes. Auto-scaling rules on the worker VMSS respond to CPU load, expanding and shrinking the cluster automatically. A Makefile wraps the Azure CLI for one-command deploy and teardown. ★47 with 11 forks — a reference template from the pre-Kubernetes container era that still gets cited.</p>
-    </div>
-
-    <div class="sec" id="s-how">
-      <div class="eyebrow">Under the hood</div>
-      <div class="sec-title">How it works</div>
-      <div class="how"><p>The ARM template creates a manager VMSS (fixed size, odd number for Raft quorum) and a worker VMSS (auto-scaling). Cloud-init on managers initialises the Swarm and stores the join token in an Azure Key Vault secret; workers fetch the token on boot and join automatically. An internal load balancer distributes Swarm management traffic; a public load balancer fronts the worker nodes for application traffic.</p></div>
-    </div>
-
-    <div class="sec" id="s-features">
-      <div class="eyebrow">Capabilities</div>
-      <div class="sec-title">What it does</div>
-      <div class="features">
-        <div class="ve-card"><div class="ve-icon">📈</div><div class="ve-title">Auto-scaling workers</div><div class="ve-body">Azure VMSS auto-scale rules expand the worker pool under load and shrink it when idle — no manual intervention.</div></div><div class="ve-card"><div class="ve-icon">🗝️</div><div class="ve-title">Secure join token</div><div class="ve-body">The Swarm join token is stored in Azure Key Vault and retrieved by worker VMs via managed identity — never in userdata or scripts.</div></div><div class="ve-card"><div class="ve-icon">🔄</div><div class="ve-title">Manager HA</div><div class="ve-body">Odd-numbered manager VMSS ensures Raft quorum survives a single node failure without manual recovery.</div></div><div class="ve-card"><div class="ve-icon">⚙️</div><div class="ve-title">Makefile orchestration</div><div class="ve-body">`make deploy` / `make destroy` wraps the Azure CLI — no portal clicks, full automation from first principles.</div></div><div class="ve-card"><div class="ve-icon">📦</div><div class="ve-title">Pre-Kubernetes reference</div><div class="ve-body">Documents the Docker Swarm era architecture; useful for comparing operational complexity against modern Kubernetes templates.</div></div>
+  <header class="hero" id="hero">
+    <div class="hero-inner">
+      <img class="hero-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAMAAAD04JH5AAAAhFBMVEVMaXE8rv88r/80nestkdgmgcQ8rv8eca47rf8heLcAOGIALlAAMlYAM1gAMVQANl3z9vcANVsAL1IALE0AN18ANFoAO2cAOmQAK0oAPWkdbacPWIwOTHkec7Kar7/Q2uEPUoG0w84URWkedbXk6u4tV3Vbe5MXZJoKOl5vjKGIoLFFaoWLS6WAAAAACnRSTlMAXR2Rp8g9/n7iwWPM/QAAAAlwSFlzAAALEwAACxMBAJqcGAAABetJREFUeNrFm2t7ojoQgG2rjbjS1rOy1UC5RO78//93AiQk5KZ9tpuZfvXxfUlmcqHOZiPF636/3+6C4KbF1zcDGSMIdluKeN2Y43WkUxZumvgfRB7HTUMtRgeTwvPTfhvcUJxcjfHn+meKTykOepxX8S7iNMc5iTEKtvunZ/3xX4IbzmWkIT7/kj/Ge9Kg4EUdBPr4t6/46oF/OkWnBCM6CGv+7oYTT3wanw3ayQYjv7n640fRKZYNXik/9sqnkVMDlgfPdP4b3/wojGkezLXw9HLD/vlh1KCXp3kCgq/EPz8MDziYJoFOQAzBD8OETsI0ABiGTydhHAI6ADkMnw3Bfoeg+GGEd1RAzgC//PAYo/1me0vA+EeCtpvdFxz/SOdgI2rAP/94bIJN0ADywzjY8G0Agn+kWbhhRQDDP+ZcAIi/CEDxjzmeBMD4TACO/zYJAPKtAr74NgFvfIuAP75ZwCPfKOCTbxLwyjcI+OXrAp75moBvvirgna8I+OePAl8xIP8/WQCCLwuA8CUBGL4QAOIvAlB8LgDGZwJw/FnAyb8SKa73+GToup5GVw/kEb4uoD19+rGKMivSrjLzqz6TP5r11V3+L1XgcE+AfXdHNH5V6J9LiZuvjcDhQQE6En275tfGj2WVm6+MgCn/LALjd9/n008RF18ZAWP+WwU+ykHwSSmQRVFIuVA4+SsBc/0xgbKYIitlhWHJP66Z1e1UfW29OFQuvixgqX/21RmvP1KLZCsJ47fMq2iX+m+5U+riSwK29WcREOUv8r1g9V/xp5XWn5aNQXl08IWAdf3jAvL6szwdnYRp/RkYa7X+1VNC9F3r4C8C9vVXFxj/78THoJjXXlYDZSSvv+1AIuf8j5HMAo71XxOY8m7J+koeATYFd9c/aR2YBVz7jyrAKq9jyC6ScyAj3+TPAs79TxHgpU9Wc3AqRRl+i28TONsExOJX8Gmf9t9elGZak8f5FoGzTUBa/TmynfZ/slqgSrphhg/xzQJnm4C8/XQiC8fE0/aCsujIfb5R4GwTWO2/9SIwl15d6rtFUR/v8E0CyvlLCKz3f155A198qtS4Zbr5BgH1/LcInMz7fyXOf2R9IpqjdvJ1Ae38yQXU81enCYyJT+pUnYrBxdcE9POvSWCsPF4FRD3/hlWdyiORhQ6+KmA4fxsEptIvTPvPUv/ypl07+IqA6fyvC0z85QRgPf8PfBgKB38tYLx/aAKr/e+js98/+OJUOvi/ZQHz/UcVYJef4oH9j+fp0c6XBSz3L0UgWg9AFs38tqr7dFDWf75UtHa+JGC7/60FGL/itVZPA8CyPlX2Hy7wZucLAev9cyWg8rN2ev5lPtb7D6vUzMFfBOz3X1lgxrfdstYM8/wvE0JkPtdMHXwu4Lh/cwF2P66GXix1Pcs/fgD+KMUJVGgODj4TcN3/7Tcjeijn+S9txvQYXNddX5TiauTgzwLO9w92gfEWwouvt2tWLr5BQH3/YBXoIqn+o9R6gXTydQHt/Yflm4tKWX+60nyFdvM1Af39i0mgTCvD/tNrCln9doevChje/3TFKtK0r9kpTFt/T4OUexk9mLrqzyjwE++/WlJVFSGhY/23Cvzo+7fH+CsBCP4ogGJAviQAwxcCQPxFAIp/YQJg/EkgB+TPAoB8VcA7XxHwz18LAPBXAhB8WQCELwnA8IUAEH8RgOJzATA+E4DjzwKAfF3AM18T8M2fzwOAfEXAP/9C/2cUxID8Szz+shqQf6E/7d6hMxz/Qn/cvkUJHL/F281+ykIYPs3BscUDv0PxaQpQAToHUHyCaZMLbfNpTjD8y9TmIw+BZ/40AHOn0ycE/20egLHZDU2T4Jl/ifHc7Da2+6HYPz/HvN1vbHhEuW9+gnei8ZW2fNIx8Pz8atMpag7++L/iNX9q+0U4iXzVX4OVtt+58Rk1SeRj/Wuw3vjMWr8Rjkn0L/m/25ziTa3fvPkdIUxb3/M8T5Kc/v1o5HGD8Yh39d9P7f+0Rx4j+lmMlL+/DFP7///g+UzpK4t4nwAAAABJRU5ErkJggg==" alt="Auto-scaling Docker Swarm cluster for Azure — ARM template plus Makefile, manager and worker VMSS included. logo">
+      <div class="hero-text">
+        <h1>azure-docker-swarm-cluster</h1>
+        <p class="hero-tagline">Auto-scaling Docker Swarm cluster for Azure — ARM template plus Makefile, manager and worker VMSS included.</p>
+        <div id="hero-meta-island-azure-docker-swarm-cluster" class="hero-meta">
+          <!-- live: stars, forks, language -->
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://github.com/rcarmo/azure-docker-swarm-cluster" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
       </div>
     </div>
+  </header>
 
-    
-  <div class="sec" id="s-diagram">
-    <div class="eyebrow">Architecture</div>
-    <div class="sec-title">System diagram</div>
-    <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" width="640" height="220">
-  <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: #111520; }
-      .box { fill: #1a1e2a; stroke: #2a3040; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
-      .box-b { fill: #0d2220; stroke: #207060; }
-      .box-warm { fill: #221a10; stroke: #a06020; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-      .arrow { stroke: #3a5070; fill: none; }
-      .arr-accent { stroke: #2b5cb0; fill: none; }
-      .bg-fill { fill: #111520; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: #f0f4fa; }
-      .box { fill: #ffffff; stroke: #c8d0e0; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; }
-      .box-b { fill: #d1fae5; stroke: #059669; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-      .arrow { stroke: #90a8c0; fill: none; }
-      .arr-accent { stroke: #3b82f6; fill: none; }
-      .bg-fill { fill: #f0f4fa; }
-    }
-    text { font-family: -apple-system,"Segoe UI",Helvetica,sans-serif; }
-    .label { font-size: 13px; font-weight: 600; }
-    .sub { font-size: 11px; }
-  </style>
-  <defs>
-    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" class="arrow" style="fill:currentColor;stroke:none"/>
-    </marker>
-  </defs>
-  <rect x="20" y="80" width="110" height="60" rx="8" class="box-warm"/>
-  <text x="75" y="113" text-anchor="middle" class="label">Makefile</text>
-  <text x="75" y="128" text-anchor="middle" class="sub">az deployment</text>
-  <rect x="190" y="20" width="130" height="60" rx="8" class="box-accent"/>
-  <text x="255" y="53" text-anchor="middle" class="label">Manager VMSS</text>
-  <text x="255" y="68" text-anchor="middle" class="sub">Raft quorum ×3</text>
-  <rect x="190" y="130" width="130" height="60" rx="8" class="box"/>
-  <text x="255" y="163" text-anchor="middle" class="label">Worker VMSS</text>
-  <text x="255" y="178" text-anchor="middle" class="sub">auto-scale</text>
-  <rect x="400" y="20" width="120" height="60" rx="8" class="box-b"/>
-  <text x="460" y="53" text-anchor="middle" class="label">Key Vault</text>
-  <text x="460" y="68" text-anchor="middle" class="sub">join token</text>
-  <rect x="400" y="130" width="120" height="60" rx="8" class="box"/>
-  <text x="460" y="163" text-anchor="middle" class="label">Swarm API</text>
-  <text x="460" y="178" text-anchor="middle" class="sub">port 2377</text>
-  <line x1="130" y1="100" x2="190" y2="80" class="arrow" stroke-width="1.5" marker-end="url(#arr)"/>
-  <line x1="130" y1="125" x2="190" y2="160" class="arrow" stroke-width="1.5" marker-end="url(#arr)"/>
-  <line x1="320" y1="50" x2="400" y2="50" class="arr-accent" stroke-width="1.5" marker-end="url(#arr)"/>
-  <line x1="320" y1="160" x2="400" y2="160" class="arrow" stroke-width="1.5" marker-end="url(#arr)"/>
-  <line x1="255" y1="80" x2="255" y2="130" class="arrow" stroke-width="1.5"/>
-</svg></div>
+  <div class="page-layout">
+    <aside class="toc-sidebar">
+      <a href="#s-about" class="toc-link" data-section="s-about">Overview</a>
+      <a href="#s-how" class="toc-link" data-section="s-how">How it works</a>
+      <a href="#s-features" class="toc-link" data-section="s-features">Features</a>
+    </aside>
+
+    <main class="content">
+      <div id="stats-island-azure-docker-swarm-cluster" class="stats-bar">
+        <!-- live: stars, forks, issues, created -->
+      </div>
+
+      <section class="sec" id="s-about">
+        <div class="sec-label">Overview</div>
+        <p>azure-docker-swarm-cluster provisions a production-grade Docker Swarm cluster on Azure using ARM templates, with separate VM Scale Sets for manager and worker nodes. Auto-scaling rules on the worker VMSS respond to CPU load, expanding and shrinking the cluster automatically. A Makefile wraps the Azure CLI for one-command deploy and teardown. ★47 with 11 forks — a reference template from the pre-Kubernetes container era that still gets cited.</p>
+      </section>
+
+      <section class="sec" id="s-how">
+        <div class="sec-label">How it works</div>
+        <p>The ARM template creates a manager VMSS (fixed size, odd number for Raft quorum) and a worker VMSS (auto-scaling). Cloud-init on managers initialises the Swarm and stores the join token in an Azure Key Vault secret; workers fetch the token on boot and join automatically. An internal load balancer distributes Swarm management traffic; a public load balancer fronts the worker nodes for application traffic.</p>
+      </section>
+
+      <section class="sec" id="s-features">
+        <div class="sec-label">Features</div>
+        <div class="features-grid">
+          
+    <div class="feature">
+      <div class="feature-icon">📈</div>
+      <div>
+        <div class="feature-title">Auto-scaling workers</div>
+        <div class="feature-body"><p>Azure VMSS auto-scale rules expand the worker pool under load and shrink it when idle — no manual intervention.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🗝️</div>
+      <div>
+        <div class="feature-title">Secure join token</div>
+        <div class="feature-body"><p>The Swarm join token is stored in Azure Key Vault and retrieved by worker VMs via managed identity — never in userdata or scripts.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🔄</div>
+      <div>
+        <div class="feature-title">Manager HA</div>
+        <div class="feature-body"><p>Odd-numbered manager VMSS ensures Raft quorum survives a single node failure without manual recovery.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">⚙️</div>
+      <div>
+        <div class="feature-title">Makefile orchestration</div>
+        <div class="feature-body"><p><code>make deploy</code> / <code>make destroy</code> wraps the Azure CLI — no portal clicks, full automation from first principles.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">📦</div>
+      <div>
+        <div class="feature-title">Pre-Kubernetes reference</div>
+        <div class="feature-body"><p>Documents the Docker Swarm era architecture; useful for comparing operational complexity against modern Kubernetes templates.</p></div>
+      </div>
+    </div>
+        </div>
+      </section>
+
+
+
+
+
+
+
+      <section class="sec" id="s-related">
+        <div class="sec-label">Related</div>
+        <div id="related-island-azure-docker-swarm-cluster" class="related-grid">
+          <a href="/projects/azure-k3s-cluster.html" class="related-card"><img src="data:image/png;base64,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" alt="" class="related-logo"><span>azure-k3s-cluster</span></a>
+          <a href="/projects/bun-opds-server.html" class="related-card"><img src="data:image/png;base64,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" alt="" class="related-logo"><span>bun-opds-server</span></a>
+          <a href="/projects/codebits-tv.html" class="related-card"><img src="data:image/png;base64,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" alt="" class="related-logo"><span>codebits-tv</span></a>
+          <a href="/projects/gnome-thumbnailers.html" class="related-card"><img src="data:image/png;base64,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" alt="" class="related-logo"><span>gnome-thumbnailers</span></a>
+        </div>
+      </section>
+    </main>
   </div>
-    
-    
-  </div>
-</div>
 
-<footer>
-  <div class="foot-r">
-    <a href="/">← All projects</a>
-    <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
-    <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
-  </div>
-</footer>
+  <footer>
+    <span class="foot-l">rcarmo.github.io</span>
+    <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/azure-docker-swarm-cluster">Source</a></span>
+  </footer>
 
-
-<script src="/assets/js/echarts.min.js"></script>
-<script type="module">
-import { mount } from '/assets/js/repo-island.mjs';
-mount({
-  fullName: 'rcarmo/azure-docker-swarm-cluster',
-  heroMetaEl: document.getElementById('hero-meta-island-azure-docker-swarm-cluster'),
-  statsEl:    document.getElementById('stats-island-azure-docker-swarm-cluster'),
-  releasesEl: document.getElementById('rel-island-azure-docker-swarm-cluster') || null,
-  chartId:    'rel-chart-azure-docker-swarm-cluster',
-});
-</script>
-<script>
-// Scroll-spy for TOC
-(function(){
-  const toc=document.getElementById('toc');
-  if(!toc)return;
-  const links=toc.querySelectorAll('a');
-  const sections=[];
-  links.forEach(l=>{const el=document.getElementById(l.getAttribute('href').slice(1));if(el)sections.push({el,link:l});});
-  const obs=new IntersectionObserver(es=>{
-    es.forEach(e=>{if(e.isIntersecting){
-      links.forEach(l=>l.classList.remove('active'));
-      const m=sections.find(s=>s.el===e.target);
-      if(m){m.link.classList.add('active');
-        if(window.innerWidth<=860)m.link.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
-    }});
-  },{rootMargin:'-10% 0px -80% 0px'});
-  sections.forEach(s=>obs.observe(s.el));
-  links.forEach(l=>{l.addEventListener('click',e=>{e.preventDefault();
-    const el=document.getElementById(l.getAttribute('href').slice(1));
-    if(el){el.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'','#'+el.id);}});});
-})();
-</script>
+  <script type="module" src="/assets/js/repo-island.mjs"></script>
+  <script type="module">
+    import { mount } from '/assets/js/repo-island.mjs';
+    mount({
+      fullName: 'rcarmo/azure-docker-swarm-cluster',
+      heroMetaEl: document.getElementById('hero-meta-island-azure-docker-swarm-cluster'),
+      statsEl:    document.getElementById('stats-island-azure-docker-swarm-cluster'),
+      releasesEl: document.getElementById('rel-island-azure-docker-swarm-cluster'),
+      relatedEl:  document.getElementById('related-island-azure-docker-swarm-cluster'),
+    });
+  </script>
 </body>
 </html>

@@ -2,6 +2,7 @@
 section: infrastructure
 status: active
 tagline: QEMU microvm for Proxmox VE — KVM isolation, under 200 ms boot.
+logo: assets/logos-opt/pve-microvm.png
 ---
 
 ## About
@@ -22,3 +23,6 @@ Appears as a machine type option. Managed like any VM.
 
 ### ↩ Fully reversible
 dpkg -r restores original qemu-server files.
+
+## Posts
+- [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01

@@ -2,6 +2,7 @@
 section: highlight
 status: active
 tagline: A self-hosted AI agent workspace — streaming UI, persistent state, no CDN.
+logo: assets/logos-opt/piclaw.png
 ---
 
 ## About
@@ -32,3 +33,9 @@ SSH, Proxmox, Portainer profiles. CDP browser automation. Sharp image processing
 
 ### 📦 Single container
 docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
+
+## Posts
+- [Vibing with the Agent Control Protocol](https://taoofmac.com/space/notes/2026/02/01/2100) — 2026-02-01
+- [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
+- [Thoughts on AI-Assisted Software Development in 2026](https://taoofmac.com/space/notes/2026/02/01/2130) — 2026-02-01
+- [So You Want To Do Agentic Development](https://taoofmac.com/space/blog/2026/03/08/2130) — 2026-03-08

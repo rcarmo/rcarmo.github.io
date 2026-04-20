@@ -2,6 +2,7 @@
 section: macos
 status: stable
 tagline: Plan 9 drawterm — HiDPI scaling, Metal rendering, Connect dialog, clipboard bridge.
+logo: assets/logos-opt/drawterm.png
 ---
 
 ## About
@@ -22,3 +23,7 @@ Command → mod4, pasteboard bridge.
 
 ### 💾 Connect dialog
 Host, user, password persist between launches.
+
+## Posts
+- [Notes, 2025-12-24](https://taoofmac.com/space/notes/2025/12/24/1400) — 2025-12-24
+- [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01

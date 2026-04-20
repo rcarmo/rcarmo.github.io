@@ -1,7 +1,9 @@
 ---
+repo: usetrmnl/byos_fastapi
 section: hardware
 status: active
 tagline: TRMNL BYOS — self-hosted FastAPI server for the TRMNL e-ink display, replacing the cloud backend.
+logo: assets/logos-opt/byos_fastapi.png
 ---
 
 ## About

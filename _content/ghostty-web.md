@@ -2,6 +2,7 @@
 section: terminal
 status: active
 tagline: Ghostty terminal sessions in a browser — xterm.js compatibility.
+logo: assets/logos-opt/ghostty-web.png
 ---
 
 ## About

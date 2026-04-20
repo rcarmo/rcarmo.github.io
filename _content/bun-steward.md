@@ -2,6 +2,7 @@
 section: ai-agents
 status: active
 tagline: Self-bootstrapping AI agent environment for Raspberry Pi and Rockchip ARM boards — AI that can recreate itself.
+logo: assets/logos-opt/bun-steward.png
 ---
 
 ## About

@@ -2,6 +2,7 @@
 section: hardware
 status: active
 tagline: Build environment and automation for compiling Haiku OS on ARM64.
+logo: assets/logos-opt/haiku-arm64-build.png
 ---
 
 ## About

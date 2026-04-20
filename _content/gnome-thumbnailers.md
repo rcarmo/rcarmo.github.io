@@ -2,6 +2,7 @@
 section: infrastructure
 status: stable
 tagline: File thumbnails for RAW, HEIC, and 3D models in GNOME Files.
+logo: assets/logos-opt/gnome-thumbnailers.png
 ---
 
 ## About
@@ -22,3 +23,7 @@ FBX, OBJ, STL thumbnail renders.
 
 ### 🔧 Drop-in
 make install, thumbnails appear immediately.
+
+## Posts
+- [You Can Leave Your Hat On](https://taoofmac.com/space/blog/2022/04/02/2130) — 2022-04-02
+- [Homelab Update](https://taoofmac.com/space/blog/2022/10/28/1900) — 2022-10-28

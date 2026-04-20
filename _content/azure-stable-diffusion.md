@@ -2,6 +2,7 @@
 section: ai-ml
 status: stable
 tagline: One-command Stable Diffusion on Azure GPU spot instances.
+logo: assets/logos-opt/azure-stable-diffusion.png
 ---
 
 ## About
@@ -19,3 +20,7 @@ NC6s_v3: typically under $0.10/hour.
 
 ### 💾 Persistent models
 Data disk survives spot preemptions and redeployments.
+
+## Posts
+- [Very Stable Diffusion](https://taoofmac.com/space/blog/2022/09/03/1400) — 2022-09-03
+- [A Diffuse Return](https://taoofmac.com/space/blog/2022/11/27/1800) — 2022-11-27

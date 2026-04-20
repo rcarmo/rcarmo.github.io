@@ -2,6 +2,7 @@
 section: infrastructure
 status: maintained
 tagline: Keyboard-oriented browser homepage designed by LLM spec — bookmarks, search, and widgets, no mouse needed.
+logo: assets/logos-opt/onepage-by-spec.png
 ---
 
 ## About
