@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>pve-microvm — rcarmo</title>
-<meta name="description" content="QEMU microvm for Proxmox VE — KVM isolation, under 200 ms boot.">
+<meta name="description" content="Firecracker-like microVMs for Proxmox VE — KVM isolation, under 200 ms boot.">
 <link rel="stylesheet" href="/assets/css/style.css">
 <link rel="icon" href="/assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
@@ -18,14 +18,14 @@
 
   <header class="hero hero-project" id="hero" data-section="infrastructure">
     <div class="hero-inner">
-      <img class="hero-logo" src="/assets/logos-opt/pve-microvm.png" alt="QEMU microvm for Proxmox VE — KVM isolation, under 200 ms boot. logo">
+      <img class="hero-logo" src="/assets/logos-opt/pve-microvm.png" alt="Firecracker-like microVMs for Proxmox VE — KVM isolation, under 200 ms boot. logo">
       <div class="hero-text">
         <div class="hero-kicker">Project</div>
         <div class="hero-title-row">
           <h1>pve-microvm</h1>
           <span class="badge badge-active">active</span>
         </div>
-        <p class="hero-tagline">QEMU microvm for Proxmox VE — KVM isolation, under 200 ms boot.</p>
+        <p class="hero-tagline">Firecracker-like microVMs for Proxmox VE — KVM isolation, under 200 ms boot.</p>
         <div id="hero-meta-island-pve-microvm" class="hero-meta">
           <!-- live: stars, forks, language -->
         </div>
@@ -60,12 +60,12 @@
 
       <section class="sec" id="s-about">
         <div class="sec-label">Overview</div>
-        <p>Debian package patching qemu-server to add QEMU microvm machine type to the Proxmox UI. microvm VMs boot in under 200 ms, use only virtio-mmio, and give full KVM isolation. Uninstall restores original files.</p>
+        <p>Debian package that adds QEMU <code>microvm</code> machine type to the Proxmox UI. microvm VMs boot in under 200 ms, use only <code>virtio-mmio</code>, and give full KVM isolation. Uninstall restores original files.</p>
       </section>
 
       <section class="sec" id="s-how">
         <div class="sec-label">How it works</div>
-        <p>Patches two qemu-server files to add microvm as a selectable machine type. A standard Proxmox VM emulates a full x86 PC with PCI bus and BIOS. A microvm skips all that — direct kernel load, virtio-mmio only, much smaller attack surface. The result is KVM-grade isolation at LXC-comparable boot times. Currently the only Proxmox integration for QEMU microvm.</p>
+        <p>Patches two <code>qemu-server</code> files to add <code>microvm</code> as a selectable machine type. A standard Proxmox VM emulates a full x86 PC with PCI bus and BIOS, but a microvm skips all that — direct kernel load, virtio-mmio only, much smaller attack surface. The result is KVM-grade isolation at LXC-comparable boot times. Currently the only Proxmox integration for QEMU microvm.</p>
       </section>
 
       <section class="sec" id="s-features">
@@ -151,8 +151,8 @@
         <div class="sec-label">Posts</div>
         <div class="posts">
     <div class="post">
-      <span class="post-date">2026-02-01</span>
-      <a href="https://taoofmac.com/space/notes/2026/02/01/1940" target="_blank" rel="noopener">Seizing The Means Of Production (Again)</a>
+      <span class="post-date">2026-04-19</span>
+      <a href="https://taoofmac.com/space/notes/2026/04/19/1400#proxmox-microvms" target="_blank" rel="noopener">Notes for April 13-19</a>
     </div></div>
       </section>
     </main>
