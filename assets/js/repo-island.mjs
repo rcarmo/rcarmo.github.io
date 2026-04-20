@@ -66,21 +66,24 @@ async function fetchAllRepos(fullNames) {
 
   const repoMap = {};
 
-  // Bulk fetch rcarmo/* (up to 100 per page)
+  // Bulk fetch rcarmo/* with pagination (handles >100 repos)
   try {
-    const res = await fetch('https://api.github.com/users/rcarmo/repos?per_page=100&type=owner');
-    if (res.ok) {
+    let page = 1;
+    while (page <= 4) { // max 400 repos
+      const res = await fetch(`https://api.github.com/users/rcarmo/repos?per_page=100&type=owner&page=${page}`);
+      if (!res.ok) break;
       const repos = await res.json();
-      if (Array.isArray(repos)) {
-        for (const r of repos) repoMap[r.full_name] = r;
-      }
+      if (!Array.isArray(repos) || !repos.length) break;
+      for (const r of repos) repoMap[r.full_name] = r;
+      if (repos.length < 100) break; // last page
+      page++;
     }
   } catch { /* offline — ok */ }
 
-  // Fetch cross-org repos individually (only those not already in the map)
-  const crossOrg = fullNames.filter(fn => !fn.startsWith('rcarmo/') && !repoMap[fn]);
+  // Fetch any repos not yet in map (cross-org + any missed)
+  const missing = fullNames.filter(fn => !repoMap[fn]);
   await Promise.allSettled(
-    crossOrg.map(async fn => {
+    missing.map(async fn => {
       try {
         const res = await fetch(`https://api.github.com/repos/${fn}`);
         if (res.ok) repoMap[fn] = await res.json();
