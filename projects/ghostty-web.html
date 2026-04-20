@@ -6,6 +6,7 @@
 <title>ghostty-web — rcarmo</title>
 <meta name="description" content="Ghostty terminal sessions in a browser — xterm.js compatibility.">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/ghostty-web.html">
 </head>
 <body>
@@ -14,11 +15,15 @@
     <a href="https://github.com/rcarmo/ghostty-web" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
-  <header class="hero" id="hero">
+  <header class="hero hero-project" id="hero" data-section="terminal">
     <div class="hero-inner">
       <img class="hero-logo" src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAJJElEQVR42u2deWwUdRTHl8P7SgwaI3R+v5mtaNCAWg+8AEWjIEgEi6LxANRw2IipICqXMR7xSDziAdI5tpiQesQYJB5R/EOjRjQeUfAvExNDsO3ubBH8c3xv293OQDu7szttZ2e+L/mFQNlO+95n3rzf+733JpUKII4hju0x5bS8KR7KGWITVnQW2yRLtvmTbJQKW5yN08dm2+R02xSPDnRx25TrbEMssw21mX6QWbalXosV/urWxWzWcUHXpPMBbWGJtT3t6lVss1CMn90qhW3JliMvJlfTD3JDLqOozq6QLgapWHZvbjrKblO0gg3IFofbJ2vIlqylKdXf9U5qFLsU+kYbPITpYkXWVCfT10fDDNEQp6N5zAGyCXmJFYdBsKHH0q5kWwZ0+anRWUvO8xjeEGu7DDGVvwaVRxQEvmkzcgp5hDUej6CL+QxJxTTRs36RJ8AwxD2dW88+CSquD+lqbzyZYrHF3jhNLCoLARPEtHiNr92Iu74uvcHovKXO8XgCU9zs+zjgZ743mNBmQpX1Lbx78MQFFBMMGu27Az6+86G+eEhWV+e6A8NDerrhiH2+baoPuFzFYrj9eD0O6NG+pD9XIFs8eQJO8riSOo8g4ItnYMg7uaKde4qPAk4dur9gW9pFUFdM4wFTvcSdMeTUfqrHFfhxkidw0gBSP48CeqxTKnllyQtQyjjlPtjhDB/UFPOAsI0TRX2BviVWpdy5/YqzRZC6ThvnrP6zg5Qr1XsD1JMM4RPbIwDgUz2oJinBYGPaAwBlANfx8SJUk5DHAB8l99UTpPrc/zKoJWleQCx3AaA2QyVJA0AuLAHQTUEBVJKwQNDSZruCQJz6JU3Y5u5dwAyoJGkAiBkAAAAAAAAAAAAAAAAAAAAAQAAABABAAAAEAEAAAAQAQAAABABAAAAEAEAAAAQAQAAABABAAAAEAEAAQGpI5tnQnMJ0Ew2qvDtvyKdptk2GZhZ9nDPlV9TC/j0v25CfU2fLDmppa6dO1yfyGXlXzhIXOB2pUNrbeXyKrctbB1v/GULWeg3uxva7hvP2xHGJAYCnknTR+JKsIZ4nQ5ORxR9VLVN+Q4p99kBGO6825cjX/a8jbg6hNWuH3zX+1ZULEwEATam4jEaXvV+10QdZpOC2TkOcAwAiCsC+zOQTcuziQzb8YYb6NWeoS4OOvAMAQyw9HY2nUXvyB0NqfNfiWCIIBABgKI2/eeI4CuI+Gy7jlyCw6JcFACMLgLNx0tG2obwXzHhyJ0X4T9IUkwc52qfP38HDDbKmeI7Wp8E8gXIjABhBAHKGsqaiAM4QP9OfrZ1bG84s9z050GMYyKv8XgFM37EHAgAjAMA/+vizKjESGXP7fkOcEVyh6SZS6q6yEOjKwwBgBACgPfpr5Y0vt/714oTjqr3GQfIYZSGgPMP+jkknAoBhBKBgmDJ3P339i3KGqUR42ikZ6LfBkkQ0Kfv6cq9WAwAhi60XXmbkH6Bl5KUhJpc29SWDWMmt/wZMEwOAsAEwxDtlFLo91Ou9NenUrvbxE5AKjgAA/O4B+mX3DLVCw1UOAAhNunpn1Pu5/70OvcwAAMQUgL5X0PkB8EkqFbWzcgAQ5oVafaP/jHyh7gAYhhUbAPKmfKZM1m8tAIi3B3jJHwB1ZeAzBaqW6dbPbKhl+W0LAUCYF9LlG77ZPyr9quKHf7NWBfuVXAGAUCt+5KtlKnfuBwBx3gVQkFfml20FADEGIGso68Mq1IgKALS1fZe2gi/Xsujs44dkxACWvM8XAFNsqzsPgDxAsPr3MtvAn4LW89Md+BhXEvutXJlqIQAwTAAc2iZFubux1jr+gesP0lcDgAgAwNW49P2/9d0K6nIjAIjxcXCh48e/GOSHvz9sOh4AxLUewFKvraAQ9HEAEFMAuOGzt7nTNyG0J8yqIAAQtaJQXSypoJ9vd6euXpwKoQax0FUMAKIDgPNy4zGVlG1zT4BtidvZa1RzSESfXUYxxY/IA0SwMYQ7gbkCqMJW74/sjNq8L6Od7vuLbFFUutvn5031lQGrgQFAtHoDucUrYNZub6E9zBAWnyvwjoLu8LfIU3RwqXd1mUBlNc8kAAAjAAArnhT81IgcspjiFy5RQ0nYCLeHMwR5S1k9nMbndvS8pU5ETWCEJoTkMto1pIivh9jwX3YZygI0hkR0RAy3g5FCH6ppNtCAp4zK29wO7mxuOgpVwXUwJczpmHBczlRusU11c197eLA7ndLJdArYRtNA7qykrRwARHhOoLNr+tjuLQ3nUrS+gIzaUggauZCCDUN/FoZDGHJDzlTvpXqCWdx6HnQOUC1FpzzfqGbPRy3wvkWrlDfBoEgIAIAAAAgAgAAACACAAAAIAIAAAAgAgAAACACAAAAIAIAAAAgAgAAACACAAAAIAIAAAEgQALSZUEnSANBmlgDoptJqqCRZkre02SUAaGBzM1SSLKHGlIUuAMQyqCRhAOhiRT8Aply3u4oeOkh9CvdLUmfVevcuYJPdpmhQTULu/ky6sWj3EgAIBJMXAHoAoKHOq52O5jFQT8zdP9mYmmzX9APAvfl9fzlAr12FiuIt2YycUrrpDbGKhzZNK/5Dlt7fE2abNSRidz/Zlt6t/EDJ3rp6VYpfpMxv7ioFg+21D2qERPTZT5NYS3a2xFqn+BJttxegLeEjXRF7kyckBNffoZ3CRi/aucfQrvAEBrbLNdDUjcU0yQuPgri4frJlzlKX9D/qZYuzcfpYLyGWphTGrhQhsNQ5UF0sjD+KPPxN/a5frj/Y3jjwm9U5KHBFiJt4zDtUWN/Gt3X1OrdNu92uf8ApnjQBy/0BgmIuHgf16fbdd37huW/JeX4jcl3xQOGN36UP8qh3BIb1FfDlDHWpx5sb4raKb+Te/aKXHo4guwwxFXmCiLt8M93kjvYLi7x64CxvIXiwtCvdgWFf7cDKbJucgrRx1NK74nz3Tq4Y8OUz6cvLun0/OaSnGw7/xr1LruEhjbbZmHZwlDwiR7p8qtd7sNOf23ffqING+9UQxjsEd8bQEyjS2TLFDcu5yoR/IN49FLwHVmiLdVrQLemYdV08zz/C8JTI4/8/JB6a08Y97bRVdB0gYUVj0dtYVvFN6uwMNmL2f6YvldzXEUxUAAAAAElFTkSuQmCC" alt="Ghostty terminal sessions in a browser — xterm.js compatibility. logo">
       <div class="hero-text">
-        <h1>ghostty-web</h1>
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>ghostty-web</h1>
+          <span class="badge badge-active">active</span>
+        </div>
         <p class="hero-tagline">Ghostty terminal sessions in a browser — xterm.js compatibility.</p>
         <div id="hero-meta-island-ghostty-web" class="hero-meta">
           <!-- live: stars, forks, language -->

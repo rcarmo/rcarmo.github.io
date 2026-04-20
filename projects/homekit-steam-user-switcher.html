@@ -6,6 +6,7 @@
 <title>homekit-steam-user-switcher — rcarmo</title>
 <meta name="description" content="Switch Steam accounts on a shared PC via HomeKit.">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/homekit-steam-user-switcher.html">
 </head>
 <body>
@@ -14,11 +15,15 @@
     <a href="https://github.com/rcarmo/homekit-steam-user-switcher" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
-  <header class="hero" id="hero">
+  <header class="hero hero-project" id="hero" data-section="macos">
     <div class="hero-inner">
       <img class="hero-logo" src="data:image/png;base64,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" alt="Switch Steam accounts on a shared PC via HomeKit. logo">
       <div class="hero-text">
-        <h1>homekit-steam-user-switcher</h1>
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>homekit-steam-user-switcher</h1>
+          <span class="badge badge-stable">stable</span>
+        </div>
         <p class="hero-tagline">Switch Steam accounts on a shared PC via HomeKit.</p>
         <div id="hero-meta-island-homekit-steam-user-switcher" class="hero-meta">
           <!-- live: stars, forks, language -->

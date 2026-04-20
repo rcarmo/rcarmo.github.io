@@ -6,6 +6,7 @@
 <title>proxmox-zpool-monitoring — rcarmo</title>
 <meta name="description" content="ZFS pool metrics for Proxmox — exported to Graphite, cron only.">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/proxmox-zpool-monitoring.html">
 </head>
 <body>
@@ -14,11 +15,15 @@
     <a href="https://github.com/rcarmo/proxmox-zpool-monitoring" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
-  <header class="hero" id="hero">
+  <header class="hero hero-project" id="hero" data-section="infrastructure">
     <div class="hero-inner">
       <img class="hero-logo" src="data:image/png;base64,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" alt="ZFS pool metrics for Proxmox — exported to Graphite, cron only. logo">
       <div class="hero-text">
-        <h1>proxmox-zpool-monitoring</h1>
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>proxmox-zpool-monitoring</h1>
+          <span class="badge badge-stable">stable</span>
+        </div>
         <p class="hero-tagline">ZFS pool metrics for Proxmox — exported to Graphite, cron only.</p>
         <div id="hero-meta-island-proxmox-zpool-monitoring" class="hero-meta">
           <!-- live: stars, forks, language -->

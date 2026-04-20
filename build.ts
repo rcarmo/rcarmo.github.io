@@ -262,6 +262,7 @@ function buildProjectPage(project: Project): string {
 <title>${esc(id)} — rcarmo</title>
 <meta name="description" content="${esc(fm.tagline || "")}">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/${id}.html">
 </head>
 <body>
@@ -270,11 +271,15 @@ function buildProjectPage(project: Project): string {
     <a href="${ghUrl}" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
-  <header class="hero" id="hero">
+  <header class="hero hero-project" id="hero" data-section="${esc(fm.section || "")}">
     <div class="hero-inner">
       ${logoImg}
       <div class="hero-text">
-        <h1>${esc(id)}</h1>
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>${esc(id)}</h1>
+          ${statusBadge}
+        </div>
         <p class="hero-tagline">${esc(fm.tagline || "")}</p>
         <div id="hero-meta-island-${id}" class="hero-meta">
           <!-- live: stars, forks, language -->
@@ -421,10 +426,11 @@ function buildIndex(projects: Project[]): string {
       return `
         <a href="/projects/${p.id}.html" class="card card-featured" data-repo="${esc(fullName)}">
           ${logoHtml}
-          <div class="card-body">
-            <div class="card-name">${esc(p.id)}</div>
-            <div class="card-tagline">${esc(p.fm.tagline || "")}</div>
-            <div id="card-meta-${p.id}" class="card-meta"></div>
+          <div class="card-body card-body-featured">
+            <div class="card-kicker">Featured project</div>
+            <div class="card-name card-name-featured">${esc(p.id)}</div>
+            <div class="card-tagline card-tagline-featured">${esc(p.fm.tagline || "")}</div>
+            <div id="card-meta-${p.id}" class="card-meta card-meta-featured"></div>
           </div>
         </a>`;
     }).join("\n");
@@ -473,6 +479,7 @@ function buildIndex(projects: Project[]): string {
 <title>rcarmo — open source</title>
 <meta name="description" content="Open source projects by Rui Carmo">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/">
 </head>
 <body>
@@ -484,8 +491,12 @@ function buildIndex(projects: Project[]): string {
   <header class="hero hero-index" id="hero">
     <div class="hero-inner">
       <div class="hero-row">
-        <h1 class="hero-title">Open /<br><strong>source</strong> /<br>craft.</h1>
-        <img class="hero-avatar" src="/assets/avatar.png" alt="Rui Carmo" width="256" height="256">
+        <div class="hero-copy">
+          <h1 class="hero-title">Open /<br><strong>source</strong> /<br>craft.</h1>
+        </div>
+        <div class="hero-aside">
+          <img class="hero-avatar" src="/assets/avatar.png" alt="Rui Carmo" width="256" height="256">
+        </div>
       </div>
       <div id="hero-stats-island" class="hero-stats"></div>
     </div>

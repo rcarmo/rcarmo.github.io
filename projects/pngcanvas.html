@@ -6,6 +6,7 @@
 <title>pngcanvas — rcarmo</title>
 <meta name="description" content="Pure-Python PNG rendering with zero dependencies — draw lines, rectangles, and text directly to PNG files.">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/pngcanvas.html">
 </head>
 <body>
@@ -14,11 +15,15 @@
     <a href="https://github.com/rcarmo/pngcanvas" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
-  <header class="hero" id="hero">
+  <header class="hero hero-project" id="hero" data-section="libraries">
     <div class="hero-inner">
       <img class="hero-logo" src="data:image/png;base64,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" alt="Pure-Python PNG rendering with zero dependencies — draw lines, rectangles, and text directly to PNG files. logo">
       <div class="hero-text">
-        <h1>pngcanvas</h1>
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>pngcanvas</h1>
+          <span class="badge badge-archived">archived</span>
+        </div>
         <p class="hero-tagline">Pure-Python PNG rendering with zero dependencies — draw lines, rectangles, and text directly to PNG files.</p>
         <div id="hero-meta-island-pngcanvas" class="hero-meta">
           <!-- live: stars, forks, language -->

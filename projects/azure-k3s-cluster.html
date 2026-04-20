@@ -6,6 +6,7 @@
 <title>azure-k3s-cluster — rcarmo</title>
 <meta name="description" content="Azure ARM template to deploy a lightweight Kubernetes cluster using k3s — one make target, running in minutes.">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/azure-k3s-cluster.html">
 </head>
 <body>
@@ -14,11 +15,15 @@
     <a href="https://github.com/rcarmo/azure-k3s-cluster" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
-  <header class="hero" id="hero">
+  <header class="hero hero-project" id="hero" data-section="infrastructure">
     <div class="hero-inner">
       <img class="hero-logo" src="data:image/png;base64,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" alt="Azure ARM template to deploy a lightweight Kubernetes cluster using k3s — one make target, running in minutes. logo">
       <div class="hero-text">
-        <h1>azure-k3s-cluster</h1>
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>azure-k3s-cluster</h1>
+          <span class="badge badge-archived">archived</span>
+        </div>
         <p class="hero-tagline">Azure ARM template to deploy a lightweight Kubernetes cluster using k3s — one make target, running in minutes.</p>
         <div id="hero-meta-island-azure-k3s-cluster" class="hero-meta">
           <!-- live: stars, forks, language -->

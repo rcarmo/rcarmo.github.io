@@ -1,31 +1,31 @@
 ---
 section: infrastructure
 status: active
-tagline: Coding kata practice environment with AI-assisted feedback — repetition makes perfect.
+tagline: Tiny micro-PaaS wrapper around Docker Compose or Swarm with implicit Traefik routing and git-push deploy hooks.
 logo: assets/logos-opt/kata.png
 ---
 
 ## About
-kata is a collection of coding exercises and a lightweight practice harness that uses an AI agent to give feedback on solutions. Write a solution to a kata, run it against the test suite, and get structured commentary on correctness, style, and alternative approaches — designed for deliberate practice rather than competitive programming.
+kata is a lightweight deployment wrapper for Docker that sits somewhere between a hand-written `docker-compose.yml` and a full platform. It reads a `kata-compose.yaml`, generates the final `.docker-compose.yaml`, and deploys the app either via Docker Compose or Docker Swarm. The current implementation focuses on simple per-app layouts, predictable directory structure, and optional HTTP routing through Traefik.
 
 ## How it works
-Each kata is a Python module with a problem description, a reference implementation, and a test suite. The harness runs the tests, captures output and timing, and feeds the result to a configured LLM along with the solution code. The agent returns feedback in a structured format covering correctness, edge-case handling, and idiomatic Python. Solutions and feedback are stored locally for review.
+For each app, kata parses a `kata-compose.yaml`, expands runtime helpers, merges environment variables from config files and service definitions, and writes a generated `.docker-compose.yaml` into the app directory. It can then launch the stack using Compose or Swarm, attach the routed service to a shared Traefik network, and inject the labels needed for host-based routing. It also manages the standard per-app directories for code, data, config, logs, virtualenv/runtime state, and git bare repositories.
 
 ## Features
-### 🥋 Structured kata library
-Exercises organised by difficulty and domain — data structures, algorithms, string manipulation, and more.
+### 🐳 Compose or Swarm deploys
+Auto-selects Docker Compose or Docker Swarm per application, with an override when you need one mode explicitly.
 
-### 🤖 AI feedback loop
-Submit a solution and get LLM commentary on correctness, style, and alternative approaches — not just pass/fail.
+### 🌐 Optional Traefik routing
+Generate Traefik labels from a compact `traefik:` block and route apps through a shared reverse proxy on the `traefik-proxy` network.
 
-### 🧪 Test-driven
-Each kata has a comprehensive test suite; the harness shows which cases pass and which fail with clear diffs.
+### 🧱 Runtime image helpers
+Builds lightweight runtime images on demand for Python, Node.js, PHP, Bun, and static assets instead of making every app hand-roll the same boilerplate.
 
-### 📈 Progress tracking
-Local SQLite log of attempts and scores — review improvement over time and identify recurring weak spots.
+### 🗂 Standard app layout
+Creates and uses predictable paths for code, data, config, logs, env/runtime state, and git repositories under `KATA_ROOT`.
 
-### 🔌 Any LLM backend
-Feedback agent works with any OpenAI-compatible endpoint — local Ollama or remote Claude/GPT.
+### 🔐 Secrets and deploy helpers
+Includes helper commands for Swarm secrets, Traefik inspection, mode switching, and simple git push deployment hooks.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180" width="620" height="180">

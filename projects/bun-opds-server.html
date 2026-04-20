@@ -6,6 +6,7 @@
 <title>bun-opds-server — rcarmo</title>
 <meta name="description" content="Read-only multi-library OPDS server for Calibre — built for the XteInk X4 and CrossPoint Reader.">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/bun-opds-server.html">
 </head>
 <body>
@@ -14,11 +15,15 @@
     <a href="https://github.com/rcarmo/bun-opds-server" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
-  <header class="hero" id="hero">
+  <header class="hero hero-project" id="hero" data-section="infrastructure">
     <div class="hero-inner">
       <img class="hero-logo" src="data:image/png;base64,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" alt="Read-only multi-library OPDS server for Calibre — built for the XteInk X4 and CrossPoint Reader. logo">
       <div class="hero-text">
-        <h1>bun-opds-server</h1>
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>bun-opds-server</h1>
+          <span class="badge badge-active">active</span>
+        </div>
         <p class="hero-tagline">Read-only multi-library OPDS server for Calibre — built for the XteInk X4 and CrossPoint Reader.</p>
         <div id="hero-meta-island-bun-opds-server" class="hero-meta">
           <!-- live: stars, forks, language -->

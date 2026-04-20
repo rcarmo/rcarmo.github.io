@@ -6,6 +6,7 @@
 <title>ground-init — rcarmo</title>
 <meta name="description" content="Idempotent Linux bootstrap — YAML-driven, like cloud-init for bare metal.">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/ground-init.html">
 </head>
 <body>
@@ -14,11 +15,15 @@
     <a href="https://github.com/rcarmo/ground-init" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
-  <header class="hero" id="hero">
+  <header class="hero hero-project" id="hero" data-section="infrastructure">
     <div class="hero-inner">
       <img class="hero-logo" src="data:image/png;base64,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" alt="Idempotent Linux bootstrap — YAML-driven, like cloud-init for bare metal. logo">
       <div class="hero-text">
-        <h1>ground-init</h1>
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>ground-init</h1>
+          <span class="badge badge-active">active</span>
+        </div>
         <p class="hero-tagline">Idempotent Linux bootstrap — YAML-driven, like cloud-init for bare metal.</p>
         <div id="hero-meta-island-ground-init" class="hero-meta">
           <!-- live: stars, forks, language -->

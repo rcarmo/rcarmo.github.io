@@ -6,6 +6,7 @@
 <title>node-red-dashboard — rcarmo</title>
 <meta name="description" content="Custom dashboard UI for Node-RED — tailored widgets and layout for homelab sensor data and automation flows.">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/node-red-dashboard.html">
 </head>
 <body>
@@ -14,11 +15,15 @@
     <a href="https://github.com/rcarmo/node-red-dashboard" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
-  <header class="hero" id="hero">
+  <header class="hero hero-project" id="hero" data-section="infrastructure">
     <div class="hero-inner">
       <img class="hero-logo" src="data:image/png;base64,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" alt="Custom dashboard UI for Node-RED — tailored widgets and layout for homelab sensor data and automation flows. logo">
       <div class="hero-text">
-        <h1>node-red-dashboard</h1>
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>node-red-dashboard</h1>
+          <span class="badge badge-maintained">maintained</span>
+        </div>
         <p class="hero-tagline">Custom dashboard UI for Node-RED — tailored widgets and layout for homelab sensor data and automation flows.</p>
         <div id="hero-meta-island-node-red-dashboard" class="hero-meta">
           <!-- live: stars, forks, language -->
