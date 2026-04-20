@@ -335,7 +335,7 @@ footer{max-width:var(--max);margin:0 auto;padding:1.5rem var(--gap);
       <div id="hero-stats-island">
         <div class="hero-stats-row">
           <div class="hero-stat"><span class="hero-stat-v">—</span><span class="hero-stat-l">Total stars</span></div>
-          <div class="hero-stat"><span class="hero-stat-v">23</span><span class="hero-stat-l">Featured repos</span></div>
+          <div class="hero-stat"><span class="hero-stat-v">24</span><span class="hero-stat-l">Featured repos</span></div>
           <div class="hero-stat" style="align-items:flex-start"><span class="hero-stat-l" style="margin-bottom:.3rem">Top languages</span><span style="font-size:.95rem;font-weight:700;color:var(--text)">—</span></div>
         </div>
       </div>
@@ -564,7 +564,7 @@ footer{max-width:var(--max);margin:0 auto;padding:1.5rem var(--gap);
   <div class="idx-eyebrow">Projects</div>
   <div class="idx-section-hdr">
     <div class="idx-title">Infrastructure & homelab</div>
-    <span class="idx-count">7</span>
+    <span class="idx-count">8</span>
   </div>
   <div class="idx-grid">
     <a class="idx-card" href="/projects/piku.html" data-repo="piku/piku">
@@ -597,6 +597,17 @@ footer{max-width:var(--max);margin:0 auto;padding:1.5rem var(--gap);
     <div id="card-meta-gnome-thumbnailers" class="idx-meta">
       <span class="idx-stars">★ 26</span>
       <span><span class="dot dot-Python"></span>Python</span>
+    </div>
+  </div>
+</a>
+    <a class="idx-card" href="/projects/haiku-arm64-build.html" data-repo="rcarmo/haiku-arm64-build">
+  <div class="idx-logo-ph">📦</div>
+  <div class="idx-body">
+    <div class="idx-name">haiku-arm64-build</div>
+    <div class="idx-desc">Build environment and automation for compiling Haiku OS on ARM64.</div>
+    <div id="card-meta-haiku-arm64-build" class="idx-meta">
+      <span class="idx-stars">★ 0</span>
+      <span><span class="dot dot-Makefile"></span>Makefile</span>
     </div>
   </div>
 </a>
@@ -682,7 +693,7 @@ footer{max-width:var(--max);margin:0 auto;padding:1.5rem var(--gap);
 import { mountIndex, mountHeroStats } from '/assets/js/repo-island.mjs';
 
 // Pre-baked card data (from dossier + content at build time)
-const CARD_DATA = [{"id":"piku","fullName":"piku/piku","fallbackStars":"★ 6,569","lang":"Python"},{"id":"webterm","fullName":"rcarmo/webterm","fallbackStars":"★ 106","lang":"Go"},{"id":"ground-init","fullName":"rcarmo/ground-init","fallbackStars":"★ 64","lang":"Python"},{"id":"python-office-mcp-server","fullName":"rcarmo/python-office-mcp-server","fallbackStars":"★ 3","lang":"Python"},{"id":"feed-summarizer","fullName":"rcarmo/feed-summarizer","fallbackStars":"★ 27","lang":"Python"},{"id":"gnome-thumbnailers","fullName":"rcarmo/gnome-thumbnailers","fallbackStars":"★ 26","lang":"Python"},{"id":"go-te","fullName":"rcarmo/go-te","fallbackStars":"★ 7","lang":"Go"},{"id":"go-busybox","fullName":"rcarmo/go-busybox","fallbackStars":"★ 10","lang":"Go"},{"id":"pve-microvm","fullName":"rcarmo/pve-microvm","fallbackStars":"★ 3","lang":"Shell"},{"id":"homekit-steam-user-switcher","fullName":"rcarmo/homekit-steam-user-switcher","fallbackStars":"★ 41","lang":"Python"},{"id":"vibes","fullName":"rcarmo/vibes","fallbackStars":"★ 142","lang":"Python"},{"id":"gotel","fullName":"rcarmo/gotel","fallbackStars":"★ 5","lang":"Go"},{"id":"zmk-config-totem","fullName":"rcarmo/zmk-config-totem","fallbackStars":"★ 2","lang":""},{"id":"PhotosExport","fullName":"rcarmo/PhotosExport","fallbackStars":"★ 280","lang":"Swift"},{"id":"go-rdp","fullName":"rcarmo/go-rdp","fallbackStars":"★ 9","lang":"Go"},{"id":"ghostty-web","fullName":"rcarmo/ghostty-web","fallbackStars":"★ 5","lang":"TypeScript"},{"id":"macemu","fullName":"rcarmo/macemu","fallbackStars":"★ 3","lang":"C++"},{"id":"drawterm","fullName":"rcarmo/drawterm","fallbackStars":"★ 26","lang":"C"},{"id":"agentbox","fullName":"rcarmo/agentbox","fallbackStars":"★ 97","lang":"Dockerfile"},{"id":"umcp","fullName":"rcarmo/umcp","fallbackStars":"★ 11","lang":"Python"},{"id":"proxmox-zpool-monitoring","fullName":"rcarmo/proxmox-zpool-monitoring","fallbackStars":"★ 7","lang":"Python"},{"id":"azure-stable-diffusion","fullName":"rcarmo/azure-stable-diffusion","fallbackStars":"★ 44","lang":"Makefile"}];
+const CARD_DATA = [{"id":"piku","fullName":"piku/piku","fallbackStars":"★ 6,569","lang":"Python"},{"id":"webterm","fullName":"rcarmo/webterm","fallbackStars":"★ 106","lang":"Go"},{"id":"ground-init","fullName":"rcarmo/ground-init","fallbackStars":"★ 64","lang":"Python"},{"id":"python-office-mcp-server","fullName":"rcarmo/python-office-mcp-server","fallbackStars":"★ 3","lang":"Python"},{"id":"feed-summarizer","fullName":"rcarmo/feed-summarizer","fallbackStars":"★ 27","lang":"Python"},{"id":"gnome-thumbnailers","fullName":"rcarmo/gnome-thumbnailers","fallbackStars":"★ 26","lang":"Python"},{"id":"go-te","fullName":"rcarmo/go-te","fallbackStars":"★ 7","lang":"Go"},{"id":"haiku-arm64-build","fullName":"rcarmo/haiku-arm64-build","fallbackStars":"★ 0","lang":"Makefile"},{"id":"go-busybox","fullName":"rcarmo/go-busybox","fallbackStars":"★ 10","lang":"Go"},{"id":"pve-microvm","fullName":"rcarmo/pve-microvm","fallbackStars":"★ 3","lang":"Shell"},{"id":"homekit-steam-user-switcher","fullName":"rcarmo/homekit-steam-user-switcher","fallbackStars":"★ 41","lang":"Python"},{"id":"vibes","fullName":"rcarmo/vibes","fallbackStars":"★ 142","lang":"Python"},{"id":"gotel","fullName":"rcarmo/gotel","fallbackStars":"★ 5","lang":"Go"},{"id":"zmk-config-totem","fullName":"rcarmo/zmk-config-totem","fallbackStars":"★ 2","lang":""},{"id":"PhotosExport","fullName":"rcarmo/PhotosExport","fallbackStars":"★ 280","lang":"Swift"},{"id":"go-rdp","fullName":"rcarmo/go-rdp","fallbackStars":"★ 9","lang":"Go"},{"id":"ghostty-web","fullName":"rcarmo/ghostty-web","fallbackStars":"★ 5","lang":"TypeScript"},{"id":"macemu","fullName":"rcarmo/macemu","fallbackStars":"★ 3","lang":"C++"},{"id":"drawterm","fullName":"rcarmo/drawterm","fallbackStars":"★ 26","lang":"C"},{"id":"agentbox","fullName":"rcarmo/agentbox","fallbackStars":"★ 97","lang":"Dockerfile"},{"id":"umcp","fullName":"rcarmo/umcp","fallbackStars":"★ 11","lang":"Python"},{"id":"proxmox-zpool-monitoring","fullName":"rcarmo/proxmox-zpool-monitoring","fallbackStars":"★ 7","lang":"Python"},{"id":"azure-stable-diffusion","fullName":"rcarmo/azure-stable-diffusion","fallbackStars":"★ 44","lang":"Makefile"}];
 
 const HL_DATA = {"id":"piclaw","fullName":"rcarmo/piclaw","fallbackStars":"★ 526","fallbackForks":37,"lang":"TypeScript","status":"active"};
 

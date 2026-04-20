@@ -1,0 +1,31 @@
+{
+  "id": "haiku-arm64-build",
+  "meta": {
+    "name": "haiku-arm64-build",
+    "full_name": "rcarmo/haiku-arm64-build",
+    "description": "Build environment and automation for compiling Haiku OS on ARM64.",
+    "homepage": "",
+    "stars": 0,
+    "forks": 0,
+    "language": "Makefile",
+    "created_at": "2026-04-18T19:04:29Z",
+    "pushed_at": "2026-04-20T10:26:59Z",
+    "updated_at": "2026-04-20T10:26:59Z",
+    "topics": [
+      "haiku",
+      "arm64",
+      "build",
+      "makefile"
+    ]
+  },
+  "readme": "",
+  "commits": [],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-20T10:51:00Z",
+  "logo": null,
+  "logo_data_uri": null,
+  "logo_ext": null,
+  "diagram": null,
+  "diagram_inline": null
+}
