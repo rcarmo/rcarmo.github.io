@@ -489,16 +489,16 @@ function buildIndex(projects: Project[]): string {
   </nav>
 
   <header class="hero hero-index" id="hero">
-    <div class="hero-inner">
-      <div class="hero-row">
-        <div class="hero-copy">
-          <h1 class="hero-title">Open /<br><strong>source</strong> /<br>craft.</h1>
+    <div class="hero-inner hero-inner-centered">
+      <div class="hero-row hero-row-centered">
+        <div class="hero-copy hero-copy-centered">
+          <h1 class="hero-title hero-title-centered">Open /<br><strong>source</strong> /<br>craft.</h1>
         </div>
-        <div class="hero-aside">
+        <div class="hero-aside hero-aside-centered">
           <img class="hero-avatar" src="/assets/avatar.png" alt="Rui Carmo" width="256" height="256">
         </div>
       </div>
-      <div id="hero-stats-island" class="hero-stats"></div>
+      <div id="hero-stats-island" class="hero-stats hero-stats-centered"></div>
     </div>
   </header>
 

@@ -163,12 +163,19 @@ code {
   max-width: var(--max-w); margin: 0 auto;
   display: flex; flex-direction: column; align-items: stretch;
 }
+.hero-inner-centered { align-items: center; }
 .hero-row {
   display: flex; align-items: flex-start; justify-content: space-between; gap: 3.5rem;
   margin-bottom: 2.5rem;
 }
+.hero-row-centered {
+  align-items: center;
+  justify-content: center;
+}
 .hero-copy { flex: 1; min-width: 0; }
+.hero-copy-centered { flex: 0 1 auto; }
 .hero-aside { display: flex; justify-content: flex-end; flex-shrink: 0; }
+.hero-aside-centered { justify-content: center; }
 .hero-title {
   font-family: var(--font-head);
   font-size: clamp(5rem, 11vw, 10rem);
@@ -178,6 +185,7 @@ code {
   text-align: left;
   text-wrap: balance;
 }
+.hero-title-centered { text-align: left; }
 .hero-title strong { color: var(--blue); font-weight: 700; }
 .hero-avatar {
   width: clamp(172px, 20vw, 232px);
@@ -191,7 +199,12 @@ code {
   display: flex; justify-content: flex-start; align-items: flex-start; gap: 3.5rem; flex-wrap: wrap;
   padding-top: 1.6rem; border-top: 1px solid var(--border);
 }
+.hero-stats-centered {
+  justify-content: center;
+  align-items: flex-start;
+}
 .hero-stat { display: flex; flex-direction: column; align-items: flex-start; gap: 0.2rem; min-width: 9rem; }
+.hero-stats-centered .hero-stat { align-items: center; text-align: center; }
 .hero-stats .hero-stat-value {
   font-family: var(--font-head); font-size: 2.35rem; font-weight: 700;
   color: var(--text); line-height: 1.05;
@@ -241,18 +254,14 @@ code {
 }
 .card-logo {
   width: 104px; height: 104px; flex-shrink: 0;
-  border-radius: 14px;
   overflow: hidden;
-  padding: 0.75rem;
-  border: 1px solid var(--border);
-  background: var(--surface2);
 }
 .card-logo img { width: 100%; height: 100%; object-fit: contain; background: transparent; }
 .card-logo-placeholder {
   display: flex; align-items: center; justify-content: center;
   color: var(--text-faint); font-family: var(--font-head); font-weight: 700;
 }
-.card-logo-lg { width: 144px; height: 144px; padding: 1rem; }
+.card-logo-lg { width: 144px; height: 144px; }
 .card-body { flex: 1; min-width: 0; }
 .card-body-featured { display: flex; flex-direction: column; justify-content: center; }
 .card-kicker {
@@ -317,9 +326,7 @@ code {
 }
 .hero-logo {
   width: 132px; height: 132px; object-fit: contain;
-  flex-shrink: 0; border-radius: 18px;
-  padding: 0.85rem; background: var(--surface);
-  border: 1px solid var(--border-strong);
+  flex-shrink: 0;
 }
 .hero-text { flex: 1; min-width: 0; }
 .hero-kicker {
@@ -354,10 +361,11 @@ code {
 }
 @media (max-width: 768px) {
   .topnav { padding-left: 1.25rem; padding-right: 1.25rem; }
-  .hero-row { flex-direction: column; align-items: flex-start; gap: 1.5rem; }
+  .hero-row, .hero-row-centered { flex-direction: column; align-items: center; gap: 1.5rem; }
   .hero-title { font-size: clamp(3.6rem, 16vw, 5rem); }
-  .hero-aside { justify-content: flex-start; }
-  .hero-stats { gap: 1.6rem; }
+  .hero-copy-centered, .hero-title-centered { text-align: center; }
+  .hero-aside, .hero-aside-centered { justify-content: center; }
+  .hero-stats, .hero-stats-centered { gap: 1.6rem; justify-content: center; }
   .hero-stat { min-width: unset; }
   .index-main { padding-left: 1.25rem; padding-right: 1.25rem; }
   .card-grid { grid-template-columns: 1fr; }
@@ -467,7 +475,12 @@ code {
 
 /* ── Diagram ──────────────────────────────────────────────────────────────── */
 .diagram-wrap { overflow-x: auto; padding: 0.5rem 0; }
-.diagram-wrap svg { width: 100%; height: auto; }
+.diagram-wrap svg {
+  display: block;
+  width: auto;
+  max-width: 100%;
+  height: auto;
+}
 
 /* ── Releases ─────────────────────────────────────────────────────────────── */
 .release-list { display: flex; flex-direction: column; gap: 0.5rem; }
@@ -610,7 +623,7 @@ footer {
   border-color: var(--border-strong);
 }
 .related-link .related-logo {
-  width: 2rem; height: 2rem; border-radius: 4px;
+  width: 2rem; height: 2rem;
   object-fit: contain;
   justify-self: center;
 }
