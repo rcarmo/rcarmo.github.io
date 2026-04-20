@@ -261,6 +261,7 @@ function buildProjectPage(project: Project): string {
 <meta name="description" content="${esc(fm.tagline || "")}">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/style.css">
 <link rel="canonical" href="https://rcarmo.github.io/projects/${id}.html">
 </head>
@@ -356,6 +357,26 @@ ${posts.length ? `      <section class="sec" id="s-posts">
       relatedEl:  document.getElementById('related-island-${id}'),
     });
   </script>
+  <script>
+    // Scroll-spy for TOC
+    const tocLinks = document.querySelectorAll('.toc-link');
+    if (tocLinks.length) {
+      const sections = [...tocLinks].map(l => ({
+        link: l,
+        el: document.getElementById(l.dataset.section)
+      })).filter(s => s.el);
+      const obs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            tocLinks.forEach(l => l.classList.remove('active'));
+            const match = sections.find(s => s.el === e.target);
+            if (match) match.link.classList.add('active');
+          }
+        }
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      sections.forEach(s => obs.observe(s.el));
+    }
+  </script>
 </body>
 </html>`;
 }
@@ -426,6 +447,7 @@ function buildIndex(projects: Project[]): string {
 <meta name="description" content="Open source projects by Rui Carmo">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/style.css">
 <link rel="canonical" href="https://rcarmo.github.io/">
 </head>

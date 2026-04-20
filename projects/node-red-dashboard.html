@@ -7,6 +7,7 @@
 <meta name="description" content="Custom dashboard UI for Node-RED — tailored widgets and layout for homelab sensor data and automation flows.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=Instrument+Serif&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <link rel="stylesheet" href="/assets/css/style.css">
 <link rel="canonical" href="https://rcarmo.github.io/projects/node-red-dashboard.html">
 </head>
@@ -185,6 +186,26 @@
       releasesEl: document.getElementById('rel-island-node-red-dashboard'),
       relatedEl:  document.getElementById('related-island-node-red-dashboard'),
     });
+  </script>
+  <script>
+    // Scroll-spy for TOC
+    const tocLinks = document.querySelectorAll('.toc-link');
+    if (tocLinks.length) {
+      const sections = [...tocLinks].map(l => ({
+        link: l,
+        el: document.getElementById(l.dataset.section)
+      })).filter(s => s.el);
+      const obs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            tocLinks.forEach(l => l.classList.remove('active'));
+            const match = sections.find(s => s.el === e.target);
+            if (match) match.link.classList.add('active');
+          }
+        }
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      sections.forEach(s => obs.observe(s.el));
+    }
   </script>
 </body>
 </html>
