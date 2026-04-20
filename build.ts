@@ -856,8 +856,8 @@ console.log(`\nBuilt ${built}, skipped ${skipped}`);
 const SECTION_ORDER = ['highlight','ai-agents','ai-ml','terminal','macos','infrastructure','hardware','libraries'];
 const SECTION_LABELS: Record<string,string> = {
   'highlight':     'Highlight',
-  'ai-agents':     'AI & Agent tooling',
-  'ai-ml':         'AI & Machine Learning',
+  'ai-agents':     'Agentic tools',
+  'ai-ml':         'Machine Learning & Models',
   'terminal':      'Terminal stack',
   'macos':         'macOS & Apple',
   'infrastructure':'Infrastructure & homelab',
