@@ -2,7 +2,6 @@
 section: infrastructure
 status: maintained
 tagline: Custom dashboard UI for Node-RED — tailored widgets and layout for homelab sensor data and automation flows.
-logo: assets/logos-opt/node-red-dashboard.png
 ---
 
 ## About

@@ -2,7 +2,6 @@
 section: infrastructure
 status: stable
 tagline: File thumbnails for RAW, HEIC, and 3D models in GNOME Files.
-logo: assets/logos-opt/gnome-thumbnailers.png
 ---
 
 ## About

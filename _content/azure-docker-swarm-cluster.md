@@ -2,7 +2,6 @@
 section: cloud
 status: archived
 tagline: Auto-scaling Docker Swarm cluster for Azure — ARM template plus Makefile, manager and worker VMSS included.
-logo: assets/logos-opt/azure-docker-swarm-cluster.png
 ---
 
 ## About
