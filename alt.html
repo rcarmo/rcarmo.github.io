@@ -3,71 +3,78 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>rcarmo — projects</title>
+<title>rcarmo — signal nexus</title>
 <style>
 *{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;background:#02040a;font-family:'Inter','SF Pro Display',system-ui,sans-serif;}
-#cv{width:100%;height:100%;display:block;}
+html,body{width:100%;height:100%;overflow:hidden;background:#010306;
+  font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
+#cv{width:100%;height:100%;display:block;cursor:grab;}
+#cv:active{cursor:grabbing;}
 
 /* ── Topbar ── */
-#topbar{position:fixed;top:0;left:0;right:0;z-index:300;
-  display:flex;align-items:center;justify-content:space-between;
-  padding:.65rem 1.4rem;
-  background:linear-gradient(to bottom,rgba(2,4,10,.85) 0%,transparent 100%);
+#topbar{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;
+  align-items:center;justify-content:space-between;padding:.7rem 1.5rem;
+  background:linear-gradient(to bottom,rgba(1,3,6,.9) 0%,transparent 100%);
   pointer-events:none;}
-#topbar a{pointer-events:auto;color:rgba(200,220,255,.7);font-size:.72rem;
-  font-family:ui-monospace,monospace;letter-spacing:.08em;text-decoration:none;}
-#topbar a:hover{color:#fff;}
-#topbar .right{display:flex;gap:1.5rem;}
+#topbar a{pointer-events:auto;color:rgba(180,210,255,.5);font-size:.7rem;
+  font-family:ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;
+  text-decoration:none;transition:color .15s;}
+#topbar a:hover{color:rgba(180,210,255,.9);}
+#topbar .right{display:flex;gap:1.6rem;}
+#topbar .title{font-weight:600;color:rgba(180,210,255,.7);letter-spacing:.06em;}
 
-/* ── Cluster nav ── */
-#clusternav{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%);
-  z-index:300;display:flex;gap:.35rem;flex-wrap:wrap;justify-content:center;
-  padding:.5rem .8rem;
-  background:rgba(2,4,10,.6);backdrop-filter:blur(20px);
-  border:1px solid rgba(100,140,255,.12);border-radius:2em;}
-.nav-btn{background:transparent;border:1px solid rgba(100,140,255,.18);
-  color:rgba(160,190,255,.65);font-size:.68rem;letter-spacing:.08em;
-  font-family:ui-monospace,monospace;padding:.3rem .8rem;border-radius:1.5em;
-  cursor:pointer;transition:all .2s;text-transform:uppercase;}
-.nav-btn:hover{border-color:rgba(120,160,255,.5);color:#a8c4ff;background:rgba(60,80,160,.15);}
-.nav-btn.active{border-color:rgba(140,180,255,.6);color:#c8d8ff;background:rgba(60,80,160,.25);}
+/* ── Nav ── */
+#clusternav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
+  z-index:300;display:flex;gap:.3rem;flex-wrap:wrap;justify-content:center;
+  padding:.45rem .7rem;
+  background:rgba(1,3,6,.75);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
+  border:1px solid rgba(80,120,220,.14);border-radius:2em;}
+.nav-btn{background:transparent;border:none;
+  color:rgba(120,160,255,.5);font-size:.65rem;letter-spacing:.1em;
+  font-family:ui-monospace,monospace;padding:.28rem .75rem;border-radius:1.5em;
+  cursor:pointer;transition:all .18s;text-transform:uppercase;}
+.nav-btn:hover{color:rgba(160,200,255,.8);background:rgba(60,90,200,.12);}
+.nav-btn.active{color:#a8c8ff;background:rgba(60,90,200,.22);
+  box-shadow:0 0 12px rgba(80,120,255,.2);}
 
 /* ── Hint ── */
-#hint{position:fixed;bottom:4.5rem;left:50%;transform:translateX(-50%);
-  color:rgba(140,170,220,.35);font-size:.65rem;letter-spacing:.06em;
-  font-family:ui-monospace,monospace;pointer-events:none;white-space:nowrap;}
+#hint{position:fixed;bottom:4.2rem;left:50%;transform:translateX(-50%);
+  color:rgba(80,110,180,.35);font-size:.6rem;letter-spacing:.1em;
+  font-family:ui-monospace,monospace;pointer-events:none;text-transform:uppercase;}
 
 /* ── Focus panel ── */
-#focus-panel{position:fixed;bottom:0;left:50%;transform:translate(-50%,100%);
-  width:min(480px,92vw);z-index:400;padding:1.4rem 1.6rem 1.8rem;
-  background:rgba(4,8,20,.94);backdrop-filter:blur(24px);
-  border:1px solid rgba(100,140,255,.2);border-radius:1rem 1rem 0 0;
-  transition:transform .35s cubic-bezier(.16,1,.3,1);pointer-events:none;}
+#focus-panel{position:fixed;bottom:0;left:50%;transform:translate(-50%,110%);
+  width:min(460px,90vw);z-index:400;
+  background:rgba(2,5,14,.95);backdrop-filter:blur(28px);
+  border:1px solid rgba(80,120,255,.2);border-top:2px solid rgba(80,120,255,.4);
+  border-radius:.85rem .85rem 0 0;padding:1.4rem 1.6rem 2rem;
+  transition:transform .4s cubic-bezier(.16,1,.3,1);pointer-events:none;}
 #focus-panel.open{transform:translate(-50%,0);pointer-events:auto;}
-#focus-header{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:.7rem;}
-#focus-logo{width:44px;height:44px;border-radius:9px;object-fit:contain;display:none;flex-shrink:0;}
-#focus-name{font-size:1.05rem;font-weight:700;color:#e0eaff;letter-spacing:-.015em;line-height:1.2;}
-#focus-stars{font-size:.72rem;color:#a8b8e0;margin-top:.2rem;font-family:ui-monospace,monospace;}
-#focus-desc{font-size:.83rem;color:#6888b8;line-height:1.65;margin-bottom:1rem;}
-#focus-actions{display:flex;gap:.6rem;}
-#focus-link{display:inline-flex;align-items:center;gap:.35rem;padding:.4rem 1rem;
-  background:#2244cc;color:#fff;font-size:.8rem;font-weight:500;border-radius:.5rem;
-  text-decoration:none;transition:background .15s;}
-#focus-link:hover{background:#3355dd;}
-#focus-close{position:absolute;top:.9rem;right:1rem;background:transparent;
-  border:1px solid rgba(100,140,255,.2);color:rgba(150,180,255,.5);
-  font-size:.8rem;border-radius:.4rem;padding:.2rem .55rem;cursor:pointer;}
-#focus-close:hover{color:#a8c4ff;border-color:rgba(140,180,255,.4);}
+#focus-close{position:absolute;top:.85rem;right:1rem;background:none;
+  border:1px solid rgba(80,120,255,.2);color:rgba(100,140,255,.45);
+  font-size:.75rem;border-radius:.4rem;padding:.18rem .5rem;cursor:pointer;transition:all .15s;}
+#focus-close:hover{color:#a8c4ff;border-color:rgba(120,160,255,.4);}
+#focus-accent{height:2px;width:32px;border-radius:1px;margin-bottom:.9rem;
+  background:currentColor;}
+#focus-header{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.6rem;}
+#focus-logo{width:40px;height:40px;border-radius:8px;object-fit:contain;display:none;flex-shrink:0;}
+#focus-name{font-size:1rem;font-weight:700;color:#dce8ff;letter-spacing:-.01em;}
+#focus-stars{font-size:.68rem;color:#6888b0;margin-top:.18rem;font-family:ui-monospace,monospace;}
+#focus-desc{font-size:.82rem;color:#4a6888;line-height:1.68;margin-bottom:.95rem;}
+#focus-link{display:inline-flex;align-items:center;gap:.3rem;padding:.38rem .9rem;
+  background:rgba(40,80,200,.7);color:#c0d4ff;font-size:.78rem;font-weight:500;
+  border-radius:.5rem;text-decoration:none;border:1px solid rgba(80,120,255,.3);
+  transition:all .15s;}
+#focus-link:hover{background:rgba(60,100,220,.85);color:#e0ecff;}
 </style>
 </head>
 <body>
 <canvas id="cv"></canvas>
 
 <header id="topbar">
-  <a href="/">rcarmo.github.io</a>
+  <span class="title">rcarmo.github.io</span>
   <div class="right">
-    <a href="index.html">list view</a>
+    <a href="index.html">← list view</a>
     <a href="https://taoofmac.com" target="_blank">taoofmac.com</a>
   </div>
 </header>
@@ -76,29 +83,24 @@ html,body{width:100%;height:100%;overflow:hidden;background:#02040a;font-family:
   <button class="nav-btn active" data-cluster="overview">Overview</button>
   <button class="nav-btn" data-cluster="highlight">Piclaw</button>
   <button class="nav-btn" data-cluster="piku">Piku</button>
-  <button class="nav-btn" data-cluster="ai">AI Agents</button>
+  <button class="nav-btn" data-cluster="ai">Agents</button>
   <button class="nav-btn" data-cluster="terminal">Terminal</button>
   <button class="nav-btn" data-cluster="macos">macOS</button>
-  <button class="nav-btn" data-cluster="infra">Infrastructure</button>
+  <button class="nav-btn" data-cluster="infra">Infra</button>
 </nav>
 
-<div id="hint">drag · scroll · WASD · click a crystal</div>
+<div id="hint">drag · scroll · WASD · click a sign</div>
 
 <div id="focus-panel">
   <button id="focus-close">✕</button>
+  <div id="focus-accent"></div>
   <div id="focus-header">
     <img id="focus-logo" src="" alt="">
-    <div>
-      <div id="focus-name"></div>
-      <div id="focus-stars"></div>
-    </div>
+    <div><div id="focus-name"></div><div id="focus-stars"></div></div>
   </div>
   <div id="focus-desc"></div>
-  <div id="focus-actions">
-    <a id="focus-link" href="#">View project →</a>
-  </div>
+  <a id="focus-link" href="#">Open project →</a>
 </div>
-
 
 <script>
 const LOGOS = {
@@ -117,39 +119,39 @@ const LOGOS = {
   "webterm": "data:image/png;base64,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"
 };
 </script>
+
 <script src="/assets/js/babylon.js"></script>
 <script>
 'use strict';
-
-// ── Cluster data ────────────────────────────────────────────────────────────
+// ── Cluster data ─────────────────────────────────────────────────────────────
 const CLUSTERS = {
-  highlight: { pos:[0,0,0],      col:'#4488ff', label:'piclaw',        projects:[
-    { id:'piclaw', name:'piclaw', stars:526, lang:'TypeScript', desc:'Self-hosted AI agent workspace — streaming UI, persistent state, built-in tools.', url:'/projects/piclaw.html' },
+  highlight: {pos:[0,0,0],      col:'#2255ff', shape:'needle',   label:'Piclaw',       projects:[
+    {id:'piclaw',name:'piclaw',stars:526,lang:'TypeScript',desc:'Self-hosted AI agent workspace — streaming UI, persistent state, no CDN.',url:'/projects/piclaw.html'},
   ]},
-  piku:      { pos:[-22,0,-8],   col:'#c89830', label:'piku',          projects:[
-    { id:'piku', name:'piku/piku', stars:6569, lang:'Python', desc:'The tiniest PaaS — git push deployments to your own server.', url:'/projects/piku.html' },
+  piku:      {pos:[-24,0,-10],  col:'#c09020', shape:'column',   label:'Piku',         projects:[
+    {id:'piku',name:'piku/piku',stars:6569,lang:'Python',desc:'The tiniest PaaS — git push deployments to your own server, Heroku-style.',url:'/projects/piku.html'},
   ]},
-  ai:        { pos:[20,0,-12],   col:'#28d880', label:'AI Agents',     projects:[
-    { id:'vibes',       name:'vibes',       stars:142, lang:'Python',     desc:'Mobile-first AI agent web UI — ACP and Pi over RPC.',               url:'/projects/vibes.html' },
-    { id:'agentbox',    name:'agentbox',    stars:97,  lang:'Python',     desc:'Docker sandbox for coding agents — Copilot, Codex, Pi preinstalled.',url:'/projects/agentbox.html' },
-    { id:'feed-summarizer', name:'feed-summarizer', stars:27, lang:'Python', desc:'LLM-powered RSS digest — full-text extraction, Raspberry Pi.',    url:'/projects/feed-summarizer.html' },
-    { id:'go-busybox',  name:'go-busybox',  stars:10,  lang:'Go',         desc:'57 BusyBox utilities in Go — compiles to a 2 MB WASM binary.',      url:'/projects/go-busybox.html' },
+  ai:        {pos:[22,0,-14],   col:'#22cc70', shape:'neural',   label:'AI Agents',    projects:[
+    {id:'vibes',name:'vibes',stars:142,lang:'Python',desc:'Mobile-first web UI for AI agents — ACP and Pi over RPC, zero build step.',url:'/projects/vibes.html'},
+    {id:'agentbox',name:'agentbox',stars:97,lang:'Python',desc:'Docker sandbox for coding agents — Copilot CLI, Codex, Pi preinstalled.',url:'/projects/agentbox.html'},
+    {id:'feed-summarizer',name:'feed-summarizer',stars:27,lang:'Python',desc:'LLM-powered RSS digest — full-text extraction, runs on a Raspberry Pi.',url:'/projects/feed-summarizer.html'},
+    {id:'go-busybox',name:'go-busybox',stars:10,lang:'Go',desc:'57 BusyBox utilities in Go — 2 MB WASM binary for agent sandboxing.',url:'/projects/go-busybox.html'},
   ]},
-  terminal:  { pos:[22,0,14],    col:'#9955ee', label:'Terminal',      projects:[
-    { id:'webterm',     name:'webterm',     stars:106, lang:'Go',  desc:'Go web terminal — multi-session, watches AI agents in real time.',          url:'/projects/webterm.html' },
-    { id:'go-rdp',      name:'go-rdp',      stars:9,   lang:'Go',  desc:'Browser-based RDP client — full MS-RDPBCGR spec, Go + WASM.',              url:'/projects/go-rdp.html' },
-    { id:'go-te',       name:'go-te',       stars:7,   lang:'Go',  desc:'VT100/VT520 terminal emulator library — ESCTest2, SVG export.',            url:'/projects/go-te.html' },
-    { id:'gotel',       name:'gotel',       stars:5,   lang:'Go',  desc:'Self-contained OTel collector — SQLite storage, built-in trace viewer.',   url:'/projects/gotel.html' },
+  terminal:  {pos:[24,0,16],    col:'#f0a020', shape:'skyline',  label:'Terminal',     projects:[
+    {id:'webterm',name:'webterm',stars:106,lang:'Go',desc:'Go web terminal — multi-session dashboard mode, watches AI agents.',url:'/projects/webterm.html'},
+    {id:'go-rdp',name:'go-rdp',stars:9,lang:'Go',desc:'Browser-based RDP client — full MS-RDPBCGR spec, Go backend, WASM frontend.',url:'/projects/go-rdp.html'},
+    {id:'go-te',name:'go-te',stars:7,lang:'Go',desc:'VT100/VT520 terminal library for Go — pyte-faithful, SVG export.',url:'/projects/go-te.html'},
+    {id:'gotel',name:'gotel',stars:5,lang:'Go',desc:'Self-contained OTel collector — SQLite storage, built-in trace viewer.',url:'/projects/gotel.html'},
   ]},
-  macos:     { pos:[-18,0,16],   col:'#ee4466', label:'macOS',         projects:[
-    { id:'PhotosExport', name:'PhotosExport', stars:280, lang:'Swift', desc:'Export your complete Apple Photos library — originals, edits, Live Photos.', url:'/projects/PhotosExport.html' },
-    { id:'drawterm',    name:'drawterm',    stars:26,  lang:'C',    desc:'Plan 9 drawterm for modern macOS — HiDPI, Metal rendering.',              url:'/projects/drawterm.html' },
-    { id:'homekit-steam-user-switcher', name:'homekit-steam', stars:41, lang:'Python', desc:'Switch Steam accounts via HomeKit.', url:'/projects/homekit-steam-user-switcher.html' },
+  macos:     {pos:[-20,0,18],   col:'#ee4466', shape:'pavilion', label:'macOS',        projects:[
+    {id:'PhotosExport',name:'PhotosExport',stars:280,lang:'Swift',desc:'Export your complete Apple Photos library — originals, edits, Live Photos.',url:'/projects/PhotosExport.html'},
+    {id:'drawterm',name:'drawterm',stars:26,lang:'C',desc:'Plan 9 drawterm for modern macOS — HiDPI, Metal rendering.',url:'/projects/drawterm.html'},
+    {id:'homekit-steam-user-switcher',name:'homekit-steam',stars:41,lang:'Python',desc:'Switch Steam accounts via HomeKit.',url:'/projects/homekit-steam-user-switcher.html'},
   ]},
-  infra:     { pos:[2,0,28],     col:'#22aa88', label:'Infrastructure', projects:[
-    { id:'imapbackup',  name:'imapbackup',  stars:343, lang:'Python', desc:'Incremental IMAP mailbox backup — Gmail, Exchange, any IMAP server.',   url:'/projects/imapbackup.html' },
-    { id:'ground-init', name:'ground-init', stars:64,  lang:'Python', desc:'Idempotent Linux bootstrap — YAML desired-state, like cloud-init.',     url:'/projects/ground-init.html' },
-    { id:'gnome-thumbnailers', name:'gnome-thumbnailers', stars:26, lang:'Python', desc:'RAW/HEIC/3D thumbnails for GNOME Files.',                   url:'/projects/gnome-thumbnailers.html' },
+  infra:     {pos:[2,0,30],     col:'#20aacc', shape:'rack',     label:'Infrastructure',projects:[
+    {id:'imapbackup',name:'imapbackup',stars:343,lang:'Python',desc:'Incremental IMAP mailbox backup — Gmail, Exchange, any IMAP server.',url:'/projects/imapbackup.html'},
+    {id:'ground-init',name:'ground-init',stars:64,lang:'Python',desc:'Idempotent Linux bootstrap — YAML desired-state, like cloud-init.',url:'/projects/ground-init.html'},
+    {id:'gnome-thumbnailers',name:'gnome-thumbnailers',stars:26,lang:'Python',desc:'RAW/HEIC/3D thumbnails for GNOME Files — make install.',url:'/projects/gnome-thumbnailers.html'},
   ]},
 };
 
@@ -165,630 +167,641 @@ const PATH_EDGES = [...new Set(
   Object.entries(PATH_GRAPH).flatMap(([a,bs])=>bs.map(b=>[a,b].sort().join('--')))
 )];
 const CAM_VIEWS = {
-  overview:  {target:[0,0,8], alpha:-Math.PI/2, beta:Math.PI/3.2, radius:65},
-  highlight: {target:[0,0,0], alpha:-Math.PI/2, beta:Math.PI/4.2, radius:15},
-  piku:      {target:[-22,0,-8], alpha:-Math.PI/2, beta:Math.PI/4, radius:18},
-  ai:        {target:[20,0,-12], alpha:-Math.PI/2, beta:Math.PI/4, radius:22},
-  terminal:  {target:[22,0,14],  alpha:-Math.PI/2, beta:Math.PI/4, radius:24},
-  macos:     {target:[-18,0,16], alpha:-Math.PI/2, beta:Math.PI/4, radius:22},
-  infra:     {target:[2,0,28],   alpha:-Math.PI/2, beta:Math.PI/4, radius:24},
+  overview:  {target:[0,0,8],    alpha:-Math.PI/2, beta:Math.PI/3.4, radius:68},
+  highlight: {target:[0,0,0],    alpha:-Math.PI/2, beta:Math.PI/4.2, radius:14},
+  piku:      {target:[-24,0,-10],alpha:-Math.PI/2, beta:Math.PI/4,   radius:16},
+  ai:        {target:[22,0,-14], alpha:-Math.PI/2, beta:Math.PI/4,   radius:22},
+  terminal:  {target:[24,0,16],  alpha:-Math.PI/2, beta:Math.PI/4,   radius:22},
+  macos:     {target:[-20,0,18], alpha:-Math.PI/2, beta:Math.PI/4,   radius:20},
+  infra:     {target:[2,0,30],   alpha:-Math.PI/2, beta:Math.PI/4,   radius:22},
 };
 
-// ── BFS path ────────────────────────────────────────────────────────────────
-function bfsPath(start, end) {
-  if (start === end) return [start];
-  const q = [[start]], visited = new Set([start]);
-  while (q.length) {
-    const path = q.shift();
-    for (const n of (PATH_GRAPH[path[path.length-1]] || [])) {
-      if (!visited.has(n)) {
-        const p = [...path, n];
-        if (n === end) return p;
-        visited.add(n); q.push(p);
-      }
-    }
-  }
-  return [start, end];
+function bfsPath(start,end){
+  if(start===end)return[start];
+  const q=[[start]],v=new Set([start]);
+  while(q.length){const p=q.shift();for(const n of(PATH_GRAPH[p[p.length-1]]||[])){if(!v.has(n)){const np=[...p,n];if(n===end)return np;v.add(n);q.push(np);}}}
+  return[start,end];
 }
-function nearestCluster(x, z) {
-  return Object.entries(CLUSTERS).reduce((best, [k, c]) => {
-    const d = Math.hypot(x-c.pos[0], z-c.pos[2]);
-    return d < best.d ? {k, d} : best;
-  }, {k:'highlight', d:Infinity}).k;
+function nearestCluster(x,z){
+  return Object.entries(CLUSTERS).reduce((b,[k,c])=>{const d=Math.hypot(x-c.pos[0],z-c.pos[2]);return d<b.d?{k,d}:b;},{k:'highlight',d:Infinity}).k;
 }
 
-// ── Babylon scene ────────────────────────────────────────────────────────────
+// ── Babylon engine & scene ───────────────────────────────────────────────────
 const canvas = document.getElementById('cv');
-const engine = new BABYLON.Engine(canvas, true, {preserveDrawingBuffer:false, stencil:true});
+const engine = new BABYLON.Engine(canvas, true, {stencil:true, preserveDrawingBuffer:false});
 const scene  = new BABYLON.Scene(engine);
-
-scene.clearColor   = new BABYLON.Color4(0.008, 0.016, 0.04, 1.0);
-scene.ambientColor = new BABYLON.Color3(0.04, 0.06, 0.1);
+scene.clearColor   = new BABYLON.Color4(0.004, 0.010, 0.022, 1.0);
+scene.ambientColor = new BABYLON.Color3(0.025, 0.04, 0.08);
 
 // Camera
-const camera = new BABYLON.ArcRotateCamera('cam', -Math.PI/2, Math.PI/3.2, 65, BABYLON.Vector3.Zero(), scene);
-camera.lowerRadiusLimit = 4;
-camera.upperRadiusLimit = 130;
-camera.lowerBetaLimit   = 0.05;
-camera.upperBetaLimit   = Math.PI * 0.48;
-camera.wheelPrecision   = 8;
-camera.pinchPrecision   = 120;
-camera.attachControl(canvas, true);
+const camera = new BABYLON.ArcRotateCamera('cam', -Math.PI/2, Math.PI/3.4, 68, new BABYLON.Vector3(0,0,8), scene);
+camera.lowerRadiusLimit=4; camera.upperRadiusLimit=140;
+camera.lowerBetaLimit=0.08; camera.upperBetaLimit=Math.PI*0.46;
+camera.wheelPrecision=10; camera.attachControl(canvas, true);
 
-// Lighting — two directional lights for dramatic shadowing
-const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.5, -1.0, -0.4), scene);
-sun.intensity = 1.8;
-sun.diffuse   = new BABYLON.Color3(0.9, 0.95, 1.0);
+// Lighting
+const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.4,-1.0,-0.35), scene);
+sun.intensity = 2.2;
+sun.diffuse   = new BABYLON.Color3(0.85, 0.90, 1.0);
 
-const fill = new BABYLON.HemisphericLight('fill', new BABYLON.Vector3(0, 1, 0), scene);
-fill.intensity   = 0.22;
-fill.diffuse     = new BABYLON.Color3(0.3, 0.45, 0.8);
-fill.groundColor = new BABYLON.Color3(0.02, 0.04, 0.08);
+const fill = new BABYLON.HemisphericLight('fill', new BABYLON.Vector3(0,1,0), scene);
+fill.intensity   = 0.18;
+fill.diffuse     = new BABYLON.Color3(0.25, 0.38, 0.75);
+fill.groundColor = new BABYLON.Color3(0.01, 0.02, 0.06);
 
-// Shadows
 const shadowGen = new BABYLON.ShadowGenerator(1024, sun);
 shadowGen.usePoissonSampling = true;
 shadowGen.bias = 0.002;
 
-// ── Material helpers ─────────────────────────────────────────────────────────
-function hex3(h) {
-  const n = parseInt(h.replace('#',''), 16);
-  return new BABYLON.Color3((n>>16&255)/255, (n>>8&255)/255, (n&255)/255);
-}
-function crystalMat(name, hexCol, emissStrength) {
-  const m = new BABYLON.StandardMaterial(name, scene);
-  const c = hex3(hexCol);
-  m.diffuseColor  = c.scale(0.6);
-  m.specularColor = c.scale(0.9);
-  m.emissiveColor = c.scale(emissStrength ?? 0.06);
-  m.specularPower = 48;
+// ── Material factory ─────────────────────────────────────────────────────────
+function hex3(h){const n=parseInt(h.replace('#',''),16);return new BABYLON.Color3((n>>16&255)/255,(n>>8&255)/255,(n&255)/255);}
+function mat(name,hexCol,opts={}){
+  const m=new BABYLON.StandardMaterial(name,scene);
+  const c=hex3(hexCol);
+  m.diffuseColor  = c.scale(opts.diff ?? 0.55);
+  m.specularColor = c.scale(opts.spec ?? 0.8);
+  m.emissiveColor = c.scale(opts.emis ?? 0.05);
+  m.specularPower = opts.power ?? 48;
   return m;
 }
-function darkMat(name, hexCol) {
-  const m = new BABYLON.StandardMaterial(name, scene);
-  m.diffuseColor  = hex3(hexCol).scale(0.35);
-  m.specularColor = hex3(hexCol).scale(0.1);
-  m.specularPower = 8;
-  return m;
-}
-function groundMat(name) {
-  const m = new BABYLON.StandardMaterial(name, scene);
-  m.diffuseColor  = new BABYLON.Color3(0.02, 0.04, 0.09);
-  m.specularColor = new BABYLON.Color3(0.06, 0.1, 0.2);
-  m.specularPower = 80;
-  return m;
-}
+function darkMat(name,hexCol){return mat(name,hexCol,{diff:0.25,spec:0.08,emis:0.02,power:8});}
+function glowMat(name,hexCol,str){return mat(name,hexCol,{diff:0.3,spec:0.1,emis:str??0.28,power:4});}
 
-// ── Ground plane ─────────────────────────────────────────────────────────────
-const ground = BABYLON.MeshBuilder.CreateGround('ground', {width:220, height:220, subdivisions:2}, scene);
-ground.material   = groundMat('gmat');
+// Per-cluster accent point lights
+Object.entries(CLUSTERS).forEach(([key,cl])=>{
+  const pl=new BABYLON.PointLight('pl_'+key, new BABYLON.Vector3(cl.pos[0],3,cl.pos[2]),scene);
+  pl.diffuse   = hex3(cl.col);
+  pl.intensity = 0.9;
+  pl.range     = 22;
+});
+
+// ── Ground ───────────────────────────────────────────────────────────────────
+const ground = BABYLON.MeshBuilder.CreateGround('ground',{width:240,height:240,subdivisions:1},scene);
+const gm = new BABYLON.StandardMaterial('gmat',scene);
+gm.diffuseColor  = new BABYLON.Color3(0.008,0.016,0.036);
+gm.specularColor = new BABYLON.Color3(0.04,0.07,0.16);
+gm.specularPower = 120;
+ground.material  = gm;
 ground.receiveShadows = true;
 
-// Subtle grid overlay on ground via DynamicTexture
-(()=>{
-  const W=512, H=512;
-  const tex = new BABYLON.DynamicTexture('gridtex', {width:W, height:H}, scene, false);
-  const ctx = tex.getContext();
-  ctx.fillStyle = 'rgba(0,0,0,0)';
-  ctx.fillRect(0, 0, W, H);
-  ctx.strokeStyle = 'rgba(40,80,180,0.12)';
-  ctx.lineWidth = 0.5;
-  const cell = 32;
-  for (let x=0; x<=W; x+=cell) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
-  for (let y=0; y<=H; y+=cell) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
-  tex.update();
-  tex.hasAlpha = true;
-  const gm = new BABYLON.StandardMaterial('gridmat', scene);
-  gm.diffuseTexture = tex;
-  gm.diffuseColor   = new BABYLON.Color3(0.02, 0.04, 0.09);
-  gm.specularColor  = new BABYLON.Color3(0.06, 0.1, 0.2);
-  gm.specularPower  = 80;
-  ground.material   = gm;
-})();
+// ── Shape builders ───────────────────────────────────────────────────────────
 
-// ── Crystal spire builder ─────────────────────────────────────────────────────
-const allCrystals = [];
-function makeCrystal(x, z, height, radius, sides, mat, yBase) {
-  const geo = BABYLON.MeshBuilder.CreateCylinder('cr', {
-    height, diameterTop:0.05, diameterBottom:radius*2,
-    tessellation:sides ?? 6, cap:BABYLON.Mesh.CAP_ALL
-  }, scene);
-  geo.position.set(x, (yBase ?? 0) + height/2, z);
-  geo.material = mat;
-  geo.rotation.y = Math.random() * Math.PI;
-  shadowGen.addShadowCaster(geo);
-  geo.receiveShadows = true;
-  allCrystals.push(geo);
-  return geo;
-}
-function makeCrystalCluster(cx, cz, col, count, radiusFactor) {
-  const mat = crystalMat('cm_'+cx+cz, col, 0.08);
-  const R   = radiusFactor ?? 1;
-  for (let i=0; i<count; i++) {
-    const angle = (i/count)*Math.PI*2 + (Math.random()-0.5)*0.6;
-    const r     = (0.6+Math.random()*0.7)*R;
-    const h     = 0.8+Math.random()*2.4;
-    const sides = 4 + Math.floor(Math.random()*4);
-    makeCrystal(cx+Math.cos(angle)*r, cz+Math.sin(angle)*r, h, 0.1+Math.random()*0.18, sides, mat, 0);
-  }
+// NEEDLE — piclaw/highlight: diamond spire with orbit rings
+function buildNeedle(pos,col){
+  const cx=pos[0],cz=pos[2];
+  const m1=glowMat('nm1',col,0.18), m2=glowMat('nm2',col,0.08);
+
+  // Central spire
+  const spire=BABYLON.MeshBuilder.CreateCylinder('ns',{height:9,diameterTop:0.05,diameterBottom:0.8,tessellation:8},scene);
+  spire.position.set(cx,4.5,cz); spire.material=m1;
+  shadowGen.addShadowCaster(spire);
+
+  // Diamond cap
+  const cap=BABYLON.MeshBuilder.CreatePolyhedron('nc',{type:1,size:1.1},scene);
+  cap.position.set(cx,10,cz); cap.material=glowMat('ncap',col,0.35);
+  cap.renderOutline=true; cap.outlineColor=hex3(col).scale(0.5); cap.outlineWidth=0.05;
+  shadowGen.addShadowCaster(cap);
+
+  // Three orbit rings at intervals
+  [3.0,5.5,8.0].forEach((y,i)=>{
+    const r=BABYLON.MeshBuilder.CreateTorus('nr'+i,{diameter:2.8+i*0.8,thickness:0.08,tessellation:36},scene);
+    r.position.set(cx,y,cz);
+    r.rotation.x=Math.PI/2+0.3*Math.sin(i); r.rotation.z=0.2*i;
+    r.material=glowMat('nrm'+i,col,0.18);
+    shadowGen.addShadowCaster(r);
+  });
+
+  // Base hex platform
+  const base=BABYLON.MeshBuilder.CreateCylinder('nb',{height:0.5,diameter:7,tessellation:6},scene);
+  base.position.set(cx,0.25,cz); base.material=darkMat('nbm',col); base.rotation.y=Math.PI/6;
+  base.receiveShadows=true; shadowGen.addShadowCaster(base);
+  return cap; // for animation
 }
 
-// ── Cluster platform builder ──────────────────────────────────────────────────
-function makeClusterPlatform(pos, col) {
-  const R = 9, cx=pos[0], cz=pos[2];
-  const platMat = darkMat('pm_'+cx, col);
-  const rimMat  = crystalMat('rm_'+cx, col, 0.14);
-
-  // Hexagonal base disc (thick, dark)
-  const base = BABYLON.MeshBuilder.CreateCylinder('plat', {
-    height:0.7, diameter:R*2*1.05, tessellation:6, cap:BABYLON.Mesh.CAP_ALL
-  }, scene);
-  base.position.set(cx, 0.35, cz);
-  base.material = platMat;
-  base.rotation.y = Math.PI/6;
-  base.receiveShadows = true;
-  shadowGen.addShadowCaster(base);
-
-  // Crystal rim — ring of small spires around perimeter
-  const rimCount = 18;
-  for (let i=0; i<rimCount; i++) {
-    const a = (i/rimCount)*Math.PI*2 + (Math.random()-0.5)*0.2;
-    const r = R*0.95 + (Math.random()-0.5)*0.5;
-    const h = 0.6+Math.random()*1.8;
-    makeCrystal(cx+Math.cos(a)*r, cz+Math.sin(a)*r, h, 0.08+Math.random()*0.1, 4+Math.floor(Math.random()*3), rimMat, 0.7);
-  }
+// COLUMN — piku: classical tapered column with capital
+function buildColumn(pos,col){
+  const cx=pos[0],cz=pos[2];
+  const shafts=[
+    {h:6.0,dTop:0.85,dBot:1.0,y:3.0},
+    {h:0.6,dTop:1.4, dBot:0.9,y:6.3},  // capital
+    {h:0.35,dTop:1.6,dBot:1.4,y:6.78}, // abacus
+    {h:0.4,dTop:0.8,dBot:1.0,y:0.2},   // base
+  ];
+  shafts.forEach((s,i)=>{
+    const c=BABYLON.MeshBuilder.CreateCylinder('sft'+i,{height:s.h,diameterTop:s.dTop,diameterBottom:s.dBot,tessellation:12},scene);
+    c.position.set(cx,s.y,cz);
+    c.material=(i===1||i===2)?glowMat('colm'+i,col,0.12):darkMat('colm'+i,col);
+    shadowGen.addShadowCaster(c); c.receiveShadows=true;
+  });
+  // Stepped base
+  [0.3,0.5,0.7].forEach((scale,i)=>{
+    const st=BABYLON.MeshBuilder.CreateCylinder('stb'+i,{height:0.25,diameter:3.5-i*0.5,tessellation:6},scene);
+    st.position.set(cx,-0.25+i*0.25,cz); st.material=darkMat('stbm',col);
+    st.receiveShadows=true;
+  });
 }
 
-// ── Glowing orb / central landmark ───────────────────────────────────────────
-function makeOrb(pos, col, size) {
-  const cx=pos[0], cz=pos[2];
-  // Central column
-  const col1 = BABYLON.MeshBuilder.CreateCylinder('col1', {height:size*2.5, diameterTop:size*0.3, diameterBottom:size*0.7, tessellation:8}, scene);
-  col1.position.set(cx, size*1.25, cz);
-  col1.material = darkMat('colmat_'+cx, col);
-  shadowGen.addShadowCaster(col1);
+// NEURAL — ai-agents: sphere cluster with connecting rods
+function buildNeural(pos,col){
+  const cx=pos[0],cz=pos[2];
+  const spherePositions=[];
+  // Central brain sphere
+  const brain=BABYLON.MeshBuilder.CreateSphere('brain',{diameter:2.2,segments:8},scene);
+  brain.position.set(cx,2,cz); brain.material=glowMat('brm',col,0.15);
+  brain.renderOutline=true; brain.outlineColor=hex3(col).scale(0.4); brain.outlineWidth=0.04;
+  shadowGen.addShadowCaster(brain);
+  spherePositions.push(brain.position.clone());
 
-  // Orb / polyhedron on top
-  const orb = BABYLON.MeshBuilder.CreatePolyhedron('orb', {type:2, size:size*0.7}, scene);
-  orb.position.set(cx, size*2.5 + size*0.7, cz);
-  orb.material = crystalMat('orbmat_'+cx, col, 0.22);
-  orb.renderOutline = true;
-  orb.outlineColor  = hex3(col).scale(0.4);
-  orb.outlineWidth  = 0.04;
-  shadowGen.addShadowCaster(orb);
-  allCrystals.push(orb);
-  return {col1, orb};
+  // Satellite nodes
+  const nodeData=[
+    [2.8, 0.3, 2.2],[-2.6, 0.4,-2.0],[2.4, 0.6,-2.5],[-2.2, 0.3, 2.8],
+    [1.5, 2.0, 1.6],[-1.8, 2.2,-1.7],[0, 2.8, 2.6],[-0.5,1.8,-2.8],
+  ];
+  const sm=glowMat('sm',col,0.10);
+  nodeData.forEach(([dx,dy,dz],i)=>{
+    const r=0.45+Math.random()*0.35;
+    const node=BABYLON.MeshBuilder.CreateSphere('node'+i,{diameter:r*2,segments:6},scene);
+    node.position.set(cx+dx,1.2+dy,cz+dz); node.material=sm;
+    shadowGen.addShadowCaster(node);
+    spherePositions.push(node.position.clone());
+    // Connecting rod
+    const start=new BABYLON.Vector3(cx,2,cz), end=node.position;
+    const dir=end.subtract(start), len=dir.length();
+    const rod=BABYLON.MeshBuilder.CreateCylinder('rod'+i,{height:len,diameter:0.06,tessellation:4},scene);
+    rod.position.set((start.x+end.x)/2,(start.y+end.y)/2,(start.z+end.z)/2);
+    const axis=BABYLON.Vector3.Up().cross(dir.normalize());
+    if(axis.length()>0.001){const ang=Math.acos(BABYLON.Vector3.Up().dot(dir.normalize()));rod.rotationQuaternion=BABYLON.Quaternion.RotationAxis(axis.normalize(),ang);}
+    rod.material=mat('rodm',col,{diff:0.1,spec:0.05,emis:0.06,power:4});
+  });
+
+  // Flat circular base
+  const base=BABYLON.MeshBuilder.CreateCylinder('nb',{height:0.35,diameter:9,tessellation:32},scene);
+  base.position.set(cx,0.17,cz); base.material=darkMat('nbm',col);
+  base.receiveShadows=true;
+  return brain; // for animation
 }
 
-// ── Path ribbons ─────────────────────────────────────────────────────────────
-const PATH_CURVES = {};
-function makePath(edgeKey, ax, az, bx, bz, trimA, trimB) {
-  const dx=bx-ax, dz=bz-az, len=Math.hypot(dx,dz);
-  if (len < trimA+trimB+1) return;
-  const u=dx/len, v=dz/len;
-  const sx=ax+u*trimA, sz=az+v*trimA, ex=bx-u*trimB, ez=bz-v*trimB;
-  const perpX=-v, perpZ=u, sway=(Math.random()-0.5)*len*0.06;
-  const mx=(sx+ex)*0.5+perpX*sway, mz=(sz+ez)*0.5+perpZ*sway;
-  const N=20, pts=[];
-  for (let i=0; i<=N; i++) {
-    const t=i/N, mt=1-t;
-    pts.push([mt*mt*sx+2*mt*t*mx+t*t*ex, mt*mt*sz+2*mt*t*mz+t*t*ez]);
-  }
-  // Glowing ribbon
-  const hw=0.5, left=[], right=[];
-  for (let i=0; i<pts.length; i++) {
-    const p=pts[i], ip=Math.max(0,i-1), inp=Math.min(pts.length-1,i+1);
-    const tx=pts[inp][0]-pts[ip][0], tz=pts[inp][1]-pts[ip][1];
-    const tl=Math.hypot(tx,tz)||1, nx=-tz/tl, nz=tx/tl;
-    left.push( new BABYLON.Vector3(p[0]+nx*hw, 0.08, p[1]+nz*hw));
-    right.push(new BABYLON.Vector3(p[0]-nx*hw, 0.08, p[1]-nz*hw));
-  }
-  const ribbon = BABYLON.MeshBuilder.CreateRibbon('path', {pathArray:[left,right], sideOrientation:BABYLON.Mesh.DOUBLESIDE}, scene);
-  const pm = new BABYLON.StandardMaterial('pmat', scene);
-  pm.diffuseColor  = new BABYLON.Color3(0.06, 0.1, 0.22);
-  pm.emissiveColor = new BABYLON.Color3(0.04, 0.08, 0.18);
-  pm.specularColor = BABYLON.Color3.Black();
-  ribbon.material = pm;
-  ribbon.receiveShadows = true;
-  if (edgeKey) PATH_CURVES[edgeKey] = pts;
+// SKYLINE — terminal: array of columns at varying heights (CRT/console aesthetic)
+function buildSkyline(pos,col){
+  const cx=pos[0],cz=pos[2];
+  const heights=[5.5,3.2,7.0,4.5,6.2,2.8,5.0,3.8,6.5,4.0,7.2,3.5,5.8,4.2,6.0];
+  const rows=3,cols=5, spacing=2.1;
+  const startX=cx-(cols-1)*spacing/2, startZ=cz-(rows-1)*spacing/2;
+  heights.forEach((h,i)=>{
+    const row=Math.floor(i/cols), col2=i%cols;
+    const x=startX+col2*spacing, z=startZ+row*spacing;
+    const bk=BABYLON.MeshBuilder.CreateBox('sk'+i,{width:1.4,height:h,depth:1.4},scene);
+    bk.position.set(x,h/2,z);
+    const bright=h/7.5;
+    bk.material=mat('skm'+i,col,{diff:0.2+bright*0.15,spec:0.3,emis:bright*0.14,power:12});
+    bk.renderOutline=true; bk.outlineColor=hex3(col).scale(0.25); bk.outlineWidth=0.03;
+    shadowGen.addShadowCaster(bk); bk.receiveShadows=true;
+    // Antenna on tall ones
+    if(h>6){
+      const ant=BABYLON.MeshBuilder.CreateCylinder('ant'+i,{height:1.4,diameterTop:0.02,diameterBottom:0.08,tessellation:4},scene);
+      ant.position.set(x,h+0.7,z); ant.material=glowMat('antm',col,0.3);
+    }
+  });
+  // Raised platform
+  const base=BABYLON.MeshBuilder.CreateBox('skbase',{width:11.5,height:0.4,depth:7.5},scene);
+  base.position.set(cx,0.2,cz); base.material=darkMat('sbbm',col);
+  base.receiveShadows=true;
 }
 
-// ── Billboard ────────────────────────────────────────────────────────────────
-const billboards = [];
-function makeBillboard(x, z, proj, accentHex, logoImg) {
-  const W=640, H=300, cv2=document.createElement('canvas');
+// PAVILION — macOS: stacked smooth discs, ascending scale
+function buildPavilion(pos,col){
+  const cx=pos[0],cz=pos[2];
+  const tiers=[
+    {y:0.3, d:8.5, h:0.55},
+    {y:0.9, d:7.0, h:0.55},
+    {y:1.5, d:5.5, h:0.6},
+    {y:2.15,d:4.0, h:0.7},
+    {y:2.95,d:2.8, h:0.9},
+    {y:3.95,d:1.5, h:1.2},
+    {y:5.3, d:0.7, h:1.8},  // spire
+  ];
+  tiers.forEach((t,i)=>{
+    const d=BABYLON.MeshBuilder.CreateCylinder('pav'+i,{height:t.h,diameter:t.d,tessellation:32},scene);
+    d.position.set(cx,t.y,cz);
+    const frac=i/tiers.length;
+    d.material=mat('pavm'+i,col,{diff:0.45+frac*0.2,spec:0.9-frac*0.3,emis:frac*0.18,power:80-frac*40});
+    shadowGen.addShadowCaster(d); d.receiveShadows=true;
+  });
+}
+
+// RACK — infrastructure: neat grid of server-rack boxes
+function buildRack(pos,col){
+  const cx=pos[0],cz=pos[2];
+  const rackLayout=[
+    {w:4.5,h:1.4,d:1.8,x:0,   z:-2.5,y:0.7},
+    {w:4.5,h:1.4,d:1.8,x:0,   z: 0,  y:0.7},
+    {w:4.5,h:1.4,d:1.8,x:0,   z: 2.5,y:0.7},
+    {w:2.0,h:3.5,d:2.0,x:-3.0,z:-1.8,y:1.75},
+    {w:2.0,h:3.5,d:2.0,x: 3.0,z: 1.8,y:1.75},
+    {w:4.5,h:0.3,d:1.8,x:0,   z:-2.5,y:1.55},
+    {w:4.5,h:0.3,d:1.8,x:0,   z: 0,  y:1.55},
+    {w:4.5,h:0.3,d:1.8,x:0,   z: 2.5,y:1.55},
+  ];
+  rackLayout.forEach((r,i)=>{
+    const bk=BABYLON.MeshBuilder.CreateBox('rack'+i,{width:r.w,height:r.h,depth:r.d},scene);
+    bk.position.set(cx+r.x,r.y,cz+r.z);
+    bk.material=mat('rkm'+i,col,{diff:0.25,spec:0.5,emis:i<3?0.05:0.12,power:30});
+    bk.renderOutline=true; bk.outlineColor=hex3(col).scale(0.2); bk.outlineWidth=0.025;
+    shadowGen.addShadowCaster(bk); bk.receiveShadows=true;
+    // LED strip on rack fronts
+    if(i<3){
+      const led=BABYLON.MeshBuilder.CreateBox('led'+i,{width:r.w*0.9,height:0.06,depth:0.05},scene);
+      led.position.set(cx+r.x,r.y+r.h*0.45,cz+r.z-r.d/2-0.03);
+      led.material=glowMat('ledm',col,0.5);
+    }
+  });
+  // Raised floor
+  const floor2=BABYLON.MeshBuilder.CreateBox('rackfloor',{width:10,height:0.35,depth:8},scene);
+  floor2.position.set(cx,0.17,cz); floor2.material=darkMat('rfm',col);
+  floor2.receiveShadows=true;
+}
+
+// ── Billboard factory ─────────────────────────────────────────────────────────
+const billboards=[];
+function makeBillboard(x,z,proj,accentHex,logoImg){
+  const W=600,H=280; const cv2=document.createElement('canvas');
   cv2.width=W; cv2.height=H;
   const ctx=cv2.getContext('2d');
   const n=parseInt(accentHex.replace('#',''),16);
-  const r=n>>16&255, g=n>>8&255, b=n&255;
+  const r=n>>16&255,g=n>>8&255,b=n&255;
 
-  // Deep dark background
-  ctx.fillStyle='#04080f'; ctx.fillRect(0,0,W,H);
+  // Dark base
+  ctx.fillStyle='#020810'; ctx.fillRect(0,0,W,H);
 
-  // Subtle noise texture simulation (grid)
-  ctx.strokeStyle='rgba(255,255,255,0.025)'; ctx.lineWidth=0.5;
-  for(let i=0;i<W;i+=20) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,H); ctx.stroke(); }
-  for(let j=0;j<H;j+=20) { ctx.beginPath(); ctx.moveTo(0,j); ctx.lineTo(W,j); ctx.stroke(); }
+  // Subtle grid
+  ctx.strokeStyle='rgba(40,70,140,0.15)'; ctx.lineWidth=0.5;
+  for(let i=0;i<=W;i+=20){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke();}
+  for(let j=0;j<=H;j+=20){ctx.beginPath();ctx.moveTo(0,j);ctx.lineTo(W,j);ctx.stroke();}
 
-  // Crystal accent border with glow
-  const grd = ctx.createLinearGradient(0,0,W,H);
-  grd.addColorStop(0, `rgba(${r},${g},${b},0.7)`);
-  grd.addColorStop(1, `rgba(${r},${g},${b},0.3)`);
-  ctx.strokeStyle = grd; ctx.lineWidth = 2;
-  ctx.strokeRect(1.5, 1.5, W-3, H-3);
+  // Accent left bar
+  ctx.fillStyle=`rgb(${r},${g},${b})`; ctx.fillRect(0,0,4,H);
 
-  // Corner crystal marks
-  const cm = 12;
-  ctx.strokeStyle = `rgba(${r},${g},${b},0.9)`; ctx.lineWidth = 2;
-  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx_,cy_]) => {
-    const sx = cx_===0?1:W-cm, sy = cy_===0?1:H-cm;
-    ctx.strokeRect(cx_===0?1:W-cm-1, cy_===0?1:H-cm-1, cm, cm);
-  });
+  // Accent top-right corner bracket
+  ctx.strokeStyle=`rgba(${r},${g},${b},0.7)`; ctx.lineWidth=1.5;
+  ctx.beginPath(); ctx.moveTo(W-28,2); ctx.lineTo(W-2,2); ctx.lineTo(W-2,28); ctx.stroke();
+  ctx.beginPath(); ctx.moveTo(2,H-28); ctx.lineTo(2,H-2); ctx.lineTo(28,H-2); ctx.stroke();
 
   // Logo
-  const hasLogo = logoImg && logoImg.complete && logoImg.naturalWidth>0;
-  let textX = 18;
-  if (hasLogo) {
-    const ls=72;
-    ctx.save();
-    ctx.globalAlpha=0.9;
-    try { ctx.drawImage(logoImg, 18, (H-ls)/2, ls, ls); } catch(e){}
-    ctx.restore();
-    textX = 18+ls+14;
+  const hasLogo=logoImg&&logoImg.complete&&logoImg.naturalWidth>0;
+  let tx=18;
+  if(hasLogo){
+    const ls=64;
+    try{ctx.drawImage(logoImg,14,(H-ls)/2,ls,ls);}catch(e){}
+    tx=14+ls+12;
   }
 
   // Name
-  ctx.fillStyle = '#e8f0ff';
-  ctx.font = `bold 44px ui-monospace,"SF Mono",Menlo,monospace`;
-  const nm = proj.name.length>13 ? proj.name.slice(0,12)+'…' : proj.name;
-  ctx.fillText(nm, textX, 58);
+  ctx.fillStyle='#d8e8ff'; ctx.font='bold 40px ui-monospace,"SF Mono",monospace';
+  ctx.fillText(proj.name.length>13?proj.name.slice(0,12)+'…':proj.name, tx, 52);
 
   // Stars + lang
-  ctx.fillStyle = `rgba(${Math.min(255,r+100)},${Math.min(255,g+100)},${Math.min(255,b+80)},1)`;
-  ctx.font = `bold 24px ui-monospace,monospace`;
-  ctx.fillText(`★ ${proj.stars.toLocaleString()}   ${proj.lang}`, textX, 92);
+  ctx.fillStyle=`rgba(${Math.min(255,r+80)},${Math.min(255,g+80)},${Math.min(255,b+60)},1)`;
+  ctx.font='bold 22px ui-monospace,monospace';
+  ctx.fillText(`★ ${proj.stars.toLocaleString()}   ${proj.lang}`, tx, 84);
 
-  // Divider
-  ctx.strokeStyle = `rgba(${r},${g},${b},0.3)`; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(textX,108); ctx.lineTo(W-18,108); ctx.stroke();
+  // Separator
+  ctx.strokeStyle=`rgba(${r},${g},${b},0.25)`; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(tx,100); ctx.lineTo(W-18,100); ctx.stroke();
 
   // Description
-  ctx.fillStyle = 'rgba(160,190,230,0.82)';
-  ctx.font = '21px -apple-system,"Helvetica Neue",Arial,sans-serif';
-  const words=proj.desc.split(' '), textW=W-textX-18;
-  let line='', y=138;
-  for (const w of words) {
-    const t=line?line+' '+w:w;
-    if (ctx.measureText(t).width>textW && line) { ctx.fillText(line,textX,y); y+=28; line=w; if(y>H-36)break; }
-    else line=t;
-  }
-  if (line && y<=H-36) ctx.fillText(line,textX,y);
+  ctx.fillStyle='rgba(120,160,220,0.88)'; ctx.font='19px system-ui,sans-serif';
+  const words=proj.desc.split(' '), maxW=W-tx-18;
+  let line='',y=126;
+  for(const w of words){const t=line?line+' '+w:w;if(ctx.measureText(t).width>maxW&&line){ctx.fillText(line,tx,y);y+=26;line=w;if(y>H-32)break;}else line=t;}
+  if(line&&y<=H-32)ctx.fillText(line,tx,y);
 
   // Click hint
-  ctx.fillStyle=`rgba(${r},${g},${b},0.7)`;
-  ctx.font='bold 16px ui-monospace,monospace';
-  ctx.textAlign='right'; ctx.fillText('→ open',W-18,H-14); ctx.textAlign='left';
+  ctx.fillStyle=`rgba(${r},${g},${b},0.65)`; ctx.font='bold 15px ui-monospace,monospace';
+  ctx.textAlign='right'; ctx.fillText('→ open',W-12,H-12); ctx.textAlign='left';
 
   const tex=new BABYLON.DynamicTexture('bbtex',{width:W,height:H},scene,false);
   tex.getContext().drawImage(cv2,0,0); tex.update();
-  const mat=new BABYLON.StandardMaterial('bbmat',scene);
-  mat.emissiveTexture=tex; mat.diffuseTexture=tex;
-  mat.specularColor=BABYLON.Color3.Black();
-  mat.backFaceCulling=false;
+  const bm=new BABYLON.StandardMaterial('bbmat',scene);
+  bm.emissiveTexture=tex; bm.diffuseTexture=tex;
+  bm.specularColor=BABYLON.Color3.Black(); bm.backFaceCulling=false;
 
-  // Crystal sign post
-  const post=BABYLON.MeshBuilder.CreateCylinder('post',{height:2.4,diameterTop:0.06,diameterBottom:0.14,tessellation:6},scene);
-  post.material=darkMat('postm',accentHex);
-  post.position.set(x,1.2,z);
+  // Thin post
+  const post=BABYLON.MeshBuilder.CreateBox('post',{width:0.1,height:2.6,depth:0.1},scene);
+  post.material=darkMat('pm',accentHex); post.position.set(x,1.3,z);
   shadowGen.addShadowCaster(post);
 
-  const panel=BABYLON.MeshBuilder.CreatePlane('panel',{width:3.8,height:1.78},scene);
-  panel.material=mat;
+  // Panel
+  const panel=BABYLON.MeshBuilder.CreatePlane('panel',{width:3.6,height:1.68},scene);
+  panel.material=bm;
   panel.position.set(x,2.9,z);
   panel.billboardMode=BABYLON.Mesh.BILLBOARDMODE_Y;
   panel.metadata={proj,x,z};
   billboards.push(panel);
 }
 
+// ── Path connections (thin glowing lines) ────────────────────────────────────
+const PATH_CURVES={};
+function makePath(edgeKey,ax,az,bx,bz,trimA,trimB){
+  const dx=bx-ax,dz=bz-az,len=Math.hypot(dx,dz);
+  if(len<trimA+trimB+1)return;
+  const u=dx/len,v=dz/len;
+  const sx=ax+u*trimA,sz=az+v*trimA,ex=bx-u*trimB,ez=bz-v*trimB;
+  const perpX=-v,perpZ=u,sway=(Math.random()-0.5)*len*0.05;
+  const mx=(sx+ex)*0.5+perpX*sway,mz=(sz+ez)*0.5+perpZ*sway;
+  const N=20,pts=[];
+  for(let i=0;i<=N;i++){const t=i/N,mt=1-t;pts.push([mt*mt*sx+2*mt*t*mx+t*t*ex,mt*mt*sz+2*mt*t*mz+t*t*ez]);}
+  const hw=0.3,left=[],right=[];
+  for(let i=0;i<pts.length;i++){
+    const p=pts[i],ip=Math.max(0,i-1),inp=Math.min(pts.length-1,i+1);
+    const tx2=pts[inp][0]-pts[ip][0],tz2=pts[inp][1]-pts[ip][1];
+    const tl=Math.hypot(tx2,tz2)||1,nx=-tz2/tl,nz2=tx2/tl;
+    left.push(new BABYLON.Vector3(p[0]+nx*hw,0.04,p[1]+nz2*hw));
+    right.push(new BABYLON.Vector3(p[0]-nx*hw,0.04,p[1]-nz2*hw));
+  }
+  const ribbon=BABYLON.MeshBuilder.CreateRibbon('path',{pathArray:[left,right],sideOrientation:BABYLON.Mesh.DOUBLESIDE},scene);
+  const pm=new BABYLON.StandardMaterial('pmat',scene);
+  pm.emissiveColor=new BABYLON.Color3(0.04,0.07,0.2);
+  pm.diffuseColor=new BABYLON.Color3(0.02,0.04,0.1);
+  pm.specularColor=BABYLON.Color3.Black();
+  ribbon.material=pm; ribbon.receiveShadows=true;
+  if(edgeKey)PATH_CURVES[edgeKey]=pts;
+}
+
 // ── Build scene ───────────────────────────────────────────────────────────────
-// Paths
-PATH_EDGES.forEach(e => {
-  const [k,j]=e.split('--');
-  const a=CLUSTERS[k].pos, b=CLUSTERS[j].pos;
-  const rK=CLUSTERS[k].projects.length<=2?5:9, rJ=CLUSTERS[j].projects.length<=2?5:9;
+PATH_EDGES.forEach(e=>{
+  const[k,j]=e.split('--');
+  const a=CLUSTERS[k].pos,b=CLUSTERS[j].pos;
+  const rK=CLUSTERS[k].projects.length<=2?5:9,rJ=CLUSTERS[j].projects.length<=2?5:9;
   const dKJ=Math.hypot(a[0]-b[0],a[2]-b[2]);
-  makePath(e, a[0],a[2], b[0],b[2], Math.min(rK+3,dKJ*0.38), Math.min(rJ+3,dKJ*0.38));
+  makePath(e,a[0],a[2],b[0],b[2],Math.min(rK+2.5,dKJ*0.35),Math.min(rJ+2.5,dKJ*0.35));
 });
 
-// Clusters
-Object.entries(CLUSTERS).forEach(([key, cluster]) => {
-  const {pos, col, projects} = cluster;
-  makeClusterPlatform(pos, col);
-  makeCrystalCluster(pos[0], pos[2], col, 14+projects.length*3, 6);
+const animatables={}; // key → mesh for per-cluster animation
 
-  // Central landmark
-  const {orb} = makeOrb(pos, col, key==='highlight'?1.8:1.1);
+Object.entries(CLUSTERS).forEach(([key,cluster])=>{
+  const{pos,col,shape,projects}=cluster;
+  let landmark;
+  switch(shape){
+    case'needle':  landmark=buildNeedle(pos,col); break;
+    case'column':  buildColumn(pos,col); break;
+    case'neural':  landmark=buildNeural(pos,col); break;
+    case'skyline': buildSkyline(pos,col); break;
+    case'pavilion':buildPavilion(pos,col); break;
+    case'rack':    buildRack(pos,col); break;
+  }
+  if(landmark) animatables[key]=landmark;
 
   // Billboards
-  if (key==='highlight') return;
+  if(key==='highlight')return;
   const N=projects.length;
-  projects.forEach((proj, i) => {
-    const angle = N===1
-      ? Math.atan2(pos[2]-0, pos[0]-0) + Math.PI
-      : (i/N)*Math.PI*2;
-    const r = N===1 ? 4 : Math.min(5*Math.sqrt(N/2), 8);
-    const bx=pos[0]+Math.cos(angle)*r, bz=pos[2]+Math.sin(angle)*r;
+  projects.forEach((proj,i)=>{
+    const angle=N===1?Math.atan2(pos[2],pos[0])+Math.PI:(i/N)*Math.PI*2;
+    const r2=N===1?4.5:Math.min(5*Math.sqrt(N/2),8.5);
+    const bx=pos[0]+Math.cos(angle)*r2,bz=pos[2]+Math.sin(angle)*r2;
     const logo=(typeof LOGOS!=='undefined')?LOGOS[proj.id]:null;
-    if (logo) {
-      const img=new Image(); let done=false;
-      const cb=(li)=>{ if(done)return; done=true; makeBillboard(bx,bz,proj,col,li); };
-      img.onload=()=>cb(img); img.onerror=()=>cb(null); img.src=logo;
-      if(img.complete) cb(img.naturalWidth>0?img:null);
-    } else {
-      makeBillboard(bx,bz,proj,col,null);
-    }
+    if(logo){
+      const img=new Image();let done=false;
+      const cb=(li)=>{if(done)return;done=true;makeBillboard(bx,bz,proj,col,li);};
+      img.onload=()=>cb(img);img.onerror=()=>cb(null);img.src=logo;
+      if(img.complete)cb(img.naturalWidth>0?img:null);
+    }else makeBillboard(bx,bz,proj,col,null);
   });
 });
 
-// Ambient crystal scatter in void between clusters
-(()=>{
-  const scatterMat = new BABYLON.StandardMaterial('scm', scene);
-  scatterMat.diffuseColor  = new BABYLON.Color3(0.03, 0.06, 0.15);
-  scatterMat.emissiveColor = new BABYLON.Color3(0.01, 0.02, 0.06);
-  scatterMat.specularColor = new BABYLON.Color3(0.1, 0.15, 0.3);
-  for (let i=0; i<40; i++) {
-    const angle=Math.random()*Math.PI*2, r=14+Math.random()*40;
-    const cx=Math.cos(angle)*r, cz=Math.sin(angle)*r;
-    const h=0.3+Math.random()*1.2;
-    const c=BABYLON.MeshBuilder.CreateCylinder('sc',{height:h,diameterTop:0.02,diameterBottom:0.08+Math.random()*0.1,tessellation:5},scene);
-    c.position.set(cx, h/2, cz);
-    c.material=scatterMat;
-    c.rotation.y=Math.random()*Math.PI;
-  }
-})();
+// ── Post-processing pipeline ─────────────────────────────────────────────────
+// Pass 1: Sobel depth → ink outlines
+const depthRenderer = scene.enableDepthRenderer(camera,false);
 
-// ── Post-processing: Moebius-style ink outlines (Sobel + crosshatch) ───────────
-const depthRenderer = scene.enableDepthRenderer(camera, false);
-
-BABYLON.Effect.ShadersStore["moebiusFragmentShader"] = `
-  #ifdef GL_ES
+BABYLON.Effect.ShadersStore["inkFragmentShader"]=`
   precision highp float;
-  #endif
   varying vec2 vUV;
   uniform sampler2D textureSampler;
   uniform sampler2D depthSampler;
   uniform vec2 texelSize;
-  uniform float edgeThreshold;
-  uniform float inkStrength;
+  uniform float outlineStr;
 
-  float sampleD(vec2 uv) { return texture2D(depthSampler, uv).r; }
-
-  float sobelDepth() {
-    float tl=sampleD(vUV+vec2(-texelSize.x,-texelSize.y));
-    float t =sampleD(vUV+vec2( 0.0,        -texelSize.y));
-    float tr=sampleD(vUV+vec2( texelSize.x,-texelSize.y));
-    float l =sampleD(vUV+vec2(-texelSize.x, 0.0));
-    float r2=sampleD(vUV+vec2( texelSize.x, 0.0));
-    float bl=sampleD(vUV+vec2(-texelSize.x, texelSize.y));
-    float b =sampleD(vUV+vec2( 0.0,         texelSize.y));
-    float br=sampleD(vUV+vec2( texelSize.x, texelSize.y));
-    float gx=-tl-2.0*l-bl+tr+2.0*r2+br;
+  float sD(vec2 uv){return texture2D(depthSampler,uv).r;}
+  float sobel(){
+    float tl=sD(vUV+vec2(-texelSize.x,-texelSize.y));
+    float t =sD(vUV+vec2(0.0,-texelSize.y));
+    float tr=sD(vUV+vec2(texelSize.x,-texelSize.y));
+    float l =sD(vUV+vec2(-texelSize.x,0.0));
+    float rr=sD(vUV+vec2(texelSize.x,0.0));
+    float bl=sD(vUV+vec2(-texelSize.x,texelSize.y));
+    float b =sD(vUV+vec2(0.0,texelSize.y));
+    float br=sD(vUV+vec2(texelSize.x,texelSize.y));
+    float gx=-tl-2.0*l-bl+tr+2.0*rr+br;
     float gy=-tl-2.0*t-tr+bl+2.0*b+br;
     return sqrt(gx*gx+gy*gy);
   }
-
-  float crosshatch(vec2 uv, float density) {
-    vec2 p=uv*density;
-    return step(0.5,fract(p.x+p.y))*step(0.5,fract(p.x-p.y));
-  }
-
-  void main() {
+  void main(){
     vec4 color=texture2D(textureSampler,vUV);
-    float edge=sobelDepth();
-    float outline=smoothstep(edgeThreshold*0.7,edgeThreshold*1.3,edge);
-    float luma=dot(color.rgb,vec3(0.299,0.587,0.114));
-    float inShadow=1.0-smoothstep(0.0,0.18,luma);
-    float hatch=crosshatch(vUV,280.0)*inShadow*0.28;
-    vec3 inkColor=vec3(0.01,0.02,0.06);
-    vec3 result=mix(color.rgb,inkColor,outline*inkStrength);
-    result=mix(result,inkColor*0.5,hatch*(1.0-outline));
-    vec2 center=vUV-0.5;
-    result*=(1.0-dot(center,center)*1.1);
-    gl_FragColor=vec4(result,color.a);
+    float edge=sobel();
+    float ink=smoothstep(0.006,0.018,edge);
+    vec3 inkC=vec3(0.005,0.01,0.025);
+    vec3 result=mix(color.rgb,inkC,ink*outlineStr);
+    // Subtle vignette
+    vec2 c=vUV-0.5; result*=1.0-dot(c,c)*0.8;
+    gl_FragColor=vec4(result,1.0);
   }
 `;
-
-const moebiusPass = new BABYLON.PostProcess(
-  'moebius', 'moebius',
-  ['texelSize','edgeThreshold','inkStrength'],
-  ['depthSampler'],
-  1.0, camera
-);
-moebiusPass.onApply = (effect) => {
-  effect.setTexture('depthSampler', depthRenderer.getDepthMap());
-  effect.setFloat2('texelSize', 1/engine.getRenderWidth(), 1/engine.getRenderHeight());
-  effect.setFloat('edgeThreshold', 0.013);
-  effect.setFloat('inkStrength', 0.85);
+const inkPass=new BABYLON.PostProcess('ink','ink',['texelSize','outlineStr'],['depthSampler'],1.0,camera);
+inkPass.onApply=effect=>{
+  effect.setTexture('depthSampler',depthRenderer.getDepthMap());
+  effect.setFloat2('texelSize',1/engine.getRenderWidth(),1/engine.getRenderHeight());
+  effect.setFloat('outlineStr',0.82);
 };
 
-// ── Orb animation ─────────────────────────────────────────────────────────────
-const orbMeshes = allCrystals.filter(m => m.name === 'orb');
-scene.registerBeforeRender(() => {
-  const t = performance.now() * 0.001;
-  orbMeshes.forEach((m, i) => {
-    m.rotation.y += 0.006 + i*0.001;
-    m.position.y  = m._baseY + Math.sin(t*0.7 + i*1.1) * 0.22;
-  });
-});
-// Store base Y for orbMeshes
-orbMeshes.forEach(m => { m._baseY = m.position.y; });
+// Pass 2: Halftone dot screen overlay (luminance-driven, fract-tiled)
+BABYLON.Effect.ShadersStore["halftoneFragmentShader"]=`
+  precision highp float;
+  varying vec2 vUV;
+  uniform sampler2D textureSampler;
+  uniform vec2 resolution;
+  uniform float gridCells;
+  uniform float dotStrength;
 
-// ── Camera animation helpers ──────────────────────────────────────────────────
-function catmullRom(t,p0,p1,p2,p3){ return 0.5*((2*p1)+(-p0+p2)*t+(2*p0-5*p1+4*p2-p3)*t*t+(-p0+3*p1-3*p2+p3)*t*t*t); }
-function catmullTangent(t,p0,p1,p2,p3){ return 0.5*((-p0+p2)+(2*(2*p0-5*p1+4*p2-p3))*t+3*(-p0+3*p1-3*p2+p3)*t*t); }
-function lerpF(a,b,t){ return a+(b-a)*t; }
-function lerpAngle(a,b,t){ let d=b-a; while(d>Math.PI)d-=Math.PI*2; while(d<-Math.PI)d+=Math.PI*2; return a+d*t; }
-function smoothstep(t){ return t*t*(3-2*t); }
+  void main(){
+    vec4 color=texture2D(textureSampler,vUV);
 
-const DROP_T=0.14, ARRIVE_T=0.86, PATH_Y=1.8, TRAVEL_R=4, TRAVEL_BETA=Math.PI/2.05;
-let autoRotate=true, autoAngle=camera.alpha, pathState=null;
+    // Aspect-correct grid
+    float aspect=resolution.x/resolution.y;
+    vec2 gUV=vec2(vUV.x*aspect,vUV.y)*gridCells;
 
-scene.registerBeforeRender(() => {
-  if (autoRotate && !pathState) { autoAngle -= 0.0012; camera.alpha = autoAngle; return; }
-  if (!pathState) return;
-  pathState.t = Math.min(1, pathState.t + pathState.speed);
-  const done = pathState.t >= 1;
-  if (pathState.t <= DROP_T) {
-    const dt=smoothstep(pathState.t/DROP_T);
-    camera.target.set(lerpF(pathState.startTx,pathState.pts[0].x,dt*0.3),lerpF(pathState.startTy,PATH_Y,dt),lerpF(pathState.startTz,pathState.pts[0].z,dt*0.3));
-    camera.beta  =lerpF(pathState.startBeta,  TRAVEL_BETA,dt*0.6);
-    camera.radius=lerpF(pathState.startRadius,TRAVEL_R,   dt*0.5);
-  } else if (pathState.t <= ARRIVE_T) {
-    const tt=(pathState.t-DROP_T)/(ARRIVE_T-DROP_T);
-    const pts=pathState.pts, N=pts.length-1;
-    const fi=tt*N, i=Math.min(Math.floor(fi),N-1), lt=fi-i;
-    const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[Math.min(N,i+1)],p3=pts[Math.min(N,i+2)];
-    camera.target.set(catmullRom(lt,p0.x,p1.x,p2.x,p3.x),PATH_Y,catmullRom(lt,p0.z,p1.z,p2.z,p3.z));
-    const tx=catmullTangent(lt,p0.x,p1.x,p2.x,p3.x), tz=catmullTangent(lt,p0.z,p1.z,p2.z,p3.z);
-    if(Math.abs(tx)+Math.abs(tz)>0.001) camera.alpha=lerpAngle(camera.alpha,Math.atan2(tz,tx)+Math.PI,0.09);
-    camera.beta  =lerpF(camera.beta,  TRAVEL_BETA,0.06);
-    camera.radius=lerpF(camera.radius,TRAVEL_R,   0.06);
-  } else {
-    const at=smoothstep((pathState.t-ARRIVE_T)/(1-ARRIVE_T)),f=at*0.14;
-    const et=pathState.endTarget;
-    camera.target.x=lerpF(camera.target.x,et.x,f);
-    camera.target.y=lerpF(camera.target.y,et.y,f);
-    camera.target.z=lerpF(camera.target.z,et.z,f);
-    camera.alpha  =lerpAngle(camera.alpha, pathState.endAlpha, at*0.13);
-    camera.beta   =lerpF(camera.beta,   pathState.endBeta,   at*0.11);
-    camera.radius =lerpF(camera.radius, pathState.endRadius, at*0.11);
+    // Sample pixelated (floor to cell) luminance
+    vec2 cellCenter=(floor(gUV)+0.5);
+    vec2 sampleUV=vec2(cellCenter.x/(gridCells*aspect), cellCenter.y/gridCells);
+    sampleUV=clamp(sampleUV,0.001,0.999);
+    vec4 cellColor=texture2D(textureSampler,sampleUV);
+    float luma=dot(cellColor.rgb,vec3(0.299,0.587,0.114));
+
+    // Dot radius: darker → bigger dot
+    float radius=sqrt(max(0.0,1.0-luma))*0.46;
+    vec2 cellUV=fract(gUV)-0.5;
+    float inDot=1.0-smoothstep(radius-0.025,radius+0.025,length(cellUV));
+
+    // Subtle: multiply scene by (1 - dot*strength) to add dark dots
+    vec3 result=color.rgb*(1.0-inDot*dotStrength);
+    gl_FragColor=vec4(result,1.0);
   }
-  if (done) { const cb=pathState.onDone; pathState=null; if(cb)cb(); }
+`;
+const halftonePass=new BABYLON.PostProcess('halftone','halftone',['resolution','gridCells','dotStrength'],[],1.0,camera);
+halftonePass.onApply=effect=>{
+  effect.setFloat2('resolution',engine.getRenderWidth(),engine.getRenderHeight());
+  effect.setFloat('gridCells',80.0);
+  effect.setFloat('dotStrength',0.22);
+};
+
+// ── Animations ───────────────────────────────────────────────────────────────
+const t0=performance.now();
+scene.registerBeforeRender(()=>{
+  const t=(performance.now()-t0)*0.001;
+  Object.entries(animatables).forEach(([key,m],i)=>{
+    if(!m._baseY) m._baseY=m.position.y;
+    m.rotation.y+=0.005+i*0.001;
+    m.position.y=m._baseY+Math.sin(t*0.65+i*1.3)*0.28;
+  });
 });
 
-function stopAuto(){ autoRotate=false; }
+// ── Camera navigation ─────────────────────────────────────────────────────────
+let autoRotate=true,autoAngle=camera.alpha,pathState=null;
+const DROP_T=0.14,ARRIVE_T=0.86,PATH_Y=1.8,TRAVEL_R=4.2,TRAVEL_B=Math.PI/2.05;
+function lerp(a,b,t){return a+(b-a)*t;}
+function lerpA(a,b,t){let d=b-a;while(d>Math.PI)d-=Math.PI*2;while(d<-Math.PI)d+=Math.PI*2;return a+d*t;}
+function ss(t){return t*t*(3-2*t);}
+function cr(t,p0,p1,p2,p3){return 0.5*((2*p1)+(-p0+p2)*t+(2*p0-5*p1+4*p2-p3)*t*t+(-p0+3*p1-3*p2+p3)*t*t*t);}
+function crT(t,p0,p1,p2,p3){return 0.5*((-p0+p2)+(2*(2*p0-5*p1+4*p2-p3))*t+3*(-p0+3*p1-3*p2+p3)*t*t);}
 
-function flyTo(clusterKey) {
-  stopAuto(); pathState=null; scene.stopAnimation(camera); camera.animations.length=0;
-  const v=CAM_VIEWS[clusterKey]; if(!v) return;
+scene.registerBeforeRender(()=>{
+  if(autoRotate&&!pathState){autoAngle-=0.0011;camera.alpha=autoAngle;return;}
+  if(!pathState)return;
+  pathState.t=Math.min(1,pathState.t+pathState.speed);
+  const done=pathState.t>=1;
+  if(pathState.t<=DROP_T){
+    const dt=ss(pathState.t/DROP_T);
+    camera.target.set(lerp(pathState.stx,pathState.pts[0].x,dt*0.3),lerp(pathState.sty,PATH_Y,dt),lerp(pathState.stz,pathState.pts[0].z,dt*0.3));
+    camera.beta=lerp(pathState.sb,TRAVEL_B,dt*0.6);camera.radius=lerp(pathState.sr,TRAVEL_R,dt*0.5);
+  }else if(pathState.t<=ARRIVE_T){
+    const tt=(pathState.t-DROP_T)/(ARRIVE_T-DROP_T);
+    const pts=pathState.pts,N=pts.length-1,fi=tt*N,i=Math.min(Math.floor(fi),N-1),lt=fi-i;
+    const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[Math.min(N,i+1)],p3=pts[Math.min(N,i+2)];
+    camera.target.set(cr(lt,p0.x,p1.x,p2.x,p3.x),PATH_Y,cr(lt,p0.z,p1.z,p2.z,p3.z));
+    const tx=crT(lt,p0.x,p1.x,p2.x,p3.x),tz=crT(lt,p0.z,p1.z,p2.z,p3.z);
+    if(Math.abs(tx)+Math.abs(tz)>0.001)camera.alpha=lerpA(camera.alpha,Math.atan2(tz,tx)+Math.PI,0.09);
+    camera.beta=lerp(camera.beta,TRAVEL_B,0.06);camera.radius=lerp(camera.radius,TRAVEL_R,0.06);
+  }else{
+    const at=ss((pathState.t-ARRIVE_T)/(1-ARRIVE_T)),f=at*0.14,et=pathState.et;
+    camera.target.x=lerp(camera.target.x,et.x,f);camera.target.y=lerp(camera.target.y,et.y,f);camera.target.z=lerp(camera.target.z,et.z,f);
+    camera.alpha=lerpA(camera.alpha,pathState.ea,at*0.13);camera.beta=lerp(camera.beta,pathState.eb,at*0.11);camera.radius=lerp(camera.radius,pathState.er,at*0.11);
+  }
+  if(done){const cb=pathState.onDone;pathState=null;if(cb)cb();}
+});
+
+function stopAuto(){autoRotate=false;}
+function flyTo(k){
+  stopAuto();pathState=null;scene.stopAnimation(camera);camera.animations.length=0;
+  const v=CAM_VIEWS[k];if(!v)return;
   closeFocus();
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.cluster===clusterKey));
-  const ease=new BABYLON.SineEase(); ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.cluster===k));
+  const ease=new BABYLON.SineEase();ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
   ['alpha','beta','radius'].forEach(prop=>{
-    const a=new BABYLON.Animation('fly_'+prop,prop,60,BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-    a.setEasingFunction(ease);
-    a.setKeys([{frame:0,value:camera[prop]},{frame:80,value:v[prop]}]);
-    camera.animations.push(a);
+    const a=new BABYLON.Animation('f_'+prop,prop,60,BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    a.setEasingFunction(ease);a.setKeys([{frame:0,value:camera[prop]},{frame:80,value:v[prop]}]);camera.animations.push(a);
   });
-  const ta=new BABYLON.Animation('fly_t','target',60,BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-  ta.setEasingFunction(ease);
-  ta.setKeys([{frame:0,value:camera.target.clone()},{frame:80,value:new BABYLON.Vector3(...v.target)}]);
-  camera.animations.push(ta);
-  scene.beginAnimation(camera,0,80,false,1,()=>{ camera.animations.length=0; });
+  const ta=new BABYLON.Animation('f_t','target',60,BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+  ta.setEasingFunction(ease);ta.setKeys([{frame:0,value:camera.target.clone()},{frame:80,value:new BABYLON.Vector3(...v.target)}]);
+  camera.animations.push(ta);scene.beginAnimation(camera,0,80,false,1,()=>camera.animations.length=0);
 }
-
-function rotateToBillboard(bill) {
-  scene.stopAnimation(camera); camera.animations.length=0;
-  const {x,z}=bill.metadata;
+function rotateToBill(bill){
+  scene.stopAnimation(camera);camera.animations.length=0;
+  const{x,z}=bill.metadata;
   const clKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===bill.metadata.proj.url))?.[0]||'highlight';
-  const cpos=CLUSTERS[clKey].pos;
-  const dx=cpos[0]-x, dz=cpos[2]-z, dist=Math.hypot(dx,dz)||1;
-  const endAlpha=Math.atan2(dz/dist,dx/dist);
-  const endTarget=new BABYLON.Vector3(x,bill.position.y*0.5,z);
-  const ease=new BABYLON.SineEase(); ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
+  const cp=CLUSTERS[clKey].pos,dx=cp[0]-x,dz2=cp[2]-z,dist=Math.hypot(dx,dz2)||1;
+  const endA=Math.atan2(dz2/dist,dx/dist);
+  const ease=new BABYLON.SineEase();ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
   ['alpha','beta','radius'].forEach((prop,pi)=>{
-    const vals=[endAlpha,Math.PI/2.5,6.5];
-    const a=new BABYLON.Animation('rot_'+prop,prop,60,BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-    a.setEasingFunction(ease); a.setKeys([{frame:0,value:camera[prop]},{frame:55,value:vals[pi]}]);
-    camera.animations.push(a);
+    const vals=[endA,Math.PI/2.4,6.0];
+    const a=new BABYLON.Animation('r_'+prop,prop,60,BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    a.setEasingFunction(ease);a.setKeys([{frame:0,value:camera[prop]},{frame:55,value:vals[pi]}]);camera.animations.push(a);
   });
-  const ta=new BABYLON.Animation('rot_t','target',60,BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-  ta.setEasingFunction(ease);
-  ta.setKeys([{frame:0,value:camera.target.clone()},{frame:55,value:endTarget}]);
-  camera.animations.push(ta);
-  scene.beginAnimation(camera,0,55,false,1,()=>{ camera.animations.length=0; openFocus(bill); });
+  const ta=new BABYLON.Animation('r_t','target',60,BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+  ta.setEasingFunction(ease);ta.setKeys([{frame:0,value:camera.target.clone()},{frame:55,value:new BABYLON.Vector3(x,bill.position.y*0.5,z)}]);
+  camera.animations.push(ta);scene.beginAnimation(camera,0,55,false,1,()=>{camera.animations.length=0;openFocus(bill);});
 }
-
-function flyToBillboard(bill) {
-  stopAuto(); pathState=null; scene.stopAnimation(camera); camera.animations.length=0;
-  const {proj,x,z}=bill.metadata;
+function flyToBill(bill){
+  stopAuto();pathState=null;scene.stopAnimation(camera);camera.animations.length=0;
+  const{proj,x,z}=bill.metadata;
   const clKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===proj.url))?.[0]||'highlight';
   const startKey=nearestCluster(camera.target.x,camera.target.z);
-  if (startKey===clKey) { rotateToBillboard(bill); return; }
+  if(startKey===clKey){rotateToBill(bill);return;}
   const route=bfsPath(startKey,clKey);
   const wpts=[new BABYLON.Vector3(camera.target.x,PATH_Y,camera.target.z)];
   for(let i=0;i<route.length-1;i++){
-    const ek=[route[i],route[i+1]].sort().join('--'), curve=PATH_CURVES[ek];
-    if(curve&&curve.length){ const fwd=route[i]===ek.split('--')[0]; (fwd?curve:[...curve].reverse()).forEach(p=>wpts.push(new BABYLON.Vector3(p[0],PATH_Y,p[1]))); }
-    else { const cp=CLUSTERS[route[i+1]].pos; wpts.push(new BABYLON.Vector3(cp[0],PATH_Y,cp[2])); }
+    const ek=[route[i],route[i+1]].sort().join('--'),curve=PATH_CURVES[ek];
+    if(curve&&curve.length){const fwd=route[i]===ek.split('--')[0];(fwd?curve:[...curve].reverse()).forEach(p=>wpts.push(new BABYLON.Vector3(p[0],PATH_Y,p[1])));}
+    else{const cp2=CLUSTERS[route[i+1]].pos;wpts.push(new BABYLON.Vector3(cp2[0],PATH_Y,cp2[2]));}
   }
   wpts.push(new BABYLON.Vector3(x,bill.position.y*0.5,z));
-  let arcLen=0;
-  for(let i=0;i<wpts.length-1;i++) arcLen+=BABYLON.Vector3.Distance(wpts[i],wpts[i+1]);
-  const totalSec=arcLen/18+0.5, speed=1/(totalSec*60);
-  const cpos=CLUSTERS[clKey].pos, dx=cpos[0]-x, dz=cpos[2]-z, dist=Math.hypot(dx,dz)||1;
-  pathState={pts:wpts,t:0,speed,startTx:camera.target.x,startTy:camera.target.y,startTz:camera.target.z,startBeta:camera.beta,startRadius:camera.radius,endTarget:new BABYLON.Vector3(x,bill.position.y*0.5,z),endAlpha:Math.atan2(dz/dist,dx/dist),endRadius:6.5,endBeta:Math.PI/2.5,onDone:()=>openFocus(bill)};
+  let arcLen=0;for(let i=0;i<wpts.length-1;i++)arcLen+=BABYLON.Vector3.Distance(wpts[i],wpts[i+1]);
+  const speed=1/((arcLen/18+0.5)*60);
+  const cp3=CLUSTERS[clKey].pos,dx2=cp3[0]-x,dz3=cp3[2]-z,dist2=Math.hypot(dx2,dz3)||1;
+  pathState={pts:wpts,t:0,speed,stx:camera.target.x,sty:camera.target.y,stz:camera.target.z,sb:camera.beta,sr:camera.radius,et:new BABYLON.Vector3(x,bill.position.y*0.5,z),ea:Math.atan2(dz3/dist2,dx2/dist2),eb:Math.PI/2.4,er:6.0,onDone:()=>openFocus(bill)};
 }
 
-// ── Focus panel ───────────────────────────────────────────────────────────────
-function openFocus(bill) {
-  const {proj}=bill.metadata;
+function openFocus(bill){
+  const{proj}=bill.metadata;
   document.getElementById('focus-name').textContent=proj.name;
   document.getElementById('focus-stars').textContent='★ '+proj.stars.toLocaleString()+'  ·  '+proj.lang;
   document.getElementById('focus-desc').textContent=proj.desc;
   document.getElementById('focus-link').href=proj.url;
+  const acc=CLUSTERS[Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===proj.url))?.[0]]?.col||'#4488ff';
+  document.getElementById('focus-accent').style.color=acc;
   const logEl=document.getElementById('focus-logo');
   const lu=(typeof LOGOS!=='undefined')?LOGOS[proj.id]:null;
   if(lu){logEl.src=lu;logEl.style.display='block';}else logEl.style.display='none';
   document.getElementById('focus-panel').classList.add('open');
 }
-function closeFocus(){ document.getElementById('focus-panel').classList.remove('open'); }
-document.getElementById('focus-close').addEventListener('click', closeFocus);
+function closeFocus(){document.getElementById('focus-panel').classList.remove('open');}
+document.getElementById('focus-close').addEventListener('click',closeFocus);
 
-// ── Pointer ───────────────────────────────────────────────────────────────────
+// Hover + click
 let hovered=null;
 scene.onPointerObservable.add(e=>{
-  if (e.type===BABYLON.PointerEventTypes.POINTERMOVE) {
+  if(e.type===BABYLON.PointerEventTypes.POINTERMOVE){
     const hit=scene.pick(scene.pointerX,scene.pointerY);
     const bill=billboards.find(b=>b===hit.pickedMesh);
-    if (bill!==hovered) {
-      if (hovered) { hovered.scaling.setAll(1); }
-      hovered=bill||null;
-      canvas.style.cursor=hovered?'pointer':'';
-      if (hovered) { hovered.scaling.setAll(1.05); }
+    if(bill!==hovered){
+      if(hovered)hovered.scaling.setAll(1);
+      hovered=bill||null;canvas.style.cursor=hovered?'pointer':'grab';
+      if(hovered)hovered.scaling.setAll(1.06);
     }
   }
-  if (e.type===BABYLON.PointerEventTypes.POINTERDOWN && e.event.button===0) {
-    if (hovered) { flyToBillboard(hovered); stopAuto(); } else closeFocus();
+  if(e.type===BABYLON.PointerEventTypes.POINTERDOWN&&e.event.button===0){
+    if(hovered){flyToBill(hovered);stopAuto();}else closeFocus();
   }
 });
 
-// ── Nav ───────────────────────────────────────────────────────────────────────
 document.querySelectorAll('.nav-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{
-    if(btn.dataset.cluster==='overview') autoRotate=true;
-    flyTo(btn.dataset.cluster);
-  });
+  btn.addEventListener('click',()=>{if(btn.dataset.cluster==='overview')autoRotate=true;flyTo(btn.dataset.cluster);});
 });
 
-// ── Keyboard ──────────────────────────────────────────────────────────────────
 const keys=new Set();
 window.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeFocus();return;}
   if(e.code==='Space'){e.preventDefault();autoRotate=!autoRotate;return;}
   const cm={'Digit1':'overview','Digit2':'highlight','Digit3':'piku','Digit4':'ai','Digit5':'terminal','Digit6':'macos','Digit7':'infra'};
   if(cm[e.code]){flyTo(cm[e.code]);return;}
-  keys.add(e.code); stopAuto(); e.preventDefault();
+  keys.add(e.code);stopAuto();e.preventDefault();
 });
 window.addEventListener('keyup',e=>keys.delete(e.code));
 scene.registerBeforeRender(()=>{
-  const sp=0.025,zp=0.97;
-  if(keys.has('KeyA')||keys.has('ArrowLeft'))  camera.alpha+=sp;
-  if(keys.has('KeyD')||keys.has('ArrowRight')) camera.alpha-=sp;
-  if(keys.has('KeyW')||keys.has('ArrowUp'))    camera.beta=Math.max(0.1,camera.beta-sp);
-  if(keys.has('KeyS')||keys.has('ArrowDown'))  camera.beta=Math.min(Math.PI*0.48,camera.beta+sp);
-  if(keys.has('Equal')||keys.has('KeyQ'))      camera.radius=Math.max(4,camera.radius*zp);
-  if(keys.has('Minus')||keys.has('KeyE'))      camera.radius=Math.min(130,camera.radius/zp);
+  const sp=0.022,zp=0.97;
+  if(keys.has('KeyA')||keys.has('ArrowLeft'))camera.alpha+=sp;
+  if(keys.has('KeyD')||keys.has('ArrowRight'))camera.alpha-=sp;
+  if(keys.has('KeyW')||keys.has('ArrowUp'))camera.beta=Math.max(0.08,camera.beta-sp);
+  if(keys.has('KeyS')||keys.has('ArrowDown'))camera.beta=Math.min(Math.PI*0.46,camera.beta+sp);
+  if(keys.has('Equal')||keys.has('KeyQ'))camera.radius=Math.max(4,camera.radius*zp);
+  if(keys.has('Minus')||keys.has('KeyE'))camera.radius=Math.min(140,camera.radius/zp);
 });
 
 window.addEventListener('resize',()=>engine.resize());
