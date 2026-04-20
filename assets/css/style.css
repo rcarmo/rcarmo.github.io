@@ -113,8 +113,8 @@ code {
 }
 .hero-title {
   font-family: var(--font-head);
-  font-size: 8rem; font-weight: 700;
-  line-height: 0.95; letter-spacing: -0.05em;
+  font-size: 10rem; font-weight: 700;
+  line-height: 0.9; letter-spacing: -0.05em;
 }
 .hero-title strong { color: var(--blue); font-weight: 700; }
 .hero-avatar {
