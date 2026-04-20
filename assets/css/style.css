@@ -646,3 +646,19 @@ footer {
   .page-layout { grid-template-columns: 1fr; }
   .sec { break-inside: avoid; }
 }
+
+/* ── Featured cards ───────────────────────────────────────────────────────── */
+.card-grid-featured {
+  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+}
+.card-featured {
+  border-color: var(--accent-dim);
+  background: linear-gradient(135deg, var(--surface) 0%, var(--accent-dim) 100%);
+}
+.card-featured:hover {
+  border-color: var(--accent);
+}
+.card-logo-lg {
+  width: 64px;
+  height: 64px;
+}

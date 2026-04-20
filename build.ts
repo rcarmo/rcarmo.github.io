@@ -26,6 +26,7 @@ interface Frontmatter {
   tagline: string;      // one-liner
   logo?: string;        // path to logo image (transparent bg)
   hidden?: boolean;     // omit from site
+  featured?: boolean;    // pin to top of index
 }
 
 interface Section {
@@ -392,12 +393,11 @@ function buildIndex(projects: Project[]): string {
     groups.get(s)!.push(p);
   }
 
-  // Section order: highlight first, then alphabetical
-  const sectionOrder = [...groups.keys()].sort((a, b) => {
-    if (a === "highlight") return -1;
-    if (b === "highlight") return 1;
-    return a.localeCompare(b);
-  });
+  // Featured projects (pinned at top, across any section)
+  const featured = projects.filter(p => p.fm.featured);
+
+  // Section order: alphabetical (no more special "highlight" section)
+  const sectionOrder = [...groups.keys()].sort((a, b) => a.localeCompare(b));
 
   // Section display names (derive from key)
   function sectionLabel(key: string): string {
@@ -408,6 +408,32 @@ function buildIndex(projects: Project[]): string {
   const allFullNames = projects.map(p => p.fm.repo || `rcarmo/${p.id}`);
 
   let sectionsHtml = "";
+
+  // Featured projects card(s)
+  if (featured.length) {
+    const featCards = featured.map(p => {
+      const logo = logoDataUri(p);
+      const fullName = p.fm.repo || `rcarmo/${p.id}`;
+      const logoHtml = logo
+        ? `<div class="card-logo card-logo-lg"><img src="${logo}" alt="" loading="lazy"></div>`
+        : `<div class="card-logo card-logo-lg card-logo-placeholder"></div>`;
+      return `
+        <a href="/projects/${p.id}.html" class="card card-featured" data-repo="${esc(fullName)}">
+          ${logoHtml}
+          <div class="card-body">
+            <div class="card-name">${esc(p.id)}</div>
+            <div class="card-tagline">${esc(p.fm.tagline || "")}</div>
+            <div id="card-meta-${p.id}" class="card-meta"></div>
+          </div>
+        </a>`;
+    }).join("\n");
+
+    sectionsHtml += `
+    <section class="idx-section idx-featured">
+      <h2 class="idx-section-title">Featured</h2>
+      <div class="card-grid card-grid-featured">${featCards}</div>
+    </section>`;
+  }
   for (const sKey of sectionOrder) {
     const sProjects = groups.get(sKey)!;
     const cardsHtml = sProjects.map(p => {
