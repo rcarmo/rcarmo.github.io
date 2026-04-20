@@ -1,0 +1,33 @@
+{
+  "id": "pngcanvas",
+  "meta": {
+    "name": "pngcanvas",
+    "full_name": "rcarmo/pngcanvas",
+    "description": "Minimalist pure-Python library for rendering PNG images with no dependencies.",
+    "homepage": "",
+    "stars": 44,
+    "forks": 9,
+    "language": "Python",
+    "created_at": "2013-12-27T10:32:48Z",
+    "pushed_at": "2020-02-04T15:33:30Z",
+    "updated_at": "2020-02-04T15:33:30Z",
+    "topics": [
+      "python",
+      "png",
+      "image",
+      "rendering",
+      "pure-python",
+      "no-dependencies"
+    ]
+  },
+  "readme": "",
+  "commits": [],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-20T11:04:00Z",
+  "logo": null,
+  "logo_data_uri": null,
+  "logo_ext": null,
+  "diagram": null,
+  "diagram_inline": null
+}
