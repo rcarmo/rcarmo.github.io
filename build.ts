@@ -600,28 +600,23 @@ function page(d: Dossier, c: Content): string {
     {id:"s-how",      label:"How it works"},
     {id:"s-features", label:"Features"},
     ...(hasDiag ? [{id:"s-diagram", label:"Diagram"}] : []),
-    ...(hasRels ? [{id:"s-releases",label:"Releases"}] : []),
+    {id:"s-releases", label:"Releases"},
     ...(hasPosts? [{id:"s-posts",   label:"Posts"}]    : []),
   ];
 
   const howParas = c.how.trim().split(/\n\n+/).map(p => `<p>${esc(p.trim())}</p>`).join("\n  ");
 
-  // ECharts release timeline (rendered client-side from inline data)
-  const releasesSection = hasRels ? `
+  // Releases — Preact island fetches live from GitHub API
+  const releasesSection = `
   <div class="sec" id="s-releases">
     <div class="eyebrow">History</div>
     <div class="sec-title">Releases</div>
-    <div class="release-chart" id="rel-chart-${d.id}"></div>
-    <p class="release-legend">${rels.length} releases · hover for details · newest right</p>
-  </div>` : "";
+    <div id="rel-island-${d.id}">
+      <div style="height:220px;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:.8rem">Loading…</div>
+    </div>
+  </div>`;
 
-  // Inline release data for ECharts
-  const relData = hasRels ? rels
-    .slice()
-    .sort((a: Release, b: Release) => a.date < b.date ? -1 : 1)
-    .map((r: Release) => ({ tag: r.tag, name: r.name || r.tag, date: r.date?.slice(0,10) ?? "" })) : [];
-
-  const diagramSection = hasDiag ? `
+    const diagramSection = hasDiag ? `
   <div class="sec" id="s-diagram">
     <div class="eyebrow">Architecture</div>
     <div class="sec-title">System diagram</div>
@@ -650,33 +645,19 @@ mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:
   primaryTextColor:dark?'#f0fdfa':'#134e4a',lineColor:dark?'#4a6285':'#94a3b8',fontSize:'13px'}});
 </script>` : "";
 
-  const relScript = hasRels ? `
+  // Island script — Preact renders all dynamic sections from live GitHub API
+  const islandScript = `
 <script src="/assets/js/echarts.min.js"></script>
-<script>
-(function(){
-  const el = document.getElementById('rel-chart-${d.id}');
-  if (!el || typeof echarts === 'undefined') return;
-  const rels = ${JSON.stringify(relData)};
-  const dark = window.matchMedia('(prefers-color-scheme:dark)').matches;
-  const chart = echarts.init(el, dark ? 'dark' : null);
-  chart.setOption({
-    backgroundColor:'transparent',
-    tooltip:{trigger:'axis',axisPointer:{type:'shadow'},
-      formatter:p=>{const d=p[0];return d.name+'<br/>'+rels[d.dataIndex]?.tag+' — '+rels[d.dataIndex]?.name;}},
-    grid:{left:10,right:10,top:10,bottom:40,containLabel:true},
-    xAxis:{type:'category',data:rels.map(r=>r.date.slice(0,7)),
-      axisLabel:{color:dark?'#6878a0':'#4a5880',fontSize:10,rotate:45,interval:'auto'},
-      splitLine:{show:false}},
-    yAxis:{show:false},
-    series:[{type:'bar',data:rels.map((_,i)=>i+1),
-      itemStyle:{color:new echarts.graphic.LinearGradient(0,0,0,1,[
-        {offset:0,color:'${d.diagram_inline ? "#4f8ef7" : "#4f8ef7"}'},
-        {offset:1,color:'rgba(79,142,247,0.3)'}])},
-      emphasis:{itemStyle:{color:'#6aa3ff'}}}]
-  });
-  window.addEventListener('resize',()=>chart.resize());
-})();
-</script>` : "";
+<script type="module">
+import { mount } from '/assets/js/repo-island.mjs';
+mount({
+  fullName: '${m.full_name}',
+  heroMetaEl: document.getElementById('hero-meta-island-${d.id}'),
+  statsEl:    document.getElementById('stats-island-${d.id}'),
+  releasesEl: document.getElementById('rel-island-${d.id}'),
+  chartId:    'rel-chart-${d.id}',
+});
+</script>`;
 
   return `<!DOCTYPE html>
 <html lang="en">
@@ -707,11 +688,13 @@ ${mermaidScript}
     ${d.logo_data_uri ? `<img src="${d.logo_data_uri}" alt="${dispN} logo" style="width:52px;height:52px;border-radius:12px;object-fit:contain;margin-bottom:.75rem;box-shadow:0 2px 12px rgba(0,0,0,.4);">` : ""}
     <h1><a href="${ghUrl}" target="_blank" rel="noopener">${dispN}</a></h1>
     <p class="tagline">${esc(c.tagline)}</p>
-    <div class="hero-meta">
-      <span class="stars">★ ${(m.stars ?? 0).toLocaleString()}</span>
-      ${(m.forks ?? 0) > 0 ? `<span>⑂ ${m.forks}</span>` : ""}
-      <span><span class="dot ${langDot}"></span>${esc(m.language ?? "misc")}</span>
-      <span class="badge badge-${c.status}">${c.status}</span>
+    <div id="hero-meta-island-${d.id}">
+      <div class="hero-meta">
+        <span class="stars">★ ${(m.stars ?? 0).toLocaleString()}</span>
+        ${(m.forks ?? 0) > 0 ? `<span>⑂ ${m.forks}</span>` : ""}
+        <span><span class="dot ${langDot}"></span>${esc(m.language ?? "misc")}</span>
+        <span class="badge badge-${c.status}">${c.status}</span>
+      </div>
     </div>
     ${(m.topics?.length ?? 0) > 0
       ? `<div class="topics">${m.topics.map((t:string) => `<span class="topic">${esc(t)}</span>`).join("")}</div>`
@@ -732,14 +715,16 @@ ${mermaidScript}
 
   <!-- Main content -->
   <div class="main">
-    <!-- Stats bar -->
-    <div class="stats" style="margin-top:1.5rem">
-      <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">${(m.stars ?? 0).toLocaleString()}</div></div>
-      <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">${m.forks ?? 0}</div></div>
-      <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem"><span class="dot ${langDot}"></span>${esc(m.language ?? "—")}</div></div>
-      <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.05rem;padding-top:.3rem">${m.created_at?.slice(0,4) ?? "?"}</div></div>
-      <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.85rem;padding-top:.35rem">${m.pushed_at?.slice(0,7) ?? "?"}</div></div>
-    </div>
+    <!-- Stats bar — Preact island, live from GitHub API -->
+    <div id="stats-island-${d.id}" style="margin-top:1.5rem">
+      <div class="stats">
+        <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">${(m.stars ?? 0).toLocaleString()}</div></div>
+        <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">${m.forks ?? 0}</div></div>
+        <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem"><span class="dot ${langDot}"></span>${esc(m.language ?? "—")}</div></div>
+        <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.05rem;padding-top:.3rem">${m.created_at?.slice(0,4) ?? "?"}</div></div>
+        <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.85rem;padding-top:.35rem">${m.pushed_at?.slice(0,7) ?? "?"}</div></div>
+      </div>
+    </div>>
 
     <div class="sec" id="s-about">
       <div class="eyebrow">Overview</div>
@@ -775,7 +760,7 @@ ${mermaidScript}
   </div>
 </footer>
 
-${relScript}
+${islandScript}
 <script>
 // Scroll-spy for TOC
 (function(){

@@ -169,11 +169,13 @@ mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:
     
     <h1><a href="https://github.com/rcarmo/pve-microvm" target="_blank" rel="noopener">pve-microvm</a></h1>
     <p class="tagline">QEMU microvm for Proxmox VE — KVM isolation, under 200 ms boot.</p>
-    <div class="hero-meta">
-      <span class="stars">★ 3</span>
-      
-      <span><span class="dot dot-Shell"></span>Shell</span>
-      <span class="badge badge-active">active</span>
+    <div id="hero-meta-island-pve-microvm">
+      <div class="hero-meta">
+        <span class="stars">★ 3</span>
+        
+        <span><span class="dot dot-Shell"></span>Shell</span>
+        <span class="badge badge-active">active</span>
+      </div>
     </div>
     <div class="topics"><span class="topic">homelab</span><span class="topic">microvm</span><span class="topic">proxmox</span><span class="topic">sandboxing</span></div>
     <div class="cta">
@@ -191,18 +193,21 @@ mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:
     <a href="#s-how">How it works</a>
     <a href="#s-features">Features</a>
     <a href="#s-diagram">Diagram</a>
+    <a href="#s-releases">Releases</a>
   </nav>
 
   <!-- Main content -->
   <div class="main">
-    <!-- Stats bar -->
-    <div class="stats" style="margin-top:1.5rem">
-      <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">3</div></div>
-      <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">0</div></div>
-      <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem"><span class="dot dot-Shell"></span>Shell</div></div>
-      <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.05rem;padding-top:.3rem">2026</div></div>
-      <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.85rem;padding-top:.35rem">2026-04</div></div>
-    </div>
+    <!-- Stats bar — Preact island, live from GitHub API -->
+    <div id="stats-island-pve-microvm" style="margin-top:1.5rem">
+      <div class="stats">
+        <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">3</div></div>
+        <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">0</div></div>
+        <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem"><span class="dot dot-Shell"></span>Shell</div></div>
+        <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.05rem;padding-top:.3rem">2026</div></div>
+        <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.85rem;padding-top:.35rem">2026-04</div></div>
+      </div>
+    </div>>
 
     <div class="sec" id="s-about">
       <div class="eyebrow">Overview</div>
@@ -264,6 +269,13 @@ mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:
 </svg></div>
   </div>
     
+  <div class="sec" id="s-releases">
+    <div class="eyebrow">History</div>
+    <div class="sec-title">Releases</div>
+    <div id="rel-island-pve-microvm">
+      <div style="height:220px;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:.8rem">Loading…</div>
+    </div>
+  </div>
     
   </div>
 </div>
@@ -278,6 +290,17 @@ mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:
 </footer>
 
 
+<script src="/assets/js/echarts.min.js"></script>
+<script type="module">
+import { mount } from '/assets/js/repo-island.mjs';
+mount({
+  fullName: 'rcarmo/pve-microvm',
+  heroMetaEl: document.getElementById('hero-meta-island-pve-microvm'),
+  statsEl:    document.getElementById('stats-island-pve-microvm'),
+  releasesEl: document.getElementById('rel-island-pve-microvm'),
+  chartId:    'rel-chart-pve-microvm',
+});
+</script>
 <script>
 // Scroll-spy for TOC
 (function(){
