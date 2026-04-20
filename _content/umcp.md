@@ -1,5 +1,5 @@
 ---
-section: ai-agents
+section: libraries
 status: active
 tagline: Micro MCP server — zero deps, decorator-based, stdio only.
 ---

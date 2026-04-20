@@ -1,5 +1,5 @@
 ---
-section: ai-ml
+section: libraries
 status: active
 tagline: Go inference for the GTE Small text embedding model — local semantic search with no Python required.
 ---

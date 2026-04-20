@@ -848,7 +848,7 @@ console.log(`\nBuilt ${built}, skipped ${skipped}`);
 
 // ── Index page ─────────────────────────────────────────────────────────────
 
-const SECTION_ORDER = ['highlight','ai-agents','ai-ml','terminal','macos','infrastructure','hardware'];
+const SECTION_ORDER = ['highlight','ai-agents','ai-ml','terminal','macos','infrastructure','hardware','libraries'];
 const SECTION_LABELS: Record<string,string> = {
   'highlight':     'Highlight',
   'ai-agents':     'AI & Agent tooling',
@@ -857,6 +857,7 @@ const SECTION_LABELS: Record<string,string> = {
   'macos':         'macOS & Apple',
   'infrastructure':'Infrastructure & homelab',
   'hardware':      'Hardware & keyboards',
+  'libraries':     'Libraries & utilities',
 };
 
 function readFrontmatter(proj: string): { section: string; status: string; tagline: string } {

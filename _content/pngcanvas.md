@@ -1,5 +1,5 @@
 ---
-section: infrastructure
+section: libraries
 status: archived
 tagline: Pure-Python PNG rendering with zero dependencies — draw lines, rectangles, and text directly to PNG files.
 ---
