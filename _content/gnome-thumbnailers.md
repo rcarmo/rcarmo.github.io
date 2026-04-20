@@ -3,7 +3,7 @@ section: infrastructure
 status: stable
 created: 2022-12-13
 tagline: File thumbnails for RAW, HEIC, and 3D models in GNOME Files.
-logo: assets/logos-opt/missing-3.png
+logo: assets/logos-opt/gnome-thumbnailers.png
 ---
 
 ## About

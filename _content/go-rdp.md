@@ -3,7 +3,7 @@ section: terminal
 status: active
 created: 2026-01-24
 tagline: Browser-based RDP client — full MS-RDPBCGR spec, Go backend, WASM frontend.
-logo: assets/logos-opt/missing-0.png
+logo: assets/logos-opt/go-rdp.png
 ---
 
 ## About

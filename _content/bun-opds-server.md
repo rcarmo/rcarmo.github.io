@@ -3,7 +3,7 @@ section: infrastructure
 status: active
 created: 2026-04-03
 tagline: Read-only multi-library OPDS server for Calibre — built for the XteInk X4 and CrossPoint Reader.
-logo: assets/logos-opt/missing-0.png
+logo: assets/logos-opt/bun-opds-server.png
 ---
 
 ## About

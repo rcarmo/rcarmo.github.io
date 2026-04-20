@@ -3,7 +3,7 @@ section: infrastructure
 status: stable
 created: 2025-04-24
 tagline: ZFS pool metrics for Proxmox — exported to Graphite, cron only.
-logo: assets/logos-opt/missing-1.png
+logo: assets/logos-opt/proxmox-zpool-monitoring.png
 ---
 
 ## About

@@ -3,7 +3,7 @@ section: terminal
 status: active
 created: 2026-01-18
 tagline: Go web terminal with multi-session dashboard mode — built for AI agent workflows.
-logo: assets/logos-opt/missing-0.png
+logo: assets/logos-opt/webterm.png
 ---
 
 ## About

@@ -3,7 +3,7 @@ section: infrastructure
 status: active
 created: 2023-03-20
 tagline: Idempotent Linux bootstrap — YAML-driven, like cloud-init for bare metal.
-logo: assets/logos-opt/missing-3.png
+logo: assets/logos-opt/ground-init.png
 ---
 
 ## About
