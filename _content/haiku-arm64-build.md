@@ -1,5 +1,5 @@
 ---
-section: infrastructure
+section: hardware
 status: active
 tagline: Build environment and automation for compiling Haiku OS on ARM64.
 ---
