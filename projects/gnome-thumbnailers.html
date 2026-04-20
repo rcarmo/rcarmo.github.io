@@ -239,7 +239,6 @@ mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:
     <a href="#s-how">How it works</a>
     <a href="#s-features">Features</a>
     <a href="#s-diagram">Diagram</a>
-    <a href="#s-releases">Releases</a>
     <a href="#s-posts">Posts</a>
   </nav>
 
@@ -334,13 +333,6 @@ mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:
 </svg></div>
   </div>
     
-  <div class="sec" id="s-releases">
-    <div class="eyebrow">History</div>
-    <div class="sec-title">Releases</div>
-    <div id="rel-island-gnome-thumbnailers">
-      <div style="height:220px;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:.8rem">Loading…</div>
-    </div>
-  </div>
     
   <div class="sec" id="s-posts">
     <div class="eyebrow">Writing</div>
@@ -372,7 +364,7 @@ mount({
   fullName: 'rcarmo/gnome-thumbnailers',
   heroMetaEl: document.getElementById('hero-meta-island-gnome-thumbnailers'),
   statsEl:    document.getElementById('stats-island-gnome-thumbnailers'),
-  releasesEl: document.getElementById('rel-island-gnome-thumbnailers'),
+  releasesEl: document.getElementById('rel-island-gnome-thumbnailers') || null,
   chartId:    'rel-chart-gnome-thumbnailers',
 });
 </script>

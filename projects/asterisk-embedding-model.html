@@ -239,7 +239,6 @@ mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:
     <a href="#s-how">How it works</a>
     <a href="#s-features">Features</a>
     <a href="#s-diagram">Diagram</a>
-    <a href="#s-releases">Releases</a>
   </nav>
 
   <!-- Main content -->
@@ -334,13 +333,6 @@ mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:
 </svg></div>
   </div>
     
-  <div class="sec" id="s-releases">
-    <div class="eyebrow">History</div>
-    <div class="sec-title">Releases</div>
-    <div id="rel-island-asterisk-embedding-model">
-      <div style="height:220px;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:.8rem">Loading…</div>
-    </div>
-  </div>
     
   </div>
 </div>
@@ -361,7 +353,7 @@ mount({
   fullName: 'rcarmo/asterisk-embedding-model',
   heroMetaEl: document.getElementById('hero-meta-island-asterisk-embedding-model'),
   statsEl:    document.getElementById('stats-island-asterisk-embedding-model'),
-  releasesEl: document.getElementById('rel-island-asterisk-embedding-model'),
+  releasesEl: document.getElementById('rel-island-asterisk-embedding-model') || null,
   chartId:    'rel-chart-asterisk-embedding-model',
 });
 </script>

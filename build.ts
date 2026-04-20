@@ -649,21 +649,21 @@ function page(d: Dossier, c: Content): string {
     {id:"s-how",      label:"How it works"},
     {id:"s-features", label:"Features"},
     ...(hasDiag ? [{id:"s-diagram", label:"Diagram"}] : []),
-    {id:"s-releases", label:"Releases"},
+    ...(hasRels  ? [{id:"s-releases", label:"Releases"}] : []),
     ...(hasPosts? [{id:"s-posts",   label:"Posts"}]    : []),
   ];
 
   const howParas = c.how.trim().split(/\n\n+/).map(p => `<p>${esc(p.trim())}</p>`).join("\n  ");
 
-  // Releases — Preact island fetches live from GitHub API
-  const releasesSection = `
+  // Releases — only render section if there's at least one known release
+  const releasesSection = d.releases?.length > 0 ? `
   <div class="sec" id="s-releases">
     <div class="eyebrow">History</div>
     <div class="sec-title">Releases</div>
     <div id="rel-island-${d.id}">
       <div style="height:220px;display:flex;align-items:center;justify-content:center;color:var(--dim);font-size:.8rem">Loading…</div>
     </div>
-  </div>`;
+  </div>` : "";
 
     const diagramSection = hasDiag ? `
   <div class="sec" id="s-diagram">
@@ -703,7 +703,7 @@ mount({
   fullName: '${m.full_name}',
   heroMetaEl: document.getElementById('hero-meta-island-${d.id}'),
   statsEl:    document.getElementById('stats-island-${d.id}'),
-  releasesEl: document.getElementById('rel-island-${d.id}'),
+  releasesEl: document.getElementById('rel-island-${d.id}') || null,
   chartId:    'rel-chart-${d.id}',
 });
 </script>`;
