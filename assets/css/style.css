@@ -482,3 +482,25 @@ footer {
 .card-meta-featured .metric { font-size: 0.95rem; }
 .card-meta-featured .icon-star { width: 16px; height: 16px; }
 .hero-stats-row { display: flex; gap: 2.5rem; }
+
+/* ── Hero related (right side, hides on mobile) ───────────────────────────── */
+.hero-related {
+  display: flex; flex-direction: column; gap: 0.4rem;
+  align-items: flex-end; flex-shrink: 0;
+  min-width: 140px;
+}
+.related-label {
+  font-family: var(--font-head); font-size: 0.7rem; font-weight: 700;
+  text-transform: uppercase; letter-spacing: 0.08em;
+  color: var(--text-faint); margin-bottom: 0.2rem;
+}
+.related-link {
+  display: flex; align-items: center; gap: 0.4rem;
+  font-family: var(--font-head); font-size: 0.82rem; font-weight: 600;
+  color: var(--text-dim);
+}
+.related-link:hover { color: var(--blue-text); text-decoration: none; }
+.related-link .related-logo { width: 20px; height: 20px; border-radius: 3px; }
+@media (max-width: 900px) {
+  .hero-related { display: none; }
+}

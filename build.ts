@@ -520,18 +520,15 @@ function buildIndex(projects: Project[]): string {
 // ── Related projects (build-time) ────────────────────────────────────────────
 
 function injectRelated(html: string, project: Project, allProjects: Project[]): string {
-  // Explicit related: from frontmatter (comma-separated ids)
   const explicitIds = (project.fm.related || "")
     .split(",").map(s => s.trim()).filter(Boolean);
   const explicit = explicitIds
     .map(id => allProjects.find(p => p.id === id))
     .filter(Boolean) as Project[];
 
-  // Same-section projects
   const sectionMates = allProjects
     .filter(p => p.fm.section === project.fm.section && p.id !== project.id);
 
-  // Merge: explicit first, then section-mates, deduplicated
   const seen = new Set<string>();
   const related: Project[] = [];
   for (const p of [...explicit, ...sectionMates]) {
@@ -539,29 +536,30 @@ function injectRelated(html: string, project: Project, allProjects: Project[]): 
       seen.add(p.id);
       related.push(p);
     }
-    if (related.length >= 6) break;
+    if (related.length >= 5) break;
   }
 
   if (!related.length) {
     return html.replace(
-      `<div id="related-island-${project.id}" data-section="${esc(project.fm.section)}">`,
-      `<div id="related-island-${project.id}" data-section="${esc(project.fm.section)}" class="related-grid related-empty">`
+      `<div id="hero-related-${project.id}" class="hero-related">`,
+      `<div id="hero-related-${project.id}" class="hero-related" style="display:none">`
     );
   }
 
   const relatedHtml = related.map(r => {
     const logo = logoDataUri(r);
     const logoImg = logo ? `<img src="${logo}" alt="" class="related-logo">` : "";
-    return `<a href="/projects/${r.id}.html" class="related-card">${logoImg}<span>${esc(r.id)}</span></a>`;
+    return `<a href="/projects/${r.id}.html" class="related-link">${logoImg}<span>${esc(r.id)}</span></a>`;
   }).join("\n          ");
 
   return html.replace(
-    `<div id="related-island-${project.id}" data-section="${esc(project.fm.section)}">
-          <!-- populated client-side or at build time -->
-        </div>`,
-    `<div id="related-island-${project.id}" class="related-grid">
-          ${relatedHtml}
-        </div>`
+    `<div id="hero-related-${project.id}" class="hero-related">
+        <!-- injected at build time -->
+      </div>`,
+    `<div id="hero-related-${project.id}" class="hero-related">
+        <div class="related-label">Related</div>
+        ${relatedHtml}
+      </div>`
   );
 }
 
