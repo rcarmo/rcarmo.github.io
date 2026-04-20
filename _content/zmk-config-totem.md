@@ -1,8 +1,9 @@
 ---
 section: hardware
 status: stable
+created: 2025-11-08
 tagline: ZMK keymap for the Totem — home row mods, combos, ZMK Studio.
-logo: assets/logos-opt/zmk-config-totem.png
+logo: assets/logos-opt/missing-1.png
 ---
 
 ## About

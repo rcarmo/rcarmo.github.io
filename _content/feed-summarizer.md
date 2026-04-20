@@ -1,8 +1,9 @@
 ---
 section: ai-agents
 status: active
+created: 2025-11-21
 tagline: LLM-powered RSS digest — full-text extraction, runs on a Raspberry Pi.
-logo: assets/logos-opt/feed-summarizer.png
+logo: assets/logos-opt/missing-1.png
 ---
 
 ## About

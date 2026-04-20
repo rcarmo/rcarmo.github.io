@@ -1,8 +1,9 @@
 ---
 section: infrastructure
 status: active
+created: 2026-04-18
 tagline: QEMU microvm for Proxmox VE — KVM isolation, under 200 ms boot.
-logo: assets/logos-opt/pve-microvm.png
+logo: assets/logos-opt/missing-0.png
 ---
 
 ## About

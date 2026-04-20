@@ -1,8 +1,9 @@
 ---
 section: libraries
 status: active
+created: 2026-02-13
 tagline: VT100/VT520 terminal library for Go — pyte-faithful, ESCTest2, SVG export.
-logo: assets/logos-opt/go-te.png
+logo: assets/logos-opt/missing-0.png
 ---
 
 ## About

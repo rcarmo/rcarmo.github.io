@@ -1,6 +1,7 @@
 ---
 section: infrastructure
 status: active
+created: 2026-02-02
 tagline: mDNS bridge — relay Bonjour/Avahi service announcements across network segments.
 logo: assets/logos-opt/mdnsbridge.png
 ---

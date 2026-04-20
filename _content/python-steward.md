@@ -1,8 +1,9 @@
 ---
 section: ai-agents
 status: experimental
+created: 2025-12-20
 tagline: Python CLI harness for running LLMs with a Copilot-style toolset — Azure OpenAI, local providers, tool use.
-logo: assets/logos-opt/python-steward.png
+logo: assets/logos-opt/missing-1.png
 ---
 
 ## About

@@ -1,8 +1,9 @@
 ---
 section: ai-agents
 status: active
+created: 2025-05-30
 tagline: Micro MCP server — zero deps, decorator-based, stdio only.
-logo: assets/logos-opt/umcp.png
+logo: assets/logos-opt/missing-1.png
 ---
 
 ## About

@@ -1,8 +1,9 @@
 ---
 section: cloud
 status: maintained
+created: 2025-11-22
 tagline: Extract audio from media files and build transcripts and subtitles via Azure Speech Services.
-logo: assets/logos-opt/azure-transcription-helper.png
+logo: assets/logos-opt/missing-1.png
 ---
 
 ## About

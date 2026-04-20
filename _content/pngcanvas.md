@@ -1,8 +1,9 @@
 ---
 section: libraries
 status: archived
+created: 2013-12-27
 tagline: Pure-Python PNG rendering with zero dependencies — draw lines, rectangles, and text directly to PNG files.
-logo: assets/logos-opt/pngcanvas.png
+logo: assets/logos-opt/missing-3.png
 ---
 
 ## About

@@ -1,8 +1,9 @@
 ---
 section: macos
 status: stable
+created: 2025-12-18
 tagline: Plan 9 drawterm — HiDPI scaling, Metal rendering, Connect dialog, clipboard bridge.
-logo: assets/logos-opt/drawterm.png
+logo: assets/logos-opt/missing-1.png
 ---
 
 ## About

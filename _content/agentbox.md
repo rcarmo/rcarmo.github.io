@@ -1,6 +1,7 @@
 ---
 section: ai-agents
 status: active
+created: 2026-01-11
 tagline: Docker sandbox for coding agents — preinstalled runtimes, opt-in services, DinD.
 logo: assets/logos-opt/agentbox.png
 ---

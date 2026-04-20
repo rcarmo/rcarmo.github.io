@@ -1,6 +1,7 @@
 ---
 section: ai-agents
 status: active
+created: 2026-02-02
 tagline: AI SPEC-driven speed coding demo — a disk usage analyser built live with GitHub Copilot in Swift.
 logo: assets/logos-opt/daisy.png
 ---

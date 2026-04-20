@@ -1,8 +1,9 @@
 ---
 section: libraries
 status: archived
+created: 2013-03-17
 tagline: Readability/Decruft article extraction reimplemented with BeautifulSoup and html5lib — clean text from any page.
-logo: assets/logos-opt/soup-strainer.png
+logo: assets/logos-opt/missing-3.png
 ---
 
 ## About

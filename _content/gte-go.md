@@ -1,8 +1,9 @@
 ---
 section: ai-ml
 status: active
+created: 2026-01-15
 tagline: Go inference for the GTE Small text embedding model — local semantic search with no Python required.
-logo: assets/logos-opt/gte-go.png
+logo: assets/logos-opt/missing-0.png
 ---
 
 ## About

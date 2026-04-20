@@ -1,6 +1,7 @@
 ---
 section: infrastructure
 status: maintained
+created: 2026-01-06
 tagline: Force Syncthing to rescan folders on demand — cron-triggered or event-driven rescans via the REST API.
 logo: assets/logos-opt/syncthing-kicker.png
 ---

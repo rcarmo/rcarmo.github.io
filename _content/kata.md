@@ -1,6 +1,7 @@
 ---
 section: infrastructure
 status: active
+created: 2025-12-19
 tagline: Tiny micro-PaaS wrapper around Docker Compose or Swarm with implicit Traefik routing and git-push deploy hooks.
 logo: assets/logos-opt/kata.png
 ---

@@ -1,8 +1,9 @@
 ---
 section: infrastructure
 status: active
+created: 2026-01-08
 tagline: Self-contained OTel collector — SQLite storage, built-in trace viewer.
-logo: assets/logos-opt/gotel.png
+logo: assets/logos-opt/missing-0.png
 ---
 
 ## About

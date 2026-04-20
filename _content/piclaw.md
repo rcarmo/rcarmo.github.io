@@ -2,8 +2,9 @@
 section: ai-agents
 featured: true
 status: active
+created: 2026-02-17
 tagline: A self-hosted AI agent workspace — streaming UI, persistent state, no CDN.
-logo: assets/logos-opt/piclaw.png
+logo: assets/logos-opt/missing-0.png
 ---
 
 ## About

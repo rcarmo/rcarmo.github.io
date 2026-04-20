@@ -1,6 +1,7 @@
 ---
 section: ai-ml
 status: active
+created: 2026-01-03
 tagline: A small text embedding model trained for low-resource hardware — fast semantic search on a Raspberry Pi.
 logo: assets/logos-opt/asterisk-embedding-model.png
 ---
