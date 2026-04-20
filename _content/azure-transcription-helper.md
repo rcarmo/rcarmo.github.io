@@ -1,5 +1,5 @@
 ---
-section: ai-agents
+section: ai-ml
 status: maintained
 tagline: Extract audio from media files and build transcripts and subtitles via Azure Speech Services.
 ---

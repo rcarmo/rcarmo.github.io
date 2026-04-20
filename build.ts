@@ -848,10 +848,11 @@ console.log(`\nBuilt ${built}, skipped ${skipped}`);
 
 // ── Index page ─────────────────────────────────────────────────────────────
 
-const SECTION_ORDER = ['highlight','ai-agents','terminal','macos','infrastructure','hardware'];
+const SECTION_ORDER = ['highlight','ai-agents','ai-ml','terminal','macos','infrastructure','hardware'];
 const SECTION_LABELS: Record<string,string> = {
   'highlight':     'Highlight',
   'ai-agents':     'AI & Agent tooling',
+  'ai-ml':         'AI & Machine Learning',
   'terminal':      'Terminal stack',
   'macos':         'macOS & Apple',
   'infrastructure':'Infrastructure & homelab',
