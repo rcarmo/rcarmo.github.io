@@ -600,8 +600,12 @@ function page(d: Dossier, c: Content): string {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${dispN} — Rui Carmo</title>
 <meta name="description" content="${esc(c.tagline)}">
-<meta property="og:title" content="${esc(dispN)}">
+<meta property="og:type" content="website">
+<meta property="og:title" content="${esc(dispN)} — Rui Carmo">
 <meta property="og:description" content="${esc(c.tagline)}">
+${d.logo_data_uri ? `<meta property="og:image" content="https://rcarmo.github.io/assets/og/${d.id}.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:image" content="https://rcarmo.github.io/assets/og/${d.id}.png">` : ''}
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>${CSS}</style>
 <script src="/assets/js/echarts.min.js"></script>
@@ -669,6 +673,31 @@ function page(d: Dossier, c: Content): string {
     <div class="sec-title">Releases</div>
     <div class="releases" id="rl"><p class="rel-loading">Loading…</p></div>
   </div>
+
+  ${(d.releases?.length??0)>=3 ? `
+  <div class="sec">
+    <div class="eyebrow">Activity</div>
+    <div class="sec-title">Release timeline</div>
+    <div id="rel-chart-${d.id}" style="width:100%;height:120px;margin-top:.5rem"></div>
+    <script>
+    (function(){
+      const el=document.getElementById("rel-chart-${d.id}");
+      if(!el||!window.echarts) return;
+      const raw=${JSON.stringify((d.releases??[]).slice(0,16).sort((a,b)=>a.date<b.date?-1:1).map(r=>({tag:r.tag,date:(r.date||"").slice(0,7)})))};
+      const chart=echarts.init(el,"dark");
+      chart.setOption({
+        backgroundColor:"transparent",
+        tooltip:{trigger:"axis",formatter:p=>"<b>"+raw[p[0]?.dataIndex]?.tag+"</b><br>"+p[0]?.name},
+        grid:{left:0,right:12,top:16,bottom:40,containLabel:true},
+        xAxis:{type:"category",data:raw.map(r=>r.date),axisLabel:{color:"#8b949e",fontSize:10,rotate:30},axisLine:{lineStyle:{color:"#30363d"}}},
+        yAxis:{show:false},
+        series:[{type:"bar",data:raw.map((_,i)=>1),itemStyle:{color:"${LANG_ACCENT[m.language??'misc']??'#4a8aff'}",opacity:.8},
+          emphasis:{itemStyle:{opacity:1}},barWidth:"60%"}]
+      });
+      window.addEventListener("resize",()=>chart.resize());
+    })();
+    </script>
+  </div>` : ""}
 
   ${postsHtml}
 </div>
