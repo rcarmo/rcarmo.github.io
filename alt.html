@@ -82,11 +82,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:#010306;
 <nav id="clusternav">
   <button class="nav-btn active" data-cluster="overview">Overview</button>
   <button class="nav-btn" data-cluster="highlight">Piclaw</button>
-  <button class="nav-btn" data-cluster="piku">Piku</button>
   <button class="nav-btn" data-cluster="ai">Agents</button>
+  <button class="nav-btn" data-cluster="ml">ML</button>
+  <button class="nav-btn" data-cluster="hardware">Hardware</button>
   <button class="nav-btn" data-cluster="terminal">Terminal</button>
   <button class="nav-btn" data-cluster="macos">macOS</button>
   <button class="nav-btn" data-cluster="infra">Infra</button>
+  <button class="nav-btn" data-cluster="libraries">Libraries</button>
 </nav>
 
 <div id="hint">drag · scroll · WASD · click a sign</div>
@@ -152,28 +154,52 @@ const CLUSTERS = {
     {id:'imapbackup',name:'imapbackup',stars:343,lang:'Python',desc:'Incremental IMAP mailbox backup — Gmail, Exchange, any IMAP server.',url:'/projects/imapbackup.html'},
     {id:'ground-init',name:'ground-init',stars:64,lang:'Python',desc:'Idempotent Linux bootstrap — YAML desired-state, like cloud-init.',url:'/projects/ground-init.html'},
     {id:'gnome-thumbnailers',name:'gnome-thumbnailers',stars:26,lang:'Python',desc:'RAW/HEIC/3D thumbnails for GNOME Files — make install.',url:'/projects/gnome-thumbnailers.html'},
+    {id:'piku',name:'piku/piku',stars:6569,lang:'Python',desc:'The tiniest PaaS — git push deployments to your own server.',url:'/projects/piku.html'},
+  ]},
+  ml:       {pos:[-14,0,-24], col:'#9940ee', shape:'lattice', label:'ML & Models', projects:[
+    {id:'ml-sharp',name:'ml-sharp',stars:26,lang:'Python',desc:'Sharp monocular view synthesis for Apple Silicon — depth-aware novel views.',url:'/projects/ml-sharp.html'},
+    {id:'asterisk-embedding-model',name:'asterisk',stars:9,lang:'Python',desc:'Small embedding model for low-resource hardware — semantic search on a Pi.',url:'/projects/asterisk-embedding-model.html'},
+    {id:'gte-go',name:'gte-go',stars:0,lang:'Go',desc:'Go inference for GTE Small text embeddings — local semantic search, no Python.',url:'/projects/gte-go.html'},
+    {id:'azure-stable-diffusion',name:'azure-stable-diff',stars:44,lang:'Python',desc:'One-command Stable Diffusion on Azure GPU spot instances.',url:'/projects/azure-stable-diffusion.html'},
+  ]},
+  hardware: {pos:[14,0,-28],  col:'#d06820', shape:'pcb',     label:'Hardware', projects:[
+    {id:'zmk-config-totem',name:'zmk-config-totem',stars:2,lang:'misc',desc:'ZMK keymap for the Totem 34-key split keyboard — home row mods, combos.',url:'/projects/zmk-config-totem.html'},
+    {id:'byos_fastapi',name:'byos_fastapi',stars:19,lang:'Python',desc:'TRMNL BYOS — self-hosted FastAPI server for the TRMNL e-ink display.',url:'/projects/byos_fastapi.html'},
+  ]},
+  libraries:{pos:[-12,0,30],  col:'#c89030', shape:'shelves', label:'Libraries', projects:[
+    {id:'pngcanvas',name:'pngcanvas',stars:44,lang:'Python',desc:'Pure-Python PNG rendering, zero dependencies.',url:'/projects/pngcanvas.html'},
+    {id:'soup-strainer',name:'soup-strainer',stars:34,lang:'Python',desc:'Readability/Decruft article extraction using BeautifulSoup.',url:'/projects/soup-strainer.html'},
+    {id:'go-te',name:'go-te',stars:7,lang:'Go',desc:'VT100/VT520 terminal library for Go — pyte-faithful, SVG export.',url:'/projects/go-te.html'},
+    {id:'umcp',name:'umcp',stars:11,lang:'Python',desc:'Micro MCP server — zero deps, decorator-based tool registration.',url:'/projects/umcp.html'},
+    {id:'imapbackup',name:'imapbackup',stars:343,lang:'Python',desc:'Incremental IMAP mailbox backup — the most-starred pure-utility.',url:'/projects/imapbackup.html'},
   ]},
 };
 
 const PATH_GRAPH = {
-  highlight:['piku','ai','terminal'],
-  piku:['highlight','infra','macos'],
-  ai:['highlight','terminal'],
+  highlight:['ml','ai','terminal'],
+  piku:['infra','macos'],
+  ai:['highlight','terminal','hardware'],
   terminal:['ai','macos','infra'],
-  macos:['terminal','piku','infra'],
+  macos:['terminal','piku','infra','libraries'],
   infra:['macos','piku','terminal'],
+  ml:['highlight','hardware'],
+  hardware:['ai','ml'],
+  libraries:['macos','infra'],
 };
 const PATH_EDGES = [...new Set(
   Object.entries(PATH_GRAPH).flatMap(([a,bs])=>bs.map(b=>[a,b].sort().join('--')))
 )];
 const CAM_VIEWS = {
-  overview:  {target:[0,0,8],    alpha:-Math.PI/2, beta:Math.PI/3.4, radius:68},
+  overview:  {target:[0,0,0],    alpha:-Math.PI/2, beta:Math.PI/3.2, radius:82},
   highlight: {target:[0,0,0],    alpha:-Math.PI/2, beta:Math.PI/4.2, radius:14},
-  piku:      {target:[-24,0,-10],alpha:-Math.PI/2, beta:Math.PI/4,   radius:16},
+  piku:      {target:[-14,0,-24],alpha:-Math.PI/2, beta:Math.PI/4,   radius:16},
   ai:        {target:[22,0,-14], alpha:-Math.PI/2, beta:Math.PI/4,   radius:22},
   terminal:  {target:[24,0,16],  alpha:-Math.PI/2, beta:Math.PI/4,   radius:22},
   macos:     {target:[-20,0,18], alpha:-Math.PI/2, beta:Math.PI/4,   radius:20},
-  infra:     {target:[2,0,30],   alpha:-Math.PI/2, beta:Math.PI/4,   radius:22},
+  infra:     {target:[2,0,30],   alpha:-Math.PI/2, beta:Math.PI/4,   radius:24},
+  ml:        {target:[-14,0,-24],alpha:-Math.PI/2, beta:Math.PI/4,   radius:20},
+  hardware:  {target:[14,0,-28], alpha:-Math.PI/2, beta:Math.PI/4,   radius:18},
+  libraries: {target:[-12,0,30], alpha:-Math.PI/2, beta:Math.PI/4,   radius:22},
 };
 
 function bfsPath(start,end){
@@ -527,6 +553,95 @@ function makePath(edgeKey,ax,az,bx,bz,trimA,trimB){
   if(edgeKey)PATH_CURVES[edgeKey]=pts;
 }
 
+
+// LATTICE — ML & Models: 3D grid of data nodes
+function buildLattice(pos,col){
+  const cx=pos[0],cz=pos[2];
+  const gm=mat('lm',col,{diff:0.4,spec:0.7,emis:0.12,power:32});
+  const em=mat('lem',col,{diff:0.15,spec:0.1,emis:0.06,power:8});
+  const grid=3,sp=2.0,nodes=[];
+  for(let x=0;x<grid;x++) for(let y=0;y<grid;y++) for(let z=0;z<grid;z++){
+    const nx=cx+(x-(grid-1)/2)*sp,ny=0.8+y*sp,nz=cz+(z-(grid-1)/2)*sp;
+    const n=BABYLON.MeshBuilder.CreatePolyhedron('ln',{type:3,size:0.28},scene);
+    n.position.set(nx,ny,nz); n.material=gm;
+    n.renderOutline=true; n.outlineColor=hex3(col).scale(0.4); n.outlineWidth=0.03;
+    shadowGen.addShadowCaster(n); nodes.push({x:nx,y:ny,z:nz});
+  }
+  for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
+    const a=nodes[i],b=nodes[j];
+    const d=Math.sqrt((a.x-b.x)**2+(a.y-b.y)**2+(a.z-b.z)**2);
+    if(d>sp*1.05) continue;
+    const rod=BABYLON.MeshBuilder.CreateCylinder('lr',{height:d,diameter:0.06,tessellation:4},scene);
+    rod.position.set((a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2);
+    const dir=new BABYLON.Vector3(b.x-a.x,b.y-a.y,b.z-a.z).normalize();
+    const ax2=BABYLON.Vector3.Up().cross(dir);
+    if(ax2.length()>0.001){const ang=Math.acos(Math.min(1,BABYLON.Vector3.Up().dot(dir)));rod.rotationQuaternion=BABYLON.Quaternion.RotationAxis(ax2.normalize(),ang);}
+    rod.material=em;
+  }
+  const base=BABYLON.MeshBuilder.CreateCylinder('lb',{height:0.4,diameter:9,tessellation:6},scene);
+  base.position.set(cx,0.2,cz); base.material=darkMat('lbm',col); base.rotation.y=Math.PI/6; base.receiveShadows=true;
+}
+
+// PCB — Hardware: circuit board with components
+function buildPcb(pos,col){
+  const cx=pos[0],cz=pos[2];
+  const board=BABYLON.MeshBuilder.CreateBox('pcb',{width:9,height:0.25,depth:7},scene);
+  board.position.set(cx,0.125,cz); board.material=mat('pcbm','#1a3a1a',{diff:0.4,spec:0.3,emis:0.02,power:30});
+  board.receiveShadows=true; shadowGen.addShadowCaster(board);
+  const tm=mat('tm',col,{diff:0.3,spec:0.5,emis:0.08,power:40});
+  [[-2,0.26,-1,3,0.06],[1,0.26,2,0.1,2],[2,0.26,-2,2.5,0.08]].forEach(([tx,ty,tz,tw,td],i)=>{
+    const tr=BABYLON.MeshBuilder.CreateBox('tr'+i,{width:tw,height:0.04,depth:td},scene);
+    tr.position.set(cx+tx,ty,cz+tz); tr.material=tm;
+  });
+  const cm=mat('chipm','#111111',{diff:0.2,spec:0.1,emis:0.03,power:8});
+  [[-2.5,0.35,1.5,1.2,0.9],[1.5,0.35,-1,1.4,1.0],[0,0.35,0.5,1.1,1.1],[-1,0.35,-2,1.6,0.8]].forEach(([cx2,cy,cz2,cw,cd],i)=>{
+    const chip=BABYLON.MeshBuilder.CreateBox('ch'+i,{width:cw,height:0.22,depth:cd},scene);
+    chip.position.set(cx+cx2,cy,cz+cz2); chip.material=cm;
+    chip.renderOutline=true; chip.outlineColor=hex3(col).scale(0.3); chip.outlineWidth=0.02;
+    shadowGen.addShadowCaster(chip);
+  });
+  const capm=glowMat('capm',col,0.15);
+  [[-3.5,0.5,-2.5],[3,0.5,2],[2.5,0.5,-2.5],[-3,0.5,2.5]].forEach(([cx3,cy,cz3])=>{
+    const cap=BABYLON.MeshBuilder.CreateCylinder('cap',{height:0.75,diameter:0.4,tessellation:8},scene);
+    cap.position.set(cx+cx3,cy,cz+cz3); cap.material=capm; shadowGen.addShadowCaster(cap);
+  });
+  const ant=BABYLON.MeshBuilder.CreateCylinder('pa',{height:2.5,diameterTop:0.05,diameterBottom:0.2,tessellation:6},scene);
+  ant.position.set(cx+3.5,1.5,cz-2.5); ant.material=glowMat('am2',col,0.25); shadowGen.addShadowCaster(ant);
+}
+
+// SHELVES — Libraries: bookshelf unit
+function buildShelves(pos,col){
+  const cx=pos[0],cz=pos[2];
+  const fW=7,fD=1.8,sH=1.4,nShelves=4;
+  const fm=darkMat('frm',col);
+  [cx-fW/2+0.15,cx,cx+fW/2-0.15].forEach(px=>{
+    const u=BABYLON.MeshBuilder.CreateBox('upr',{width:0.25,height:sH*nShelves+0.5,depth:fD},scene);
+    u.position.set(px,sH*nShelves/2+0.25,cz); u.material=fm;
+    shadowGen.addShadowCaster(u); u.receiveShadows=true;
+  });
+  for(let i=0;i<=nShelves;i++){
+    const sh=BABYLON.MeshBuilder.CreateBox('sh'+i,{width:fW,height:0.12,depth:fD+0.1},scene);
+    sh.position.set(cx,i*sH+0.06,cz); sh.material=fm;
+    shadowGen.addShadowCaster(sh); sh.receiveShadows=true;
+    if(i>0&&i<nShelves){
+      let bx=cx-fW/2+0.35;
+      while(bx<cx+fW/2-0.4){
+        const bw=0.18+Math.random()*0.22,bh=0.8+Math.random()*0.5;
+        const book=BABYLON.MeshBuilder.CreateBox('bk',{width:bw,height:bh,depth:fD*0.8},scene);
+        book.position.set(bx+bw/2,i*sH+0.06+bh/2,cz);
+        const hue=(bx*20)%360;
+        const bkm=new BABYLON.StandardMaterial('bkm',scene);
+        bkm.diffuseColor=new BABYLON.Color3((150+100*Math.sin(hue*Math.PI/180))/255,(80+80*Math.sin((hue+120)*Math.PI/180))/255,(100+80*Math.sin((hue+240)*Math.PI/180))/255);
+        bkm.specularColor=new BABYLON.Color3(0.1,0.1,0.1);
+        book.material=bkm; shadowGen.addShadowCaster(book);
+        bx+=bw+0.04;
+      }
+    }
+  }
+  const base2=BABYLON.MeshBuilder.CreateBox('shb',{width:fW+0.5,height:0.4,depth:fD+0.5},scene);
+  base2.position.set(cx,0.2,cz); base2.material=fm; base2.receiveShadows=true;
+}
+
 // ── Build scene ───────────────────────────────────────────────────────────────
 PATH_EDGES.forEach(e=>{
   const[k,j]=e.split('--');
@@ -548,6 +663,9 @@ Object.entries(CLUSTERS).forEach(([key,cluster])=>{
     case'skyline': buildSkyline(pos,col); break;
     case'pavilion':buildPavilion(pos,col); break;
     case'rack':    buildRack(pos,col); break;
+    case'lattice': buildLattice(pos,col); break;
+    case'pcb':     buildPcb(pos,col); break;
+    case'shelves': buildShelves(pos,col); break;
   }
   if(landmark) animatables[key]=landmark;
 
