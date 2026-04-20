@@ -445,7 +445,7 @@ function buildIndex(projects: Project[]): string {
   }
   for (const sKey of sectionOrder) {
     const sProjects = groups.get(sKey)!;
-    const cardsHtml = sProjects.map(p => {
+    const cardsHtml = sProjects.filter(p => !p.fm.featured).map(p => {
       const logo = logoDataUri(p);
       const fullName = p.fm.repo || `rcarmo/${p.id}`;
       const logoHtml = logo
