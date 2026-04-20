@@ -38,16 +38,25 @@ code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.875e
 
 /* ── Hero banner ── */
 .hero-banner{position:relative;overflow:hidden;height:320px;background:var(--surface2);}
-.hero-banner img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+.hero-bg{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
 .hero-overlay{position:absolute;inset:0;
-  background:linear-gradient(to right,rgba(11,13,18,.96) 0%,rgba(11,13,18,.75) 55%,rgba(11,13,18,.20) 100%);}
+  background:linear-gradient(to right,rgba(6,8,18,.92) 0%,rgba(6,8,18,.65) 50%,rgba(6,8,18,.15) 100%);}
 @media(prefers-color-scheme:light){
-  .hero-overlay{background:linear-gradient(to right,rgba(242,245,251,.96) 0%,rgba(242,245,251,.75) 55%,rgba(242,245,251,.20) 100%);}}
-.hero-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
-  padding:3.5rem var(--gap);max-width:var(--max);margin:0 auto;left:0;right:0;}
-.hero-content h1{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;}
-.hero-content h1 a{color:var(--text);}.hero-content h1 a:hover{color:var(--accent);text-decoration:none;}
-.tagline{font-size:clamp(.9rem,2vw,1.05rem);color:var(--muted);margin:.5rem 0 1.1rem;max-width:540px;line-height:1.5;}
+  /* keep hero overlay dark even in light mode so white text stays legible */
+  .hero-overlay{background:linear-gradient(to right,rgba(6,8,18,.90) 0%,rgba(6,8,18,.60) 50%,rgba(6,8,18,.10) 100%);}}
+.hero-content{position:absolute;inset:0;display:flex;flex-direction:row;align-items:center;justify-content:space-between;
+  padding:3.5rem var(--gap);max-width:var(--max);margin:0 auto;left:0;right:0;gap:2rem;overflow:hidden;}
+.hero-text{display:flex;flex-direction:column;justify-content:flex-start;flex:1;min-width:0;gap:.4rem;max-height:100%;overflow:hidden;}
+.hero-logo{flex-shrink:0;width:160px;height:160px;object-fit:contain;
+  filter:drop-shadow(0 4px 32px rgba(0,0,0,.6));}
+/* hero text always white — it sits on a dark gradient overlay */
+.hero-content h1{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;color:#fff;}
+.hero-content h1 a{color:#fff;}.hero-content h1 a:hover{color:rgba(255,255,255,.8);text-decoration:none;}
+.hero-content .tagline{color:rgba(255,255,255,.8);}
+.hero-content .hero-meta{color:rgba(255,255,255,.7);}
+.hero-content .stars{color:#fcd34d;}
+.hero-content .topic{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75);}
+.hero-content h1 a{color:#fff;}.hero-content h1 a:hover{color:rgba(255,255,255,.8);text-decoration:none;}
 .hero-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;font-size:.8rem;color:var(--muted);}
 .stars{color:var(--amber);font-weight:700;}
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:3px;}
@@ -95,6 +104,8 @@ code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.875e
     border-radius:4px 4px 0 0;padding:5px 10px;font-size:.72rem;}
   .toc a.active{border-left:none;border-bottom-color:var(--accent);background:var(--surface2);}
   .hero-banner{height:260px;}
+  .hero-content{flex-direction:column;}
+  .hero-logo{display:none;}
 }
 
 /* ── Stats ── */
@@ -163,10 +174,10 @@ mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:
 
 <!-- Hero banner -->
 <div class="hero-banner">
-  <img src="/assets/banners/piku.png" alt="piku/piku banner" loading="eager">
+  <img class="hero-bg" src="/assets/banners/piku.png" alt="" loading="eager" aria-hidden="true">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    <img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAACXBIWXMAAA3XAAAN1wFCKJt4AAAIl0lEQVR4Xu1da4hd1RW+TUwVaxUfMaQImvHee9Za+87EMBqhomNR8FH/WDoUfyioFEJQQq2v+goi2EZbtEWxBhT8pWCM71IVKaL4FhVKFBFB0LZRGlSM2kzmLFnr7HXmzJ0Zb3XEibPWB5d7zzl773P2+r712PsMTKvVanF8XNvA9eRD/OH97kXg3gDeo4B7A4QAIg24FoHryYf4w/vdi8C9AbxHAfcGCAFEGnAtAteTD/GH97sXgXsDeI8C7g0QAog04FoEricf4g/vdy8C9wbwHgXcGyAEEGnAtQhcTz7EH97vXgTuDeA9Crg3QAgg0oBrEbiefIg/vN+9CNwbwHsUcG+AEECkAdcicD35EH94v3sRuDeA9yjg3gAhgEgDrkXgevIh/vB+9yJwbwDvUSAQCAQCgUAgEAgEAoFAIBAIBAKBQAa3Wj+w34FFDCGax8eX9hPefxxwBCb6IRPt52jKey641VqSP99qSJYxZdYMcAYjPsZFUZgVGGBTifg6j44u0zaRDr57GPHNO2u4rgSxlMfG9jISvwq5zwzxSH/px4h/5DVruAT4hY3DKT3IvR4z0UHaJgTw3YJbraVqeMnNKR3JRfETCcv/z1MY4flbxzHYuAIjlYeGDmDEY7nVqgXFRPczEfPw8IHWNo8n0agWUz5XHzdh15rtAwPAGzcukY804253FSPex4j/Y8QPmOgtBnhezwH8uUS8kjudtdq2QUr/cSZimbXJx3ORVgkP8UFOqRkBNA3p4H2wcQPzhBlSC7CiuJiJPspheFK9UQiRj4TmlCZ49Wr5fa/cNlfxFXnd7qkM8AJ3OkMMcBEDvFsifsaI2xhxQ9lu7619LMogns6IL5ft9mE2hVoAUxGgGhvgRka8u25XFCcy4kvcbh+ZxxShVG2JxhnxOQY4OF+bVXSBZjjudI5nxFeUZMQJJprU30K6fIaH9btMaTePjIiH/lb7S6oYH68Mn9IVei2ldzmlXQzwNCNuYaJ3VDQSVVotWfYZUVfL+RJgzMioBTBF3l6MuJmPOkrueU/djugiHZPo1Po5rLYg2qTtAXp6LRedgT7URACck728ZMRdSraEfcTzuSjWlQDXMOJNjHhXCfA3BniKETsynBaGJgDES7Qv4jM8MrIqX69yONHNmbAL7DE0lYiwEE+wc7UAhocPVLEgblUyEW/pu9cG7ZvSKXofEaIJAPH3KkTElJ9h1hTiHuYZTPSIejnR5yoE8VSAC7jbPSYb8CtDqAmgBLgsR4Cfab/R0WVGStlu78+IH5aIr5rhGfEqIbEvAjykaaeqQx5WkgEuz8+xpB4P4Dc5Es2MAACbQgADUOf9bveQkuj9Os9Lvu5215dEuzWMI65T4wuZVfi2qrwWxZwCsFBv34iPM+KnPDR0qI4JcPUMARA9oAIgei2TuIu73eO0vSw/c7QZIIAbQgAD0CDlpOz1EzkKPMEpbc6/v5Bv8eyagEoE05dkU6RUEaAoqghgxNs34t8ZcSevWrVCx5tNABJ9Rka47PX+K4VkmdJ2rSl6vapP3iCaVQC2eYT4hxDAAFgoZcRrlWxZ8kk+BpB1+B1KglTwVeV/pwnAhrUIouf7BZDSiXpeooaRsnLlvoz4byb6p/WdIwVszc/xcx2j2z07k7nFxtTvlNbrM+ZNJB4b26cxp9u1TxSBc6NBwpNZABM5EvynBPg1I76haUAEUBQ/VaMTHcSI1zPAE9xuL9dz+YWO/ka8NJP1mKSWfL3aWwC4Lq8ELpHzAka8QsluFoG2EZR3ArUd0a25gNSVR+57cib5L3o8VQBu4JTKvHxdrddiFTAdNfkAK0vEHUo8kRitWvoRPSthX6t/ogvVe4viQkZ8TwVRVe6bzbi18Yl+p9eJZPNop1b0iH/VvX3ZO5B9/8MP38cIYcrLwF5vahloW8FZQHqP5cv3Y6JX9L6WXmQcouezCB5lgJsZ8c2SaEdJ9KKeTyGAWSFbr2pYxPMy+dWGj2zBihBSqoSA+FGJ+A+JBplYaTeRBfBMTaR5H8Dl+dppmt+JPtYxRTgAG4VIva8tGwHOFNK4KI6wB9V2iE/XY1r90OmsZsR3GPFXdVtZKUjRKOlLxCv9ZBOq2gh6oxmlrI971AZFPJ6JPml4v5CvnxJxt4Z/Oa5qgFLOye8Scbuu91es+JEYs5kC6mVgUVQ1gHjp6OgBdR0g6aKxdZyPNacbRFRGvsH65XcGSua0cYrix81XyDpGrj0CDdQe2+0Cp/SvnPOb3i8CmFSyZUOoSgulikCWb0Xxp7qCbxJpHm01gAkge6/A7t1Eg9jaQ+1cs53Azk+7b35dbW2bx812gWxA/a4KuW1CvhKdvV7Iro/F6+UjYRXgbQa4zd7ZZyJmXwYS2UZQFQGq18YzyByEr0tefqZp9/m6Yyx6mEFkj123eacLYNIqfi0KpcoXb+501toLHIF4tI3TRB0BANbnQu3o3L72zsAeAAvDsj7WSl3e8FWhflKXTkK6CKQR3gWZ+DnJtPa63dvprG2G/sAeBiNHX6cSfaqFnWz7FsW58qiWR3P4nhbqA4sEtQiIfql/8AFwlkytWWV/E0gksCgT2MNhZMkSSh41iHOILILwWs+wAi4QCAQCgUAgEAgEAoFAIBAIBAKBwLzh/T9meJ+/ewOEAKrX7u4N4dUObifulfD+ec840d8gjhe3jYLgRU7woPkNbDBogLj+/bZhEPg9J3C+zz/vAeb7ANF/YTkIAhaYgIW+/4I/wEIbwPv93RsgBOA8BHqfv3sDhAAiArgWgevJh/jD+92LwL0BvEcB9wYIAUQacC0C15MP8Yf3uxeBewN4jwLuDRACiDTgWgSuJx/iD+93LwL3BvAeBdwbIAQQacC1CFxPPsQf3u9eBO4N4D0KuDdACCDSgGsRuJ58iD+8370I3BvAexRwb4AQQKQBvyL4EjLrGDOcNHC5AAAAAElFTkSuQmCC" alt="piku/piku logo" style="width:52px;height:52px;border-radius:12px;object-fit:contain;margin-bottom:.75rem;box-shadow:0 2px 12px rgba(0,0,0,.4);">
+    <div class="hero-text">
     <h1><a href="https://github.com/piku/piku" target="_blank" rel="noopener">piku/piku</a></h1>
     <p class="tagline">git push deployments to your own server — no Docker, no ops.</p>
     <div id="hero-meta-island-piku">
@@ -182,6 +193,8 @@ mermaid.initialize({startOnLoad:true,theme:'base',look:'classic',themeVariables:
       <a class="btn btn-p" href="https://github.com/piku/piku" target="_blank" rel="noopener"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub</a>
       <a class="btn btn-g" href="http://piku.github.io" target="_blank" rel="noopener">🌐 Homepage</a>
     </div>
+    </div>
+    <img class="hero-logo" src="data:image/png;base64,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" alt="piku/piku logo">
   </div>
 </div>
 

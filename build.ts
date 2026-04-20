@@ -421,16 +421,25 @@ code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.875e
 
 /* ── Hero banner ── */
 .hero-banner{position:relative;overflow:hidden;height:320px;background:var(--surface2);}
-.hero-banner img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+.hero-bg{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
 .hero-overlay{position:absolute;inset:0;
-  background:linear-gradient(to right,rgba(11,13,18,.96) 0%,rgba(11,13,18,.75) 55%,rgba(11,13,18,.20) 100%);}
+  background:linear-gradient(to right,rgba(6,8,18,.92) 0%,rgba(6,8,18,.65) 50%,rgba(6,8,18,.15) 100%);}
 @media(prefers-color-scheme:light){
-  .hero-overlay{background:linear-gradient(to right,rgba(242,245,251,.96) 0%,rgba(242,245,251,.75) 55%,rgba(242,245,251,.20) 100%);}}
-.hero-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
-  padding:3.5rem var(--gap);max-width:var(--max);margin:0 auto;left:0;right:0;}
-.hero-content h1{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;}
-.hero-content h1 a{color:var(--text);}.hero-content h1 a:hover{color:var(--accent);text-decoration:none;}
-.tagline{font-size:clamp(.9rem,2vw,1.05rem);color:var(--muted);margin:.5rem 0 1.1rem;max-width:540px;line-height:1.5;}
+  /* keep hero overlay dark even in light mode so white text stays legible */
+  .hero-overlay{background:linear-gradient(to right,rgba(6,8,18,.90) 0%,rgba(6,8,18,.60) 50%,rgba(6,8,18,.10) 100%);}}
+.hero-content{position:absolute;inset:0;display:flex;flex-direction:row;align-items:center;justify-content:space-between;
+  padding:3.5rem var(--gap);max-width:var(--max);margin:0 auto;left:0;right:0;gap:2rem;overflow:hidden;}
+.hero-text{display:flex;flex-direction:column;justify-content:flex-start;flex:1;min-width:0;gap:.4rem;max-height:100%;overflow:hidden;}
+.hero-logo{flex-shrink:0;width:160px;height:160px;object-fit:contain;
+  filter:drop-shadow(0 4px 32px rgba(0,0,0,.6));}
+/* hero text always white — it sits on a dark gradient overlay */
+.hero-content h1{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;color:#fff;}
+.hero-content h1 a{color:#fff;}.hero-content h1 a:hover{color:rgba(255,255,255,.8);text-decoration:none;}
+.hero-content .tagline{color:rgba(255,255,255,.8);}
+.hero-content .hero-meta{color:rgba(255,255,255,.7);}
+.hero-content .stars{color:#fcd34d;}
+.hero-content .topic{background:rgba(255,255,255,.1);border-color:rgba(255,255,255,.2);color:rgba(255,255,255,.75);}
+.hero-content h1 a{color:#fff;}.hero-content h1 a:hover{color:rgba(255,255,255,.8);text-decoration:none;}
 .hero-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;font-size:.8rem;color:var(--muted);}
 .stars{color:var(--amber);font-weight:700;}
 .dot{width:9px;height:9px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:3px;}
@@ -478,6 +487,8 @@ code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.875e
     border-radius:4px 4px 0 0;padding:5px 10px;font-size:.72rem;}
   .toc a.active{border-left:none;border-bottom-color:var(--accent);background:var(--surface2);}
   .hero-banner{height:260px;}
+  .hero-content{flex-direction:column;}
+  .hero-logo{display:none;}
 }
 
 /* ── Stats ── */
@@ -682,10 +693,10 @@ ${mermaidScript}
 
 <!-- Hero banner -->
 <div class="hero-banner">
-  <img src="/assets/banners/${d.id}.png" alt="${dispN} banner" loading="eager">
+  <img class="hero-bg" src="/assets/banners/${d.id}.png" alt="" loading="eager" aria-hidden="true">
   <div class="hero-overlay"></div>
   <div class="hero-content">
-    ${d.logo_data_uri ? `<img src="${d.logo_data_uri}" alt="${dispN} logo" style="width:52px;height:52px;border-radius:12px;object-fit:contain;margin-bottom:.75rem;box-shadow:0 2px 12px rgba(0,0,0,.4);">` : ""}
+    <div class="hero-text">
     <h1><a href="${ghUrl}" target="_blank" rel="noopener">${dispN}</a></h1>
     <p class="tagline">${esc(c.tagline)}</p>
     <div id="hero-meta-island-${d.id}">
@@ -703,6 +714,8 @@ ${mermaidScript}
       <a class="btn btn-p" href="${ghUrl}" target="_blank" rel="noopener">${ghSvg()} GitHub</a>
       ${m.homepage ? `<a class="btn btn-g" href="${m.homepage}" target="_blank" rel="noopener">🌐 Homepage</a>` : ""}
     </div>
+    </div>
+    ${d.logo_data_uri ? `<img class="hero-logo" src="${d.logo_data_uri}" alt="${dispN} logo">` : ""}
   </div>
 </div>
 
