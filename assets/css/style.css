@@ -13,8 +13,8 @@
   --font-body: 'Inter', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
 
-  --bg:         #ffffff;
-  --bg-subtle:  #f6f6f8;
+  --bg:         #f0eeea;
+  --bg-subtle:  #e8e5e0;
   --surface:    #ffffff;
   --surface2:   #f0f0f4;
   --border:     rgba(0, 0, 0, 0.08);
@@ -40,8 +40,8 @@
 
 @media (prefers-color-scheme: dark) {
   :root {
-    --bg:         #0a0a0a;
-    --bg-subtle:  #111111;
+    --bg:         #080808;
+    --bg-subtle:  #0e0e0e;
     --surface:    #161616;
     --surface2:   #1e1e1e;
     --border:     rgba(255, 255, 255, 0.08);
@@ -63,7 +63,10 @@
 /* ── Reset ────────────────────────────────────────────────────────────────── */
 *, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
 html { font-size: 16px; scroll-behavior: smooth; -webkit-font-smoothing: antialiased; }
-body { font-family: var(--font-body); color: var(--text); background: var(--bg); line-height: 1.65; }
+body { font-family: var(--font-body); color: var(--text); background: var(--bg); line-height: 1.65;
+  background-image: radial-gradient(circle, var(--text-faint) 0.8px, transparent 0.8px);
+  background-size: 20px 20px;
+}
 a { color: var(--blue-text); text-decoration: none; }
 a:hover { text-decoration: underline; }
 img { max-width: 100%; height: auto; display: block; }
@@ -175,13 +178,13 @@ code {
 .card {
   display: flex; align-items: center; gap: 1.25rem;
   padding: 1rem 1.25rem;
-  background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+  background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
   color: var(--text);
   transition: background 0.12s;
   min-height: 88px;
 }
 .card:hover {
-  background: linear-gradient(180deg, var(--surface2) 0%, var(--surface) 100%);
+  background: linear-gradient(180deg, var(--surface) 0%, var(--surface2) 100%);
   text-decoration: none;
 }
 
@@ -363,7 +366,7 @@ code {
 .feature {
   display: flex; gap: 0.75rem;
   padding: 0.85rem 1rem;
-  background: linear-gradient(180deg, var(--surface) 0%, var(--bg) 100%);
+  background: linear-gradient(180deg, var(--bg) 0%, var(--surface) 100%);
 }
 .feature-icon { font-size: 1.4rem; flex-shrink: 0; width: 2rem; text-align: center; }
 .feature-title { font-family: var(--font-head); font-weight: 700; font-size: 0.95rem; margin-bottom: 0.25rem; }
