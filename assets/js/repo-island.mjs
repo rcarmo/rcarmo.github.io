@@ -81,7 +81,7 @@ function StatsBar({ fullName }) {
       .catch(() => {});
   }, [fullName]);
 
-  const color = repo ? langColor(repo.language) : null;
+  const color = repo ? langColor(realLang(repo.language)) : null;
 
   return html`
     <div class="stats">
@@ -97,8 +97,10 @@ function StatsBar({ fullName }) {
         <div class="stat-l">Language</div>
         <div class="stat-v" style="font-size:.9rem;padding-top:.35rem">
           ${repo
-            ? html`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;
-                background:${color};vertical-align:middle;margin-right:3px;"></span>${repo.language ?? '—'}`
+            ? realLang(repo.language)
+              ? html`<span style="display:inline-block;width:9px;height:9px;border-radius:50%;
+                  background:${color};vertical-align:middle;margin-right:3px;"></span>${realLang(repo.language)}`
+              : '—'
             : html`<${Skel} w="4rem"/>`}
         </div>
       </div>
@@ -361,7 +363,8 @@ function HeroStats({ fullNames }) {
 
       const langCount = {};
       featured.forEach(r => {
-        if (r.language) langCount[r.language] = (langCount[r.language] ?? 0) + 1;
+        const lang = realLang(r.language);
+        if (lang) langCount[lang] = (langCount[lang] ?? 0) + 1;
       });
       const top3 = Object.entries(langCount)
         .sort((a, b) => b[1] - a[1])
