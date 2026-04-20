@@ -1038,12 +1038,15 @@ function indexPage(
   contents: Map<string, { section:string; status:string; tagline:string }>
 ): string {
 
-  // Group projects by section
+  // Group projects by section, then sort each group by descending star count
   const groups = new Map<string, string[]>();
   for (const [proj, c] of contents) {
     const s = c.section;
     if (!groups.has(s)) groups.set(s, []);
     groups.get(s)!.push(proj);
+  }
+  for (const [, projs] of groups) {
+    projs.sort((a, b) => (dossiers.get(b)?.meta.stars ?? 0) - (dossiers.get(a)?.meta.stars ?? 0));
   }
 
   const langDotIdx = (lang: string|null) =>
