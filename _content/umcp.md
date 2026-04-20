@@ -24,3 +24,41 @@ Docstring → description. Annotations → JSON Schema.
 ## Posts
 - [Creating Per-Project MCP Servers](https://taoofmac.com/space/blog/2025/10/04/1111) — 2025-10-04
 - [Notes on SKILL.md vs MCP](https://taoofmac.com/space/notes/2026/01/14/0830) — 2026-01-14
+
+## Diagram
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180" width="480" height="180">
+  <style>
+    .bg{ fill: transparent; }
+    .box{ fill: #161b22; stroke: #30363d; stroke-width:1.5; }
+    .box-accent{ fill: #0d2040; stroke: #2b6cb0; stroke-width:1.5; }
+    .box-green{ fill: #0a2218; stroke: #2a7a3a; stroke-width:1.5; }
+    .box-warm{ fill: #221810; stroke: #c87020; stroke-width:1.5; }
+    text{ font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; fill: #c9d1d9; }
+    .label{ font-size: 12px; font-weight: 600; }
+    .sub{ font-size: 10px; fill: #8b949e; }
+    line{ stroke-width:1.5; }
+    .arr{ stroke: #58a6ff; marker-end: url(#a); }
+    .arrd{ stroke: #8b949e; marker-end: url(#ad); stroke-dasharray:4,3; }
+  </style>
+  <defs>
+    <marker id="a" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3z" fill="#58a6ff"/>
+    </marker>
+    <marker id="ad" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3z" fill="#8b949e"/>
+    </marker>
+  </defs>
+  <rect width="480" height="180" class="bg" rx="8"/>
+  
+  <rect x="20" y="65" width="100" height="50" rx="5" class="box-accent"/><text x="70" y="87" text-anchor="middle" class="label">MCP client</text><text x="70" y="101" text-anchor="middle" class="sub">Claude / Cursor</text>
+  <line x1="120" y1="90" x2="160" y2="90" class="arr"/>
+  <text x="140" y="80" text-anchor="middle" class="sub">stdio</text>
+  <rect x="160" y="65" width="120" height="50" rx="5" class="box-green"/><text x="220" y="87" text-anchor="middle" class="label">umcp server</text><text x="220" y="101" text-anchor="middle" class="sub">zero deps</text>
+  <line x1="280" y1="90" x2="320" y2="70" class="arr"/>
+  <line x1="280" y1="90" x2="320" y2="110" class="arr"/>
+  <rect x="320" y="55" width="120" height="35" rx="5" class="box"/><text x="380" y="69" text-anchor="middle" class="label">@server.tool</text><text x="380" y="83" text-anchor="middle" class="sub">async handler</text>
+  <rect x="320" y="98" width="120" height="35" rx="5" class="box"/><text x="380" y="112" text-anchor="middle" class="label">@server.tool</text><text x="380" y="126" text-anchor="middle" class="sub">sync handler</text>
+  <text x="140" y="155" text-anchor="middle" class="sub">JSON-RPC 2.0 over stdio — MCP spec compliant</text>
+  <text x="350" y="155" text-anchor="middle" class="sub">plain Python functions</text>
+
+</svg>

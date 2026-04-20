@@ -37,6 +37,7 @@
       <a href="#s-about" class="toc-link" data-section="s-about">Overview</a>
       <a href="#s-how" class="toc-link" data-section="s-how">How it works</a>
       <a href="#s-features" class="toc-link" data-section="s-features">Features</a>
+      <a href="#s-diagram" class="toc-link" data-section="s-diagram">Diagram</a>
       <a href="#s-posts" class="toc-link" data-section="s-posts">Posts</a>
     </aside>
 
@@ -93,7 +94,49 @@
         </div>
       </section>
 
+      <section class="sec" id="s-diagram">
+        <div class="sec-label">Architecture</div>
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180" width="480" height="180">
+  <style>
+    .bg{ fill: transparent; }
+    .box{ fill: #161b22; stroke: #30363d; stroke-width:1.5; }
+    .box-accent{ fill: #0d2040; stroke: #2b6cb0; stroke-width:1.5; }
+    .box-green{ fill: #0a2218; stroke: #2a7a3a; stroke-width:1.5; }
+    .box-warm{ fill: #221810; stroke: #c87020; stroke-width:1.5; }
+    text{ font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; fill: #c9d1d9; }
+    .label{ font-size: 12px; font-weight: 600; }
+    .sub{ font-size: 10px; fill: #8b949e; }
+    line{ stroke-width:1.5; }
+    .arr{ stroke: #58a6ff; marker-end: url(#a); }
+    .arrd{ stroke: #8b949e; marker-end: url(#ad); stroke-dasharray:4,3; }
+  </style>
+  <defs>
+    <marker id="a" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3z" fill="#58a6ff"/>
+    </marker>
+    <marker id="ad" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L6,3z" fill="#8b949e"/>
+    </marker>
+  </defs>
+  <rect width="480" height="180" class="bg" rx="8"/>
+  
+  <rect x="20" y="60" width="90" height="55" rx="5" class="box-accent"/><text x="65" y="84" text-anchor="middle" class="label">busybox</text><text x="65" y="98" text-anchor="middle" class="sub">multi-call binary</text>
+  <line x1="110" y1="87" x2="150" y2="60" class="arr"/>
+  <line x1="110" y1="87" x2="150" y2="90" class="arr"/>
+  <line x1="110" y1="87" x2="150" y2="120" class="arr"/>
+  <rect x="150" y="45" width="100" height="30" rx="5" class="box"/><text x="200" y="65" text-anchor="middle" class="label">ls / cat / grep</text>
+  <rect x="150" y="82" width="100" height="30" rx="5" class="box"/><text x="200" y="102" text-anchor="middle" class="label">find / sed / awk</text>
+  <rect x="150" y="120" width="100" height="30" rx="5" class="box"/><text x="200" y="140" text-anchor="middle" class="label">ps / kill / xargs…</text>
+  <text x="20" y="40" class="sub">Native binary</text>
+  <text x="270" y="40" class="sub">WASM target</text>
+  <line x1="260" y1="30" x2="260" y2="155" class="arrd"/>
+  <rect x="270" y="55" width="100" height="30" rx="5" class="box-green"/><text x="320" y="67" text-anchor="middle" class="label">busybox.wasm</text><text x="320" y="81" text-anchor="middle" class="sub">2 MB</text>
+  <rect x="270" y="95" width="100" height="30" rx="5" class="box-warm"/><text x="320" y="107" text-anchor="middle" class="label">wasmtime sandbox</text><text x="320" y="121" text-anchor="middle" class="sub">no host access</text>
+  <rect x="270" y="135" width="100" height="30" rx="5" class="box"/><text x="320" y="147" text-anchor="middle" class="label">57 applets, 100%</text><text x="320" y="161" text-anchor="middle" class="sub">test coverage</text>
+  <text x="240" y="168" text-anchor="middle" class="sub">Compiles to native binary or 2MB WASM — runs in any sandbox</text>
 
+</svg></div>
+      </section>
 
 
 

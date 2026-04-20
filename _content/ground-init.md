@@ -24,3 +24,59 @@ Pure Python 3 stdlib.
 ## Posts
 - [Reviving a MacBook Air with Fedora Silverblue](https://taoofmac.com/space/blog/2025/11/05/2200) — 2025-11-05
 - [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
+
+## Diagram
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" width="640" height="200">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: #111520; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-b { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+      .arrow { stroke: #3a5070; fill: none; }
+      .arr-accent { stroke: #2b5cb0; fill: none; }
+      .bg-fill { fill: #111520; }
+    }
+    @media (prefers-color-scheme: light) {
+      .bg { fill: #f0f4fa; }
+      .box { fill: #ffffff; stroke: #c8d0e0; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; }
+      .box-b { fill: #d1fae5; stroke: #059669; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; }
+      .box-purple { fill: #ede9fe; stroke: #7c3aed; }
+      .label { fill: #1a2a40; }
+      .sub { fill: #5070a0; }
+      .arrow { stroke: #90a8c0; fill: none; }
+      .arr-accent { stroke: #3b82f6; fill: none; }
+      .bg-fill { fill: #f0f4fa; }
+    }
+    text { font-family: -apple-system,"Segoe UI",Helvetica,sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
+  </style>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" class="arrow" style="fill:currentColor;stroke:none"/>
+    </marker>
+  </defs>
+  <rect x="20" y="60" width="120" height="80" rx="8" class="box-warm"/>
+  <text x="80" y="98" text-anchor="middle" class="label">YAML config</text>
+  <text x="80" y="113" text-anchor="middle" class="sub">desired state</text>
+  <rect x="200" y="20" width="140" height="60" rx="8" class="box-accent"/>
+  <text x="270" y="55" text-anchor="middle" class="label">Parser</text>
+  <text x="270" y="70" text-anchor="middle" class="sub">validate schema</text>
+  <rect x="200" y="110" width="140" height="60" rx="8" class="box"/>
+  <text x="270" y="145" text-anchor="middle" class="label">State cache</text>
+  <text x="270" y="160" text-anchor="middle" class="sub">applied hashes</text>
+  <rect x="430" y="60" width="150" height="80" rx="8" class="box-b"/>
+  <text x="505" y="95" text-anchor="middle" class="label">Idempotent</text>
+  <text x="505" y="112" text-anchor="middle" class="label">executor</text>
+  <text x="505" y="127" text-anchor="middle" class="sub">pkg/file/svc</text>
+  <line x1="140" y1="100" x2="200" y2="80" class="arr-accent" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="340" y1="80" x2="430" y2="80" class="arrow" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="340" y1="140" x2="430" y2="120" class="arrow" stroke-width="1.5" marker-end="url(#arr)"/>
+</svg>
