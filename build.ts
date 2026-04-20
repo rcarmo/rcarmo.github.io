@@ -937,9 +937,12 @@ const INDEX_CSS = `
 .idx-section{padding:3rem 0;border-top:1px solid var(--border);}
 .idx-section:first-child{border-top:none;padding-top:2.5rem;}
 .idx-eyebrow{font-size:.65rem;font-weight:700;text-transform:uppercase;
-  letter-spacing:.14em;color:var(--accent);margin-bottom:.3rem;font-family:var(--mono);}
-.idx-title{font-size:1.25rem;font-weight:700;letter-spacing:-.025em;
-  margin-bottom:1.4rem;color:var(--text);}
+  letter-spacing:.14em;color:var(--accent);margin-bottom:.4rem;font-family:var(--mono);}
+.idx-section-hdr{display:flex;align-items:baseline;gap:.7rem;margin-bottom:1.3rem;}
+.idx-title{font-size:1.45rem;font-weight:800;letter-spacing:-.03em;color:var(--text);}
+.idx-count{font-size:.7rem;font-weight:700;background:var(--accent-dim);color:var(--accent);
+  border:1px solid var(--accent-muted);padding:.18rem .5rem;border-radius:2em;
+  font-family:var(--mono);vertical-align:baseline;}
 
 /* ── Card grid ── */
 .idx-grid{
@@ -947,14 +950,15 @@ const INDEX_CSS = `
   gap:1px;background:var(--border);border:1px solid var(--border2);
   border-radius:var(--radius-lg);overflow:hidden;box-shadow:var(--shadow-sm);}
 .idx-card{
-  display:flex;gap:1rem;padding:1.1rem 1.2rem;background:var(--bg);
-  text-decoration:none;color:inherit;transition:background .12s;align-items:flex-start;}
+  display:flex;gap:1rem;padding:1rem 1.1rem;background:var(--bg);
+  text-decoration:none;color:inherit;transition:background .12s;align-items:stretch;
+  min-height:84px;}
 .idx-card:hover{background:var(--surface);text-decoration:none;}
-.idx-logo{width:40px;height:40px;object-fit:contain;flex-shrink:0;
-  border-radius:8px;margin-top:.1rem;}
-.idx-logo-ph{width:40px;height:40px;flex-shrink:0;border-radius:8px;
+.idx-logo-wrap{width:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:4px 0;}
+.idx-logo{width:100%;height:auto;max-height:80%;object-fit:contain;border-radius:7px;}
+.idx-logo-ph{width:52px;flex-shrink:0;border-radius:8px;
   background:var(--surface);border:1px solid var(--border);
-  display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-top:.1rem;}
+  display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
 .idx-body{min-width:0;flex:1;}
 .idx-name{font-size:.875rem;font-weight:600;color:var(--text);margin-bottom:.2rem;
   white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
@@ -1015,15 +1019,15 @@ function indexPage(
     const dispN = m.full_name.split("/")[0] !== "rcarmo" ? m.full_name : m.name;
     const langD = langDotIdx(m.language);
     const logoImg = d.logo_data_uri
-      ? `<img class="idx-logo" src="${d.logo_data_uri}" alt="${esc(dispN)} logo">`
+      ? `<div class="idx-logo-wrap"><img class="idx-logo" src="${d.logo_data_uri}" alt="${esc(dispN)} logo"></div>`
       : `<div class="idx-logo-ph">📦</div>`;
     return `<a class="idx-card" href="/projects/${proj}.html" data-repo="${m.full_name}">
   ${logoImg}
   <div class="idx-body">
     <div class="idx-name">${esc(dispN)}</div>
     <div class="idx-desc">${esc(c.tagline)}</div>
-    <div class="idx-meta">
-      <span class="idx-stars" data-stars="${m.full_name}">★ ${(m.stars??0).toLocaleString()}</span>
+    <div id="card-meta-${proj}" class="idx-meta">
+      <span class="idx-stars">★ ${(m.stars??0).toLocaleString()}</span>
       ${m.language ? `<span><span class="dot ${langD}"></span>${esc(m.language)}</span>` : ""}
     </div>
   </div>
@@ -1045,8 +1049,8 @@ function indexPage(
     <div class="hl-body">
       <div class="hl-name"><a href="/projects/${proj}.html">${esc(m.name)}</a></div>
       <p class="hl-tagline">${esc(c.tagline)}</p>
-      <div class="hl-meta">
-        <span class="hl-stars" data-stars="${m.full_name}">★ ${(m.stars??0).toLocaleString()}</span>
+      <div id="hl-meta-${proj}" class="hl-meta">
+        <span class="hl-stars">★ ${(m.stars??0).toLocaleString()}</span>
         ${(m.forks??0)>0 ? `<span>⑂ ${m.forks}</span>` : ""}
         ${m.language ? `<span><span class="dot ${langD}"></span>${esc(m.language)}</span>` : ""}
         <span class="badge badge-${c.status}">${c.status}</span>
@@ -1069,13 +1073,16 @@ function indexPage(
       if (s === "highlight") {
         return `<div class="idx-section">
   <div class="idx-eyebrow">Featured project</div>
-  <div class="idx-title">${label}</div>
+  <div class="idx-section-hdr"><div class="idx-title">${label}</div></div>
   ${projs.map(p => highlightCard(p)).join("\n")}
 </div>`;
       }
       return `<div class="idx-section">
   <div class="idx-eyebrow">Projects</div>
-  <div class="idx-title">${label}</div>
+  <div class="idx-section-hdr">
+    <div class="idx-title">${label}</div>
+    <span class="idx-count">${projs.length}</span>
+  </div>
   <div class="idx-grid">
     ${projs.map(p => card(p)).join("\n    ")}
   </div>
@@ -1116,10 +1123,12 @@ function indexPage(
       <h1 class="hero-h1">Open<br><span>source</span><br>craft.</h1>
       <p class="hero-sub">Building tools for AI agents, terminals, deployment, and homelab infrastructure — most of it runs on a Raspberry Pi somewhere.</p>
       <div class="hero-divider"></div>
-      <div class="hero-stats-row">
-        <div class="hero-stat"><span class="hero-stat-v" id="total-stars">—</span><span class="hero-stat-l">Total stars</span></div>
-        <div class="hero-stat"><span class="hero-stat-v">${dossiers.size}</span><span class="hero-stat-l">Repos shown</span></div>
-        <div class="hero-stat"><span class="hero-stat-v" id="top-lang">—</span><span class="hero-stat-l">Top language</span></div>
+      <div id="hero-stats-island">
+        <div class="hero-stats-row">
+          <div class="hero-stat"><span class="hero-stat-v">—</span><span class="hero-stat-l">Total stars</span></div>
+          <div class="hero-stat"><span class="hero-stat-v">${dossiers.size}</span><span class="hero-stat-l">Featured repos</span></div>
+          <div class="hero-stat" style="align-items:flex-start"><span class="hero-stat-l" style="margin-bottom:.3rem">Top languages</span><span style="font-size:.95rem;font-weight:700;color:var(--text)">—</span></div>
+        </div>
       </div>
     </div>
     <div class="hero-avatar-wrap">
@@ -1147,30 +1156,50 @@ ${sections}
 </footer>
 
 <script type="module">
-import { h, render } from '/assets/js/preact.module.js';
-import { useState, useEffect } from '/assets/js/preact-hooks.module.js';
-import htm from '/assets/js/htm.module.js';
-const html = htm.bind(h);
-fetch('https://api.github.com/users/rcarmo/repos?per_page=100&type=owner')
-  .then(r => r.json())
-  .then(repos => {
-    if (!Array.isArray(repos)) return;
-    const byFN = Object.fromEntries(repos.map(r => [r.full_name, r]));
-    document.querySelectorAll('[data-stars]').forEach(el => {
-      const r = byFN[el.dataset.stars];
-      if (r) el.textContent = '★ ' + (r.stargazers_count >= 1000
-        ? (r.stargazers_count/1000).toFixed(1)+'k' : r.stargazers_count);
-    });
-    const total = repos.reduce((s,r) => s + r.stargazers_count, 0);
-    const langs = {};
-    repos.forEach(r => { if (r.language) langs[r.language] = (langs[r.language]||0)+1; });
-    const top = Object.entries(langs).sort((a,b)=>b[1]-a[1])[0]?.[0] ?? '—';
-    const ts = document.getElementById('total-stars');
-    const tl = document.getElementById('top-lang');
-    if (ts) ts.textContent = total >= 1000 ? (total/1000).toFixed(1)+'k' : String(total);
-    if (tl) tl.textContent = top;
-  })
-  .catch(()=>{});
+import { mountIndex, mountHeroStats } from '/assets/js/repo-island.mjs';
+
+// Pre-baked card data (from dossier + content at build time)
+const CARD_DATA = ${JSON.stringify(
+  [...dossiers.entries()]
+    .filter(([proj]) => contents.get(proj)?.section !== 'highlight')
+    .map(([proj, d]) => ({
+      id: proj,
+      fullName: d.meta.full_name,
+      fallbackStars: '\u2605 ' + (d.meta.stars ?? 0).toLocaleString(),
+      lang: d.meta.language ?? '',
+    }))
+)};
+
+const HL_DATA = ${JSON.stringify((() => {
+  const hlEntry = [...dossiers.entries()].find(([proj]) => contents.get(proj)?.section === 'highlight');
+  if (!hlEntry) return null;
+  return {
+    id: hlEntry[0],
+    fullName: hlEntry[1].meta.full_name,
+    fallbackStars: '\u2605 ' + (hlEntry[1].meta.stars ?? 0).toLocaleString(),
+    fallbackForks: hlEntry[1].meta.forks ?? 0,
+    lang: hlEntry[1].meta.language ?? '',
+    status: contents.get(hlEntry[0])?.status ?? 'active',
+  };
+})())};
+
+mountIndex({
+  cards: CARD_DATA.map(c => ({
+    ...c,
+    el: document.getElementById('card-meta-' + c.id),
+  })),
+  highlight: HL_DATA ? {
+    ...HL_DATA,
+    el: document.getElementById('hl-meta-' + HL_DATA.id),
+  } : null,
+});
+
+// Hero stats: all featured repo full_names (includes cross-org repos like piku/piku)
+const ALL_FULL_NAMES = [
+  ...CARD_DATA.map(c => c.fullName),
+  ...(HL_DATA ? [HL_DATA.fullName] : []),
+];
+mountHeroStats(document.getElementById('hero-stats-island'), ALL_FULL_NAMES);
 </script>
 </body>
 </html>`;

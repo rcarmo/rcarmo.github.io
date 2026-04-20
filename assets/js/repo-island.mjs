@@ -207,3 +207,207 @@ export function mount({ fullName, heroMetaEl, statsEl, releasesEl, chartId }) {
   if (statsEl)    render(html`<${StatsBar}  fullName=${fullName}/>`, statsEl);
   if (releasesEl) render(html`<${ReleaseTimeline} fullName=${fullName} chartId=${chartId}/>`, releasesEl);
 }
+
+// ── Index-page islands ────────────────────────────────────────────────────
+
+function langDot(lang, size=9) {
+  const c = LANG_COLOR[lang] ?? '#94a3b8';
+  return html`<span style="display:inline-block;width:${size}px;height:${size}px;
+    border-radius:50%;background:${c};vertical-align:middle;margin-right:3px;flex-shrink:0;"></span>`;
+}
+
+/**
+ * CardStar — renders live ★ count for one card pill.
+ * Receives a pre-fetched `repo` object (or null while loading).
+ */
+function CardStar({ repo, fallback }) {
+  if (!repo) return html`<span class="idx-stars">${fallback}</span>`;
+  const n = repo.stargazers_count;
+  const s = n >= 1000 ? (n/1000).toFixed(1)+'k' : String(n);
+  return html`<span class="idx-stars">★ ${s}</span>`;
+}
+
+/**
+ * CardMeta — full meta row (stars + language dot) for a grid card.
+ */
+function CardMeta({ repo, fallbackStars, lang }) {
+  return html`
+    <div class="idx-meta">
+      <${CardStar} repo=${repo} fallback=${fallbackStars}/>
+      ${lang ? html`<span>${langDot(lang)}<span>${lang}</span></span>` : null}
+    </div>`;
+}
+
+/**
+ * HighlightMeta — live stars + forks + language + badge for the hl-card header.
+ */
+function HighlightMeta({ repo, fallbackStars, fallbackForks, lang, status }) {
+  if (!repo) return html`
+    <div class="hl-meta">
+      <span class="hl-stars">${fallbackStars}</span>
+      ${fallbackForks > 0 ? html`<span>⑂ ${fallbackForks}</span>` : null}
+      ${lang ? html`<span>${langDot(lang)}<span>${lang}</span></span>` : null}
+      <span class=${'badge badge-'+status}>${status}</span>
+    </div>`;
+  const sn = repo.stargazers_count;
+  const stars = '★ ' + (sn >= 1000 ? (sn/1000).toFixed(1)+'k' : sn);
+  const forks = repo.forks_count;
+  const language = repo.language ?? lang;
+  return html`
+    <div class="hl-meta">
+      <span class="hl-stars">${stars}</span>
+      ${forks > 0 ? html`<span>⑂ ${forks}</span>` : null}
+      ${language ? html`<span>${langDot(language)}<span>${language}</span></span>` : null}
+      <span class=${'badge badge-'+status}>${status}</span>
+    </div>`;
+}
+
+// Single shared cache: fullName → repo object
+let _repoCache = null;
+let _repoCachePromise = null;
+
+function fetchRepos() {
+  if (_repoCache) return Promise.resolve(_repoCache);
+  if (!_repoCachePromise) {
+    _repoCachePromise = fetch('https://api.github.com/users/rcarmo/repos?per_page=100&type=owner')
+      .then(r => r.json())
+      .then(repos => {
+        if (!Array.isArray(repos)) return {};
+        _repoCache = Object.fromEntries(repos.map(r => [r.full_name, r]));
+        return _repoCache;
+      })
+      .catch(() => ({}));
+  }
+  return _repoCachePromise;
+}
+
+/**
+ * IndexCardIsland — mounts a CardMeta island into a card's meta div.
+ */
+function IndexCardIsland({ fullName, fallbackStars, lang }) {
+  const [repo, setRepo] = useState(null);
+  useEffect(() => {
+    fetchRepos().then(cache => { if (cache[fullName]) setRepo(cache[fullName]); });
+  }, [fullName]);
+  return html`<${CardMeta} repo=${repo} fallbackStars=${fallbackStars} lang=${lang}/>`;
+}
+
+/**
+ * IndexHighlightIsland — mounts live meta into the highlight card.
+ */
+function IndexHighlightIsland({ fullName, fallbackStars, fallbackForks, lang, status }) {
+  const [repo, setRepo] = useState(null);
+  useEffect(() => {
+    // highlight card is always rcarmo-owned, straight fetch
+    fetch(`https://api.github.com/repos/${fullName}`)
+      .then(r => r.json())
+      .then(setRepo)
+      .catch(() => {});
+  }, [fullName]);
+  return html`<${HighlightMeta} repo=${repo}
+    fallbackStars=${fallbackStars} fallbackForks=${fallbackForks}
+    lang=${lang} status=${status}/>`;
+}
+
+/**
+ * mountIndex({ cards: [{el, fullName, fallbackStars, lang}],
+ *              highlight: {el, fullName, fallbackStars, fallbackForks, lang, status} })
+ */
+export function mountIndex({ cards = [], highlight = null }) {
+  for (const { el, fullName, fallbackStars, lang } of cards) {
+    if (el) render(html`<${IndexCardIsland}
+      fullName=${fullName} fallbackStars=${fallbackStars} lang=${lang}/>`, el);
+  }
+  if (highlight?.el) {
+    render(html`<${IndexHighlightIsland}
+      fullName=${highlight.fullName}
+      fallbackStars=${highlight.fallbackStars}
+      fallbackForks=${highlight.fallbackForks}
+      lang=${highlight.lang}
+      status=${highlight.status}/>`, highlight.el);
+  }
+}
+
+// ── HeroStats island ──────────────────────────────────────────────────────
+
+/**
+ * HeroStats — fetches all known repos (splitting by owner) and renders
+ * total stars, repo count, and top-3 languages dynamically.
+ */
+function HeroStats({ fullNames }) {
+  const [stats, setStats] = useState(null);  // null = loading
+
+  useEffect(() => {
+    if (!fullNames || !fullNames.length) return;
+
+    // Split by owner: batch-fetch rcarmo repos; fetch others individually
+    const rcarmoOwned = fullNames.filter(n => n.startsWith('rcarmo/'));
+    const others      = fullNames.filter(n => !n.startsWith('rcarmo/'));
+
+    const fetches = [
+      fetch('https://api.github.com/users/rcarmo/repos?per_page=100&type=owner')
+        .then(r => r.json())
+        .then(repos => Array.isArray(repos) ? repos : [])
+        .catch(() => []),
+      ...others.map(fn =>
+        fetch(`https://api.github.com/repos/${fn}`)
+          .then(r => r.json())
+          .then(r => r.stargazers_count != null ? [r] : [])
+          .catch(() => [])
+      ),
+    ];
+
+    Promise.all(fetches).then(results => {
+      const allRepos = results.flat();
+      // Deduplicate by full_name and keep only repos we actually feature
+      const knownSet = new Set(fullNames);
+      const featured = allRepos.filter(r => knownSet.has(r.full_name));
+
+      const totalStars = featured.reduce((s, r) => s + (r.stargazers_count ?? 0), 0);
+
+      const langCount = {};
+      featured.forEach(r => {
+        if (r.language) langCount[r.language] = (langCount[r.language] ?? 0) + 1;
+      });
+      const top3 = Object.entries(langCount)
+        .sort((a, b) => b[1] - a[1])
+        .slice(0, 3)
+        .map(([l]) => l);
+
+      setStats({ totalStars, repoCount: featured.length, top3 });
+    });
+  }, []);
+
+  const Skel = ({ w }) => html`<span style="display:inline-block;width:${w};height:1em;
+    background:var(--surface2);border-radius:4px;animation:pulse 1.4s ease infinite;vertical-align:middle;"></span>`;
+
+  const stars = stats
+    ? (stats.totalStars >= 1000 ? (stats.totalStars/1000).toFixed(1)+'k' : String(stats.totalStars))
+    : null;
+  const langs = stats?.top3 ?? [];
+
+  return html`
+    <div class="hero-stats-row">
+      <div class="hero-stat">
+        <span class="hero-stat-v">${stars ?? html`<${Skel} w="3.5rem"/>`}</span>
+        <span class="hero-stat-l">Total stars</span>
+      </div>
+      <div class="hero-stat">
+        <span class="hero-stat-v">${stats ? stats.repoCount : html`<${Skel} w="2rem"/>`}</span>
+        <span class="hero-stat-l">Featured repos</span>
+      </div>
+      <div class="hero-stat" style="align-items:flex-start">
+        <span class="hero-stat-l" style="margin-bottom:.3rem">Top languages</span>
+        <span style="font-size:.95rem;font-weight:700;color:var(--text);letter-spacing:-.01em">
+          ${langs.length ? langs.join(' · ') : html`<${Skel} w="9rem"/>`}
+        </span>
+      </div>
+    </div>`;
+}
+
+/**
+ * mountHeroStats(el, fullNames) — mount the live hero stats island.
+ */
+export function mountHeroStats(el, fullNames) {
+  if (el) render(html`<${HeroStats} fullNames=${fullNames}/>`, el);
+}
