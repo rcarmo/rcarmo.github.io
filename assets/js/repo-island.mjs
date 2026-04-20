@@ -181,6 +181,10 @@ function HeroStats({ allRepos, repoCount }) {
   if (!allRepos) return html`<div class="hero-stats"><span class="metric" style="color:var(--text-faint)">Loading stats…</span></div>`;
 
   const repos = Object.values(allRepos);
+  if (!repos.length) return html`
+    <div class="hero-stats">
+      <span class="metric" style="color:var(--text-dim)">GitHub stats temporarily unavailable</span>
+    </div>`;
   const totalStars = repos.reduce((s, r) => s + (r.stargazers_count ?? 0), 0);
   const langCount = {};
   repos.forEach(r => {
@@ -230,12 +234,18 @@ export function mount({ fullName, heroMetaEl, statsEl, releasesEl, relatedEl }) 
  */
 export function mountIndex(allFullNames) {
   fetchAllRepos(allFullNames).then(repoMap => {
-    // Render card metas
     for (const fn of allFullNames) {
       const repo = repoMap[fn];
       const id = fn.split('/').pop();
       const el = document.getElementById(`card-meta-${id}`);
       if (el) render(html`<${CardMeta} repo=${repo}/>`, el);
+    }
+  }).catch(() => {
+    // API failed — render fallback dashes on all cards
+    for (const fn of allFullNames) {
+      const id = fn.split('/').pop();
+      const el = document.getElementById(`card-meta-${id}`);
+      if (el) render(html`<${CardMeta} repo=${null}/>`, el);
     }
   });
 }
@@ -249,7 +259,8 @@ export function mountHeroStats(el, allFullNames) {
   render(html`<${HeroStats} allRepos=${null}/>`, el);
 
   fetchAllRepos(allFullNames).then(repoMap => {
-    // Pass ALL repos for total stars, featured count as separate prop
     render(html`<${HeroStats} allRepos=${repoMap} repoCount=${allFullNames.length}/>`, el);
+  }).catch(() => {
+    render(html`<${HeroStats} allRepos=${{}} repoCount=${allFullNames.length}/>`, el);
   });
 }
