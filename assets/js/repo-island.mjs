@@ -17,6 +17,8 @@ const LANG_COLOR = {
   'C++': '#f34b7d', Shell: '#89e051', Dockerfile: '#384d54',
 };
 
+const SKIP_LANGS = new Set(['Dockerfile','Makefile','HTML','CSS','YAML','JSON','TOML','Shell','Batchfile','PowerShell','Roff','Nix']);
+function realLang(lang) { return lang && !SKIP_LANGS.has(lang) ? lang : null; }
 function langColor(lang) {
   return LANG_COLOR[lang] ?? '#7a8190';
 }
@@ -53,18 +55,18 @@ function HeroMeta({ fullName }) {
       <${Skel} w="3rem"/> <${Skel} w="2rem"/> <${Skel} w="5rem"/> <${Skel} w="4rem"/>
     </div>`;
 
-  const color = langColor(repo.language);
+  const color = langColor(realLang(repo.language));
   const pushed = fmtDate(repo.pushed_at);
 
   return html`
     <div class="hero-meta">
       <span class="stars">★ ${fmtNum(repo.stargazers_count)}</span>
       ${repo.forks_count > 0 ? html`<span>⑂ ${repo.forks_count}</span>` : null}
-      ${repo.language ? html`
+      ${realLang(repo.language) ? html`
         <span>
           <span style="display:inline-block;width:9px;height:9px;border-radius:50%;
             background:${color};vertical-align:middle;margin-right:3px;"></span>
-          ${repo.language}
+          ${realLang(repo.language)}
         </span>` : null}
       <span style="color:var(--dim);font-size:.75rem">pushed ${pushed}</span>
     </div>`;
@@ -231,10 +233,11 @@ function CardStar({ repo, fallback }) {
  * CardMeta — full meta row (stars + language dot) for a grid card.
  */
 function CardMeta({ repo, fallbackStars, lang }) {
+  const dl = realLang(repo ? repo.language : lang);
   return html`
     <div class="idx-meta">
       <${CardStar} repo=${repo} fallback=${fallbackStars}/>
-      ${lang ? html`<span>${langDot(lang)}<span>${lang}</span></span>` : null}
+      ${dl ? html`<span>${langDot(dl)}<span>${dl}</span></span>` : null}
     </div>`;
 }
 
@@ -246,13 +249,13 @@ function HighlightMeta({ repo, fallbackStars, fallbackForks, lang, status }) {
     <div class="hl-meta">
       <span class="hl-stars">${fallbackStars}</span>
       ${fallbackForks > 0 ? html`<span>⑂ ${fallbackForks}</span>` : null}
-      ${lang ? html`<span>${langDot(lang)}<span>${lang}</span></span>` : null}
+      ${realLang(lang) ? html`<span>${langDot(realLang(lang))}<span>${realLang(lang)}</span></span>` : null}
       <span class=${'badge badge-'+status}>${status}</span>
     </div>`;
   const sn = repo.stargazers_count;
   const stars = '★ ' + (sn >= 1000 ? (sn/1000).toFixed(1)+'k' : sn);
   const forks = repo.forks_count;
-  const language = repo.language ?? lang;
+  const language = realLang(repo.language ?? lang);
   return html`
     <div class="hl-meta">
       <span class="hl-stars">${stars}</span>

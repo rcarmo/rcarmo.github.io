@@ -572,6 +572,11 @@ footer{max-width:var(--max);margin:0 auto;padding:1.5rem var(--gap);
 .foot-r a{color:var(--muted);}.foot-r a:hover{color:var(--text);}
 `;
 
+const SKIP_LANGS = new Set(['Dockerfile','Makefile','HTML','CSS','YAML','JSON','TOML','Shell','Batchfile','PowerShell','Roff','Nix']);
+function realLang(lang: string|null|undefined): string|null {
+  return lang && !SKIP_LANGS.has(lang) ? lang : null;
+}
+
 function ghSvg() {
   return `<svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg>`;
 }
@@ -736,7 +741,7 @@ ${mermaidScript}
       <div class="hero-meta">
         <span class="stars">★ ${(m.stars ?? 0).toLocaleString()}</span>
         ${(m.forks ?? 0) > 0 ? `<span>⑂ ${m.forks}</span>` : ""}
-        <span><span class="dot ${langDot}"></span>${esc(m.language ?? "misc")}</span>
+        ${realLang(m.language) ? `<span><span class="dot ${langDot}"></span>${esc(realLang(m.language)!)}</span>` : ""}
         <span class="badge badge-${c.status}">${c.status}</span>
       </div>
     </div>
@@ -766,7 +771,7 @@ ${mermaidScript}
       <div class="stats">
         <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">${(m.stars ?? 0).toLocaleString()}</div></div>
         <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">${m.forks ?? 0}</div></div>
-        <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem"><span class="dot ${langDot}"></span>${esc(m.language ?? "—")}</div></div>
+        <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">${realLang(m.language) ? `<span class="dot ${langDot}"></span>${esc(realLang(m.language)!)}` : '—'}</div></div>
         <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.05rem;padding-top:.3rem">${m.created_at?.slice(0,4) ?? "?"}</div></div>
         <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.85rem;padding-top:.35rem">${m.pushed_at?.slice(0,7) ?? "?"}</div></div>
       </div>
@@ -1061,7 +1066,7 @@ function indexPage(
     <div class="idx-desc">${esc(c.tagline)}</div>
     <div id="card-meta-${proj}" class="idx-meta">
       <span class="idx-stars">★ ${(m.stars??0).toLocaleString()}</span>
-      ${m.language ? `<span><span class="dot ${langD}"></span>${esc(m.language)}</span>` : ""}
+      ${realLang(m.language) ? `<span><span class="dot ${langD}"></span>${esc(realLang(m.language)!)}</span>` : ""}
     </div>
   </div>
 </a>`;
@@ -1085,7 +1090,7 @@ function indexPage(
       <div id="hl-meta-${proj}" class="hl-meta">
         <span class="hl-stars">★ ${(m.stars??0).toLocaleString()}</span>
         ${(m.forks??0)>0 ? `<span>⑂ ${m.forks}</span>` : ""}
-        ${m.language ? `<span><span class="dot ${langD}"></span>${esc(m.language)}</span>` : ""}
+        ${realLang(m.language) ? `<span><span class="dot ${langD}"></span>${esc(realLang(m.language)!)}</span>` : ""}
         <span class="badge badge-${c.status}">${c.status}</span>
       </div>
       <div class="hl-actions">
