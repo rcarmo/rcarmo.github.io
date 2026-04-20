@@ -1,0 +1,35 @@
+{
+  "id": "daisy",
+  "meta": {
+    "name": "daisy",
+    "full_name": "rcarmo/daisy",
+    "description": "AI SPEC-driven speed coding demo \u2014 disk usage analyser built live with GitHub Copilot.",
+    "homepage": "",
+    "stars": 4,
+    "forks": 0,
+    "language": "Swift",
+    "created_at": "2026-02-02T10:11:53Z",
+    "pushed_at": "2026-02-03T09:19:26Z",
+    "updated_at": "2026-02-03T09:19:26Z",
+    "topics": [
+      "apple",
+      "bun",
+      "disk",
+      "filesystem",
+      "swift",
+      "usage",
+      "copilot",
+      "ai"
+    ]
+  },
+  "readme": "",
+  "commits": [],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-20T10:54:00Z",
+  "logo": null,
+  "logo_data_uri": null,
+  "logo_ext": null,
+  "diagram": null,
+  "diagram_inline": null
+}
