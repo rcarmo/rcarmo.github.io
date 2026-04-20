@@ -420,14 +420,14 @@ code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.875e
 @media(prefers-color-scheme:light){.topbar{background:rgba(242,245,251,.88);}}
 
 /* ── Hero banner ── */
-.hero-banner{position:relative;overflow:hidden;height:260px;background:var(--surface2);}
+.hero-banner{position:relative;overflow:hidden;height:320px;background:var(--surface2);}
 .hero-banner img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
 .hero-overlay{position:absolute;inset:0;
   background:linear-gradient(to right,rgba(11,13,18,.96) 0%,rgba(11,13,18,.75) 55%,rgba(11,13,18,.20) 100%);}
 @media(prefers-color-scheme:light){
   .hero-overlay{background:linear-gradient(to right,rgba(242,245,251,.96) 0%,rgba(242,245,251,.75) 55%,rgba(242,245,251,.20) 100%);}}
 .hero-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
-  padding:2rem var(--gap);max-width:var(--max);margin:0 auto;left:0;right:0;}
+  padding:3.5rem var(--gap);max-width:var(--max);margin:0 auto;left:0;right:0;}
 .hero-content h1{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;}
 .hero-content h1 a{color:var(--text);}.hero-content h1 a:hover{color:var(--accent);text-decoration:none;}
 .tagline{font-size:clamp(.9rem,2vw,1.05rem);color:var(--muted);margin:.5rem 0 1.1rem;max-width:540px;line-height:1.5;}
@@ -477,7 +477,7 @@ code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.875e
   .toc a{white-space:nowrap;flex-shrink:0;border-left:none;border-bottom:2px solid transparent;
     border-radius:4px 4px 0 0;padding:5px 10px;font-size:.72rem;}
   .toc a.active{border-left:none;border-bottom-color:var(--accent);background:var(--surface2);}
-  .hero-banner{height:200px;}
+  .hero-banner{height:260px;}
 }
 
 /* ── Stats ── */
