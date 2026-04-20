@@ -16,6 +16,7 @@ const ROOT    = import.meta.dir;
 const CONTENT = join(ROOT, "_content");
 const OUT     = join(ROOT, "projects");
 const ASSETS  = join(ROOT, "assets");
+const ASSET_VERSION = Date.now().toString(36);
 mkdirSync(OUT, { recursive: true });
 
 // ── Types ────────────────────────────────────────────────────────────────────
@@ -297,8 +298,8 @@ function buildProjectPage(project: Project): string {
 <title>${esc(id)} — rcarmo</title>
 <meta name="description" content="${esc(fm.tagline || "")}">
 <link rel="stylesheet" href="/assets/css/style.css">
-<link rel="icon" href="/assets/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link id="dynamic-favicon" rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/${id}.html">
 </head>
 <body>
@@ -380,9 +381,9 @@ ${posts.length ? `      <section class="sec" id="s-posts">
     <span class="foot-r"><a href="/">Home</a> · <a href="${ghUrl}">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=${ASSET_VERSION}"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs';
+    import { mount } from '/assets/js/repo-island.mjs?v=${ASSET_VERSION}';
     mount({
       fullName: '${fullName}',
       heroMetaEl: document.getElementById('hero-meta-island-${id}'),
@@ -511,8 +512,8 @@ function buildIndex(projects: Project[]): string {
 <title>rcarmo — open source</title>
 <meta name="description" content="Open source projects by Rui Carmo">
 <link rel="stylesheet" href="/assets/css/style.css">
-<link rel="icon" href="/assets/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link id="dynamic-favicon" rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/">
 </head>
 <body>
@@ -544,9 +545,9 @@ function buildIndex(projects: Project[]): string {
     <span class="foot-r"><a href="https://taoofmac.com">Blog</a> · <a href="https://github.com/rcarmo">GitHub</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=${ASSET_VERSION}"></script>
   <script type="module">
-    import { mountIndex, mountHeroStats } from '/assets/js/repo-island.mjs';
+    import { mountIndex, mountHeroStats } from '/assets/js/repo-island.mjs?v=${ASSET_VERSION}';
     const ALL_FULL_NAMES = ${JSON.stringify(allFullNames)};
     mountIndex(ALL_FULL_NAMES);
     mountHeroStats(document.getElementById('hero-stats-island'), ALL_FULL_NAMES);

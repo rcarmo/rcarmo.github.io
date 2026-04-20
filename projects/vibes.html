@@ -6,8 +6,8 @@
 <title>vibes — rcarmo</title>
 <meta name="description" content="Mobile-first web UI for AI agents — ACP and Pi over RPC, zero build step.">
 <link rel="stylesheet" href="/assets/css/style.css">
-<link rel="icon" href="/assets/favicon.ico" sizes="any">
-<link rel="icon" type="image/png" href="/assets/favicon.png">
+<link id="dynamic-favicon" rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/vibes.html">
 </head>
 <body>
@@ -168,9 +168,9 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/vibes">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo7qouib"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo7qouib';
     mount({
       fullName: 'rcarmo/vibes',
       heroMetaEl: document.getElementById('hero-meta-island-vibes'),
