@@ -98,7 +98,7 @@ code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.875e
 }
 
 /* ── Stats ── */
-.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:1px;
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));max-width:640px;gap:1px;
   background:var(--border);border:1px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:2rem;}
 .stat{background:var(--surface);padding:.85rem 1rem;}
 .stat-l{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);
@@ -160,6 +160,7 @@ footer{max-width:var(--max);margin:0 auto;padding:1.5rem var(--gap);border-top:1
   <img src="/assets/banners/zmk-config-totem.png" alt="zmk-config-totem banner" loading="eager">
   <div class="hero-overlay"></div>
   <div class="hero-content">
+    
     <h1><a href="https://github.com/rcarmo/zmk-config-totem" target="_blank" rel="noopener">zmk-config-totem</a></h1>
     <p class="tagline">ZMK keymap for the Totem — home row mods, combos, ZMK Studio.</p>
     <div class="hero-meta">

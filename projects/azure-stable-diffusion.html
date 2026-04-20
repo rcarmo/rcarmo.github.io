@@ -98,7 +98,7 @@ code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.875e
 }
 
 /* ── Stats ── */
-.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:1px;
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));max-width:640px;gap:1px;
   background:var(--border);border:1px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:2rem;}
 .stat{background:var(--surface);padding:.85rem 1rem;}
 .stat-l{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);
@@ -160,6 +160,7 @@ footer{max-width:var(--max);margin:0 auto;padding:1.5rem var(--gap);border-top:1
   <img src="/assets/banners/azure-stable-diffusion.png" alt="azure-stable-diffusion banner" loading="eager">
   <div class="hero-overlay"></div>
   <div class="hero-content">
+    
     <h1><a href="https://github.com/rcarmo/azure-stable-diffusion" target="_blank" rel="noopener">azure-stable-diffusion</a></h1>
     <p class="tagline">One-command Stable Diffusion on Azure GPU spot instances.</p>
     <div class="hero-meta">

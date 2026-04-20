@@ -481,7 +481,7 @@ code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.875e
 }
 
 /* ── Stats ── */
-.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:1px;
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(110px,1fr));max-width:640px;gap:1px;
   background:var(--border);border:1px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:2rem;}
 .stat{background:var(--surface);padding:.85rem 1rem;}
 .stat-l{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);
@@ -704,6 +704,7 @@ ${mermaidScript}
   <img src="/assets/banners/${d.id}.png" alt="${dispN} banner" loading="eager">
   <div class="hero-overlay"></div>
   <div class="hero-content">
+    ${d.logo_data_uri ? `<img src="${d.logo_data_uri}" alt="${dispN} logo" style="width:52px;height:52px;border-radius:12px;object-fit:contain;margin-bottom:.75rem;box-shadow:0 2px 12px rgba(0,0,0,.4);">` : ""}
     <h1><a href="${ghUrl}" target="_blank" rel="noopener">${dispN}</a></h1>
     <p class="tagline">${esc(c.tagline)}</p>
     <div class="hero-meta">
