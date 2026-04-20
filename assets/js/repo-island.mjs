@@ -56,8 +56,6 @@ function HeroMeta({ fullName }) {
     </div>`;
 
   const color = langColor(realLang(repo.language));
-  const pushed = fmtDate(repo.pushed_at);
-
   return html`
     <div class="hero-meta">
       <span class="stars">★ ${fmtNum(repo.stargazers_count)}</span>
@@ -68,7 +66,6 @@ function HeroMeta({ fullName }) {
             background:${color};vertical-align:middle;margin-right:3px;"></span>
           ${realLang(repo.language)}
         </span>` : null}
-      <span style="color:var(--dim);font-size:.75rem">pushed ${pushed}</span>
     </div>`;
 }
 
@@ -109,12 +106,6 @@ function StatsBar({ fullName }) {
         <div class="stat-l">Created</div>
         <div class="stat-v" style="font-size:1.05rem;padding-top:.3rem">
           ${repo ? repo.created_at?.slice(0, 4) : html`<${Skel} w="2.5rem"/>`}
-        </div>
-      </div>
-      <div class="stat">
-        <div class="stat-l">Last push</div>
-        <div class="stat-v" style="font-size:.85rem;padding-top:.35rem">
-          ${repo ? fmtDate(repo.pushed_at) : html`<${Skel} w="3.5rem"/>`}
         </div>
       </div>
       <div class="stat">

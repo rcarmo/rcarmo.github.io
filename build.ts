@@ -773,7 +773,6 @@ ${mermaidScript}
         <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">${m.forks ?? 0}</div></div>
         <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem">${realLang(m.language) ? `<span class="dot ${langDot}"></span>${esc(realLang(m.language)!)}` : '—'}</div></div>
         <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.05rem;padding-top:.3rem">${m.created_at?.slice(0,4) ?? "?"}</div></div>
-        <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.85rem;padding-top:.35rem">${m.pushed_at?.slice(0,7) ?? "?"}</div></div>
       </div>
     </div>>
 
@@ -803,7 +802,6 @@ ${mermaidScript}
 </div>
 
 <footer>
-  <div class="foot-l">Last indexed ${m.pushed_at?.slice(0,10) ?? "?"}</div>
   <div class="foot-r">
     <a href="/">← All projects</a>
     <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
