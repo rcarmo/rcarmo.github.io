@@ -2,87 +2,63 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>Projects — Rui Carmo</title>
-<link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>rcarmo — projects</title>
 <style>
-  * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { width: 100%; height: 100%; overflow: hidden; background: #78aaff; }
-  #cv { width: 100%; height: 100%; display: block; }
+*{margin:0;padding:0;box-sizing:border-box;}
+html,body{width:100%;height:100%;overflow:hidden;background:#02040a;font-family:'Inter','SF Pro Display',system-ui,sans-serif;}
+#cv{width:100%;height:100%;display:block;}
 
-  #topbar {
-    position: fixed; top: 0; left: 0; right: 0; z-index: 50;
-    display: flex; justify-content: space-between; align-items: center;
-    padding: .55rem 1.25rem;
-    background: linear-gradient(to bottom, rgba(40,28,18,.9) 0%, rgba(30,20,12,.85) 100%);
-    backdrop-filter: blur(8px);
-    border-bottom: 1px solid rgba(80,160,255,.2);
-    font-family: ui-monospace, "SF Mono", monospace; font-size: .72rem;
-    color: rgba(180,210,255,.55); pointer-events: auto;
-    box-shadow: 0 2px 12px rgba(0,0,0,.5);
-  }
-  #topbar a { color: #f5d98a; text-decoration: none; font-weight: 700; letter-spacing: .04em; }
-  #topbar .right { display: flex; gap: 1.25rem; }
-  #topbar .right a { color: rgba(140,190,255,.45); font-weight: 400; }
-  #topbar .right a:hover { color: #f5d98a; }
+/* ── Topbar ── */
+#topbar{position:fixed;top:0;left:0;right:0;z-index:300;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:.65rem 1.4rem;
+  background:linear-gradient(to bottom,rgba(2,4,10,.85) 0%,transparent 100%);
+  pointer-events:none;}
+#topbar a{pointer-events:auto;color:rgba(200,220,255,.7);font-size:.72rem;
+  font-family:ui-monospace,monospace;letter-spacing:.08em;text-decoration:none;}
+#topbar a:hover{color:#fff;}
+#topbar .right{display:flex;gap:1.5rem;}
 
-  #nav {
-    position: fixed; bottom: 1.25rem; left: 50%; transform: translateX(-50%);
-    z-index: 50; display: flex; gap: .35rem; flex-wrap: wrap; justify-content: center;
-    pointer-events: auto;
-  }
-  .nav-btn {
-    background: linear-gradient(135deg, rgba(10,20,50,.88) 0%, rgba(5,15,40,.88) 100%);
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(60,130,255,.35);
-    border-radius: 4px;
-    color: rgba(160,200,255,.75); font-family: ui-monospace, monospace;
-    font-size: .68rem; padding: .3rem .75rem; cursor: pointer; transition: all .2s;
-    white-space: nowrap; text-transform: uppercase; letter-spacing: .06em;
-    box-shadow: 0 2px 8px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
-  }
-  .nav-btn:hover { background: linear-gradient(135deg, rgba(80,60,30,.8) 0%, rgba(60,45,20,.8) 100%);
-    border-color: rgba(200,160,80,.6); color: #f0d88a; box-shadow: none; }
-  .nav-btn.active { background: linear-gradient(135deg, rgba(100,78,32,.9) 0%, rgba(80,60,24,.9) 100%);
-    border-color: #c89040; color: #ffe0a0; box-shadow: none; }
+/* ── Cluster nav ── */
+#clusternav{position:fixed;bottom:1.4rem;left:50%;transform:translateX(-50%);
+  z-index:300;display:flex;gap:.35rem;flex-wrap:wrap;justify-content:center;
+  padding:.5rem .8rem;
+  background:rgba(2,4,10,.6);backdrop-filter:blur(20px);
+  border:1px solid rgba(100,140,255,.12);border-radius:2em;}
+.nav-btn{background:transparent;border:1px solid rgba(100,140,255,.18);
+  color:rgba(160,190,255,.65);font-size:.68rem;letter-spacing:.08em;
+  font-family:ui-monospace,monospace;padding:.3rem .8rem;border-radius:1.5em;
+  cursor:pointer;transition:all .2s;text-transform:uppercase;}
+.nav-btn:hover{border-color:rgba(120,160,255,.5);color:#a8c4ff;background:rgba(60,80,160,.15);}
+.nav-btn.active{border-color:rgba(140,180,255,.6);color:#c8d8ff;background:rgba(60,80,160,.25);}
 
-  #focus-panel {
-    position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
-    transform: translateY(100%); transition: transform .3s cubic-bezier(.2,.9,.3,1);
-    pointer-events: none;
-  }
-  #focus-panel.open { transform: translateY(0); pointer-events: auto; }
-  #focus-content {
-    max-width: 640px; margin: 0 auto;
-    background: rgba(42,28,14,.96); backdrop-filter: blur(16px);
-    border: 1px solid rgba(255,255,255,.14); border-bottom: none;
-    border-radius: 18px 18px 0 0; padding: 1.25rem 1.75rem 2.25rem;
-    position: relative; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
-  }
-  #focus-close {
-    position: absolute; top: .85rem; right: 1rem; font-size: .9rem;
-    color: rgba(255,255,255,.4); cursor: pointer; width: 26px; height: 26px;
-    display: flex; align-items: center; justify-content: center;
-    border-radius: 50%; border: 1px solid rgba(255,255,255,.12); transition: all .15s;
-  }
-  #focus-close:hover { color: #fceab0; border-color: rgba(252,234,176,.4); }
-  .f-row { display: flex; align-items: center; gap: .85rem; margin-bottom: .55rem; }
-  #focus-logo { width: 52px; height: 52px; border-radius: 11px; object-fit: contain; display: none; }
-  #focus-name { font-size: 1.15rem; font-weight: 700; color: #fceab0; letter-spacing: -.01em; }
-  #focus-stars { font-size: .75rem; color: #f5c842; font-family: ui-monospace, monospace; }
-  #focus-desc { font-size: .86rem; color: #c8b890; line-height: 1.65; margin-bottom: 1.1rem; }
-  #focus-link {
-    display: inline-flex; align-items: center; gap: .35rem;
-    background: #5b8a2c; color: #fff; font-size: .88rem; font-weight: 600;
-    padding: .55rem 1.35rem; border-radius: 8px; text-decoration: none; transition: filter .15s;
-  }
-  #focus-link:hover { filter: brightness(1.12); }
+/* ── Hint ── */
+#hint{position:fixed;bottom:4.5rem;left:50%;transform:translateX(-50%);
+  color:rgba(140,170,220,.35);font-size:.65rem;letter-spacing:.06em;
+  font-family:ui-monospace,monospace;pointer-events:none;white-space:nowrap;}
 
-  #hint {
-    position: fixed; bottom: 4.6rem; left: 50%; transform: translateX(-50%);
-    font-family: ui-monospace, monospace; font-size: .65rem;
-    color: rgba(255,255,255,.28); pointer-events: none; white-space: nowrap;
-  }
+/* ── Focus panel ── */
+#focus-panel{position:fixed;bottom:0;left:50%;transform:translate(-50%,100%);
+  width:min(480px,92vw);z-index:400;padding:1.4rem 1.6rem 1.8rem;
+  background:rgba(4,8,20,.94);backdrop-filter:blur(24px);
+  border:1px solid rgba(100,140,255,.2);border-radius:1rem 1rem 0 0;
+  transition:transform .35s cubic-bezier(.16,1,.3,1);pointer-events:none;}
+#focus-panel.open{transform:translate(-50%,0);pointer-events:auto;}
+#focus-header{display:flex;align-items:flex-start;gap:.9rem;margin-bottom:.7rem;}
+#focus-logo{width:44px;height:44px;border-radius:9px;object-fit:contain;display:none;flex-shrink:0;}
+#focus-name{font-size:1.05rem;font-weight:700;color:#e0eaff;letter-spacing:-.015em;line-height:1.2;}
+#focus-stars{font-size:.72rem;color:#a8b8e0;margin-top:.2rem;font-family:ui-monospace,monospace;}
+#focus-desc{font-size:.83rem;color:#6888b8;line-height:1.65;margin-bottom:1rem;}
+#focus-actions{display:flex;gap:.6rem;}
+#focus-link{display:inline-flex;align-items:center;gap:.35rem;padding:.4rem 1rem;
+  background:#2244cc;color:#fff;font-size:.8rem;font-weight:500;border-radius:.5rem;
+  text-decoration:none;transition:background .15s;}
+#focus-link:hover{background:#3355dd;}
+#focus-close{position:absolute;top:.9rem;right:1rem;background:transparent;
+  border:1px solid rgba(100,140,255,.2);color:rgba(150,180,255,.5);
+  font-size:.8rem;border-radius:.4rem;padding:.2rem .55rem;cursor:pointer;}
+#focus-close:hover{color:#a8c4ff;border-color:rgba(140,180,255,.4);}
 </style>
 </head>
 <body>
@@ -91,37 +67,38 @@
 <header id="topbar">
   <a href="/">rcarmo.github.io</a>
   <div class="right">
-    <a href="/index.html">list view</a>
-    <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
+    <a href="index.html">list view</a>
+    <a href="https://taoofmac.com" target="_blank">taoofmac.com</a>
   </div>
 </header>
 
-<div id="focus-panel">
-  <div id="focus-content">
-    <div id="focus-close">✕</div>
-    <div class="f-row">
-      <img id="focus-logo" src="" alt="">
-      <div>
-        <div id="focus-name"></div>
-        <div id="focus-stars"></div>
-      </div>
-    </div>
-    <p id="focus-desc"></p>
-    <a id="focus-link" href="#" target="_blank">Open project page →</a>
-  </div>
-</div>
-
-<nav id="nav">
+<nav id="clusternav">
   <button class="nav-btn active" data-cluster="overview">Overview</button>
-  <button class="nav-btn" data-cluster="highlight">piclaw</button>
-  <button class="nav-btn" data-cluster="piku">piku</button>
-  <button class="nav-btn" data-cluster="ai">AI &amp; agents</button>
+  <button class="nav-btn" data-cluster="highlight">Piclaw</button>
+  <button class="nav-btn" data-cluster="piku">Piku</button>
+  <button class="nav-btn" data-cluster="ai">AI Agents</button>
   <button class="nav-btn" data-cluster="terminal">Terminal</button>
   <button class="nav-btn" data-cluster="macos">macOS</button>
   <button class="nav-btn" data-cluster="infra">Infrastructure</button>
 </nav>
 
-<div id="hint">drag to orbit · scroll to zoom · WASD/arrows to fly · space to pause · 1–7 clusters · click a sign</div>
+<div id="hint">drag · scroll · WASD · click a crystal</div>
+
+<div id="focus-panel">
+  <button id="focus-close">✕</button>
+  <div id="focus-header">
+    <img id="focus-logo" src="" alt="">
+    <div>
+      <div id="focus-name"></div>
+      <div id="focus-stars"></div>
+    </div>
+  </div>
+  <div id="focus-desc"></div>
+  <div id="focus-actions">
+    <a id="focus-link" href="#">View project →</a>
+  </div>
+</div>
+
 
 <script>
 const LOGOS = {
@@ -140,788 +117,620 @@ const LOGOS = {
   "webterm": "data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAgAElEQVR4Xu1dB3hT5f4+5yRNB61sAS+K4ryKihcFB1fU6/XivupFQSpDEVxc9hQIyGihZeOo4ABklakgpRQIo4vSRfdI23SlTdJm5yRn/v7Pd0aalBbRP1605H2ePoHkJOec7/d+729842BYAAEEEEAAAQQQQAABBBBAAAEEEEAAAQQQQAABBPBrAQAEZGYGAYAC/WXGCf/Gf+3vBPAnAqjVBPyCoSEeFPHx8Yo/0W0FcDkAAA4ajRL1ePk4wABv2HFiMJVa+JktPe8LMqdkXV1O5azMM0V90DHoc1C3HB/AnwzIgBrR6H49uWFb4m3O0/nzHZklOVShjoM6G8DFBoCMWuDLGsFzsYJ0pWRu15/LG4RuGQJK8OcC6uXI8L5XbVl7sEvTydx3LelFx5yFOg/U2Xgurx7cx0poZl++i95fwEFqLdB5Nawnu9zJXKzl2Lw6vj45e4JAAh/lCOAPCCTVoAEk8UIABxiGq+8doTInZL3SlFH6A5lfYQOdiQetGWhNOcccKHAy+/M4SKsHKDYCmVVmdVwo3WY9mP12QUFBeP63x26mtl7UMCk6qM368QF0ywES/MGAjK0Bwehev65WA1Gz//QjTenFq20FWh1db+GhzgmeNB1QPxa5mL15NJyuBChpBndJDWMp1CY2ni94v2SHpod8ezKJzn34RVf3jgyrIyHzC4kAfq4kgGsAZBx1K7+Oer/mYM6t2szKWZY8ba6jwshBIwlUtgFsCTrKcUDrYY9rAUrsPFfWALaiyouOixWLtds0A3xvQU4F0TkgE4LQZ57v0jebt6an+x4XwP8cgKOUTKMBP7++8UBR94TsxgmFZYaTRdVm2mJieVehHSwn6hnLwVrSeawauAIbsFVmsJTUGMyllV9WJ2U8GxeXKRgXAcm6lB345f7InaDPuU2ZKx1xeef/57ccAIapUTAHLUZHPXPy+qPBsQW2V7JKDD8U6sy2CivLN9TQUJNq4quOGEjdUQNLFzgBaj28s6LOZS2tPNh8Infkli3JEbK0I0jxgtd1tAYqCKH3uA250fb1BQEF+F8BGQkZHRlfOic+AhuhWK41PLGtxr72eL2tLtnBsOUmgJJcJ2Qes7gvJjTT+mwHMI08WOrNXGOt4WxtSdXUQzuzbvK9biTxV1rckQnArM1eaV+fHyDA74oWvy4bXYjip5833rW9yrZ4X7295KSZYnMdAMmlNCSdcXhOH7W5M1KcoKsDqDBRfJHRVp5XZ16Zo8kZOGJESwVPkHixzOsn8ZcDiilqptWEomMsK3RR1rXlaZc7PoDfBMBHxMMlfv2FI1W959RYP15ntGuONJH0BQr4MzUcHEt2sseOO8jj55xwsRagyMpBqoG0nGy0f5+Uo3vxXnW8Sr4MIYj7tUZHVT+URkqVP1QKRr/XvMy4ybzKECDA1QKS9omZfkEYPiK+JvTDUsvrsfW2/RubXK6fKeCPNPNwIJfktmlcrl2nXaymnIVUO/Bn7G53cpPj4EGd/b13kuq6I8PJ1watUsIrgRBcqsU4Q/6twqX6fpblphWWKJuWWuUE++r6I1fyWwG0ByTx/n4dhd/E6ELj3+fr7ZvWm1z6b100v88JsLOYgq+SXe5vNS5qTzYDZ5oATtgZblcTeXGb2TlvfF51f9/TiH4dFOgcvu9fDqhWAJLRZdSsrgltWm0bY1ppO2eNsoJ9hbmsYKl+bPVS/WbLSnOqfFwAVwrBr/sFcwj405Wmuz+qc6rnNzgLVzsZbo8b4FsdByvT3NSac6R7XRYFP5oAjjhZ2G9xN/xgIz+Pzq0fOsyntIv8OkoJfaP6X4IQXPpIPCYpR84a+xMNK53bm6IsDnO0zWFcZt6RurBsGKjFUnLT0sZo8ypTIA28IgDgIwAUap98XY2piUc0Vb0jdY6Ppza7Ty+weZg4joe1Jg6icjxsVKrbtSLdw3+vBzjgAf4Hm9u1vZncv67OOvLxQ8X+qVtrFbkCiBIvGlOW+CMx+n5Vqx2La9d4qipjSa56eXN6+krTOyNWpwqBHwKoQYgpzMuN0c0BAlweyK8jiZePQr2te3JxxDPN1MgJBvLIDIuHXMNw/HoHwLIKipuV5XHNz6KYTZUcbHUDv83hYTfbnGc3Wh0fzyww9JZ/B0EK5lB2cMUSj86Pij2+CvFTXH1Y4edk5IWNnrMXNnrg/DpXZX6M7bMzS3W3iecTXYhGrVEi0qD5Auh9c0AB2oEUzHkbGfngggLVS7XNz48ykVs+aHJb5lEcLCEBFtUxMCXf7Z6eTVHqMhbWkwCbPSz3ucOtW2F1rRqv09+L/LJ8JiTx8b8yim/tcuTenrDR9tiBr1xbd39Fkqe+9HgSNtr27l+qfQZdv/d8qJSsFuYKeEmWOVEkgHGpMbp5ZcAFeIHk3adIIzT8Y3XOh16zUqves3p00zwMv5AHmNPEwoQSihpX5HZ/VE5BrAtgE8PDapvbstLu/v49ffMLwyeXBcu+GBHp16ZuCIL6tAR0ggHXbHf22fY1qf7uK2f5tjgn/9Vma+b6tdYPh36R11W+EeF8alD6Es8XMgGyl5qjdVENgTQQNbTc29HrsHLDHa81kgtH2+icyR6OW8QDTLPxMEHrZseXeFxjy2juUyvAahb4laSHXOgiD082ON8ZmpfXVf4dhFZVvyuDFGDKv4Ne1ZqqkAV7yDc/200ej/qBZGK2uPVfxtlXfbg5/6++P9ruVC+1mhim1ignxmUGob/41WIh6PwK28ryWNv1HQSiwE5oxAJQ/cNMjR5n9WgmuBh6EQA/wwMwTs9yr5d7XCNKXexMIwcrOIBoD8svtrszZ9nIGcPLmvqi8XlfQwgu41cBcGSgEd7ZOaJcj0uw/G3eHs/mZds95LIfKM+Sbx0/jo+reh6TAj8EUeLbyhrE32xLBeIkF5Cywr4qa1Xz9VsKlo3/TKP5gdftTObHADCJAX5sE8e/rGPIl6po6h09Bws4gBWMYHTdMqsrZkpmw5BharVvYEigYVxkEHvy5x+40zakuFLW/0cw0OVyeABimE9WgfBBivbGiQmO6RMOkmUf7yVh6nZL7rvfmqcMXV/WUzhAAkr72jIuIhEik3wcwrD16X3f/KZ0xvPfFC8eHlf72fh91g/R+6fmmFZkLDYJdQBp7oE/kTsyZF//9wbLM8MpxjkRAF610fQQPeV5ro5iJ9MAy3iAxS7KMtft3jq+wfzSo6vjUSrl30iCfxcb3Hlu3VjI3wSQuwbozHV19T+pw1AbAvh8B7kYH+PJAd2rJ50vfPCzK3HyYTc7YZ/N+sEO25cj15UIs3VkxHtn87YylCTxLcoD+ER1fdiwmIyRj6zMPfK3qGzy1W21/KREC8SUsrDLAHDC49En5FqLc/brT0D8CEEFEVnROeTzdVxIUfIDNc0DnvXQzW9wAM+aafr+Ojcz2sqyi1mOn+fyaN4yOt8blVnfQzYSamDZr1NZn4/3ZKyZefTo0WC5oajkNYchZSXA2RUcnRKbK8/dE1QANaxPwQdh6FnjXS+fsMf8J8mqH3XUSb29j0wctcPwBjZxYpB8TsEobWcNgtvwVQFEtCdXlD92+6Lk9fep0/QPxxbAc1sqYPopPazTWqidNg+1001Re90eNoHhIBmAP0m7uaMOT8rGJvtrmOSCUKYi31OHxhCr6+RTAPDXOpK6pcLJ/sdC8wtp1vmewfU6unFZvuMhXoEkXh5udWtWxULWOoCCz8GuWT1PbiQ6ec1ByFkDkLseyHOxC9H7as13IfLnCLOSTRHPnbS8PzTRmffkSRKeS7SW/PuAYe7EOHG6tgzUE32NKwO911riB69P7/vAkgvT71qYnN1vQTo3aE0JvLizFP57voFZUuui5zQy/Byjk1mkd3iW60l2jclNb3d66AQPzWcDQCUHfAMAnHJ5TN/X2V5B55IVsuNBCvrCqmzP/9XEwx35DurGLDt9X6WLmckCfFhrEYwv9HbNdyEFW+NuqYkXpF9A+a7Pb2aTljvZY5954Ew0eJLXfCU3UpNm/aPmnzelmhLWLYsDaVAIuQgM8H5plqceP+eMf+yE0/1QotEyMMH0zeM7rQ/LJENAPQ+NIrZIuQQURyC/3hJP4CPi41W3rjj9yu3q9H19551x3RaVwz/2RT68mVDBvZtv9YzR2diRFXb+9Xwb//pFJx9ZYWenVltdK00k9yMHkAHAX/BQ7hMOV0ItRS2p8ZALTpBU2nkAWFNrEeIXpDzyJXQcSDd1Q5nn6246DsLO6uojUhptL7oBPrR5NqMbRcFh8sotEZ7vo5NgaxQ4tq1JS40XS6mNR9c9wCatoLmjS3hIiQFKs+Yd9J34gniV7Frk/P/BHMutD59yRQ08Yat54HgzM+iEPenxY8a3sPgR3uFdZFRhLKDFuBIko/uP/+ODo0of7L/4bEzneUerey4+x9++Nhue21kEb2U20iNLm9jhBc3co5kmbnBGI/9Upol7Mc9Kv6N1cWttLBwEHn52e7ifXe6z8VbH5A/zy28WCOejdlsszj3bScrYV7rfS6/rT42W4Klrljmje5ahQpFcca5LZk3tmzaafbTGOli+PevWlYtg71qAuCUc+/0K1nLoi4eEhoqPV9A/L0mApCgwJ371tfCej/HuLSgIv+V088S7TlnS7jhtpQcl2ssGHKude0tCprAiR4bU0y/1tcj/tori792k6d1n6bHJvRaeuNB5/gn+ppgseGBbLryoqWZfyjPSzxWYuEfO6/l7ztbw96fUc3+70MA8m2dkJta6YAMNsJXlYIfDU73N4VoVWdMwAPPPYFCRSllQII4PvJpfd/MaJ2Wf22gWXIGcKXUMyIbSaJQhGfaCXoWm2Z2TSwf211o3P2Vxl4zVaLz+2rFt7SH4ZhnwXy1hqW+XN+VtXtdLboSffooLqzq4toscqCEoM81Duybb9nY7Y3Z3PdFgueNo3dbuh7Ie9p5T8qtXIvHod9XfQUi36OOv91pwdl/nucdcPVak8rd8kQGPHS7mn8o0UkPzDOx9GXV8/9NV/N0aHX/H6Wr2kfN6+uXCJn6mnYWNAPClm3Gsdnl2f9BofqVPXCbKSIQMBhG2rcqkTOTxjc4zs/S2GdI1+6WUf27IBFBrlMHpzvzuJa5/oxu6s8459pFG9zn0b7S4Er02b1m9DA5sANixFszfrBMCOnmyh9xQ91803d3lvCOmc4ql5obTzVSXk/VJNx0tHXmvukXi0bFtSzyGC1G3j8Sr1Wri/qjiQb3UmnXhc47oVerjcOO6dLg9/iI8llxNP5bXyNyTUcfffLqS73Vcy/c9Vcndc7aGHnyhnn23zgVLGYA1FMNGeajk2Q7XJ8NaDT7JGYzXiKg95DbxCfxeM5LxrxnIOei9YT4DYX9+yDerEQnQrdT1Grqp3nXOsffrXSm+N7hyy5aIph2xC+t3xwnLp2Q8mGPposxyf9I5tSk3PL0ZOp01lvTUVM/rd6TAb6SvXYlHA0OtJL5/TOKNwUsOfKJa8NMFYu5PfEj0aeizJR0GnihjBuc2UvdmG7hbzlbx3RPL+RuTtHxvTRV7R2o182xRE0whOVjO8hDlpGrUpHvNi7XmB4VzSJAHn7z3jiAaHgWVIhmEV2Fii/D/t0zuPW8ZnB2cAOeded1LXK+i9uhd7Rx7b71TJABqHLRwwmcED0XDqgzTK6EX7Ic7ZdhpVZrFGppS93XQwXRhgaUc9Hn9t0w0Gej/PlE8Kh0Pn3w0WLV27/OhixJ34LMPOJVLj/NdNpyF2w/k8vdm6Oi7cwxsn5Rqrvvxcr5LYinfLUnL9jqnox/I1nOjjG5YzAMs9zCu2SR1cLLB/p9BP/lL/CW1A9HoiAgtkb3wXssUNjn1e87g3tOxFSAeFMHnHYVdS6xvIRtFVJNj+tS6W6ZGSQbsnW16pFOeLS4o29EUlOmggzPtR0LP6N4YNDHOu/hCOBYVeKTv+AAXgi0fiUcVu/4xuQMUSw5EY/N3VeOLfuJDVp+Av+xIhQFnq+n7LzYwvdN0fHhSGa88WsSHJ5ZyXU6UMzel6tjnquwwmQL4lOX42SR98RMrueDFvEa/KWTI6LIRvUC9u5WMh2fW91DWuqaE1DoyQ3R2LqTBORcdL2cEQwzuPcM7tALExyuU6a48RSnNRVTYXupUYx3dp851Rmg0nbNPWDU5X1XiKg8utPLB2aYcZZpxSvjRbL9avNCTZAn1RRsS3ydW00O5ZP9H2ML4NGx+PE/EHOO7f3MO7kwsYf6aVU/1zqrmIk5recXRIl6RUMgTiUVst3MVzEOFBhjn4GAWBzCFZhomeei4Zyv1w9CInnzKK5J4BAAizOD8V3Ct8ydVrYsKKjeYFeWG9YpS0xpVIw1dKswvy7/5iMG1+wGjYzr6f+uxij835F6amRmkOu/IDC90p6rKGXdQpYvrXO0uVmnJJGUpyQcVuUyhF62r70qpuke8YSl9RPJ5uUKNFECiKH6EOl6lWnbg1eBFR3bg8/fYiRVH+NDPT0Ofg5l8v4wKT98cPXtDSiWHHy/gsaP5PJZYwKk0ZfRf0nXcPxqc8AkAP5Vm3Z9Q9OHXzM4xd6SX3eDb+MLcBR83Jdwbuj6vxIvX3MNouyvIRK4LqnGYVDorrSzRJ6nStC9goCZkNxdabk0KqrGtkH//nlr77nuMjmno/77zFf/8kAmgAWVwuj3/llLHs2Hnnb1Dy8mkEJ2LCdY6t4edqnjRexyCLKHyd32Baue+Eo9hWP+YjAGKpQeisU93VmNLDvHKdUnQbec56H9GS9+cW0d3SavkVCdLeCwhH/1xRFIJE56sZf5WYoLRHg4+5ngYR3Ilb1vJBa+Ls4S9g0/tSrzPVHSErhXmzsF2dqLCZM8J0jt4VZX1ovJi2bSIjQe6+14+VlUlpL2h1c7twdXOWPmzO2vte3rV2WYJ/281WvnnhmxElAWcd+Z3K7ULZd8uOkfkDdXOlpkx6DjkN9uSeARx0MRrmIitB7oTK3dNxD/brcEW7uGI1YnQ9Zuz8JfEfKb3BR3VI1PHBZ8uEXs6MnxiIas6VUrfml0LL1pomMQBP4lkHGPt9I7nmxz/HBFf4K0UXqnEC2pgcvwjyOzcrzC73ER1Y5OiqPbLrokN0iphr4oRgoqhNFRSi9Bq587gWleMbNz+tfY9PWssHZwAQh3ALtQBIrTu8WFad5oayaLY473G9QeK5sVUCQ3IqGIOPI9Hxe/GlvzgwGIP86q4U9DjYAZ3U2qpp2dWDRt6tpwjEiWJP1bAKU6W0j3TKrlhtXYYT/PwPsMxYyjm9DPN1IQ7svU95foCgrDWwFfiZYPJAZ1E5uBGa3+F3R2jMrsMmMHC4jrDcUVa8Su+1b52VUwmgM6+M7i2RQE61zr3RHR4BfApBEVUkmNDS50tWYBUMfMDanBpuFS18dBryuhDxVj0HsC/PMqHHUiGsHOlTLesGiY8RcsFnSjmsWMFPHa8iMdPlDBhyZX0Q2VN8LqHhQkcD2MpVvumm4l+urr5PgwTC08I4mAQWvvnQ0DZBfmgVwN0CqFgDOH0ZBA2EpQme6lS2zC707bEG30OQz/Yvooh+BGgRQEidM49ETUd3QX4EqDcOSa0RKoDiPBXAMElYDhamKnYsPNbfMNBINbu48MOp7NhOTV0yPkaTnW2nMeTCnlMU8LjZ8rZoOQK+ra8ev7ZZgrG8gAfuVn7SA+zY3CD+cW+PnP0UdomVNukHi1AOF8r4wHgnSzup5Q07FCQjItocrjwauO2sES5FiFdMyKMOKnD/x7agi8B6n0J4NodUiVmAR06BpBLwZ0KbZGhRQ7fSqB/40kEUH5xMB7b/DOEbdxP982sYiJKmzg8uYxXninlsXQtT2TUMhF5DcwTBheMZ3l4j2a58RyX8i+z6+OB2Xq/NFJYa9A6xvDt7RIhQsrrbsbd1GKF1V1PWFyA1xvTggrr3sImr0cTUcTrbCGM/3X/EmQCVNp2hlZZV8mHR1S5dodUdGgCgDI01ZZ/Y6EYA3QqMUeGFZjaJoCU2oVvPrkW23wYOm3YTQ0qb+BU9U6OKGziVKXNHFZqZHtXNTP/IhlAU8vGM6z+DTu19olK84NSbxSARtaE0TXJuALaMF6/qqqQIBsVSbjYZMJJgdLgrlbpzIu6HU79i/glr+FR2tdS2/+18BLAviO0ytxCgBrX7rBKy0zh5zpmFgDKsLPW/BvzLEIQGJJliwzNsl5KACkIU6794Uli3R7AVnzDPnGhgu9PAtfJTPIRZopTGEh2gN1DTwKAMR4m62WjddS9moJw2Y+jwK5No6OGlQzgJQQND+Me5lvc4XbgzTYKrzftUWbXDPObdYwM3nbl8ddDJkCpzY8A4Vr77k5VDmE0sGMSAEAZes6S1z3LJFS/QtJskap0R7JPC8pSKrwSsdsTsGVfQ7+dScx9Jo4LbyK5uz0s38tF8U96aG4Wx/GvWjyzMWm6NTIoytkv6Z2+Ei+hkwNuVNL0XIWHKSdcFAQZbeeJIt0EbOWWCPkYAcjokhpdNUgECKtALqBFASQCCJXAjkuAs4gADe0TQGrszp9+fRum3kQSi7+AW1K0nLLYyKnqHFx3J8094ma4BQAwtsn1X2QUZPQ2e7sY0HlJhYI+ld3zBuFhkxQumsWt7qagBmtsz2NZdwjGlV0EMpCUefwukAigLDHsDCo1rpTPEV5h39WpQwaBcnoVH68IPd5wsXtGozDrpVOyOTLsnMVfAaSG77MoYRQxbyMoVm9lw1LLeeJkEa/Ia+RUdU5B9ie6mT2o4aQeLxoZGbANiQ+zUA8pGO4rgqQchJNiCLP7SFhW1XA0D0Bu/Ksq8b+EFgLswAsbo+XDg8tMu0IqbB1QAWQCaNRK5Y91eaE/NYoxQKp19CUEkKZNKWdtmobNjgX860O0YvdpPujQBR7TlHL31FlgHAvMgEaHOHdflHdvdU1GuN7ek2DZGQqGKydYANzsLCSqm6aF+2zeKKB12ve/gEyAQv11RgCIVygO110MTWoU5gO0qQDyvLlPls/FpkUD/vk+mvjmZz5oaxKPHcpiBpMAL5F0gmQ8cWaNFDSiwE9ld/2boNjDCprlCIfbqWhyxYUVWAZ6j0cQJB6Nz3vdw/8WEgEU+bU/XKoAFikI9F9l9CeH1NAatVLxY21e6BGJAMdMo8NOt3IBMgGmRM3BJi8HPPYHGtu0lye+OMAr96ZQTwDAP9zUEtQgciEHRevBLvpDnOOaCB4Ad3iSb6gyjhq+vmXxiOAe/GOCawevAtTtwPNbXICqUL8rpNwiuYCOSoBDtXmhByUXcLRxtOpIo38MIBGAQAT4eCkQy7+h8VXf8dianXzwtuNMPwDo66I/EqwH4ozaLi5mlfBojmZybWhpk5iztwR0ly/LXgtIBAjOadihyGshQOhFw66QouaOTYDg3dV54fvqxRjgaOPooPYIMHHRLGySGoilW2h8xWYei/qWV36XwOA8AEazE2W79ay23k6wPAQ3WN6VSCGmgQBBXqn3H9y59pAIoLpQtz04Ux8lX1BojmGXKq8DEwClaqE7a/NCD4guIOSIPrJdAoybOx17bwEQi+NofMkXPLY0jse+PsSgDQWUNDtJbrQgknqHcFPWvjXi2nu5cf0gVv1aIv5rDS8B6rcHZ/gSoHGXKtfYcRVgmBqUYdvr80IP1AtB4GUJMHbeDGz8fCA+3cjgCzfwmHoTj311gEET6wkWvApAkNRYwu1pwMrQziBCgCcY+rGGhhtvcNPf32rzbJ5SZemCPvrDTLWWCZBevT04o85HAa4HAmzTewnQ6cfGyKDD7cQASAHGzBUJMH8NjyESbNrbJgEUHo/BhwDCgoquTs8mpBbBANDfzZQ+2iSuPpIDx2sqAhIBlOe024PTa64fAqDZr+FbWwgQsacxMnSvvu0gUCKAYs5GGp8dy2Pz1vDYhj0iAXxcAMGyYxQeqrE1AW63uteGAAAG4EQBYi+Wox5tdgprDaSq4bVzCTIBUvwJEJyu26XM1nfcNBA1fOfNdXnhu0QX0GWnKTI0vqFtAoydMwOLnA2KaRtpfGYsj82N5bH1uy5VAIoa60cAqbr3naYqpL/TvS9MJAGFAdCdkRrYPF+gZ/ohBRCIcC3QPgF2KzM7OAG6ft1CgIidpshOPzT6jwbKaSAiwNszQDF9A41Pj+Gx2TE8tnrbLxNASP/EugOqD9xpcs7qzrDoezwG4FEBwB1u5uywnKpbke2viUuQCKA4V7odP1vodQHB568DAnT2IUCXnY2R4VdKgJnRPBb7ffsEOOoNAr3jAnLQ95TJ/Y+uNKNHW4BhAG60EWFfijU9bbA+5yWB77jA7w1ZAU4VbcfP5rcQILWi4ytAz89r8/psqBLqAN2/b4zsskXvrwDDxE2giFEzp2OjpoNi6noanxrNCwSI+V6oA/hlARQ7RkFRjZcQAAEtEEXVPwzDBhUZ+9zioU8h4yMlwAC4G1mOHWK0L5QXpnqLR7832iPAufJdypSqjhsDoM0Xb1rvQ4BvGiO7bW6HAKNnT8fenAbKKetpfEoUj01bwWMx37VBgFYxgFwB9IHs69FzfG62ulZ15njAeJ7FACi0cfBdJP3Tu4eKxXkAbXz/qqM9Apwu26nUlEozgjpgKRgtd+oXW53XL1ZUgNvW6SO7f90OAf4zZSr2+lQgJq+m8f8u57HpK3hs5TdtEWAM4Z8FtJ3iyZNAMQx7uMn1eg+asaM0EbkElC30t5CfC4aWjNMmJEUZJFYZ2z7PlUCcPIopkgq246d9XEBHJwBaVnX7quq8vldCgNcmT8XemArYxytp7JOlPDZlGY9Fb2mTADjpMfqkge0bRqgIij1rQJXpnq4eJgeRAP11dnm2C7a7dK6fMLVMVpGrApkAxwu2KxIvtsQAp0o6tgIgF3DnSn8C9PiqHQVABHh9CmAfxNDYx8t47L+f8diKry8lAPnLLsAPAgmA0HynCenjZlE6eY8AAA3bSURBVDLRGHIPimn6Z4NDXMkjE8AnfpAxvaS+x1M2z/QHPPTCu4tNv91ltEMAVVLxTuXJDuwCWhPgrlX6yL4b6tsOAr0EWEVjHy3lsf8u5bHlcQzOABA0eMcCBAK4/QpB7SsAgiTx9znc36MCUScUAxis8uii0NN9ezvam+jpBsszD7rprTcxrK0zz7MolQyzO9+Xfu/Xb+XSLgEKOzYBUAxw31Jd3u0rxRjgrtX6yNtian+BADE0Nmkxj03+rG0CUNQY3OU2YfI+Q5cL4iTjD7Q730NFITSu0N/m2eElhqgOAoFermjsNdBCzrjFzRR15TgeGR0TawkQ6mH4fvrm4d7v/VpczwQY4EOAO1brI/uvujwB8EmxNDZpyWUIwF4RAeQNHF5sdgxAko+kv7ebKX3mRIW4CZVklGEG+9B7HJ5tPRjWjoJDKVAUXkPcjDPC7NnTs6RGNv7l1aY9yAQ4dnG7IiHHGwOorgcF8CUAUoA7LkeA1/4LxMTVNI4I8MliHlv6leQCWoaDUR3gFxVAUoWj648G3+Zh0pHxu5EMN7jW8gyykRDVYxj2oIUa2JVmXVLBCFUOQcEBdGqy6m6ubvq074lS/wUivxXtEeBER48BNKC8f3Fl/u3LJRewqjbyrhU17buAVyf7E+CzLxiCEoaDW2KAK3EBst+3ezahQhCS8zubyAWC/dBnUrGoh9U1UXjKM8+zIS7aE2Rw/BieV//v4cMne/clliahtuz381vQHgE6ugKgIHDggsr8AZ+JBBj4adWoez+r9h8MkiuBKAh8ZTIQ78XQ+MQlPPbhIh5b/PmlBGB/QQEk4z7uoN6S/X4XG5koGV8cEZQUAq0j7GZzR0eYXIt7Hs283c+26HeuVrn4eibAkJnagkHzyoVS8KB5ZW8PuBwBXvoYiHdjGHziYh77CBFg06UEoNjIdl2AlNI9XWe7uw/FNCJJj/DQuiHF4kCQ/Hm7EKeco97+23x9e/AlwM/Z3nUBHV8BNCAQYPAsiQCfakddlgAvfgTEu6to/H01iARoQwHIdrIAqVejZ/X187ApyPjBNAddyupeEuzS1uJLMQtAk0h/34mkvgS4noJAkQBlfgRo1wUM/2Aq9sKHiAAMPkENggtYtIkh3BwaDPLGAJiDQgpgvCQNlHr/bQ4qBvl8FM3f0CTtxiHFBNcM1zMBHp3hQ4C52lEPqKvajgFe/ngq9oKgACIBJi3gsUUbGcLN+xOApEbjzlYEkPN9o2PEDWL+Dj3sntS4QdI+g5I6XDPIBEjI/eH6UwAfAjw8Tzty8Eytz9OzAPcGgS8iBfgI8DHRNPbuIl4gwIINbSgAGdmKAOKk0NyGG7vTbK3g90naeHs52hamZdLoNYVMgGP5reoA10EaOMTHBQgEmFWe0WIMHwJILsCPAJ+ub4MAVJsEeMhkuinYzTSHsQC3lxiFnUllZbjmkAigPJ7/g+Jotnd1cIevA6BS8KPTSr0xwC8SYPgkwN+JalGAtgnQlgsQovawZMPAbkVNjwoGlwd5rjWQ8aUV0MGnSjNCfy78QL6kAAFaK8C/3hcVYNxCHpv4KY/NX9uGApCRuKNVDNAa19r4KOYQl62L2+FhGEakF78bdK6iudPynd7nIQSfLN7V4SeE/CoF+NdEUQEQAd7/DQQQ8/hrOf1b3FZGgKhKnXIdA5Sp1fsVKVoIP5I3QvhIcglhSWUnlcfLpgjvddQZQYgAj8wsFZ4X8PBs7chHp5W2HwM89z7gkVG0QIAJ89HaAAZ30iil80kDr0AB/pcQerv/tjJ9AUKDiprfV2RVZSjStDSRlHlGuff4w6Lx0f6EGNa9GCKCztfpIg4WPy68f61V6+pCZL8QA0wvLRg8s1xYGvbw7NJfIMAEwCNXSASYx2NzVzO4i/FPA/8oBECGbOm1QgzSq6JhsKqw/ltFTrWNSC02KRKzYkO2HOknGRjtbUDI+w0Ha00fqHL1BS3t/htHGv+YEG8GDck+NrUsd8j0EiEq/2UF8CXAfJEAfyQFkHu7T12hM3qySUn9VGVeXYEiq4InUgqSiX3J6IllLQNIyPCIMFK9og96joDWoldm1H0s2K+FSB0H8n68Q2aUHhsyrXANurNHZpWNHjKtLKOlAVulgX9UAiCf3WIkobcrS5qfUObpdyou6kg8o6QZP5O3MiQ+6RbJguJYghwIou9Lxr+3oEBFVJqzVDl634dJi8d3JMhP3Xx6Wtn4J6ZX2nrGx4c/PKvylSHTS9AzE6UbBhwboRZ27CaenTgD++d7ogsYu4AXYgDkAi5RgDbSwN8DQm8Xxgi8xrmhoKabssI4jSiqKSFyKjkirThJcTLrFT//jXo7Igt6FccYxG1tMAy7q8LxQFC9o1JRqC/pFbNN3G/Y2xYdEdLNPTIld+/Qmdqav88pXPzotLLif8Y0dBJv10cBnh03E3v2XZEAY+bz2Ltz0PKwNgiAgkDy0rGAqwX/3i4gpNT4pLJUv5vIr/YQmeV6xen8qG7bNX2lU7bb2xEQ2UMM5qHKavthZWUz4OeLfsSmSU9IvVrDzX94qNXEoMkZsUNnVsHQOY3w+MyKpeiZvYMyM4P6T/zplofeu7j4hleWVWJPvoWyAO6yBLCRkbjNZcQ04kMYZJL9v4CIKvdWCRF1tu6qctNMRVFthQL19vTiJFVCzqUPuRDlvaW3Swivt/dQGuyzlbqmckLbyBH5ugTsx5+fED4W1cGrLB0d+LBh4tz8QR+lDRkyrfDCE3NN8NiMKvaxaWX0wAkX2HvfTirr/Lz6LPbkKJEA78znsfFIAVa1oQDU6KumAMgvS74ZAfXWzuWmp5SVpl1ESR2tyNHq8dSSZaH7W/d2lPYJRm/5vvTo+nAzOTSo2blXUW1kiLLaBlW2dlH3nck3eY18nRlfAuDyk7KwEZjir5PPvfnwzIroRz8pjf7ruKMvoIOIp8fNxJ4aC/iopbSXALNWXkqA/68CtNHbOzU03KisbZ6jKDdUKYrqgMipPK44efFS3456u2h45OO9PRjtUah0euYozK4qRb0ZiJLq04qk/JewEX6ZgLckfN0CPQegJQCUMGyYMM9e+cy4OVdCAAIRwOEyys/h8TXEZdGqt6PvKWotzyhrrQcVuiYGv6htxlOLo0Liz10ayV/S20XjK83kMKXDvQ+3uhi8xmDG8kvXYNt+vE26Dik28C8SBYDW6A/TKAdNzAxCf3cMF/bjx4inx87Cnr4CBXCQkQqry9jvytYFyDV5/95qsM5R1DVXEVoDELnlZxSnc1/2C8hEmW6zt0fYbN2VTnqWwunR4s1OwKv0Z7G0jDda9fYrf5jEdQ95UuiVEsBGRiqtLsNlCeCTd8vz+xQWx1PKZsdehcFG42XVzXhWeVTIwTM3S+0v9VZpapifWojkCTGTfw8iqb24nWTwBlMzXlq5Orh1b7+aE0mvG7RLgNk8NqutIJCMJNrKAtrw7RFFdd1VFs90pdGmVRgcQOiazyrSc/7tt4+g3NvFVz/ffgNAN4KFGQqHR4tbUW+vTcFSLvznErUQi0RelQng16BdAszh2wwCHeRohZU09E2V9gkUe61YdpV8c4jBPlRldccrm1wMUWOwKAoq1nZOypAf/3qZ3i5+prA4nlai3m5zsXhjkxUrKV+H7UoQtpiRFSXQ268WvAQYN7PdGMBvUigZSZgdRvS4F+ESJKMLvtlCzlRayHJlswuCqk3ng3Iq3xwm70WMcJneHm6391R66PkKm0dHWJyA6+rTsLNpI7FBE72PjxW+H+jtVxkyAf75/jS/LODduaILcHj8RgNDLZ7XCAfF9KwxCA99CKmzPR5kcuxVmJy0st5sV1SZ1t9wUlrkIZFDKvKgYo1P3i76dkWT41mlkz5E2EgOrzea8eKq6ODvDkq9XQoeA779d4SUKyte+fBp7MnRgI/6jBfqAO/NFUvBdspvPkCfzJIeBMVUKx2US2lw1CuMTgiqMma02dtRb5V9uw/C7YB6+zyFk6rGHW7AaxtSFGlZr2OYX94uT+4I+PbfGWIDq9Uq/KnIYixyKWDvzGWFwaA5sXIhSNwqVtotXFnbNARvdq5VVJtjOqVIj2y9XG+XoHC7nyWc1EHCTvK43mTGC0rWqXbsu1P6uCU2uG5q9H8USCpAPDd+DD5yNmCTljLYBwtZbN5aBrcLM4JkArS9OQPq5e31dvQkESe9QOGi9bjTA1i1PhXTpIyUXY8AOTa42kvCAvg1kHzyP8ZGY5NjAJuxisM+3eDG7SwQLDtb+CXkixFkWRcHcPx9uxzJo95O0gcJh4fHG81WvLh8Lfb11rukKxJ7u/z9AP4gkKSXGDfvbWxWrAP77GserzRCEAf7hCsUDSY9NkZ4ALVMCMGgoSbXTUqSXkA46TrcRQFerU8nzmW/LZebpd8I+PY/NGT/O0V9K75wUyKemAXosTBh1QZhl0+h97eCwur4J+Ggj6CAETc0WfGiqvWqrbvE3t46NgjgTwA5d9eAUrls8zxcq2cIDhzBjfb3MagKwQCCw4zOPior+SnR7KxVmF2AV9SlYZoLoy7x7YG8/U8KpAQSEZSfb38Eq2nMQUOJhJPmcLsbCH0zS2gb3Hhu6brOP6aLI3CB3t7RALhMAjRlQHHo3Gt4kyMab3JEEftPjcZGjBDmEwqQM4FAJN8BIU6pFiP31ghE8tcREBEyIUj4Q0O+cqk2gAACCCCAAAIIIIAAAggggAACCCCAAAIIIIAAApDxf53DrfbfucV8AAAAAElFTkSuQmCC"
 };
 </script>
-</script>
 <script src="/assets/js/babylon.js"></script>
 <script>
-// ── Data ────────────────────────────────────────────────────────────────
+'use strict';
+
+// ── Cluster data ────────────────────────────────────────────────────────────
 const CLUSTERS = {
-  highlight: { pos: [0,0,0],     col: '#3e7e3e', projects: [
-    { id:'piclaw', name:'piclaw', stars:526, lang:'TypeScript', desc:'Self-hosted AI agent workspace — streaming UI, persistent state, built-in tools.', url:'/projects/piclaw.html' }
+  highlight: { pos:[0,0,0],      col:'#4488ff', label:'piclaw',        projects:[
+    { id:'piclaw', name:'piclaw', stars:526, lang:'TypeScript', desc:'Self-hosted AI agent workspace — streaming UI, persistent state, built-in tools.', url:'/projects/piclaw.html' },
   ]},
-  piku:      { pos: [-22,0,-8],  col: '#b89030', projects: [
-    { id:'piku', name:'piku/piku', stars:6569, lang:'Python', desc:'The tiniest PaaS — git push deployments to your own server.', url:'/projects/piku.html' }
+  piku:      { pos:[-22,0,-8],   col:'#c89830', label:'piku',          projects:[
+    { id:'piku', name:'piku/piku', stars:6569, lang:'Python', desc:'The tiniest PaaS — git push deployments to your own server.', url:'/projects/piku.html' },
   ]},
-  ai:        { pos: [20,0,-12],  col: '#3a6ea8', projects: [
-    { id:'vibes',        name:'vibes',        stars:142, lang:'Python',     desc:'Mobile-first web UI for AI agents — ACP and Pi over RPC.', url:'/projects/vibes.html' },
-    { id:'agentbox',     name:'agentbox',     stars:97,  lang:'Dockerfile', desc:'Docker sandbox for coding agents — opt-in services, DinD.', url:'/projects/agentbox.html' },
-    { id:'umcp',         name:'umcp',         stars:11,  lang:'Python',     desc:'Micro MCP server — zero deps, decorator-based.', url:'/projects/umcp.html' },
-    { id:'go-busybox',   name:'go-busybox',   stars:10,  lang:'Go',         desc:'57 BusyBox utilities in Go — 2 MB WASM binary.', url:'/projects/go-busybox.html' },
-    { id:'feed-summarizer', name:'feed-summarizer', stars:27, lang:'Python', desc:'LLM-powered RSS digest — powers feeds.carmo.io.', url:'/projects/feed-summarizer.html' },
-    { id:'pve-microvm',  name:'pve-microvm',  stars:3,   lang:'Shell',      desc:'QEMU microvm for Proxmox — KVM isolation, <200ms boot.', url:'/projects/pve-microvm.html' },
+  ai:        { pos:[20,0,-12],   col:'#28d880', label:'AI Agents',     projects:[
+    { id:'vibes',       name:'vibes',       stars:142, lang:'Python',     desc:'Mobile-first AI agent web UI — ACP and Pi over RPC.',               url:'/projects/vibes.html' },
+    { id:'agentbox',    name:'agentbox',    stars:97,  lang:'Python',     desc:'Docker sandbox for coding agents — Copilot, Codex, Pi preinstalled.',url:'/projects/agentbox.html' },
+    { id:'feed-summarizer', name:'feed-summarizer', stars:27, lang:'Python', desc:'LLM-powered RSS digest — full-text extraction, Raspberry Pi.',    url:'/projects/feed-summarizer.html' },
+    { id:'go-busybox',  name:'go-busybox',  stars:10,  lang:'Go',         desc:'57 BusyBox utilities in Go — compiles to a 2 MB WASM binary.',      url:'/projects/go-busybox.html' },
   ]},
-  terminal:  { pos: [22,0,14],   col: '#6a6a72', projects: [
-    { id:'webterm',      name:'webterm',      stars:106, lang:'Go',         desc:'Go web terminal — multi-session dashboard for AI agents.', url:'/projects/webterm.html' },
-    { id:'ghostty-web',  name:'ghostty-web',  stars:5,   lang:'TypeScript', desc:'Ghostty terminal sessions in a browser.', url:'/projects/ghostty-web.html' },
-    { id:'go-rdp',       name:'go-rdp',       stars:9,   lang:'Go',         desc:'Browser-based RDP client — full MS-RDPBCGR spec.', url:'/projects/go-rdp.html' },
-    { id:'go-te',        name:'go-te',        stars:7,   lang:'Go',         desc:'VT100/VT520 terminal library for Go — pyte-faithful.', url:'/projects/go-te.html' },
-    { id:'gotel',        name:'gotel',        stars:5,   lang:'Go',         desc:'Self-contained OTel collector — SQLite + built-in viewer.', url:'/projects/gotel.html' },
+  terminal:  { pos:[22,0,14],    col:'#9955ee', label:'Terminal',      projects:[
+    { id:'webterm',     name:'webterm',     stars:106, lang:'Go',  desc:'Go web terminal — multi-session, watches AI agents in real time.',          url:'/projects/webterm.html' },
+    { id:'go-rdp',      name:'go-rdp',      stars:9,   lang:'Go',  desc:'Browser-based RDP client — full MS-RDPBCGR spec, Go + WASM.',              url:'/projects/go-rdp.html' },
+    { id:'go-te',       name:'go-te',       stars:7,   lang:'Go',  desc:'VT100/VT520 terminal emulator library — ESCTest2, SVG export.',            url:'/projects/go-te.html' },
+    { id:'gotel',       name:'gotel',       stars:5,   lang:'Go',  desc:'Self-contained OTel collector — SQLite storage, built-in trace viewer.',   url:'/projects/gotel.html' },
   ]},
-  macos:     { pos: [-18,0,16],  col: '#b06838', projects: [
-    { id:'PhotosExport', name:'PhotosExport', stars:280, lang:'Swift',      desc:'Export your complete Apple Photos library.', url:'/projects/PhotosExport.html' },
-    { id:'drawterm',     name:'drawterm',     stars:26,  lang:'C',          desc:'Plan 9 drawterm — HiDPI, Metal rendering, clipboard bridge.', url:'/projects/drawterm.html' },
+  macos:     { pos:[-18,0,16],   col:'#ee4466', label:'macOS',         projects:[
+    { id:'PhotosExport', name:'PhotosExport', stars:280, lang:'Swift', desc:'Export your complete Apple Photos library — originals, edits, Live Photos.', url:'/projects/PhotosExport.html' },
+    { id:'drawterm',    name:'drawterm',    stars:26,  lang:'C',    desc:'Plan 9 drawterm for modern macOS — HiDPI, Metal rendering.',              url:'/projects/drawterm.html' },
     { id:'homekit-steam-user-switcher', name:'homekit-steam', stars:41, lang:'Python', desc:'Switch Steam accounts via HomeKit.', url:'/projects/homekit-steam-user-switcher.html' },
-    { id:'macemu',       name:'macemu',       stars:3,   lang:'C++',        desc:'Basilisk II / SheepShaver for Raspberry Pi.', url:'/projects/macemu.html' },
   ]},
-  infra:     { pos: [2,0,26],    col: '#4a7030', projects: [
-    { id:'piku2',        name:'piku/piku',    stars:6569, lang:'Python',    desc:'See the piku garden — listed here for routing.', url:'/projects/piku.html' },
-    { id:'ground-init',  name:'ground-init',  stars:64,  lang:'Python',     desc:'Idempotent Linux bootstrap — YAML-driven, zero deps.', url:'/projects/ground-init.html' },
-    { id:'azure-stable-diffusion', name:'azure-SD', stars:44, lang:'Makefile', desc:'One-command Stable Diffusion on Azure GPU spot.', url:'/projects/azure-stable-diffusion.html' },
-    { id:'proxmox-zpool-monitoring', name:'proxmox-zpool', stars:7, lang:'Python', desc:'ZFS pool metrics for Proxmox → Graphite.', url:'/projects/proxmox-zpool-monitoring.html' },
-    { id:'gnome-thumbnailers', name:'gnome-thumbnailers', stars:26, lang:'Python', desc:'Thumbnails for RAW, HEIC, 3D files in GNOME.', url:'/projects/gnome-thumbnailers.html' },
+  infra:     { pos:[2,0,28],     col:'#22aa88', label:'Infrastructure', projects:[
+    { id:'imapbackup',  name:'imapbackup',  stars:343, lang:'Python', desc:'Incremental IMAP mailbox backup — Gmail, Exchange, any IMAP server.',   url:'/projects/imapbackup.html' },
+    { id:'ground-init', name:'ground-init', stars:64,  lang:'Python', desc:'Idempotent Linux bootstrap — YAML desired-state, like cloud-init.',     url:'/projects/ground-init.html' },
+    { id:'gnome-thumbnailers', name:'gnome-thumbnailers', stars:26, lang:'Python', desc:'RAW/HEIC/3D thumbnails for GNOME Files.',                   url:'/projects/gnome-thumbnailers.html' },
   ]},
 };
 
-// Real infra cluster (no piku duplicate — remove placeholder)
-CLUSTERS.infra.projects = CLUSTERS.infra.projects.filter(p => p.id !== 'piku2');
-
+const PATH_GRAPH = {
+  highlight:['piku','ai','terminal'],
+  piku:['highlight','infra','macos'],
+  ai:['highlight','terminal'],
+  terminal:['ai','macos','infra'],
+  macos:['terminal','piku','infra'],
+  infra:['macos','piku','terminal'],
+};
+const PATH_EDGES = [...new Set(
+  Object.entries(PATH_GRAPH).flatMap(([a,bs])=>bs.map(b=>[a,b].sort().join('--')))
+)];
 const CAM_VIEWS = {
-  overview:  { target:[0,0,4],  alpha:-Math.PI/2, beta:Math.PI/3.5, radius:58 },
-  highlight: { target:[0,0,0],  alpha:-Math.PI/2, beta:Math.PI/4.2, radius:16 },
-  piku:      { target:[-22,0,-8], alpha:-Math.PI/2, beta:Math.PI/4, radius:18 },
-  ai:        { target:[20,0,-12], alpha:-Math.PI/2, beta:Math.PI/4, radius:20 },
-  terminal:  { target:[22,0,14],  alpha:-Math.PI/2, beta:Math.PI/4, radius:22 },
-  macos:     { target:[-18,0,16], alpha:-Math.PI/2, beta:Math.PI/4, radius:20 },
-  infra:     { target:[2,0,26],   alpha:-Math.PI/2, beta:Math.PI/4, radius:22 },
+  overview:  {target:[0,0,8], alpha:-Math.PI/2, beta:Math.PI/3.2, radius:65},
+  highlight: {target:[0,0,0], alpha:-Math.PI/2, beta:Math.PI/4.2, radius:15},
+  piku:      {target:[-22,0,-8], alpha:-Math.PI/2, beta:Math.PI/4, radius:18},
+  ai:        {target:[20,0,-12], alpha:-Math.PI/2, beta:Math.PI/4, radius:22},
+  terminal:  {target:[22,0,14],  alpha:-Math.PI/2, beta:Math.PI/4, radius:24},
+  macos:     {target:[-18,0,16], alpha:-Math.PI/2, beta:Math.PI/4, radius:22},
+  infra:     {target:[2,0,28],   alpha:-Math.PI/2, beta:Math.PI/4, radius:24},
 };
 
-// BFS path graph (2 nearest neighbours each)
-const PATH_GRAPH = {};
-const PATH_EDGES = new Set();
-Object.keys(CLUSTERS).forEach(k => { PATH_GRAPH[k] = []; });
-Object.keys(CLUSTERS).forEach(k => {
-  const sorted = Object.keys(CLUSTERS).filter(j => j !== k).sort((a,b) => {
-    const pa = CLUSTERS[k].pos, pb = CLUSTERS[a].pos, pc = CLUSTERS[b].pos;
-    const da = Math.hypot(pa[0]-pb[0], pa[2]-pb[2]);
-    const db = Math.hypot(pa[0]-pc[0], pa[2]-pc[2]);
-    return da - db;
-  });
-  sorted.slice(0,2).forEach(j => {
-    if (!PATH_GRAPH[k].includes(j)) PATH_GRAPH[k].push(j);
-    if (!PATH_GRAPH[j].includes(k)) PATH_GRAPH[j].push(k);
-    const e = [k,j].sort().join('--');
-    PATH_EDGES.add(e);
-  });
-});
-
+// ── BFS path ────────────────────────────────────────────────────────────────
 function bfsPath(start, end) {
   if (start === end) return [start];
-  const q = [[start]], vis = new Set([start]);
+  const q = [[start]], visited = new Set([start]);
   while (q.length) {
-    const path = q.shift(), cur = path[path.length-1];
-    for (const next of (PATH_GRAPH[cur]||[])) {
-      if (vis.has(next)) continue;
-      const np = [...path, next];
-      if (next === end) return np;
-      vis.add(next); q.push(np);
+    const path = q.shift();
+    for (const n of (PATH_GRAPH[path[path.length-1]] || [])) {
+      if (!visited.has(n)) {
+        const p = [...path, n];
+        if (n === end) return p;
+        visited.add(n); q.push(p);
+      }
     }
   }
   return [start, end];
 }
-
-function nearestClusterKey(x, z) {
-  let best = 'highlight', bd = Infinity;
-  Object.entries(CLUSTERS).forEach(([k,c]) => {
+function nearestCluster(x, z) {
+  return Object.entries(CLUSTERS).reduce((best, [k, c]) => {
     const d = Math.hypot(x-c.pos[0], z-c.pos[2]);
-    if (d < bd) { bd = d; best = k; }
-  });
-  return best;
+    return d < best.d ? {k, d} : best;
+  }, {k:'highlight', d:Infinity}).k;
 }
 
-// ── Babylon scene ────────────────────────────────────────────────────────
+// ── Babylon scene ────────────────────────────────────────────────────────────
 const canvas = document.getElementById('cv');
-const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer:true });
+const engine = new BABYLON.Engine(canvas, true, {preserveDrawingBuffer:false, stencil:true});
 const scene  = new BABYLON.Scene(engine);
-scene.clearColor = new BABYLON.Color4(0.47, 0.67, 1.0, 1.0);  // Minecraft sky blue
-scene.ambientColor = new BABYLON.Color3(0.35, 0.42, 0.28);
 
-// Camera (ArcRotateCamera — orbit built in)
-const camera = new BABYLON.ArcRotateCamera('cam',
-  CAM_VIEWS.overview.alpha, CAM_VIEWS.overview.beta, CAM_VIEWS.overview.radius,
-  new BABYLON.Vector3(...CAM_VIEWS.overview.target.map((v,i)=>i===1?0:v)), scene);
-camera.lowerRadiusLimit  = 4;
-camera.upperRadiusLimit  = 120;
-camera.upperBetaLimit    = Math.PI * 0.48;
-camera.inertia           = 0.75;
-camera.wheelPrecision    = 3;
+scene.clearColor   = new BABYLON.Color4(0.008, 0.016, 0.04, 1.0);
+scene.ambientColor = new BABYLON.Color3(0.04, 0.06, 0.1);
+
+// Camera
+const camera = new BABYLON.ArcRotateCamera('cam', -Math.PI/2, Math.PI/3.2, 65, BABYLON.Vector3.Zero(), scene);
+camera.lowerRadiusLimit = 4;
+camera.upperRadiusLimit = 130;
+camera.lowerBetaLimit   = 0.05;
+camera.upperBetaLimit   = Math.PI * 0.48;
+camera.wheelPrecision   = 8;
+camera.pinchPrecision   = 120;
 camera.attachControl(canvas, true);
 
-// Lights
-const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.5, -0.9, -0.35), scene);
-sun.intensity = 1.3;  // strong afternoon sun
+// Lighting — two directional lights for dramatic shadowing
+const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.5, -1.0, -0.4), scene);
+sun.intensity = 1.8;
+sun.diffuse   = new BABYLON.Color3(0.9, 0.95, 1.0);
+
 const fill = new BABYLON.HemisphericLight('fill', new BABYLON.Vector3(0, 1, 0), scene);
-fill.intensity     = 0.55;
-fill.diffuse       = new BABYLON.Color3(0.72, 0.82, 0.95);  // sky-blue fill
-fill.groundColor   = new BABYLON.Color3(0.18, 0.28, 0.10);  // dark AO-style ground bounce
+fill.intensity   = 0.22;
+fill.diffuse     = new BABYLON.Color3(0.3, 0.45, 0.8);
+fill.groundColor = new BABYLON.Color3(0.02, 0.04, 0.08);
 
-// ── Effects layers (shadow only) ─────────────────────────────────────────
+// Shadows
 const shadowGen = new BABYLON.ShadowGenerator(1024, sun);
-shadowGen.useBlurExponentialShadowMap = false;
 shadowGen.usePoissonSampling = true;
+shadowGen.bias = 0.002;
 
-// ── Material helpers ──────────────────────────────────────────────────────
+// ── Material helpers ─────────────────────────────────────────────────────────
 function hex3(h) {
   const n = parseInt(h.replace('#',''), 16);
   return new BABYLON.Color3((n>>16&255)/255, (n>>8&255)/255, (n&255)/255);
 }
-function darkHex(h) {
-  const n = parseInt(h.replace('#',''), 16);
-  return new BABYLON.Color3(((n>>16&255)*0.28)/255, ((n>>8&255)*0.28)/255, ((n&255)*0.28)/255);
-}
-function toonMat(name, hexCol, emFactor) {
+function crystalMat(name, hexCol, emissStrength) {
   const m = new BABYLON.StandardMaterial(name, scene);
-  m.diffuseColor  = hex3(hexCol);
-  m.emissiveColor = BABYLON.Color3.Black();
-  m.specularColor = BABYLON.Color3.Black();
+  const c = hex3(hexCol);
+  m.diffuseColor  = c.scale(0.6);
+  m.specularColor = c.scale(0.9);
+  m.emissiveColor = c.scale(emissStrength ?? 0.06);
+  m.specularPower = 48;
   return m;
 }
-function outlineOn(mesh, hexCol, width) {
-  mesh.renderOutline  = true;
-  mesh.outlineColor   = darkHex(hexCol);
-  mesh.outlineWidth   = width || 0.04;
+function darkMat(name, hexCol) {
+  const m = new BABYLON.StandardMaterial(name, scene);
+  m.diffuseColor  = hex3(hexCol).scale(0.35);
+  m.specularColor = hex3(hexCol).scale(0.1);
+  m.specularPower = 8;
+  return m;
+}
+function groundMat(name) {
+  const m = new BABYLON.StandardMaterial(name, scene);
+  m.diffuseColor  = new BABYLON.Color3(0.02, 0.04, 0.09);
+  m.specularColor = new BABYLON.Color3(0.06, 0.1, 0.2);
+  m.specularPower = 80;
+  return m;
 }
 
-// ── Ground ────────────────────────────────────────────────────────────────
-const ground = BABYLON.MeshBuilder.CreateGround('ground', {width:160, height:160, subdivisions:2}, scene);
-ground.material = toonMat('gmat', '#5a8c2a', 0);  // minecraft grass green
+// ── Ground plane ─────────────────────────────────────────────────────────────
+const ground = BABYLON.MeshBuilder.CreateGround('ground', {width:220, height:220, subdivisions:2}, scene);
+ground.material   = groundMat('gmat');
+ground.receiveShadows = true;
 
-// ── Cluster zone (Bresenham voxel circle) ───────────────────────────────
-// Shared template meshes, one pair per cluster colour
-const _discTemplates = {};
-function getDiscTemplate(col) {
-  if (_discTemplates[col]) return _discTemplates[col];
-  const n = parseInt(col.replace('#',''), 16);
-  const dirtHex = '#' + [n>>16&255, n>>8&255, n&255]
-    .map(v => Math.round(v*0.42).toString(16).padStart(2,'0')).join('');
-  const edgeHex = '#' + [n>>16&255, n>>8&255, n&255]
-    .map(v => Math.round(v*0.55).toString(16).padStart(2,'0')).join('');
+// Subtle grid overlay on ground via DynamicTexture
+(()=>{
+  const W=512, H=512;
+  const tex = new BABYLON.DynamicTexture('gridtex', {width:W, height:H}, scene, false);
+  const ctx = tex.getContext();
+  ctx.fillStyle = 'rgba(0,0,0,0)';
+  ctx.fillRect(0, 0, W, H);
+  ctx.strokeStyle = 'rgba(40,80,180,0.12)';
+  ctx.lineWidth = 0.5;
+  const cell = 32;
+  for (let x=0; x<=W; x+=cell) { ctx.beginPath(); ctx.moveTo(x,0); ctx.lineTo(x,H); ctx.stroke(); }
+  for (let y=0; y<=H; y+=cell) { ctx.beginPath(); ctx.moveTo(0,y); ctx.lineTo(W,y); ctx.stroke(); }
+  tex.update();
+  tex.hasAlpha = true;
+  const gm = new BABYLON.StandardMaterial('gridmat', scene);
+  gm.diffuseTexture = tex;
+  gm.diffuseColor   = new BABYLON.Color3(0.02, 0.04, 0.09);
+  gm.specularColor  = new BABYLON.Color3(0.06, 0.1, 0.2);
+  gm.specularPower  = 80;
+  ground.material   = gm;
+})();
 
-  const gt = BABYLON.MeshBuilder.CreateBox('gt_'+col, {size:1}, scene);
-  gt.material = toonMat('gm_'+col, col, 0);
-  gt.isVisible = false;
-  const dt = BABYLON.MeshBuilder.CreateBox('dt_'+col, {size:1}, scene);
-  dt.material = toonMat('dm_'+col, dirtHex, 0);
-  dt.isVisible = false;
-  const et = BABYLON.MeshBuilder.CreateBox('et_'+col, {size:1, height:0.55}, scene);
-  et.material = toonMat('em_'+col, edgeHex, 0);
-  et.isVisible = false;
-
-  _discTemplates[col] = {gt, dt, et};
-  return _discTemplates[col];
-}
-
-function makeDisc(pos, col) {
-  const R = 9;
-  const cx = pos[0], cz = pos[2];
-  const {gt, dt, et} = getDiscTemplate(col);
-
-  for (let dz = -R; dz <= R; dz++) {
-    for (let dx = -R; dx <= R; dx++) {
-      const d2 = dx*dx + dz*dz;
-      if (d2 > R*R) continue;
-      const wx = cx + dx, wz = cz + dz;
-      const onEdge = d2 >= (R-1.5)*(R-1.5);
-
-      // Grass top (level 0→1)
-      const gi = gt.createInstance('gi');
-      gi.position.set(wx, 0.5, wz);
-      gi.receiveShadows = true;
-
-      // Dirt layer (-1→0)
-      const di = dt.createInstance('di');
-      di.position.set(wx, -0.5, wz);
-      di.receiveShadows = true;
-
-      // Edge ring: extra short block as lip (level 1→1.55)
-      if (onEdge) {
-        const ei = et.createInstance('ei');
-        ei.position.set(wx, 1.275, wz);
-        ei.receiveShadows = true;
-      }
-    }
-  }
-}
-
-// ── Path strip ────────────────────────────────────────────────────────────
-function makePath(edgeKey, ax, az, bx, bz, trimA, trimB) {
-  const dx = bx-ax, dz = bz-az;
-  const len = Math.hypot(dx, dz);
-  if (len < trimA+trimB+1) return;
-  const u = dx/len, v = dz/len;
-  // Trim both ends to stay outside garden perimeters
-  const sx = ax+u*trimA, sz = az+v*trimA;
-  const ex = bx-u*trimB, ez = bz-v*trimB;
-
-  // Build a smooth quadratic Bézier with a slight organic offset at midpoint
-  // Perpendicular to path direction: adds gentle curve rather than ruler-straight
-  const perpX = -v, perpZ = u;   // rotate 90°
-  const sway  = (Math.random()-0.5) * Math.hypot(ex-sx, ez-sz) * 0.08;
-  const mx = (sx+ex)*0.5 + perpX*sway;
-  const mz = (sz+ez)*0.5 + perpZ*sway;
-
-  const N = 24;   // curve segments
-  const pts = [];
-  for (let i=0; i<=N; i++) {
-    const t = i/N;
-    const mt = 1-t;
-    // Quadratic Bézier: B(t) = (1-t)²·P0 + 2(1-t)t·P1 + t²·P2
-    pts.push([
-      mt*mt*sx + 2*mt*t*mx + t*t*ex,
-      mt*mt*sz + 2*mt*t*mz + t*t*ez,
-    ]);
-  }
-
-  // Build ribbon: two edge paths offset perpendicular to the curve tangent
-  const hw = 1.4;  // half-width
-  const left = [], right = [];
-  for (let i=0; i<pts.length; i++) {
-    const p = pts[i];
-    // Tangent at this point
-    const ip = Math.max(0, i-1), in_ = Math.min(pts.length-1, i+1);
-    const tx = pts[in_][0]-pts[ip][0], tz = pts[in_][1]-pts[ip][1];
-    const tl = Math.hypot(tx,tz)||1;
-    const nx = -tz/tl, nz = tx/tl;  // normal (perpendicular)
-    left.push( new BABYLON.Vector3(p[0]+nx*hw, 0.06, p[1]+nz*hw));
-    right.push(new BABYLON.Vector3(p[0]-nx*hw, 0.06, p[1]-nz*hw));
-  }
-
-  const ribbon = BABYLON.MeshBuilder.CreateRibbon('path', {
-    pathArray: [left, right], sideOrientation: BABYLON.Mesh.DOUBLESIDE
+// ── Crystal spire builder ─────────────────────────────────────────────────────
+const allCrystals = [];
+function makeCrystal(x, z, height, radius, sides, mat, yBase) {
+  const geo = BABYLON.MeshBuilder.CreateCylinder('cr', {
+    height, diameterTop:0.05, diameterBottom:radius*2,
+    tessellation:sides ?? 6, cap:BABYLON.Mesh.CAP_ALL
   }, scene);
-  ribbon.material = toonMat('pmat', '#8b6030', 0);
-  // Store curve for camera path-following
+  geo.position.set(x, (yBase ?? 0) + height/2, z);
+  geo.material = mat;
+  geo.rotation.y = Math.random() * Math.PI;
+  shadowGen.addShadowCaster(geo);
+  geo.receiveShadows = true;
+  allCrystals.push(geo);
+  return geo;
+}
+function makeCrystalCluster(cx, cz, col, count, radiusFactor) {
+  const mat = crystalMat('cm_'+cx+cz, col, 0.08);
+  const R   = radiusFactor ?? 1;
+  for (let i=0; i<count; i++) {
+    const angle = (i/count)*Math.PI*2 + (Math.random()-0.5)*0.6;
+    const r     = (0.6+Math.random()*0.7)*R;
+    const h     = 0.8+Math.random()*2.4;
+    const sides = 4 + Math.floor(Math.random()*4);
+    makeCrystal(cx+Math.cos(angle)*r, cz+Math.sin(angle)*r, h, 0.1+Math.random()*0.18, sides, mat, 0);
+  }
+}
+
+// ── Cluster platform builder ──────────────────────────────────────────────────
+function makeClusterPlatform(pos, col) {
+  const R = 9, cx=pos[0], cz=pos[2];
+  const platMat = darkMat('pm_'+cx, col);
+  const rimMat  = crystalMat('rm_'+cx, col, 0.14);
+
+  // Hexagonal base disc (thick, dark)
+  const base = BABYLON.MeshBuilder.CreateCylinder('plat', {
+    height:0.7, diameter:R*2*1.05, tessellation:6, cap:BABYLON.Mesh.CAP_ALL
+  }, scene);
+  base.position.set(cx, 0.35, cz);
+  base.material = platMat;
+  base.rotation.y = Math.PI/6;
+  base.receiveShadows = true;
+  shadowGen.addShadowCaster(base);
+
+  // Crystal rim — ring of small spires around perimeter
+  const rimCount = 18;
+  for (let i=0; i<rimCount; i++) {
+    const a = (i/rimCount)*Math.PI*2 + (Math.random()-0.5)*0.2;
+    const r = R*0.95 + (Math.random()-0.5)*0.5;
+    const h = 0.6+Math.random()*1.8;
+    makeCrystal(cx+Math.cos(a)*r, cz+Math.sin(a)*r, h, 0.08+Math.random()*0.1, 4+Math.floor(Math.random()*3), rimMat, 0.7);
+  }
+}
+
+// ── Glowing orb / central landmark ───────────────────────────────────────────
+function makeOrb(pos, col, size) {
+  const cx=pos[0], cz=pos[2];
+  // Central column
+  const col1 = BABYLON.MeshBuilder.CreateCylinder('col1', {height:size*2.5, diameterTop:size*0.3, diameterBottom:size*0.7, tessellation:8}, scene);
+  col1.position.set(cx, size*1.25, cz);
+  col1.material = darkMat('colmat_'+cx, col);
+  shadowGen.addShadowCaster(col1);
+
+  // Orb / polyhedron on top
+  const orb = BABYLON.MeshBuilder.CreatePolyhedron('orb', {type:2, size:size*0.7}, scene);
+  orb.position.set(cx, size*2.5 + size*0.7, cz);
+  orb.material = crystalMat('orbmat_'+cx, col, 0.22);
+  orb.renderOutline = true;
+  orb.outlineColor  = hex3(col).scale(0.4);
+  orb.outlineWidth  = 0.04;
+  shadowGen.addShadowCaster(orb);
+  allCrystals.push(orb);
+  return {col1, orb};
+}
+
+// ── Path ribbons ─────────────────────────────────────────────────────────────
+const PATH_CURVES = {};
+function makePath(edgeKey, ax, az, bx, bz, trimA, trimB) {
+  const dx=bx-ax, dz=bz-az, len=Math.hypot(dx,dz);
+  if (len < trimA+trimB+1) return;
+  const u=dx/len, v=dz/len;
+  const sx=ax+u*trimA, sz=az+v*trimA, ex=bx-u*trimB, ez=bz-v*trimB;
+  const perpX=-v, perpZ=u, sway=(Math.random()-0.5)*len*0.06;
+  const mx=(sx+ex)*0.5+perpX*sway, mz=(sz+ez)*0.5+perpZ*sway;
+  const N=20, pts=[];
+  for (let i=0; i<=N; i++) {
+    const t=i/N, mt=1-t;
+    pts.push([mt*mt*sx+2*mt*t*mx+t*t*ex, mt*mt*sz+2*mt*t*mz+t*t*ez]);
+  }
+  // Glowing ribbon
+  const hw=0.5, left=[], right=[];
+  for (let i=0; i<pts.length; i++) {
+    const p=pts[i], ip=Math.max(0,i-1), inp=Math.min(pts.length-1,i+1);
+    const tx=pts[inp][0]-pts[ip][0], tz=pts[inp][1]-pts[ip][1];
+    const tl=Math.hypot(tx,tz)||1, nx=-tz/tl, nz=tx/tl;
+    left.push( new BABYLON.Vector3(p[0]+nx*hw, 0.08, p[1]+nz*hw));
+    right.push(new BABYLON.Vector3(p[0]-nx*hw, 0.08, p[1]-nz*hw));
+  }
+  const ribbon = BABYLON.MeshBuilder.CreateRibbon('path', {pathArray:[left,right], sideOrientation:BABYLON.Mesh.DOUBLESIDE}, scene);
+  const pm = new BABYLON.StandardMaterial('pmat', scene);
+  pm.diffuseColor  = new BABYLON.Color3(0.06, 0.1, 0.22);
+  pm.emissiveColor = new BABYLON.Color3(0.04, 0.08, 0.18);
+  pm.specularColor = BABYLON.Color3.Black();
+  ribbon.material = pm;
+  ribbon.receiveShadows = true;
   if (edgeKey) PATH_CURVES[edgeKey] = pts;
 }
 
-// ── Bush / tree (stacked voxel cubes) ───────────────────────────────────
-const bushMats = [
-  toonMat('b0','#3a6a1a',0), toonMat('b1','#2e5414',0), toonMat('b2','#487c22',0),
-  toonMat('b3','#4e8a1c',0), toonMat('b4','#345e10',0), toonMat('b5','#527a1e',0),
-];
-const trunkMat = toonMat('trk','#5a3a1a',0);
-const bushMeshes = [];
-
-function makeBush(x, z, scale, cx, cz) {
-  const isTree = scale > 1.2 && Math.random() < 0.35;
-  const mat = bushMats[Math.floor(Math.random()*bushMats.length)];
-
-  if (isTree) {
-    // Trunk
-    const th = 1.4 + Math.random()*0.8;
-    const trunk = BABYLON.MeshBuilder.CreateBox('b',{width:0.35,height:th,depth:0.35},scene);
-    trunk.material = trunkMat;
-    trunk.position.set(x, th*0.5 - 0.5, z);
-    outlineOn(trunk,'#1a0e04',0.015);
-    bushMeshes.push(trunk);
-    // Canopy: 2 layers
-    const cw = scale*(1.0+Math.random()*0.4);
-    const c1 = BABYLON.MeshBuilder.CreateBox('b',{width:cw,height:cw*0.65,depth:cw},scene);
-    c1.material = mat;
-    c1.position.set(x+(Math.random()-0.5)*0.15, th-0.5+cw*0.32, z+(Math.random()-0.5)*0.15);
-    outlineOn(c1,'#1a3208',0.016); bushMeshes.push(c1);
-    const c2 = BABYLON.MeshBuilder.CreateBox('b',{width:cw*0.65,height:cw*0.5,depth:cw*0.65},scene);
-    c2.material = bushMats[Math.floor(Math.random()*bushMats.length)];
-    c2.position.set(x+(Math.random()-0.5)*0.1, th-0.5+cw*0.9, z+(Math.random()-0.5)*0.1);
-    outlineOn(c2,'#1a3208',0.014); bushMeshes.push(c2);
-  } else {
-    // Bush: 2-3 stacked voxel blocks
-    const layers = 2 + Math.floor(Math.random()*2);
-    let yBase = -0.5;
-    for (let i = 0; i < layers; i++) {
-      const frac = 1 - i*0.25;
-      const w = scale*frac*(0.85+Math.random()*0.25);
-      const h = Math.max(0.3, scale*frac*(0.55+Math.random()*0.35));
-      const d = scale*frac*(0.70+Math.random()*0.25);
-      const box = BABYLON.MeshBuilder.CreateBox('b',{width:w,height:h,depth:d},scene);
-      box.material = bushMats[Math.floor(Math.random()*bushMats.length)];
-      box.rotation.y = (Math.random()-0.5)*1.2 + i*0.2;
-      box.position.set(x+(Math.random()-0.5)*0.12*scale, yBase+h*0.5, z+(Math.random()-0.5)*0.12*scale);
-      outlineOn(box,'#1a3208',0.018);
-      bushMeshes.push(box);
-      yBase += h*0.72;
-    }
-  }
-}
-
-// ── Billboard (park sign — clean flat) ───────────────────────────────────
+// ── Billboard ────────────────────────────────────────────────────────────────
 const billboards = [];
 function makeBillboard(x, z, proj, accentHex, logoImg) {
-  const W=640, H=320, cv=document.createElement('canvas');
-  cv.width=W; cv.height=H;
-  const ctx=cv.getContext('2d');
+  const W=640, H=300, cv2=document.createElement('canvas');
+  cv2.width=W; cv2.height=H;
+  const ctx=cv2.getContext('2d');
   const n=parseInt(accentHex.replace('#',''),16);
   const r=n>>16&255, g=n>>8&255, b=n&255;
 
-  // Clean dark-green park-sign background
-  ctx.fillStyle='#0f1e0f'; ctx.fillRect(0,0,W,H);
+  // Deep dark background
+  ctx.fillStyle='#04080f'; ctx.fillRect(0,0,W,H);
 
-  // Thin accent-colour top bar (8px)
-  ctx.fillStyle=`rgb(${r},${g},${b})`; ctx.fillRect(0,0,W,8);
+  // Subtle noise texture simulation (grid)
+  ctx.strokeStyle='rgba(255,255,255,0.025)'; ctx.lineWidth=0.5;
+  for(let i=0;i<W;i+=20) { ctx.beginPath(); ctx.moveTo(i,0); ctx.lineTo(i,H); ctx.stroke(); }
+  for(let j=0;j<H;j+=20) { ctx.beginPath(); ctx.moveTo(0,j); ctx.lineTo(W,j); ctx.stroke(); }
 
-  // Outer border
-  ctx.strokeStyle=`rgb(${Math.min(255,r+60)},${Math.min(255,g+60)},${Math.min(255,b+60)})`;
-  ctx.lineWidth=3; ctx.strokeRect(2,2,W-4,H-4);
+  // Crystal accent border with glow
+  const grd = ctx.createLinearGradient(0,0,W,H);
+  grd.addColorStop(0, `rgba(${r},${g},${b},0.7)`);
+  grd.addColorStop(1, `rgba(${r},${g},${b},0.3)`);
+  ctx.strokeStyle = grd; ctx.lineWidth = 2;
+  ctx.strokeRect(1.5, 1.5, W-3, H-3);
 
-  const pad = 18;
-  let textX = pad;
+  // Corner crystal marks
+  const cm = 12;
+  ctx.strokeStyle = `rgba(${r},${g},${b},0.9)`; ctx.lineWidth = 2;
+  [[0,0],[W,0],[0,H],[W,H]].forEach(([cx_,cy_]) => {
+    const sx = cx_===0?1:W-cm, sy = cy_===0?1:H-cm;
+    ctx.strokeRect(cx_===0?1:W-cm-1, cy_===0?1:H-cm-1, cm, cm);
+  });
+
+  // Logo
   const hasLogo = logoImg && logoImg.complete && logoImg.naturalWidth>0;
+  let textX = 18;
   if (hasLogo) {
-    const lW=110, logoSz=88;
-    // Subtle logo well
-    ctx.fillStyle='rgba(255,255,255,0.07)';
-    ctx.beginPath();
-    const rx=pad, ry=14, rw=lW, rh=H-28;
-    ctx.roundRect(rx,ry,rw,rh,6); ctx.fill();
-    try {
-      ctx.drawImage(logoImg, pad+(lW-logoSz)/2, (H-logoSz)/2, logoSz, logoSz);
-    } catch(e){}
-    textX = pad + lW + 14;
+    const ls=72;
+    ctx.save();
+    ctx.globalAlpha=0.9;
+    try { ctx.drawImage(logoImg, 18, (H-ls)/2, ls, ls); } catch(e){}
+    ctx.restore();
+    textX = 18+ls+14;
   }
 
-  // Project name
-  ctx.fillStyle='#f0ecd0';
-  ctx.font='bold 48px ui-monospace,"SF Mono",Menlo,monospace';
-  const nm = proj.name.length>12 ? proj.name.slice(0,11)+'…' : proj.name;
-  ctx.fillText(nm, textX, 66);
+  // Name
+  ctx.fillStyle = '#e8f0ff';
+  ctx.font = `bold 44px ui-monospace,"SF Mono",Menlo,monospace`;
+  const nm = proj.name.length>13 ? proj.name.slice(0,12)+'…' : proj.name;
+  ctx.fillText(nm, textX, 58);
 
-  // Stars + language
-  ctx.fillStyle=`rgb(${Math.min(255,r+90)},${Math.min(255,g+90)},${Math.min(255,b+70)})`;
-  ctx.font='bold 26px ui-monospace,monospace';
-  ctx.fillText('★ '+proj.stars.toLocaleString()+'  '+proj.lang, textX, 106);
+  // Stars + lang
+  ctx.fillStyle = `rgba(${Math.min(255,r+100)},${Math.min(255,g+100)},${Math.min(255,b+80)},1)`;
+  ctx.font = `bold 24px ui-monospace,monospace`;
+  ctx.fillText(`★ ${proj.stars.toLocaleString()}   ${proj.lang}`, textX, 92);
 
   // Divider
-  ctx.strokeStyle='rgba(255,255,255,0.15)'; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(textX,120); ctx.lineTo(W-pad,120); ctx.stroke();
+  ctx.strokeStyle = `rgba(${r},${g},${b},0.3)`; ctx.lineWidth=1;
+  ctx.beginPath(); ctx.moveTo(textX,108); ctx.lineTo(W-18,108); ctx.stroke();
 
   // Description
-  ctx.fillStyle='rgba(220,230,200,0.80)';
-  ctx.font='22px -apple-system,"Helvetica Neue",Arial,sans-serif';
-  const words=proj.desc.split(' ');
-  let line='', y=152, textW=W-textX-pad;
+  ctx.fillStyle = 'rgba(160,190,230,0.82)';
+  ctx.font = '21px -apple-system,"Helvetica Neue",Arial,sans-serif';
+  const words=proj.desc.split(' '), textW=W-textX-18;
+  let line='', y=138;
   for (const w of words) {
-    const t = line ? line+' '+w : w;
-    if (ctx.measureText(t).width > textW && line) {
-      ctx.fillText(line,textX,y); y+=30; line=w;
-      if (y>H-36) break;
-    } else line=t;
+    const t=line?line+' '+w:w;
+    if (ctx.measureText(t).width>textW && line) { ctx.fillText(line,textX,y); y+=28; line=w; if(y>H-36)break; }
+    else line=t;
   }
   if (line && y<=H-36) ctx.fillText(line,textX,y);
 
-  // "→ click" hint
-  ctx.fillStyle=`rgba(${r},${g},${b},0.8)`;
-  ctx.font='bold 18px ui-monospace,monospace';
-  ctx.textAlign='right'; ctx.fillText('→ click to open',W-pad,H-14); ctx.textAlign='left';
+  // Click hint
+  ctx.fillStyle=`rgba(${r},${g},${b},0.7)`;
+  ctx.font='bold 16px ui-monospace,monospace';
+  ctx.textAlign='right'; ctx.fillText('→ open',W-18,H-14); ctx.textAlign='left';
 
   const tex=new BABYLON.DynamicTexture('bbtex',{width:W,height:H},scene,false);
-  tex.getContext().drawImage(cv,0,0); tex.update();
-
+  tex.getContext().drawImage(cv2,0,0); tex.update();
   const mat=new BABYLON.StandardMaterial('bbmat',scene);
-  mat.diffuseTexture=tex;
-  mat.emissiveTexture=tex;
+  mat.emissiveTexture=tex; mat.diffuseTexture=tex;
   mat.specularColor=BABYLON.Color3.Black();
   mat.backFaceCulling=false;
 
-  // Wooden post (oak log block style)
-  const post=BABYLON.MeshBuilder.CreateBox('post',{width:0.3,height:2.2,depth:0.3},scene);
-  post.material=toonMat('postmat','#6b4420',0);
-  post.position.set(x,0.6,z);
+  // Crystal sign post
+  const post=BABYLON.MeshBuilder.CreateCylinder('post',{height:2.4,diameterTop:0.06,diameterBottom:0.14,tessellation:6},scene);
+  post.material=darkMat('postm',accentHex);
+  post.position.set(x,1.2,z);
+  shadowGen.addShadowCaster(post);
 
-  // Sign panel on post
-  const panel=BABYLON.MeshBuilder.CreatePlane('panel',{width:3.8,height:1.9},scene);
+  const panel=BABYLON.MeshBuilder.CreatePlane('panel',{width:3.8,height:1.78},scene);
   panel.material=mat;
-  panel.position.set(x,2.4,z);
+  panel.position.set(x,2.9,z);
   panel.billboardMode=BABYLON.Mesh.BILLBOARDMODE_Y;
   panel.metadata={proj,x,z};
   billboards.push(panel);
 }
 
-// ── Build scene ───────────────────────────────────────────────────────────
+// ── Build scene ───────────────────────────────────────────────────────────────
 // Paths
-const PATH_CURVES = {};  // edgeKey → [[x,z], ...] (trimmed Bézier points)
 PATH_EDGES.forEach(e => {
-  const [k,j] = e.split('--');
+  const [k,j]=e.split('--');
   const a=CLUSTERS[k].pos, b=CLUSTERS[j].pos;
-  const rK=CLUSTERS[k].projects.length<=2?5:9;
-  const rJ=CLUSTERS[j].projects.length<=2?5:9;
+  const rK=CLUSTERS[k].projects.length<=2?5:9, rJ=CLUSTERS[j].projects.length<=2?5:9;
   const dKJ=Math.hypot(a[0]-b[0],a[2]-b[2]);
-  makePath(e, a[0],a[2],b[0],b[2], Math.min(rK+3,dKJ*0.40), Math.min(rJ+3,dKJ*0.40));
+  makePath(e, a[0],a[2], b[0],b[2], Math.min(rK+3,dKJ*0.38), Math.min(rJ+3,dKJ*0.38));
 });
 
 // Clusters
-Object.entries(CLUSTERS).forEach(([key,cluster]) => {
-  const {pos,col,projects} = cluster;
-  makeDisc(pos, col); // game-vivid disc
+Object.entries(CLUSTERS).forEach(([key, cluster]) => {
+  const {pos, col, projects} = cluster;
+  makeClusterPlatform(pos, col);
+  makeCrystalCluster(pos[0], pos[2], col, 14+projects.length*3, 6);
 
-  const clusterR = projects.length<=2 ? 5 : 9;
-  const minND = Math.min(...Object.keys(CLUSTERS)
-    .filter(k=>k!==key)
-    .map(k=>Math.hypot(pos[0]-CLUSTERS[k].pos[0], pos[2]-CLUSTERS[k].pos[2])));
-  const maxRing = Math.min(minND*0.42, clusterR+3.5);
-  const innerR=Math.min(clusterR+0.4,maxRing-2), midR=Math.min(clusterR+1.5,maxRing-1), outerR=maxRing;
-  const gapH=0.55;
-
-  const pathDirs = Object.keys(CLUSTERS).filter(k=>k!==key).sort((a,b)=>
-    Math.hypot(pos[0]-CLUSTERS[a].pos[0],pos[2]-CLUSTERS[a].pos[2]) -
-    Math.hypot(pos[0]-CLUSTERS[b].pos[0],pos[2]-CLUSTERS[b].pos[2])
-  ).slice(0,3).map(k=>Math.atan2(CLUSTERS[k].pos[2]-pos[2], CLUSTERS[k].pos[0]-pos[0]));
-
-  function isGap(a) {
-    return pathDirs.some(d=>{ let diff=a-d; diff-=Math.round(diff/(Math.PI*2))*(Math.PI*2); return Math.abs(diff)<gapH; });
-  }
-
-  // Outer ring — dense double-pass (large trees + medium bushes)
-  const outerN=Math.round(outerR*Math.PI*2.2);
-  for (let i=0;i<outerN;i++) {
-    const a=(i/outerN)*Math.PI*2+(Math.random()-0.5)*0.12;
-    if (isGap(a)) continue;
-    const r=outerR+(Math.random()-0.5)*0.7;
-    makeBush(pos[0]+Math.cos(a)*r, pos[2]+Math.sin(a)*r, 1.1+Math.random()*0.7, pos[0], pos[2]);
-  }
-  // Outer fill — stagger offset for density
-  const outerN2=Math.round(outerR*Math.PI*1.6);
-  for (let i=0;i<outerN2;i++) {
-    const a=((i+0.5)/outerN2)*Math.PI*2+(Math.random()-0.5)*0.18;
-    if (isGap(a)) continue;
-    const r=outerR-0.7+(Math.random()-0.5)*0.5;
-    makeBush(pos[0]+Math.cos(a)*r, pos[2]+Math.sin(a)*r, 0.7+Math.random()*0.5, pos[0], pos[2]);
-  }
-  // Mid ring
-  const midN=Math.round(midR*Math.PI*1.8);
-  for (let i=0;i<midN;i++) {
-    const a=(i/midN)*Math.PI*2+(Math.random()-0.5)*0.22;
-    if (isGap(a)) continue;
-    const r=midR+(Math.random()-0.5)*0.5;
-    makeBush(pos[0]+Math.cos(a)*r, pos[2]+Math.sin(a)*r, 0.65+Math.random()*0.45, pos[0], pos[2]);
-  }
-  // Inner ring
-  const innerN=Math.round(innerR*Math.PI*1.3);
-  for (let i=0;i<innerN;i++) {
-    const a=(i/innerN)*Math.PI*2+(Math.random()-0.5)*0.28;
-    if (isGap(a)) continue;
-    const r=innerR+(Math.random()-0.5)*0.4;
-    makeBush(pos[0]+Math.cos(a)*r, pos[2]+Math.sin(a)*r, 0.4+Math.random()*0.35, pos[0], pos[2]);
-  }
-  // Interior scatter (trees + small bushes)
-  for (let i=0;i<8+projects.length*2;i++) {
-    const a=Math.random()*Math.PI*2, r=Math.random()*clusterR*0.55;
-    if (r>clusterR*0.3 && isGap(a)) continue;
-    makeBush(pos[0]+Math.cos(a)*r, pos[2]+Math.sin(a)*r, 0.3+Math.random()*0.9, pos[0], pos[2]);
-  }
-
-  // Floor label
-  const lW=512, lH=128, lcv=document.createElement('canvas');
-  lcv.width=lW; lcv.height=lH;
-  const lctx=lcv.getContext('2d');
-  const n=parseInt(col.replace('#',''),16);
-  lctx.fillStyle=`rgb(${Math.round((n>>16&255)*0.35)},${Math.round((n>>8&255)*0.35)},${Math.round((n&255)*0.35)})`;
-  lctx.font='bold 64px ui-monospace,"SF Mono",monospace';
-  lctx.textAlign='center'; lctx.textBaseline='middle';
-  lctx.fillText(key.toUpperCase(), lW/2, lH/2);
-  const ltex=new BABYLON.DynamicTexture('ltex'+key,{width:lW,height:lH},scene,false);
-  ltex.getContext().drawImage(lcv,0,0); ltex.update();
-  ltex.hasAlpha=true;
-  const lmat=new BABYLON.StandardMaterial('lmat'+key,scene);
-  lmat.diffuseTexture=ltex; lmat.emissiveTexture=ltex;
-  lmat.diffuseTexture.hasAlpha=true; lmat.useAlphaFromDiffuseTexture=true;
-  lmat.specularColor=BABYLON.Color3.Black();
-  const label=BABYLON.MeshBuilder.CreateGround('label'+key,{width:8,height:2},scene);
-  label.position.set(pos[0], 0.07, pos[2]);
-  label.material=lmat;
+  // Central landmark
+  const {orb} = makeOrb(pos, col, key==='highlight'?1.8:1.1);
 
   // Billboards
   if (key==='highlight') return;
   const N=projects.length;
-  projects.forEach((proj,i) => {
-    let angle, r;
-    if (N === 1) {
-      // Single-project garden: place the sign like a statue plaque —
-      // offset AWAY from the nearest path entrance so it faces into the garden.
-      // Find the direction toward the nearest neighbour cluster (path entrance),
-      // then go opposite so the sign is on the far, quiet side.
-      const neighbour = (PATH_GRAPH[key]||[]).reduce((best,k)=>{
-        const d=Math.hypot(pos[0]-CLUSTERS[k].pos[0], pos[2]-CLUSTERS[k].pos[2]);
-        return d < best.d ? {k,d} : best;
-      }, {k:null, d:Infinity});
-      if (neighbour.k) {
-        const np = CLUSTERS[neighbour.k].pos;
-        const toPath = Math.atan2(np[2]-pos[2], np[0]-pos[0]);
-        angle = toPath + Math.PI;   // opposite direction = away from main path
-      } else {
-        angle = 0;
-      }
-      r = 3.5;  // offset enough to be clear of the obelisk/hero mesh
-    } else {
-      angle = (i/N)*Math.PI*2;
-      r = Math.min(4.5*Math.sqrt(N/2), 9);
-    }
+  projects.forEach((proj, i) => {
+    const angle = N===1
+      ? Math.atan2(pos[2]-0, pos[0]-0) + Math.PI
+      : (i/N)*Math.PI*2;
+    const r = N===1 ? 4 : Math.min(5*Math.sqrt(N/2), 8);
     const bx=pos[0]+Math.cos(angle)*r, bz=pos[2]+Math.sin(angle)*r;
     const logo=(typeof LOGOS!=='undefined')?LOGOS[proj.id]:null;
     if (logo) {
-      const img=new Image();
-      let _done=false;
-      const _cb=(li)=>{ if(_done)return; _done=true; makeBillboard(bx,bz,proj,col,li); };
-      img.onload=()=>_cb(img);
-      img.onerror=()=>_cb(null);
-      img.src=logo;
-      // data URIs may be synchronously complete before onload fires
-      if (img.complete) _cb(img.naturalWidth>0?img:null);
+      const img=new Image(); let done=false;
+      const cb=(li)=>{ if(done)return; done=true; makeBillboard(bx,bz,proj,col,li); };
+      img.onload=()=>cb(img); img.onerror=()=>cb(null); img.src=logo;
+      if(img.complete) cb(img.naturalWidth>0?img:null);
     } else {
       makeBillboard(bx,bz,proj,col,null);
     }
   });
 });
 
-// piclaw hero icosahedron
-// Hero: floating emerald/diamond block stack
-const heroBase = BABYLON.MeshBuilder.CreateBox('hero',{width:2.0,height:2.0,depth:2.0},scene);
-heroBase.material=toonMat('hmat','#2e8b2e',0);
-heroBase.position.set(0,1.5,0);
-outlineOn(heroBase,'#0a2a0a',0.05);
-const heroTop = BABYLON.MeshBuilder.CreateBox('hero2',{width:1.4,height:1.4,depth:1.4},scene);
-heroTop.material=toonMat('hmat2','#50c050',0);
-heroTop.position.set(0,3.4,0);
-outlineOn(heroTop,'#0a2a0a',0.04);
-const heroMesh = heroTop;  // alias for animation
+// Ambient crystal scatter in void between clusters
+(()=>{
+  const scatterMat = new BABYLON.StandardMaterial('scm', scene);
+  scatterMat.diffuseColor  = new BABYLON.Color3(0.03, 0.06, 0.15);
+  scatterMat.emissiveColor = new BABYLON.Color3(0.01, 0.02, 0.06);
+  scatterMat.specularColor = new BABYLON.Color3(0.1, 0.15, 0.3);
+  for (let i=0; i<40; i++) {
+    const angle=Math.random()*Math.PI*2, r=14+Math.random()*40;
+    const cx=Math.cos(angle)*r, cz=Math.sin(angle)*r;
+    const h=0.3+Math.random()*1.2;
+    const c=BABYLON.MeshBuilder.CreateCylinder('sc',{height:h,diameterTop:0.02,diameterBottom:0.08+Math.random()*0.1,tessellation:5},scene);
+    c.position.set(cx, h/2, cz);
+    c.material=scatterMat;
+    c.rotation.y=Math.random()*Math.PI;
+  }
+})();
 
-// piku obelisk
-// Piku: stone pillar/obelisk
-const mono = BABYLON.MeshBuilder.CreateBox('mono',{width:1.0,height:6,depth:1.0},scene);
-mono.material=toonMat('mmat','#888070',0);
-mono.position.set(-22,3,-8);
-outlineOn(mono,'#404040',0.04);
-const monoCap = BABYLON.MeshBuilder.CreateBox('monocap',{width:1.4,height:0.6,depth:1.4},scene);
-monoCap.material=toonMat('mmat2','#a09880',0);
-monoCap.position.set(-22,6.3,-8);
-outlineOn(monoCap,'#404040',0.03);
+// ── Post-processing: Moebius-style ink outlines (Sobel + crosshatch) ───────────
+const depthRenderer = scene.enableDepthRenderer(camera, false);
 
-// Animations + wind
-scene.registerBeforeRender(()=>{
+BABYLON.Effect.ShadersStore["moebiusFragmentShader"] = `
+  #ifdef GL_ES
+  precision highp float;
+  #endif
+  varying vec2 vUV;
+  uniform sampler2D textureSampler;
+  uniform sampler2D depthSampler;
+  uniform vec2 texelSize;
+  uniform float edgeThreshold;
+  uniform float inkStrength;
+
+  float sampleD(vec2 uv) { return texture2D(depthSampler, uv).r; }
+
+  float sobelDepth() {
+    float tl=sampleD(vUV+vec2(-texelSize.x,-texelSize.y));
+    float t =sampleD(vUV+vec2( 0.0,        -texelSize.y));
+    float tr=sampleD(vUV+vec2( texelSize.x,-texelSize.y));
+    float l =sampleD(vUV+vec2(-texelSize.x, 0.0));
+    float r2=sampleD(vUV+vec2( texelSize.x, 0.0));
+    float bl=sampleD(vUV+vec2(-texelSize.x, texelSize.y));
+    float b =sampleD(vUV+vec2( 0.0,         texelSize.y));
+    float br=sampleD(vUV+vec2( texelSize.x, texelSize.y));
+    float gx=-tl-2.0*l-bl+tr+2.0*r2+br;
+    float gy=-tl-2.0*t-tr+bl+2.0*b+br;
+    return sqrt(gx*gx+gy*gy);
+  }
+
+  float crosshatch(vec2 uv, float density) {
+    vec2 p=uv*density;
+    return step(0.5,fract(p.x+p.y))*step(0.5,fract(p.x-p.y));
+  }
+
+  void main() {
+    vec4 color=texture2D(textureSampler,vUV);
+    float edge=sobelDepth();
+    float outline=smoothstep(edgeThreshold*0.7,edgeThreshold*1.3,edge);
+    float luma=dot(color.rgb,vec3(0.299,0.587,0.114));
+    float inShadow=1.0-smoothstep(0.0,0.18,luma);
+    float hatch=crosshatch(vUV,280.0)*inShadow*0.28;
+    vec3 inkColor=vec3(0.01,0.02,0.06);
+    vec3 result=mix(color.rgb,inkColor,outline*inkStrength);
+    result=mix(result,inkColor*0.5,hatch*(1.0-outline));
+    vec2 center=vUV-0.5;
+    result*=(1.0-dot(center,center)*1.1);
+    gl_FragColor=vec4(result,color.a);
+  }
+`;
+
+const moebiusPass = new BABYLON.PostProcess(
+  'moebius', 'moebius',
+  ['texelSize','edgeThreshold','inkStrength'],
+  ['depthSampler'],
+  1.0, camera
+);
+moebiusPass.onApply = (effect) => {
+  effect.setTexture('depthSampler', depthRenderer.getDepthMap());
+  effect.setFloat2('texelSize', 1/engine.getRenderWidth(), 1/engine.getRenderHeight());
+  effect.setFloat('edgeThreshold', 0.013);
+  effect.setFloat('inkStrength', 0.85);
+};
+
+// ── Orb animation ─────────────────────────────────────────────────────────────
+const orbMeshes = allCrystals.filter(m => m.name === 'orb');
+scene.registerBeforeRender(() => {
   const t = performance.now() * 0.001;
-  heroBase.position.y = 1.5 + Math.sin(t*0.7)*0.18;
-  heroMesh.position.y  = 3.4 + Math.sin(t*0.7)*0.18;
-  heroBase.rotation.y += 0.007;
-  heroMesh.rotation.y += 0.007;
-  mono.position.y      = 3   + Math.sin(t*0.5)*0.06;  // subtle
-  monoCap.position.y   = 6.3 + Math.sin(t*0.5)*0.06;
-  // Wind sway on bushes
-  bushMeshes && bushMeshes.forEach((m, i) => {
-    const phase = i*0.61;
-    m.scaling.x = 1 + 0.04*Math.sin(t*1.2 + phase);
-    m.rotation.z = 0.03*Math.sin(t*0.9 + phase);
+  orbMeshes.forEach((m, i) => {
+    m.rotation.y += 0.006 + i*0.001;
+    m.position.y  = m._baseY + Math.sin(t*0.7 + i*1.1) * 0.22;
   });
 });
+// Store base Y for orbMeshes
+orbMeshes.forEach(m => { m._baseY = m.position.y; });
 
-// ── Maths helpers ─────────────────────────────────────────────────────────
-function catmullRom(t,p0,p1,p2,p3){
-  return 0.5*((2*p1)+(-p0+p2)*t+(2*p0-5*p1+4*p2-p3)*t*t+(-p0+3*p1-3*p2+p3)*t*t*t);
-}
-function catmullTangent(t,p0,p1,p2,p3){
-  return 0.5*((-p0+p2)+(2*(2*p0-5*p1+4*p2-p3))*t+3*(-p0+3*p1-3*p2+p3)*t*t);
-}
+// ── Camera animation helpers ──────────────────────────────────────────────────
+function catmullRom(t,p0,p1,p2,p3){ return 0.5*((2*p1)+(-p0+p2)*t+(2*p0-5*p1+4*p2-p3)*t*t+(-p0+3*p1-3*p2+p3)*t*t*t); }
+function catmullTangent(t,p0,p1,p2,p3){ return 0.5*((-p0+p2)+(2*(2*p0-5*p1+4*p2-p3))*t+3*(-p0+3*p1-3*p2+p3)*t*t); }
 function lerpF(a,b,t){ return a+(b-a)*t; }
-function lerpAngle(a,b,t){
-  let d=b-a; while(d>Math.PI)d-=Math.PI*2; while(d<-Math.PI)d+=Math.PI*2; return a+d*t;
-}
+function lerpAngle(a,b,t){ let d=b-a; while(d>Math.PI)d-=Math.PI*2; while(d<-Math.PI)d+=Math.PI*2; return a+d*t; }
 function smoothstep(t){ return t*t*(3-2*t); }
 
-// ── Shadow casters + effects ─────────────────────────────────────────────
-scene.meshes.forEach(m => {
-  if (m.name === 'b' || m.name === 'hero' || m.name === 'hero2' ||
-      m.name === 'mono' || m.name === 'monocap' || m.name === 'post') {
-    shadowGen.addShadowCaster(m, true);
-  }
-  if (m.name === 'ground' || m.name.startsWith('path') ||
-      m.name.startsWith('label') || m.name.startsWith('panel')) {
-    m.receiveShadows = true;
-  }
-});
-// Bush meshes cast and receive shadows
-bushMeshes.forEach(m => {
-  shadowGen.addShadowCaster(m, true);
-  m.receiveShadows = true;
-});
-// (no glow layer)
+const DROP_T=0.14, ARRIVE_T=0.86, PATH_Y=1.8, TRAVEL_R=4, TRAVEL_BETA=Math.PI/2.05;
+let autoRotate=true, autoAngle=camera.alpha, pathState=null;
 
-// (fireflies removed — clean Minecraft daylight)
-
-
-// ── Camera navigation ─────────────────────────────────────────────────────
-let autoRotate=true, autoAngle=camera.alpha;
-let pathState=null;
-// pathState phases: DROP(0→DROP_T) → TRAVEL(DROP_T→ARRIVE_T) → ARRIVE(ARRIVE_T→1)
-const DROP_T=0.14, ARRIVE_T=0.86;
-const PATH_Y=1.6;     // target height during travel (slightly above hedges)
-const TRAVEL_R=3.8;   // camera radius during ground-level travel
-const TRAVEL_BETA=Math.PI/2.05; // nearly horizontal
-
-scene.registerBeforeRender(()=>{
-  if (autoRotate && !pathState){ autoAngle-=0.0015; camera.alpha=autoAngle; return; }
+scene.registerBeforeRender(() => {
+  if (autoRotate && !pathState) { autoAngle -= 0.0012; camera.alpha = autoAngle; return; }
   if (!pathState) return;
-
   pathState.t = Math.min(1, pathState.t + pathState.speed);
   const done = pathState.t >= 1;
-
   if (pathState.t <= DROP_T) {
-    // Phase 1: DROP — descend in place to hedge height before moving
-    const dt = smoothstep(pathState.t / DROP_T);
-    camera.target.set(
-      lerpF(pathState.startTx, pathState.pts[0].x, dt * 0.3),
-      lerpF(pathState.startTy, PATH_Y, dt),
-      lerpF(pathState.startTz, pathState.pts[0].z, dt * 0.3)
-    );
-    camera.beta   = lerpF(pathState.startBeta,   TRAVEL_BETA, dt * 0.6);
-    camera.radius = lerpF(pathState.startRadius, TRAVEL_R,    dt * 0.5);
-
+    const dt=smoothstep(pathState.t/DROP_T);
+    camera.target.set(lerpF(pathState.startTx,pathState.pts[0].x,dt*0.3),lerpF(pathState.startTy,PATH_Y,dt),lerpF(pathState.startTz,pathState.pts[0].z,dt*0.3));
+    camera.beta  =lerpF(pathState.startBeta,  TRAVEL_BETA,dt*0.6);
+    camera.radius=lerpF(pathState.startRadius,TRAVEL_R,   dt*0.5);
   } else if (pathState.t <= ARRIVE_T) {
-    // Phase 2: TRAVEL — move horizontally along path curve at hedge height
-    const tt = (pathState.t - DROP_T) / (ARRIVE_T - DROP_T);
+    const tt=(pathState.t-DROP_T)/(ARRIVE_T-DROP_T);
     const pts=pathState.pts, N=pts.length-1;
     const fi=tt*N, i=Math.min(Math.floor(fi),N-1), lt=fi-i;
-    const p0=pts[Math.max(0,i-1)], p1=pts[i], p2=pts[Math.min(N,i+1)], p3=pts[Math.min(N,i+2)];
-
-    camera.target.set(
-      catmullRom(lt,p0.x,p1.x,p2.x,p3.x),
-      PATH_Y,
-      catmullRom(lt,p0.z,p1.z,p2.z,p3.z)
-    );
-
-    // Look forward: camera behind target
-    const tx=catmullTangent(lt,p0.x,p1.x,p2.x,p3.x);
-    const tz=catmullTangent(lt,p0.z,p1.z,p2.z,p3.z);
-    if (Math.abs(tx)+Math.abs(tz)>0.001)
-      camera.alpha = lerpAngle(camera.alpha, Math.atan2(tz,tx)+Math.PI, 0.09);
-    camera.beta   = lerpF(camera.beta,   TRAVEL_BETA, 0.06);
-    camera.radius = lerpF(camera.radius, TRAVEL_R,    0.06);
-
+    const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[Math.min(N,i+1)],p3=pts[Math.min(N,i+2)];
+    camera.target.set(catmullRom(lt,p0.x,p1.x,p2.x,p3.x),PATH_Y,catmullRom(lt,p0.z,p1.z,p2.z,p3.z));
+    const tx=catmullTangent(lt,p0.x,p1.x,p2.x,p3.x), tz=catmullTangent(lt,p0.z,p1.z,p2.z,p3.z);
+    if(Math.abs(tx)+Math.abs(tz)>0.001) camera.alpha=lerpAngle(camera.alpha,Math.atan2(tz,tx)+Math.PI,0.09);
+    camera.beta  =lerpF(camera.beta,  TRAVEL_BETA,0.06);
+    camera.radius=lerpF(camera.radius,TRAVEL_R,   0.06);
   } else {
-    // Phase 3: ARRIVE — rotate to face billboard from inside garden
-    const at = smoothstep((pathState.t-ARRIVE_T)/(1-ARRIVE_T));
-    const et=pathState.endTarget, f=at*0.14;
+    const at=smoothstep((pathState.t-ARRIVE_T)/(1-ARRIVE_T)),f=at*0.14;
+    const et=pathState.endTarget;
     camera.target.x=lerpF(camera.target.x,et.x,f);
     camera.target.y=lerpF(camera.target.y,et.y,f);
     camera.target.z=lerpF(camera.target.z,et.z,f);
-    camera.alpha  = lerpAngle(camera.alpha, pathState.endAlpha,  at*0.13);
-    camera.beta   = lerpF(camera.beta,   pathState.endBeta,   at*0.11);
-    camera.radius = lerpF(camera.radius, pathState.endRadius, at*0.11);
+    camera.alpha  =lerpAngle(camera.alpha, pathState.endAlpha, at*0.13);
+    camera.beta   =lerpF(camera.beta,   pathState.endBeta,   at*0.11);
+    camera.radius =lerpF(camera.radius, pathState.endRadius, at*0.11);
   }
-
-  if (done){ const cb=pathState.onDone; pathState=null; if(cb)cb(); }
+  if (done) { const cb=pathState.onDone; pathState=null; if(cb)cb(); }
 });
 
 function stopAuto(){ autoRotate=false; }
 
-function flyTo(clusterKey){
+function flyTo(clusterKey) {
   stopAuto(); pathState=null; scene.stopAnimation(camera); camera.animations.length=0;
   const v=CAM_VIEWS[clusterKey]; if(!v) return;
   closeFocus();
   document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.cluster===clusterKey));
   const ease=new BABYLON.SineEase(); ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
   ['alpha','beta','radius'].forEach(prop=>{
-    const a=new BABYLON.Animation('fly_'+prop,prop,60,
-      BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    const a=new BABYLON.Animation('fly_'+prop,prop,60,BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
     a.setEasingFunction(ease);
     a.setKeys([{frame:0,value:camera[prop]},{frame:80,value:v[prop]}]);
     camera.animations.push(a);
   });
-  const ta=new BABYLON.Animation('fly_t','target',60,
-    BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+  const ta=new BABYLON.Animation('fly_t','target',60,BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
   ta.setEasingFunction(ease);
   ta.setKeys([{frame:0,value:camera.target.clone()},{frame:80,value:new BABYLON.Vector3(...v.target)}]);
   camera.animations.push(ta);
   scene.beginAnimation(camera,0,80,false,1,()=>{ camera.animations.length=0; });
 }
 
-function rotateToBillboard(bill){
-  // Same garden: just turn to face the sign
+function rotateToBillboard(bill) {
   scene.stopAnimation(camera); camera.animations.length=0;
   const {x,z}=bill.metadata;
-  const clusterKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===bill.metadata.proj.url))?.[0]||'highlight';
-  const cpos=CLUSTERS[clusterKey].pos;
+  const clKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===bill.metadata.proj.url))?.[0]||'highlight';
+  const cpos=CLUSTERS[clKey].pos;
   const dx=cpos[0]-x, dz=cpos[2]-z, dist=Math.hypot(dx,dz)||1;
-  const endAlpha=Math.atan2(dz/dist, dx/dist);
-  const endTarget=new BABYLON.Vector3(x, bill.position.y*0.55, z);
+  const endAlpha=Math.atan2(dz/dist,dx/dist);
+  const endTarget=new BABYLON.Vector3(x,bill.position.y*0.5,z);
   const ease=new BABYLON.SineEase(); ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
   ['alpha','beta','radius'].forEach((prop,pi)=>{
-    const vals=[endAlpha, Math.PI/2.6, 7];
-    const a=new BABYLON.Animation('rot_'+prop,prop,60,
-      BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-    a.setEasingFunction(ease);
-    a.setKeys([{frame:0,value:camera[prop]},{frame:55,value:vals[pi]}]);
+    const vals=[endAlpha,Math.PI/2.5,6.5];
+    const a=new BABYLON.Animation('rot_'+prop,prop,60,BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+    a.setEasingFunction(ease); a.setKeys([{frame:0,value:camera[prop]},{frame:55,value:vals[pi]}]);
     camera.animations.push(a);
   });
-  const ta=new BABYLON.Animation('rot_t','target',60,
-    BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
+  const ta=new BABYLON.Animation('rot_t','target',60,BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
   ta.setEasingFunction(ease);
   ta.setKeys([{frame:0,value:camera.target.clone()},{frame:55,value:endTarget}]);
   camera.animations.push(ta);
   scene.beginAnimation(camera,0,55,false,1,()=>{ camera.animations.length=0; openFocus(bill); });
 }
 
-function flyToBillboard(bill){
+function flyToBillboard(bill) {
   stopAuto(); pathState=null; scene.stopAnimation(camera); camera.animations.length=0;
   const {proj,x,z}=bill.metadata;
-  const clusterKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===proj.url))?.[0]||'highlight';
-  const startKey=nearestClusterKey(camera.target.x,camera.target.z);
-
-  // Same garden: just rotate, no travel needed
-  if (startKey===clusterKey){
-    rotateToBillboard(bill);
-    return;
-  }
-
-  const route=bfsPath(startKey,clusterKey);
-
-  // Build waypoints along actual path curves
-  const wpts=[new BABYLON.Vector3(camera.target.x, PATH_Y, camera.target.z)];
+  const clKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===proj.url))?.[0]||'highlight';
+  const startKey=nearestCluster(camera.target.x,camera.target.z);
+  if (startKey===clKey) { rotateToBillboard(bill); return; }
+  const route=bfsPath(startKey,clKey);
+  const wpts=[new BABYLON.Vector3(camera.target.x,PATH_Y,camera.target.z)];
   for(let i=0;i<route.length-1;i++){
-    const fromKey=route[i],toKey=route[i+1];
-    const edgeKey=[fromKey,toKey].sort().join('--');
-    const curve=PATH_CURVES[edgeKey];
-    if(curve&&curve.length){
-      const fwd=fromKey===edgeKey.split('--')[0];
-      const pts=fwd?curve:[...curve].reverse();
-      // Every point for maximum smoothness (Catmull-Rom will interpolate between them)
-      pts.forEach(p=>wpts.push(new BABYLON.Vector3(p[0],PATH_Y,p[1])));
-    } else {
-      const cp=CLUSTERS[toKey].pos;
-      wpts.push(new BABYLON.Vector3(cp[0],PATH_Y,cp[2]));
-    }
+    const ek=[route[i],route[i+1]].sort().join('--'), curve=PATH_CURVES[ek];
+    if(curve&&curve.length){ const fwd=route[i]===ek.split('--')[0]; (fwd?curve:[...curve].reverse()).forEach(p=>wpts.push(new BABYLON.Vector3(p[0],PATH_Y,p[1]))); }
+    else { const cp=CLUSTERS[route[i+1]].pos; wpts.push(new BABYLON.Vector3(cp[0],PATH_Y,cp[2])); }
   }
-  // Approach billboard directly — no extra cluster-centre waypoint (avoids corner)
-  wpts.push(new BABYLON.Vector3(x, bill.position.y*0.55, z));
-
-  // Arc-length-based speed: travel at ~9 units/sec
+  wpts.push(new BABYLON.Vector3(x,bill.position.y*0.5,z));
   let arcLen=0;
   for(let i=0;i<wpts.length-1;i++) arcLen+=BABYLON.Vector3.Distance(wpts[i],wpts[i+1]);
-  const travelFrac = ARRIVE_T - DROP_T;
-  const totalSec = arcLen / 16 + 0.6;  // faster travel
-  const speed = 1 / (totalSec * 60);
-
-  const cpos=CLUSTERS[clusterKey].pos;
-  const dx=cpos[0]-x, dz=cpos[2]-z, dist=Math.hypot(dx,dz)||1;
-
-  pathState={
-    pts: wpts, t: 0, speed,
-    startTx: camera.target.x, startTy: camera.target.y, startTz: camera.target.z,
-    startBeta: camera.beta, startRadius: camera.radius,
-    endTarget: new BABYLON.Vector3(x, bill.position.y*0.55, z),
-    endAlpha:  Math.atan2(dz/dist, dx/dist),
-    endRadius: 7,
-    endBeta:   Math.PI/2.6,    // lower angle → camera at eye level for y=2.2 billboard
-    onDone:    ()=>openFocus(bill),
-  };
+  const totalSec=arcLen/18+0.5, speed=1/(totalSec*60);
+  const cpos=CLUSTERS[clKey].pos, dx=cpos[0]-x, dz=cpos[2]-z, dist=Math.hypot(dx,dz)||1;
+  pathState={pts:wpts,t:0,speed,startTx:camera.target.x,startTy:camera.target.y,startTz:camera.target.z,startBeta:camera.beta,startRadius:camera.radius,endTarget:new BABYLON.Vector3(x,bill.position.y*0.5,z),endAlpha:Math.atan2(dz/dist,dx/dist),endRadius:6.5,endBeta:Math.PI/2.5,onDone:()=>openFocus(bill)};
 }
 
-// ── Focus panel ───────────────────────────────────────────────────────────
+// ── Focus panel ───────────────────────────────────────────────────────────────
 function openFocus(bill) {
   const {proj}=bill.metadata;
   document.getElementById('focus-name').textContent=proj.name;
@@ -930,40 +739,39 @@ function openFocus(bill) {
   document.getElementById('focus-link').href=proj.url;
   const logEl=document.getElementById('focus-logo');
   const lu=(typeof LOGOS!=='undefined')?LOGOS[proj.id]:null;
-  if (lu){logEl.src=lu;logEl.style.display='block';}else logEl.style.display='none';
+  if(lu){logEl.src=lu;logEl.style.display='block';}else logEl.style.display='none';
   document.getElementById('focus-panel').classList.add('open');
 }
-function closeFocus() { document.getElementById('focus-panel').classList.remove('open'); }
-document.getElementById('focus-close').addEventListener('click',closeFocus);
+function closeFocus(){ document.getElementById('focus-panel').classList.remove('open'); }
+document.getElementById('focus-close').addEventListener('click', closeFocus);
 
-// ── Pointer pick ─────────────────────────────────────────────────────────
+// ── Pointer ───────────────────────────────────────────────────────────────────
 let hovered=null;
 scene.onPointerObservable.add(e=>{
   if (e.type===BABYLON.PointerEventTypes.POINTERMOVE) {
     const hit=scene.pick(scene.pointerX,scene.pointerY);
     const bill=billboards.find(b=>b===hit.pickedMesh);
     if (bill!==hovered) {
-      if (hovered) { hovered.renderOutline=false; hovered.scaling.setAll(1); }
+      if (hovered) { hovered.scaling.setAll(1); }
       hovered=bill||null;
       canvas.style.cursor=hovered?'pointer':'';
-      if (hovered) { hovered.renderOutline=true; hovered.outlineColor=new BABYLON.Color3(0.9,0.7,0.2); hovered.outlineWidth=0.06; hovered.scaling.setAll(1.04); }
+      if (hovered) { hovered.scaling.setAll(1.05); }
     }
   }
   if (e.type===BABYLON.PointerEventTypes.POINTERDOWN && e.event.button===0) {
-    if (hovered) { flyToBillboard(hovered); stopAuto(); }
-    else closeFocus();
+    if (hovered) { flyToBillboard(hovered); stopAuto(); } else closeFocus();
   }
 });
 
-// ── Cluster nav buttons ───────────────────────────────────────────────────
+// ── Nav ───────────────────────────────────────────────────────────────────────
 document.querySelectorAll('.nav-btn').forEach(btn=>{
   btn.addEventListener('click',()=>{
-    if(btn.dataset.cluster==='overview'){autoRotate=true;}
+    if(btn.dataset.cluster==='overview') autoRotate=true;
     flyTo(btn.dataset.cluster);
   });
 });
 
-// ── Keyboard ─────────────────────────────────────────────────────────────
+// ── Keyboard ──────────────────────────────────────────────────────────────────
 const keys=new Set();
 window.addEventListener('keydown',e=>{
   if(e.key==='Escape'){closeFocus();return;}
@@ -974,17 +782,15 @@ window.addEventListener('keydown',e=>{
 });
 window.addEventListener('keyup',e=>keys.delete(e.code));
 scene.registerBeforeRender(()=>{
-  const sp=0.025, zp=0.97;
+  const sp=0.025,zp=0.97;
   if(keys.has('KeyA')||keys.has('ArrowLeft'))  camera.alpha+=sp;
   if(keys.has('KeyD')||keys.has('ArrowRight')) camera.alpha-=sp;
-  if(keys.has('KeyW')||keys.has('ArrowUp'))    camera.beta =Math.max(0.1,camera.beta-sp);
-  if(keys.has('KeyS')||keys.has('ArrowDown'))  camera.beta =Math.min(Math.PI*0.48,camera.beta+sp);
+  if(keys.has('KeyW')||keys.has('ArrowUp'))    camera.beta=Math.max(0.1,camera.beta-sp);
+  if(keys.has('KeyS')||keys.has('ArrowDown'))  camera.beta=Math.min(Math.PI*0.48,camera.beta+sp);
   if(keys.has('Equal')||keys.has('KeyQ'))      camera.radius=Math.max(4,camera.radius*zp);
-  if(keys.has('Minus')||keys.has('KeyE'))      camera.radius=Math.min(120,camera.radius/zp);
+  if(keys.has('Minus')||keys.has('KeyE'))      camera.radius=Math.min(130,camera.radius/zp);
 });
 
-// ── Resize + render ───────────────────────────────────────────────────────
 window.addEventListener('resize',()=>engine.resize());
 engine.runRenderLoop(()=>scene.render());
 </script>
-
