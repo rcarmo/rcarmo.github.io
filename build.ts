@@ -992,8 +992,8 @@ const INDEX_CSS = `
   text-decoration:none;color:inherit;transition:background .12s;align-items:stretch;
   min-height:84px;}
 .idx-card:hover{background:var(--surface);text-decoration:none;}
-.idx-logo-wrap{width:52px;flex-shrink:0;display:flex;align-items:center;justify-content:center;padding:4px 0;}
-.idx-logo{width:100%;height:auto;max-height:80%;object-fit:contain;border-radius:7px;}
+.idx-logo-wrap{width:72px;flex-shrink:0;display:flex;align-items:center;justify-content:center;}
+.idx-logo{width:100%;height:auto;max-height:100%;object-fit:contain;border-radius:8px;}
 .idx-logo-ph{width:52px;flex-shrink:0;border-radius:8px;
   background:var(--surface);border:1px solid var(--border);
   display:flex;align-items:center;justify-content:center;font-size:1.3rem;}
@@ -1088,12 +1088,7 @@ function indexPage(
     <div class="hl-body">
       <div class="hl-name"><a href="/projects/${proj}.html">${esc(m.name)}</a></div>
       <p class="hl-tagline">${esc(c.tagline)}</p>
-      <div id="hl-meta-${proj}" class="hl-meta">
-        <span class="hl-stars">★ ${(m.stars??0).toLocaleString()}</span>
-        ${(m.forks??0)>0 ? `<span>⑂ ${m.forks}</span>` : ""}
-        ${realLang(m.language) ? `<span><span class="dot ${langD}"></span>${esc(realLang(m.language)!)}</span>` : ""}
-        <span class="badge badge-${c.status}">${c.status}</span>
-      </div>
+      <div id="hl-meta-${proj}"></div>
       <div class="hl-actions">
         <a class="btn btn-p" href="/projects/${proj}.html">View project →</a>
         <a class="btn btn-g" href="${ghUrl}" target="_blank" rel="noopener">${ghSvg()} GitHub</a>
