@@ -66,17 +66,14 @@ async function fetchAllRepos(fullNames) {
 
   const repoMap = {};
 
-  // Bulk fetch rcarmo/* with pagination (handles >100 repos)
+  // Bulk fetch rcarmo/* (top 100 by stars — covers all significant repos in 1 call)
   try {
-    let page = 1;
-    while (page <= 4) { // max 400 repos
-      const res = await fetch(`https://api.github.com/users/rcarmo/repos?per_page=100&type=owner&page=${page}`);
-      if (!res.ok) break;
+    const res = await fetch('https://api.github.com/users/rcarmo/repos?per_page=100&type=owner&sort=stars&direction=desc');
+    if (res.ok) {
       const repos = await res.json();
-      if (!Array.isArray(repos) || !repos.length) break;
-      for (const r of repos) repoMap[r.full_name] = r;
-      if (repos.length < 100) break; // last page
-      page++;
+      if (Array.isArray(repos)) {
+        for (const r of repos) repoMap[r.full_name] = r;
+      }
     }
   } catch { /* offline — ok */ }
 
