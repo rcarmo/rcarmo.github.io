@@ -167,6 +167,97 @@ function mat(name,hexCol,opts={}){
 }
 function darkMat(name,hexCol){return mat(name,hexCol,{diff:0.25,spec:0.08,emis:0.02,power:8});}
 function glowMat(name,hexCol,str){return mat(name,hexCol,{diff:0.3,spec:0.1,emis:str??0.28,power:4});}
+// ── Procedural DynamicTexture factory ─────────────────────────────────────────
+// Returns a 128×128 tileable DynamicTexture for each cluster type.
+// Pattern is dark bg + accent colour traces — adds surface detail without noise.
+function clusterTex(kind, hexCol, size=128){
+  const dt=new BABYLON.DynamicTexture('dtex_'+kind,{width:size,height:size},scene,false);
+  const ctx=dt.getContext();
+  const n=parseInt(hexCol.replace('#',''),16);
+  const r=(n>>16)&255,g=(n>>8)&255,b=n&255;
+  const acc=`rgba(${r},${g},${b},`;
+
+  // Base fill — very dark, hinted with accent
+  ctx.fillStyle='rgba(2,3,5,1)'; // neutral dark — accent colour via material diffuse
+  ctx.fillRect(0,0,size,size);
+
+  if(kind==='circuit'||kind==='rack'){
+    // Circuit traces: horizontal + vertical lines with pads
+    ctx.strokeStyle=acc+'0.35)'; ctx.lineWidth=1.5;
+    for(let i=8;i<size;i+=16){
+      ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,size);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(size,i);ctx.stroke();
+    }
+    ctx.fillStyle=acc+'0.5)';
+    for(let x=8;x<size;x+=16) for(let y=8;y<size;y+=16){
+      ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fill();
+    }
+  } else if(kind==='hex'||kind==='needle'){
+    // Hex grid
+    const hw=12,hh=14;
+    ctx.strokeStyle=acc+'0.3)'; ctx.lineWidth=1.0;
+    for(let row=0;row<10;row++) for(let col=0;col<10;col++){
+      const ox=col*hw*1.5+(row%2)*hw*0.75, oy=row*hh;
+      ctx.beginPath();
+      for(let a=0;a<6;a++){const ang=Math.PI/3*a-Math.PI/6;ctx.lineTo(ox+hw*0.5*Math.cos(ang),oy+hh*0.5*Math.sin(ang));}
+      ctx.closePath(); ctx.stroke();
+    }
+  } else if(kind==='dots'||kind==='neural'){
+    // Dot matrix
+    ctx.fillStyle=acc+'0.45)';
+    for(let x=6;x<size;x+=12) for(let y=6;y<size;y+=12){
+      ctx.beginPath();ctx.arc(x,y,1.8,0,Math.PI*2);ctx.fill();
+    }
+  } else if(kind==='skyline'||kind==='terminal'){
+    // Scanlines + small square pads
+    ctx.strokeStyle=acc+'0.22)'; ctx.lineWidth=1;
+    for(let y=4;y<size;y+=8){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(size,y);ctx.stroke();}
+    ctx.fillStyle=acc+'0.4)';
+    for(let x=6;x<size;x+=14) for(let y=6;y<size;y+=14){
+      ctx.fillRect(x-2,y-2,4,4);
+    }
+  } else if(kind==='pavilion'||kind==='macos'){
+    // Brushed metal: fine diagonal lines
+    ctx.strokeStyle=acc+'0.18)'; ctx.lineWidth=0.8;
+    for(let i=-size;i<size*2;i+=4){
+      ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+size,size);ctx.stroke();
+    }
+  } else if(kind==='lattice'||kind==='ml'){
+    // Lattice grid with diagonal cross
+    ctx.strokeStyle=acc+'0.28)'; ctx.lineWidth=1;
+    for(let i=0;i<size;i+=16){
+      ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,size);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(size,i);ctx.stroke();
+    }
+    ctx.strokeStyle=acc+'0.15)';
+    for(let i=0;i<size;i+=16){
+      ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(size,size-i);ctx.stroke();
+      ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(size-i,size);ctx.stroke();
+    }
+  } else if(kind==='pcb'||kind==='hardware'){
+    // PCB: traces + square pads
+    ctx.strokeStyle=acc+'0.38)'; ctx.lineWidth=2;
+    [[0,32,size,32],[0,80,size,80],[32,0,32,size],[96,0,96,size]].forEach(([x1,y1,x2,y2])=>{
+      ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+    });
+    ctx.fillStyle=acc+'0.55)';
+    [[32,32],[96,32],[32,80],[96,80],[64,64],[64,16],[64,112]].forEach(([x,y])=>{
+      ctx.fillRect(x-4,y-4,8,8);
+    });
+  } else {
+    // shelves / libraries: horizontal planks
+    ctx.strokeStyle=acc+'0.3)'; ctx.lineWidth=1.5;
+    for(let y=16;y<size;y+=24){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(size,y);ctx.stroke();}
+    ctx.fillStyle=acc+'0.12)';
+    ctx.fillRect(0,0,size,size);
+  }
+
+  dt.update(false);
+  dt.wrapU = BABYLON.Texture.WRAP_ADDRESSMODE;
+  dt.wrapV = BABYLON.Texture.WRAP_ADDRESSMODE;
+  return dt;
+}
+
 
 
 // ── Ground ───────────────────────────────────────────────────────────────────
@@ -610,11 +701,25 @@ Object.entries(CLUSTERS).forEach(([key,cluster])=>{
     case'pcb':     buildPcb(pos,col); break;
     case'shelves': buildShelves(pos,col); break;
   }
-  // Bowl lift + scale: raise and enlarge all newly-created meshes
+  // Bowl lift + scale + texture: raise, enlarge, and texture all newly-created meshes
   const yOff = pos[1] ?? 0;
+  const _ctex = clusterTex(shape, col);
   for(let _i=nBefore;_i<scene.meshes.length;_i++){
     if(yOff > 0.1) scene.meshes[_i].position.y += yOff;
     scene.meshes[_i].scaling.scaleInPlace(1.5);
+    const _mn = scene.meshes[_i].name;
+    const _nameSkip = /base|ground|post|panel|path|floor|disc|ring/.test(_mn);
+    if(!_nameSkip && scene.meshes[_i].material && !scene.meshes[_i].material.emissiveTexture){
+      // Also skip flat geometry (thin disc-like meshes)
+      const _bb = scene.meshes[_i].getBoundingInfo();
+      const _h  = _bb.boundingBox.maximumWorld.y - _bb.boundingBox.minimumWorld.y;
+      if(_h > 0.8) { // only texture meshes with real height
+        scene.meshes[_i].material.diffuseTexture = _ctex;
+        scene.meshes[_i].material.diffuseTexture.uScale = 5;
+        scene.meshes[_i].material.diffuseTexture.vScale = 5;
+        scene.meshes[_i].material.diffuseColor.scaleToRef(0.55, scene.meshes[_i].material.diffuseColor);
+      }
+    }
   }
   if(yOff > 0.1 && landmark) landmark.position.y += yOff;
   if(landmark) animatables[key]=landmark;
@@ -636,129 +741,81 @@ Object.entries(CLUSTERS).forEach(([key,cluster])=>{
   });
 });
 
-// ── Post-processing pipeline ─────────────────────────────────────────────────
-// Pass 1: Sobel depth → ink outlines
-const depthRenderer = scene.enableDepthRenderer(camera,false);
-// Geometry buffer gives us depth + normals in screen space
-const gbr = scene.enableGeometryBufferRenderer(0.5);  // half-res for perf
-const normalTex = gbr ? gbr.getGBuffer().textures[1] : null;
+// ── Post-processing: single-pass painterly Kuwahara + quantise ───────────────
+// 4-quadrant Kuwahara (radius 3) — each pixel picks the lowest-variance quadrant
+// mean colour → paint-like smooth regions with preserved edges.
+// Colour quantisation posterises to N levels for a painted-palette feel.
+// Based on Maxime Heckel's "On Crafting Painterly Shaders" (Oct 2024).
 
-// ── Post-processing: clean Sobel ink outlines + very light halftone ─────────────
-// Principle: outlines give form, halftone adds print character, nothing more.
-
-BABYLON.Effect.ShadersStore["inkFragmentShader"]=`
+BABYLON.Effect.ShadersStore["painterlyFragmentShader"]=`
   precision highp float;
   varying vec2 vUV;
   uniform sampler2D textureSampler;
-  uniform sampler2D depthSampler;
-  uniform sampler2D normalSampler;
   uniform vec2 texelSize;
-  uniform float outlineStr;
-  uniform float hasNormals;
-
-  float sD(vec2 uv){return texture2D(depthSampler,uv).r;}
-
-  float sobelDepth(){
-    float tl=sD(vUV+vec2(-texelSize.x,-texelSize.y));
-    float t =sD(vUV+vec2( 0.0,         -texelSize.y));
-    float tr=sD(vUV+vec2( texelSize.x, -texelSize.y));
-    float l =sD(vUV+vec2(-texelSize.x,  0.0));
-    float r2=sD(vUV+vec2( texelSize.x,  0.0));
-    float bl=sD(vUV+vec2(-texelSize.x,  texelSize.y));
-    float b =sD(vUV+vec2( 0.0,           texelSize.y));
-    float br=sD(vUV+vec2( texelSize.x,   texelSize.y));
-    float gx=-tl-2.0*l-bl+tr+2.0*r2+br;
-    float gy=-tl-2.0*t-tr+bl+2.0*b+br;
-    return sqrt(gx*gx+gy*gy);
-  }
-
-  float sobelNormal(){
-    if(hasNormals<0.5) return 0.0;
-    vec3 l =texture2D(normalSampler,vUV+vec2(-texelSize.x, 0.0)).rgb;
-    vec3 r2=texture2D(normalSampler,vUV+vec2( texelSize.x, 0.0)).rgb;
-    vec3 t2=texture2D(normalSampler,vUV+vec2( 0.0,-texelSize.y)).rgb;
-    vec3 b2=texture2D(normalSampler,vUV+vec2( 0.0, texelSize.y)).rgb;
-    return length(r2-l)+length(b2-t2);
-  }
+  uniform float levels;
 
   void main(){
-    vec4 color = texture2D(textureSampler, vUV);
+    vec2 ts = texelSize;
 
-    // Combined edge: depth gives hard edges, normals give silhouette curves
-    float edgeD = sobelDepth();
-    float edgeN = sobelNormal();
-    float edge  = max(edgeD, edgeN * 0.35);
-    float outline = smoothstep(0.005, 0.018, edge);
+    // 4-quadrant Kuwahara, radius=3 (4x4 samples per quadrant)
+    // Each quadrant covers one "corner" around the pixel
+    vec3 m0=vec3(0.),m1=vec3(0.),m2=vec3(0.),m3=vec3(0.);
+    vec3 q0=vec3(0.),q1=vec3(0.),q2=vec3(0.),q3=vec3(0.);
+    float n=16.0; // 4x4
 
-    // Ink colour: very dark navy (not pure black — keeps warmth of scene)
-    vec3 ink = vec3(0.01, 0.02, 0.05);
-    vec3 result = mix(color.rgb, ink, outline * outlineStr);
+    for(int j=0; j<=3; j++){
+      for(int i=0; i<=3; i++){
+        float fi=float(i), fj=float(j);
+        vec3 c;
+        c=texture2D(textureSampler,vUV+vec2( fi, fj)*ts).rgb; m0+=c; q0+=c*c;
+        c=texture2D(textureSampler,vUV+vec2(-fi, fj)*ts).rgb; m1+=c; q1+=c*c;
+        c=texture2D(textureSampler,vUV+vec2(-fi,-fj)*ts).rgb; m2+=c; q2+=c*c;
+        c=texture2D(textureSampler,vUV+vec2( fi,-fj)*ts).rgb; m3+=c; q3+=c*c;
+      }
+    }
+    m0/=n; m1/=n; m2/=n; m3/=n;
+    q0/=n; q1/=n; q2/=n; q3/=n;
 
-    // Subtle vignette
-    vec2 c = vUV - 0.5;
-    result *= 1.0 - dot(c,c) * 0.55;
+    // Variance of each quadrant (sum of channel variances)
+    float v0=dot(max(vec3(0.),q0-m0*m0),vec3(1.));
+    float v1=dot(max(vec3(0.),q1-m1*m1),vec3(1.));
+    float v2=dot(max(vec3(0.),q2-m2*m2),vec3(1.));
+    float v3=dot(max(vec3(0.),q3-m3*m3),vec3(1.));
 
-    gl_FragColor = vec4(result, 1.0);
+    // Blend all quadrants weighted by 1/variance (minimum-variance wins)
+    float w0=1.0/(v0*80.0+0.004);
+    float w1=1.0/(v1*80.0+0.004);
+    float w2=1.0/(v2*80.0+0.004);
+    float w3=1.0/(v3*80.0+0.004);
+    float tw=w0+w1+w2+w3;
+
+    vec3 paint = (m0*w0+m1*w1+m2*w2+m3*w3)/tw;
+
+    // Colour quantisation: posterise to N levels
+    paint = floor(paint * levels + 0.5) / levels;
+
+    // Subtle dark outline: edge detect on Kuwahara output
+    float lum=dot(paint,vec3(0.299,0.587,0.114));
+    float el=dot(texture2D(textureSampler,vUV+vec2(-ts.x,0.)).rgb,vec3(0.299,0.587,0.114));
+    float er=dot(texture2D(textureSampler,vUV+vec2( ts.x,0.)).rgb,vec3(0.299,0.587,0.114));
+    float et=dot(texture2D(textureSampler,vUV+vec2(0.,-ts.y)).rgb,vec3(0.299,0.587,0.114));
+    float eb=dot(texture2D(textureSampler,vUV+vec2(0., ts.y)).rgb,vec3(0.299,0.587,0.114));
+    float edge=abs(er-el)+abs(eb-et);
+    float outline=smoothstep(0.02,0.06,edge);
+    paint=mix(paint,vec3(0.01,0.015,0.03),outline*0.65);
+
+    // Vignette
+    vec2 cv=vUV-0.5; paint*=1.0-dot(cv,cv)*0.5;
+
+    gl_FragColor=vec4(clamp(paint,0.0,1.0),1.0);
   }
 `;
 
-const inkPass = new BABYLON.PostProcess('ink','ink',
-  ['texelSize','outlineStr','hasNormals'],
-  ['depthSampler','normalSampler'],
-  1.0, camera);
-
-inkPass.onApply = effect => {
-  effect.setTexture('depthSampler', depthRenderer.getDepthMap());
-  if (normalTex) {
-    effect.setTexture('normalSampler', normalTex);
-    effect.setFloat('hasNormals', 1.0);
-  } else {
-    effect.setTexture('normalSampler', depthRenderer.getDepthMap());
-    effect.setFloat('hasNormals', 0.0);
-  }
+const painterlyPass = new BABYLON.PostProcess('painterly','painterly',
+  ['texelSize','levels'], [], 0.75, camera);
+painterlyPass.onApply = effect => {
   effect.setFloat2('texelSize', 1/engine.getRenderWidth(), 1/engine.getRenderHeight());
-  effect.setFloat('outlineStr', 0.85);
-};
-
-// Very light halftone — large cells, low strength, just enough to suggest print texture
-BABYLON.Effect.ShadersStore["halftoneFragmentShader"]=`
-  precision highp float;
-  varying vec2 vUV;
-  uniform sampler2D textureSampler;
-  uniform vec2 resolution;
-  uniform float gridCells;
-  uniform float dotStrength;
-
-  void main(){
-    vec4 color = texture2D(textureSampler, vUV);
-    float aspect = resolution.x / resolution.y;
-    vec2 gUV = vec2(vUV.x * aspect, vUV.y) * gridCells;
-
-    // Sample cell colour (pixelated)
-    vec2 cell   = (floor(gUV) + 0.5) / gridCells;
-    vec2 sampleUV = vec2(cell.x / aspect, cell.y);
-    sampleUV = clamp(sampleUV, 0.001, 0.999);
-    float luma = dot(texture2D(textureSampler, sampleUV).rgb, vec3(0.299,0.587,0.114));
-
-    // Skip background (dark sky pixels would get the biggest dots — wrong)
-    if (luma < 0.07) { gl_FragColor = color; return; }
-
-    // Dot radius: lit geometry gets subtle dot texture
-    float radius = sqrt(max(0.0, 1.0 - luma)) * 0.38;
-    vec2 cellUV  = fract(gUV) - 0.5;
-    float inDot  = 1.0 - smoothstep(radius - 0.025, radius + 0.025, length(cellUV));
-
-    vec3 result = color.rgb * (1.0 - inDot * dotStrength);
-    gl_FragColor = vec4(result, 1.0);
-  }
-`;
-
-const halftonePass = new BABYLON.PostProcess('halftone','halftone',
-  ['resolution','gridCells','dotStrength'],[],1.0,camera);
-halftonePass.onApply = effect => {
-  effect.setFloat2('resolution', engine.getRenderWidth(), engine.getRenderHeight());
-  effect.setFloat('gridCells',   45.0);   // large cells = coarse dots, less busy
-  effect.setFloat('dotStrength', 0.08);   // 8% — a hint, not a statement
+  effect.setFloat('levels', 14.0);
 };
 
 // ── Animations ───────────────────────────────────────────────────────────────
