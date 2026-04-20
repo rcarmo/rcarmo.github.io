@@ -194,7 +194,7 @@ const PATH_EDGES = [...new Set(
 (function layoutClusters(){
   const keys = Object.keys(CLUSTERS);
   const n = keys.length;
-  const SCENE_R = 30;   // target radius for the layout
+  const SCENE_R = 58;   // target radius for the layout
   const IDEAL_K = SCENE_R * 1.2 / Math.sqrt(n);   // ideal spring length
 
   // Initialise on a circle so the layout starts spread out
@@ -266,7 +266,7 @@ const PATH_EDGES = [...new Set(
 })();
 
 // ── Camera views — derived from computed cluster positions ─────────────────────
-const CAM_VIEWS = { overview: {target:[0,0,0], alpha:-Math.PI/2, beta:Math.PI/3.2, radius:88} };
+const CAM_VIEWS = { overview: {target:[0,0,0], alpha:-Math.PI/2, beta:Math.PI/3.4, radius:130} };
 Object.entries(CLUSTERS).forEach(([key, cl]) => {
   CAM_VIEWS[key] = {
     target: [...cl.pos],
@@ -291,8 +291,8 @@ function nearestCluster(x,z){
 const canvas = document.getElementById('cv');
 const engine = new BABYLON.Engine(canvas, true, {stencil:true, preserveDrawingBuffer:false});
 const scene  = new BABYLON.Scene(engine);
-scene.clearColor   = new BABYLON.Color4(0.012, 0.025, 0.055, 1.0);
-scene.ambientColor = new BABYLON.Color3(0.12, 0.18, 0.30);
+scene.clearColor   = new BABYLON.Color4(0.006, 0.010, 0.018, 1.0);
+scene.ambientColor = new BABYLON.Color3(0.06, 0.08, 0.12);
 
 // Camera
 const camera = new BABYLON.ArcRotateCamera('cam', -Math.PI/2, Math.PI/3.4, 68, new BABYLON.Vector3(0,0,8), scene);
@@ -306,15 +306,15 @@ sun.intensity = 3.2;
 sun.diffuse   = new BABYLON.Color3(0.85, 0.90, 1.0);
 
 const fill = new BABYLON.HemisphericLight('fill', new BABYLON.Vector3(0,1,0), scene);
-fill.intensity   = 1.1;
-fill.diffuse     = new BABYLON.Color3(0.65, 0.75, 1.0);
-fill.groundColor = new BABYLON.Color3(0.08, 0.12, 0.20);
+fill.intensity   = 0.25;
+fill.diffuse     = new BABYLON.Color3(0.5, 0.6, 0.8);
+fill.groundColor = new BABYLON.Color3(0.02, 0.03, 0.06);
 fill.groundColor = new BABYLON.Color3(0.01, 0.02, 0.06);
 
 // Rim light from above-behind (blue-white sky fill)
 const rim = new BABYLON.DirectionalLight('rim', new BABYLON.Vector3(0.3, -0.4, 0.8), scene);
-rim.intensity = 1.0;
-rim.diffuse   = new BABYLON.Color3(0.7, 0.85, 1.0);
+rim.intensity = 0.4;
+rim.diffuse   = new BABYLON.Color3(0.6, 0.75, 0.95);
 const shadowGen = new BABYLON.ShadowGenerator(1024, sun);
 shadowGen.usePoissonSampling = true;
 shadowGen.bias = 0.002;
@@ -345,7 +345,7 @@ Object.entries(CLUSTERS).forEach(([key,cl])=>{
 // ── Ground ───────────────────────────────────────────────────────────────────
 const ground = BABYLON.MeshBuilder.CreateGround('ground',{width:240,height:240,subdivisions:1},scene);
 const gm = new BABYLON.StandardMaterial('gmat',scene);
-gm.diffuseColor  = new BABYLON.Color3(0.04,0.07,0.14);
+gm.diffuseColor  = new BABYLON.Color3(0.015,0.025,0.05);
 gm.specularColor = new BABYLON.Color3(0.04,0.07,0.16);
 gm.specularPower = 120;
 ground.material  = gm;
@@ -617,7 +617,7 @@ function makePath(edgeKey,ax,az,bx,bz,trimA,trimB){
   const mx=(sx+ex)*0.5+perpX*sway,mz=(sz+ez)*0.5+perpZ*sway;
   const N=20,pts=[];
   for(let i=0;i<=N;i++){const t=i/N,mt=1-t;pts.push([mt*mt*sx+2*mt*t*mx+t*t*ex,mt*mt*sz+2*mt*t*mz+t*t*ez]);}
-  const hw=0.3,left=[],right=[];
+  const hw=0.45,left=[],right=[];
   for(let i=0;i<pts.length;i++){
     const p=pts[i],ip=Math.max(0,i-1),inp=Math.min(pts.length-1,i+1);
     const tx2=pts[inp][0]-pts[ip][0],tz2=pts[inp][1]-pts[ip][1];
@@ -627,8 +627,8 @@ function makePath(edgeKey,ax,az,bx,bz,trimA,trimB){
   }
   const ribbon=BABYLON.MeshBuilder.CreateRibbon('path',{pathArray:[left,right],sideOrientation:BABYLON.Mesh.DOUBLESIDE},scene);
   const pm=new BABYLON.StandardMaterial('pmat',scene);
-  pm.emissiveColor=new BABYLON.Color3(0.04,0.07,0.2);
-  pm.diffuseColor=new BABYLON.Color3(0.02,0.04,0.1);
+  pm.emissiveColor=new BABYLON.Color3(0.08,0.14,0.4);
+  pm.diffuseColor=new BABYLON.Color3(0.04,0.08,0.2);
   pm.specularColor=BABYLON.Color3.Black();
   ribbon.material=pm; ribbon.receiveShadows=true;
   if(edgeKey)PATH_CURVES[edgeKey]=pts;
@@ -871,12 +871,14 @@ BABYLON.Effect.ShadersStore["halftoneFragmentShader"]=`
     sampleUV = clamp(sampleUV, 0.001, 0.999);
     float luma = dot(texture2D(textureSampler, sampleUV).rgb, vec3(0.299,0.587,0.114));
 
-    // Dot radius: darker area → slightly larger dot
-    float radius = sqrt(max(0.0, 1.0 - luma)) * 0.40;
-    vec2 cellUV  = fract(gUV) - 0.5;
-    float inDot  = 1.0 - smoothstep(radius - 0.03, radius + 0.03, length(cellUV));
+    // Skip background (dark sky pixels would get the biggest dots — wrong)
+    if (luma < 0.07) { gl_FragColor = color; return; }
 
-    // Blend: very subtle — just a texture hint, not a filter
+    // Dot radius: lit geometry gets subtle dot texture
+    float radius = sqrt(max(0.0, 1.0 - luma)) * 0.38;
+    vec2 cellUV  = fract(gUV) - 0.5;
+    float inDot  = 1.0 - smoothstep(radius - 0.025, radius + 0.025, length(cellUV));
+
     vec3 result = color.rgb * (1.0 - inDot * dotStrength);
     gl_FragColor = vec4(result, 1.0);
   }
