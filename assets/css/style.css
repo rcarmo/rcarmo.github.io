@@ -13,7 +13,7 @@
 
 /* ── Custom properties ────────────────────────────────────────────────────── */
 :root {
-  --font-head: 'Instrument Serif', Georgia, 'Times New Roman', serif;
+  --font-head: 'Fraunces', Georgia, 'Times New Roman', serif;
   --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
   --font-mono: 'JetBrains Mono', 'SF Mono', Consolas, monospace;
 
