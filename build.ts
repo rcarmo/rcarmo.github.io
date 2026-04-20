@@ -1,13 +1,8 @@
 #!/usr/bin/env bun
 /**
- * Build rich project pages using visual-explainer design language:
- * - Blueprint/Editorial constrained aesthetic (NOT generic blue-on-dark)
- * - Dot-grid background atmosphere
- * - Sticky sidebar TOC (desktop) / horizontal scroll bar (mobile) with scroll spy
- * - Mermaid.js architecture diagrams
- * - Dynamic releases from GitHub API, date-sorted
- * - No commit noise
- * Run: bun run build.ts
+ * Project pages — dark game aesthetic with ECharts activity sparklines,
+ * release timelines with live GitHub API, glow logos, full dossier data.
+ * Leverages image_process-optimised logos and vendored ECharts.
  */
 import { mkdirSync, writeFileSync, readFileSync, readdirSync } from "node:fs";
 import { join } from "node:path";
@@ -18,23 +13,25 @@ const OUT  = join(ROOT, "projects");
 mkdirSync(OUT, { recursive: true });
 
 type Post    = { title: string; url: string; date: string };
+type Commit  = { sha: string; date: string; msg: string };
+type Release = { tag: string; name: string; date: string; body: string };
 type Meta    = { name: string; full_name: string; description: string;
                  homepage: string|null; stars: number; forks: number;
-                 language: string; created_at: string; pushed_at: string; topics: string[] };
-type Dossier = { id: string; meta: Meta; posts: Post[];
+                 language: string; created_at: string; pushed_at: string;
+                 topics: string[] };
+type Dossier = { id: string; meta: Meta; commits: Commit[];
+                 releases: Release[]; posts: Post[];
                  logo_data_uri: string|null; diagram_inline: string|null };
+
 
 const POSTS: Record<string, Post[]> = JSON.parse(readFileSync(join(DATA,"verified-posts.json"),"utf-8"));
 
-// ── Content ───────────────────────────────────────────────────────────────
+
+// ── Content ─────────────────────────────────────────────
 type Feature = { icon: string; title: string; body: string };
 type Content = {
-  tagline: string;
-  about: string;
-  how: string;
-  features: Feature[];
-  mermaid?: string;   // Mermaid diagram definition
-  status: "active"|"stable"|"maintained"|"archived";
+  tagline: string; about: string; how: string;
+  features: Feature[]; status: 'active'|'stable'|'maintained'|'archived';
 };
 
 const C: Record<string, Content> = {
@@ -381,188 +378,127 @@ Sessions branch as git-like conversation trees in SQLite. The keychain stores se
   },
 };
 
-// ── Visual-explainer design language ──────────────────────────────────────
-// Blueprint aesthetic: monospace labels, dot-grid background, deep slate/teal
-// palette — specifically NOT generic blue-on-dark or violet/indigo.
-// Sticky sidebar TOC (desktop) / horizontal scroll bar (mobile) with scroll spy.
-// Mermaid.js diagrams with theme:base deep theming.
+
+// ── CSS ───────────────────────────────────────────────────────────────────
+const LANG_DOT: Record<string,string> = {
+  TypeScript:"#3178c6",Python:"#3572A5",Go:"#00ADD8",Swift:"#F05138",
+  C:"#555","C++":"#f34b7d",Dockerfile:"#384d54",Shell:"#89e051",misc:"#7a8190",
+};
+
+const LANG_ACCENT: Record<string,string> = {
+  TypeScript:"#4a8aff",Go:"#00c8f0",Python:"#4a90d9",Swift:"#ff7030",
+  C:"#999","C++":"#e060a0",Dockerfile:"#5090a0",Shell:"#50c050",
+};
 
 const CSS = `
-*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-
-:root {
-  --font-body: -apple-system, BlinkMacSystemFont, "Segoe UI", "Inter", Helvetica, Arial, sans-serif;
-  --font-mono: ui-monospace, "SF Mono", "Fira Code", Menlo, Consolas, monospace;
-
-  /* Blueprint palette — deep slate/teal, warm amber accents */
-  --bg: #0b0e14;
-  --surface: #111620;
-  --surface2: #161c2a;
-  --surface-elevated: #1d2435;
-  --border: rgba(255,255,255,.06);
-  --border-bright: rgba(255,255,255,.12);
-  --text: #e2e8f4;
-  --text-dim: #7a8aa8;
-  --accent: #22d3ee;       /* teal — NOT violet/indigo */
-  --accent-dim: rgba(34,211,238,.1);
-  --green: #34d399;
-  --amber: #fbbf24;
-  --orange: #fb923c;
-  --red: #f87171;
-  --radius: 8px; --radius-lg: 14px;
-  --gap: clamp(1rem, 4vw, 2rem); --max: 1400px;
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
+:root{
+  --bg:#080c18;--surface:#0e1424;--surface2:#141c30;
+  --border:rgba(60,120,255,.1);--border2:rgba(80,140,255,.18);
+  --text:#dde8ff;--muted:#6a88bb;--dim:#344668;
+  --accent:#4a8aff;--accent-glow:rgba(74,138,255,.15);
+  --amber:#fbbf24;--green:#34d399;
+  --radius:8px;--radius-lg:14px;
+  --gap:clamp(1rem,4vw,2rem);--max:880px;
 }
-@media (prefers-color-scheme: light) {
-  :root {
-    --bg: #f0f4f8;
-    --surface: #ffffff;
-    --surface2: #eaf0f8;
-    --surface-elevated: #ffffff;
-    --border: rgba(0,0,0,.08);
-    --border-bright: rgba(0,0,0,.16);
-    --text: #0d1b2e;
-    --text-dim: #4a6285;
-    --accent: #0891b2;
-    --accent-dim: rgba(8,145,178,.08);
-    --green: #059669;
-    --amber: #d97706;
-    --orange: #ea580c;
-  }
+html{scroll-behavior:smooth;}
+body{
+  background-color:var(--bg);
+  background-image:radial-gradient(circle,rgba(60,120,255,.055) 1px,transparent 1px);
+  background-size:24px 24px;
+  color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;
 }
-
-html { scroll-behavior: smooth; }
-
-/* Dot-grid background atmosphere (from visual-explainer css-patterns.md) */
-body {
-  background-color: var(--bg);
-  background-image: radial-gradient(circle, var(--border-bright) 1px, transparent 1px);
-  background-size: 24px 24px;
-  color: var(--text);
-  font-family: var(--font-body);
-  font-size: 15px;
-  line-height: 1.65;
-  -webkit-font-smoothing: antialiased;
-}
-
-a { color: var(--accent); text-decoration: none; }
-a:hover { text-decoration: underline; }
-code { font-family: var(--font-mono); font-size: .875em; background: var(--surface2); padding: .1em .35em; border-radius: 4px; border: 1px solid var(--border); }
-
-/* ── Topbar ── */
-.topbar { position: sticky; top: 0; z-index: 300; background: rgba(11,14,20,.85); backdrop-filter: blur(16px); border-bottom: 1px solid var(--border-bright); }
-.topbar-inner { max-width: 900px; margin: 0 auto; padding: .7rem var(--gap); display: flex; align-items: center; gap: .6rem; font-size: .78rem; color: var(--text-dim); font-family: var(--font-mono); }
-.topbar-inner a { color: var(--text-dim); } .topbar-inner a:hover { color: var(--text); text-decoration: none; }
-.sep { opacity: .4; }
-.current { color: var(--text); }
-@media (prefers-color-scheme: light) {
-  .topbar { background: rgba(240,244,248,.88); }
-}
-
-/* ── Page layout: TOC sidebar + main ── */
-.outer { max-width: var(--max); margin: 0 auto; display: grid; grid-template-columns: 170px 1fr; gap: 0 40px; padding: 2rem var(--gap) 4rem; }
-.main { min-width: 0; max-width: 900px; }
-
-/* TOC — Desktop sticky sidebar */
-.toc { position: sticky; top: 56px; align-self: start; padding: 14px 0; grid-row: 1 / -1; max-height: calc(100dvh - 80px); overflow-y: auto; }
-.toc::-webkit-scrollbar { width: 3px; }
-.toc::-webkit-scrollbar-thumb { background: var(--surface-elevated); border-radius: 2px; }
-.toc-title { font-family: var(--font-mono); font-size: 9px; font-weight: 700; text-transform: uppercase; letter-spacing: 2px; color: var(--text-dim); padding: 0 0 10px; margin-bottom: 8px; border-bottom: 1px solid var(--border); }
-.toc a { display: block; font-size: 11px; color: var(--text-dim); text-decoration: none; padding: 4px 8px; border-radius: 5px; border-left: 2px solid transparent; transition: all .15s; line-height: 1.4; margin-bottom: 1px; }
-.toc a:hover { color: var(--text); background: var(--surface2); text-decoration: none; }
-.toc a.active { color: var(--text); border-left-color: var(--accent); background: var(--accent-dim); }
-
-/* TOC — Mobile horizontal scrollable bar */
-@media (max-width: 1000px) {
-  .outer { grid-template-columns: 1fr; padding-top: 0; }
-  .toc { position: sticky; top: 44px; z-index: 200; max-height: none; display: flex; gap: 4px; align-items: center; overflow-x: auto; -webkit-overflow-scrolling: touch; background: var(--bg); border-bottom: 1px solid var(--border-bright); padding: 10px 0; margin: 0 calc(-1 * var(--gap)); padding-left: var(--gap); padding-right: var(--gap); grid-row: auto; }
-  .toc::-webkit-scrollbar { display: none; }
-  .toc-title { display: none; }
-  .toc a { white-space: nowrap; flex-shrink: 0; border-left: none; border-bottom: 2px solid transparent; border-radius: 4px 4px 0 0; padding: 6px 10px; font-size: 10px; }
-  .toc a.active { border-left: none; border-bottom-color: var(--accent); background: var(--surface2); }
-}
-
-/* ── Hero ── */
-.hero { padding: 2.5rem 0 2rem; }
-.hero-top { display: flex; align-items: flex-start; gap: 1.5rem; justify-content: space-between; }
-.hero-logo img { width: 80px; height: 80px; border-radius: 18px; box-shadow: 0 0 0 1px var(--border-bright), 0 8px 24px rgba(0,0,0,.5); flex-shrink: 0; }
-h1 { font-size: clamp(1.8rem,5vw,2.8rem); font-weight: 700; letter-spacing: -.03em; line-height: 1.1; }
-h1 a { color: var(--text); } h1 a:hover { color: var(--accent); text-decoration: none; }
-.tagline { font-size: clamp(.95rem,2.2vw,1.15rem); color: var(--text-dim); margin: .6rem 0 1.25rem; max-width: 580px; line-height: 1.55; }
-.meta { display: flex; flex-wrap: wrap; align-items: center; gap: .5rem 1rem; font-size: .8rem; color: var(--text-dim); margin-bottom: 1.1rem; }
-.stars { color: var(--amber); font-weight: 700; }
-.dot { width: 9px; height: 9px; border-radius: 50%; display: inline-block; vertical-align: middle; margin-right: 3px; }
-.dot-TypeScript{background:#3178c6} .dot-Python{background:#3572A5} .dot-Go{background:#00ADD8}
-.dot-Swift{background:#F05138} .dot-C{background:#555} .dot-Cpp{background:#f34b7d}
-.dot-Dockerfile{background:#384d54} .dot-Shell{background:#89e051} .dot-misc{background:#7a8190}
-.badge { display: inline-flex; align-items: center; padding: .18rem .55rem; border-radius: 2em; font-size: .68rem; font-weight: 700; letter-spacing: .03em; }
-.badge-active   { background: rgba(52,211,153,.1);  color: #34d399; border: 1px solid rgba(52,211,153,.2); }
-.badge-stable   { background: rgba(34,211,238,.1);  color: #22d3ee; border: 1px solid rgba(34,211,238,.2); }
-.badge-maintained{background: rgba(251,191,36,.1);  color: #fbbf24; border: 1px solid rgba(251,191,36,.2); }
-.badge-archived { background: rgba(248,113,113,.1); color: #f87171; border: 1px solid rgba(248,113,113,.2); }
-@media (prefers-color-scheme: light) {
-  .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
-  .badge-stable{background:#cffafe;color:#0e7490;border-color:#67e8f9}
-  .badge-maintained{background:#fef3c7;color:#92400e;border-color:#fcd34d}
-  .badge-archived{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
-}
-.topics { display: flex; flex-wrap: wrap; gap: .35rem; margin-bottom: 1.1rem; }
-.topic { font-size: .7rem; background: var(--surface2); border: 1px solid var(--border-bright); color: var(--text-dim); padding: .13rem .5rem; border-radius: 2em; font-family: var(--font-mono); }
-.cta { display: flex; flex-wrap: wrap; gap: .6rem; }
-.btn { display: inline-flex; align-items: center; gap: .4rem; padding: .48rem 1rem; border-radius: var(--radius); font-size: .83rem; font-weight: 500; transition: all .15s; }
-.btn-p { background: var(--accent); color: #000; } .btn-p:hover { filter: brightness(1.1); text-decoration: none; }
-.btn-g { background: transparent; color: var(--text); border: 1px solid var(--border-bright); } .btn-g:hover { border-color: var(--accent); color: var(--accent); text-decoration: none; }
-
-/* ── Stats ── */
-.stats { display: grid; grid-template-columns: repeat(auto-fill, minmax(110px, 1fr)); gap: 1px; background: var(--border-bright); border: 1px solid var(--border-bright); border-radius: var(--radius-lg); overflow: hidden; margin-bottom: 2.5rem; }
-.stat { background: var(--surface); padding: .85rem 1rem; }
-.stat-l { font-size: .65rem; text-transform: uppercase; letter-spacing: .1em; color: var(--text-dim); margin-bottom: .2rem; font-family: var(--font-mono); }
-.stat-v { font-size: 1.35rem; font-weight: 700; letter-spacing: -.02em; color: var(--text); }
-.stat-sub { font-size: .68rem; color: var(--text-dim); margin-top: .1rem; }
-
-/* ── Sections ── */
-.sec { padding: 2.5rem 0; border-top: 1px solid var(--border); }
-.eyebrow { font-size: .68rem; font-weight: 700; text-transform: uppercase; letter-spacing: .1em; color: var(--accent); margin-bottom: .4rem; font-family: var(--font-mono); }
-.sec-title { font-size: 1.25rem; font-weight: 700; letter-spacing: -.02em; margin-bottom: 1.2rem; }
-.about { font-size: 1rem; line-height: 1.8; color: var(--text); max-width: 680px; }
-.how { display: flex; flex-direction: column; gap: 1rem; max-width: 680px; }
-.how p { font-size: .95rem; line-height: 1.8; color: var(--text-dim); }
-
-/* ── Features grid ── */
-/* NOTE: using .ve-card to avoid collision with Mermaid's internal .node class */
-.features { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px,1fr)); gap: 1px; background: var(--border); border: 1px solid var(--border-bright); border-radius: var(--radius-lg); overflow: hidden; }
-.ve-card { background: var(--surface); padding: 1.3rem; display: flex; flex-direction: column; gap: .4rem; transition: background .15s; }
-.ve-card:hover { background: var(--surface2); }
-.ve-icon { font-size: 1.25rem; line-height: 1; }
-.ve-title { font-size: .86rem; font-weight: 600; color: var(--text); }
-.ve-body { font-size: .8rem; color: var(--text-dim); line-height: 1.6; }
-
-/* ── Mermaid diagram (from visual-explainer css-patterns.md) ── */
-.diagram-wrap { background: var(--surface); border: 1px solid var(--border-bright); border-radius: var(--radius-lg); overflow: hidden; }
-.mermaid-container { padding: 1.5rem; }
-/* Centre the Mermaid SVG — narrow diagrams look bad left-aligned */
-.mermaid { display: flex; justify-content: center; }
-.mermaid svg { max-width: 100%; height: auto; }
-
-/* ── Releases (dynamic) ── */
-#releases-list { display: flex; flex-direction: column; }
-.rel { display: grid; grid-template-columns: 8rem 1fr; gap: .75rem; padding: .65rem 0; border-bottom: 1px solid var(--border); font-size: .85rem; }
-.rel:last-child { border-bottom: none; }
-.rel-date { color: var(--text-dim); font-size: .75rem; white-space: nowrap; padding-top: .12rem; font-family: var(--font-mono); }
-.rel-tag { font-family: var(--font-mono); font-size: .72rem; font-weight: 700; color: var(--accent); background: var(--accent-dim); padding: .08rem .4rem; border-radius: 4px; display: inline-block; margin-right: .4rem; }
-.rel-name { color: var(--text); font-size: .86rem; }
-.rel-note { font-size: .78rem; color: var(--text-dim); margin-top: .2rem; line-height: 1.5; }
-.rel-loading { color: var(--text-dim); font-size: .83rem; }
-
-/* ── Posts ── */
-.posts { display: flex; flex-direction: column; gap: .4rem; }
-.post { display: grid; grid-template-columns: 5.5rem 1fr; gap: .75rem; font-size: .875rem; }
-.post-date { color: var(--text-dim); font-size: .73rem; padding-top: .1rem; white-space: nowrap; font-family: var(--font-mono); }
-
-/* ── Footer ── */
-footer { max-width: 900px; margin: 0 auto; padding: 1.5rem var(--gap); border-top: 1px solid var(--border); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem; }
-.foot-l { font-size: .75rem; color: var(--text-dim); font-family: var(--font-mono); }
-.foot-r { display: flex; gap: 1.5rem; font-size: .75rem; }
-.foot-r a { color: var(--text-dim); } .foot-r a:hover { color: var(--text); }
+a{color:var(--accent);text-decoration:none;}a:hover{text-decoration:underline;}
+code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.875em;
+  background:var(--surface2);padding:.1em .35em;border-radius:4px;border:1px solid var(--border);}
+.topbar{position:sticky;top:0;z-index:100;background:rgba(8,12,24,.92);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border2);box-shadow:0 2px 16px rgba(0,0,0,.5);}
+.topbar-inner{max-width:var(--max);margin:0 auto;padding:.65rem var(--gap);
+  display:flex;align-items:center;gap:.5rem;font-size:.72rem;
+  font-family:ui-monospace,monospace;color:var(--muted);}
+.topbar-inner a{color:rgba(140,190,255,.9);font-weight:600;}
+.topbar-inner a:hover{color:#fff;text-decoration:none;}
+.sep{color:var(--border2);}.current{color:var(--text);font-weight:600;}
+.outer{max-width:var(--max);margin:0 auto;padding:2rem var(--gap) 4rem;}
+.hero{padding:2.5rem 0 2rem;display:flex;gap:1.5rem;align-items:flex-start;justify-content:space-between;}
+@media(max-width:520px){.hero{flex-direction:column-reverse;}.hero-logo{display:none;}}
+.hero-logo img{width:88px;height:88px;border-radius:18px;flex-shrink:0;
+  box-shadow:0 0 0 1px var(--border2),0 0 36px rgba(74,138,255,.22),0 8px 24px rgba(0,0,0,.6);}
+h1{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;}
+h1 a{color:var(--text);}h1 a:hover{color:var(--accent);text-decoration:none;}
+.tagline{font-size:clamp(.95rem,2.2vw,1.15rem);color:var(--muted);margin:.55rem 0 1.1rem;max-width:560px;line-height:1.55;}
+.meta{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;font-size:.79rem;color:var(--muted);margin-bottom:1.1rem;}
+.stars{color:var(--amber);font-weight:800;font-size:.95rem;text-shadow:0 0 12px rgba(251,191,36,.35);}
+.lang-dot{width:9px;height:9px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:3px;}
+.badge{display:inline-flex;align-items:center;padding:.18rem .55rem;border-radius:2em;font-size:.68rem;font-weight:700;letter-spacing:.04em;}
+.badge-active  {background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.25);}
+.badge-stable  {background:rgba(74,138,255,.1);color:#4a8aff;border:1px solid rgba(74,138,255,.25);}
+.badge-maintained{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.25);}
+.badge-archived{background:rgba(248,113,113,.1);color:#f87171;border:1px solid rgba(248,113,113,.25);}
+.topics{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:1.1rem;}
+.topic{font-size:.7rem;background:var(--surface2);border:1px solid var(--border2);
+  color:var(--muted);padding:.13rem .5rem;border-radius:2em;font-family:ui-monospace,monospace;}
+.cta{display:flex;flex-wrap:wrap;gap:.55rem;}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.48rem 1rem;
+  border-radius:var(--radius);font-size:.83rem;font-weight:600;transition:all .15s;}
+.btn-p{background:linear-gradient(135deg,#3a7aff 0%,#2860e0 100%);color:#fff;
+  box-shadow:0 2px 12px rgba(60,130,255,.3);}
+.btn-p:hover{filter:brightness(1.12);text-decoration:none;}
+.btn-g{background:var(--surface2);color:var(--text);border:1px solid var(--border2);}
+.btn-g:hover{border-color:var(--accent);color:var(--accent);text-decoration:none;}
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
+  gap:1px;background:var(--border);border:1px solid var(--border2);
+  border-radius:var(--radius-lg);overflow:hidden;margin-bottom:2.5rem;}
+.stat{background:var(--surface);padding:.85rem 1rem;}
+.stat-l{font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;
+  color:var(--dim);margin-bottom:.2rem;font-family:ui-monospace,monospace;}
+.stat-v{font-size:1.35rem;font-weight:800;letter-spacing:-.02em;color:var(--text);}
+.stat-sub{font-size:.68rem;color:var(--muted);margin-top:.1rem;}
+.activity-chart{height:80px;}
+.sec{padding:2rem 0;border-top:1px solid var(--border);}
+.eyebrow{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--accent);margin-bottom:.4rem;font-family:ui-monospace,monospace;}
+.sec-title{font-size:1.2rem;font-weight:700;letter-spacing:-.02em;margin-bottom:1.1rem;}
+.about{font-size:.98rem;line-height:1.8;color:var(--muted);max-width:680px;}
+.how{display:flex;flex-direction:column;gap:.9rem;max-width:680px;}
+.how p{font-size:.92rem;line-height:1.8;color:var(--muted);}
+.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
+  gap:1px;background:var(--border);border:1px solid var(--border2);
+  border-radius:var(--radius-lg);overflow:hidden;}
+.feat{background:var(--surface);padding:1.2rem;display:flex;flex-direction:column;gap:.4rem;transition:background .15s;}
+.feat:hover{background:var(--surface2);}
+.feat-icon{font-size:1.2rem;line-height:1;}
+.feat-title{font-size:.86rem;font-weight:600;color:var(--text);}
+.feat-body{font-size:.79rem;color:var(--muted);line-height:1.6;}
+.diagram-wrap{background:var(--surface);border:1px solid var(--border2);
+  border-radius:var(--radius-lg);overflow:hidden;padding:1.25rem;}
+.diagram-wrap svg{width:100%;height:auto;display:block;}
+.releases{display:flex;flex-direction:column;position:relative;padding-left:1.2rem;}
+.releases::before{content:'';position:absolute;left:.35rem;top:.5rem;bottom:0;
+  width:1px;background:linear-gradient(to bottom,var(--accent),transparent 90%);}
+.release{position:relative;padding:.6rem 0 .6rem .5rem;border-bottom:1px solid var(--border);}
+.release:last-child{border-bottom:none;}
+.release::before{content:'';position:absolute;left:-.6rem;top:.9rem;
+  width:.5rem;height:.5rem;border-radius:50%;
+  background:var(--accent);box-shadow:0 0 6px var(--accent);}
+.rel-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem;margin-bottom:.2rem;}
+.rel-date{color:var(--dim);font-size:.72rem;font-family:ui-monospace,monospace;}
+.rel-tag{font-family:ui-monospace,monospace;font-size:.72rem;font-weight:700;
+  color:var(--accent);background:var(--accent-glow);padding:.06rem .38rem;border-radius:4px;}
+.rel-name{color:var(--text);font-size:.84rem;}
+.rel-note{font-size:.76rem;color:var(--muted);line-height:1.5;}
+.rel-loading{color:var(--dim);font-size:.82rem;}
+.posts{display:flex;flex-direction:column;gap:.4rem;}
+.post{display:grid;grid-template-columns:5.5rem 1fr;gap:.75rem;font-size:.86rem;}
+.post-date{color:var(--dim);font-size:.72rem;padding-top:.1rem;
+  white-space:nowrap;font-family:ui-monospace,monospace;}
+footer{max-width:var(--max);margin:0 auto;padding:1.5rem var(--gap);
+  border-top:1px solid var(--border);
+  display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
+.foot-l{font-size:.72rem;color:var(--dim);font-family:ui-monospace,monospace;}
+.foot-r{display:flex;gap:1.5rem;font-size:.72rem;}
+.foot-r a{color:var(--muted);}  .foot-r a:hover{color:var(--text);}
 `;
 
 function ghSvg() {
@@ -570,265 +506,194 @@ function ghSvg() {
 }
 function esc(s: string) { return String(s ?? "").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;"); }
 
-function mermaidScript(): string {
-  // Vendored UMD build — works offline and in local file preview
-  return `<script src="/assets/js/mermaid.min.js"></script>
-<script>
-const dark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-mermaid.initialize({
-  startOnLoad: true,
-  theme: 'base',
-  look: 'classic',
-  themeVariables: {
-    primaryColor:       dark ? '#134e4a' : '#ccfbf1',
-    primaryBorderColor: dark ? '#14b8a6' : '#0d9488',
-    primaryTextColor:   dark ? '#f0fdfa' : '#134e4a',
-    secondaryColor:     dark ? '#1e293b' : '#f0fdf4',
-    secondaryBorderColor: dark ? '#059669' : '#16a34a',
-    secondaryTextColor: dark ? '#f1f5f9' : '#1e293b',
-    tertiaryColor:      dark ? '#27201a' : '#fef3c7',
-    tertiaryBorderColor:dark ? '#d97706' : '#f59e0b',
-    lineColor:          dark ? '#4a6285' : '#94a3b8',
-    fontSize: '13px',
-    fontFamily: '-apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif',
-  }
-});
-</script>`;
+function commitActivity(commits: Commit[]) {
+  const map = new Map<string, number>();
+  (commits ?? []).forEach(c => { const mo = c.date.slice(0,7); map.set(mo, (map.get(mo)??0)+1); });
+  const sorted = [...map.entries()].sort((a,b) => a[0].localeCompare(b[0]));
+  return { labels: sorted.map(([k]) => k.slice(5)), values: sorted.map(([,v]) => v) };
 }
 
-function releasesScript(fullName: string): string {
+function activityScript(id: string, labels: string[], values: number[], accent: string) {
+  if (values.length < 2) return "";
+  const L = JSON.stringify(labels), V = JSON.stringify(values);
   return `<script>
-(function() {
-  var el = document.getElementById('releases-list');
-  if (!el) return;
-  fetch('https://api.github.com/repos/${fullName}/releases?per_page=20')
-    .then(function(r){ return r.ok ? r.json() : []; })
-    .then(function(releases) {
-      if (!releases || !releases.length) {
-        el.innerHTML = '<p class="rel-loading">No releases yet.</p>';
-        return;
-      }
-      releases.sort(function(a,b){ return new Date(b.published_at)-new Date(a.published_at); });
-      el.innerHTML = releases.slice(0,12).map(function(r) {
-        var d = new Date(r.published_at);
-        var fmt = d.toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-        var note = (r.body||'').trim().split('\\n')[0].replace(/</g,'&lt;').slice(0,140);
-        var nameHtml = (r.name && r.name !== r.tag_name)
-          ? '<span class="rel-name">' + r.name.replace(/</g,'&lt;') + '</span>' : '';
-        return '<div class="rel">'
-          + '<span class="rel-date">' + fmt + '</span>'
-          + '<div><span class="rel-tag">' + r.tag_name + '</span>' + nameHtml
-          + (note ? '<div class="rel-note">' + note + '</div>' : '')
-          + '</div></div>';
+(function(){
+  const el=document.getElementById('${id}');
+  if(!el||typeof echarts==='undefined')return;
+  const c=echarts.init(el,'dark');
+  c.setOption({
+    backgroundColor:'transparent',
+    grid:{left:0,right:0,top:4,bottom:16},
+    tooltip:{trigger:'axis',formatter:p=>p[0].name+': '+p[0].value+' commits'},
+    xAxis:{type:'category',data:${L},axisLabel:{color:'#4a6890',fontSize:9},
+      axisLine:{lineStyle:{color:'#1a2848'}}},
+    yAxis:{type:'value',show:false},
+    series:[{type:'bar',data:${V},
+      itemStyle:{color:'${accent}',opacity:.65,borderRadius:2},
+      emphasis:{itemStyle:{opacity:1}}}]
+  });
+  window.addEventListener('resize',()=>c.resize());
+})();</script>`;
+}
+
+function releasesScript(fullName: string) {
+  return `<script>
+(function(){
+  var el=document.getElementById('rl');if(!el)return;
+  fetch('https://api.github.com/repos/${fullName}/releases?per_page=12')
+    .then(r=>r.ok?r.json():[])
+    .then(function(rs){
+      if(!rs||!rs.length){el.innerHTML='<p class="rel-loading">No releases yet.</p>';return;}
+      rs.sort(function(a,b){return new Date(b.published_at)-new Date(a.published_at);});
+      el.innerHTML=rs.slice(0,10).map(function(r){
+        var d=new Date(r.published_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
+        var note=(r.body||'').trim().split('\\n')[0].replace(/</g,'&lt;').slice(0,130);
+        var nm=r.name&&r.name!==r.tag_name?'<span class="rel-name">'+r.name.replace(/</g,'&lt;')+'</span>':'';
+        return '<div class="release"><div class="rel-head"><span class="rel-date">'+d+'</span><span class="rel-tag">'+r.tag_name+'</span>'+nm+'</div>'+(note?'<div class="rel-note">'+note+'</div>':'')+'</div>';
       }).join('');
     })
-    .catch(function(){ el.innerHTML = '<p class="rel-loading">Could not load releases.</p>'; });
-})();
-</script>`;
-}
-
-function scrollSpyScript(): string {
-  return `<script>
-(function() {
-  var toc = document.getElementById('toc');
-  if (!toc) return;
-  var links = toc.querySelectorAll('a');
-  var sections = [];
-  links.forEach(function(link) {
-    var id = link.getAttribute('href').slice(1);
-    var el = document.getElementById(id);
-    if (el) sections.push({ el: el, link: link });
-  });
-  var obs = new IntersectionObserver(function(entries) {
-    entries.forEach(function(e) {
-      if (e.isIntersecting) {
-        links.forEach(function(l){ l.classList.remove('active'); });
-        var m = sections.find(function(s){ return s.el === e.target; });
-        if (m) {
-          m.link.classList.add('active');
-          if (window.innerWidth <= 1000)
-            m.link.scrollIntoView({ behavior:'smooth', block:'nearest', inline:'center' });
-        }
-      }
-    });
-  }, { rootMargin: '-10% 0px -80% 0px' });
-  sections.forEach(function(s){ obs.observe(s.el); });
-  links.forEach(function(link) {
-    link.addEventListener('click', function(e) {
-      e.preventDefault();
-      var id = link.getAttribute('href').slice(1);
-      var el = document.getElementById(id);
-      if (el) { el.scrollIntoView({ behavior:'smooth', block:'start' }); history.replaceState(null,'','#'+id); }
-    });
-  });
-})();
-</script>`;
+    .catch(function(){el.innerHTML='<p class="rel-loading">Could not load releases.</p>';});
+})();</script>`;
 }
 
 function page(d: Dossier, c: Content): string {
   const m = d.meta;
-  const ghUrl = `https://github.com/${m.full_name}`;
-  const displayName = m.full_name.split("/")[0] !== "rcarmo" ? m.full_name : m.name;
-  const langDot = "dot-" + ({"C++":"Cpp"}[m.language] ?? m.language ?? "misc");
-  const posts = POSTS[d.id] ?? [];
+  const ghUrl  = `https://github.com/${m.full_name}`;
+  const dispN  = m.full_name.split("/")[0] !== "rcarmo" ? m.full_name : m.name;
+  const dot    = LANG_DOT[m.language] ?? LANG_DOT["misc"];
+  const accent = LANG_ACCENT[m.language] ?? "#4a8aff";
+  const posts  = POSTS[d.id] ?? [];
+  const { labels, values } = commitActivity(d.commits);
+  const actId  = `act${d.id.replace(/[^a-z]/gi,"")}`;
 
-  const hasDiagram = !!c.mermaid;
-  const hasPosts   = posts.length > 0;
+  const logo   = d.logo_data_uri
+    ? `<div class="hero-logo"><img src="${d.logo_data_uri}" alt="${esc(dispN)} logo"></div>` : "";
 
-  const logoHtml = d.logo_data_uri
-    ? `<img src="${d.logo_data_uri}" alt="${esc(displayName)} logo">` : "";
+  const how = c.how.trim().split(/\n\n+/).map(p => `<p>${esc(p.trim())}</p>`).join("\n  ");
 
-  // Build TOC
-  const tocLinks: {id:string;label:string}[] = [
-    {id:"s-about",    label:"Overview"},
-    {id:"s-how",      label:"How it works"},
-    {id:"s-features", label:"Features"},
-    ...(hasDiagram ? [{id:"s-diagram",  label:"Diagram"}] : []),
-    {id:"s-releases", label:"Releases"},
-    ...(hasPosts   ? [{id:"s-posts",    label:"Posts"}] : []),
-  ];
-
-  const howParas = c.how.trim().split(/\n\n+/).map(p => `<p>${esc(p.trim())}</p>`).join("\n  ");
-
-  const mermaidHtml = hasDiagram ? `
-  <div class="sec" id="s-diagram">
+  const diag = d.diagram_inline ? `
+  <div class="sec">
     <div class="eyebrow">Architecture</div>
     <div class="sec-title">System diagram</div>
-    <div class="diagram-wrap">
-      <div class="mermaid-container">
-        <pre class="mermaid">${esc(c.mermaid!)}</pre>
-      </div>
-    </div>
+    <div class="diagram-wrap">${d.diagram_inline}</div>
   </div>` : "";
 
-  const postsHtml = hasPosts ? `
-  <div class="sec" id="s-posts">
+  const postsHtml = posts.length > 0 ? `
+  <div class="sec">
     <div class="eyebrow">Writing</div>
     <div class="sec-title">On taoofmac.com</div>
     <div class="posts">
-      ${posts.map(p => `
-      <div class="post">
-        <span class="post-date">${p.date}</span>
-        <a href="${p.url}" target="_blank" rel="noopener">${esc(p.title)}</a>
-      </div>`).join("")}
+      ${posts.map(p => `<div class="post"><span class="post-date">${p.date}</span><a href="${p.url}" target="_blank" rel="noopener">${esc(p.title)}</a></div>`).join("")}
     </div>
   </div>` : "";
+
+  const actSpan = values.length >= 2
+    ? `<div class="stat" style="grid-column:span 2;min-width:0">
+        <div class="stat-l">Commit activity</div>
+        <div id="${actId}" class="activity-chart"></div>
+      </div>` : "";
 
   return `<!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>${displayName} — Rui Carmo</title>
+<title>${dispN} — Rui Carmo</title>
 <meta name="description" content="${esc(c.tagline)}">
+<meta property="og:title" content="${esc(dispN)}">
+<meta property="og:description" content="${esc(c.tagline)}">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>${CSS}</style>
-${hasDiagram ? mermaidScript() : ""}
+<script src="/assets/js/echarts.min.js"></script>
 </head>
 <body>
 <header class="topbar">
   <div class="topbar-inner">
-    <a href="/">rcarmo.github.io</a>
-    <span class="sep">/</span>
-    <span class="current">${displayName}</span>
+    <a href="/">rcarmo.github.io</a><span class="sep">/</span>
+    <span class="current">${dispN}</span>
   </div>
 </header>
 
 <div class="outer">
-  <!-- TOC sidebar / mobile horizontal bar -->
-  <nav class="toc" id="toc">
-    <div class="toc-title">Contents</div>
-    ${tocLinks.map(l => `<a href="#${l.id}">${l.label}</a>`).join("\n    ")}
-  </nav>
-
-  <!-- Main content -->
-  <div class="main">
-
-    <!-- Hero -->
-    <div class="hero">
-      <div class="hero-top">
-        <div>
-          <h1><a href="${ghUrl}" target="_blank" rel="noopener">${displayName}</a></h1>
-          <p class="tagline">${esc(c.tagline)}</p>
-          <div class="meta">
-            <span class="stars">★ ${(m.stars ?? 0).toLocaleString()}</span>
-            ${(m.forks ?? 0) > 0 ? `<span>⑂ ${m.forks}</span>` : ""}
-            <span><span class="dot ${langDot}"></span>${esc(m.language ?? "misc")}</span>
-            <span class="badge badge-${c.status}">${c.status}</span>
-          </div>
-          ${(m.topics?.length ?? 0) > 0
-            ? `<div class="topics">${m.topics.map(t => `<span class="topic">${esc(t)}</span>`).join("")}</div>` : ""}
-          <div class="cta">
-            <a class="btn btn-p" href="${ghUrl}" target="_blank" rel="noopener">${ghSvg()} GitHub</a>
-            ${m.homepage ? `<a class="btn btn-g" href="${m.homepage}" target="_blank" rel="noopener">🌐 Homepage</a>` : ""}
-          </div>
-        </div>
-        ${logoHtml ? `<div class="hero-logo">${logoHtml}</div>` : ""}
+  <div class="hero">
+    <div>
+      <h1><a href="${ghUrl}" target="_blank" rel="noopener">${dispN}</a></h1>
+      <p class="tagline">${esc(c.tagline)}</p>
+      <div class="meta">
+        <span class="stars">★ ${(m.stars??0).toLocaleString()}</span>
+        ${(m.forks??0)>0?`<span>⑂ ${m.forks}</span>`:""}
+        <span><span class="lang-dot" style="background:${dot}"></span>${esc(m.language??"misc")}</span>
+        <span class="badge badge-${c.status}">${c.status}</span>
+      </div>
+      ${(m.topics?.length??0)>0?`<div class="topics">${m.topics.map(t=>`<span class="topic">${esc(t)}</span>`).join("")}</div>`:""}
+      <div class="cta">
+        <a class="btn btn-p" href="${ghUrl}" target="_blank" rel="noopener">${ghSvg()} GitHub</a>
+        ${m.homepage?`<a class="btn btn-g" href="${m.homepage}" target="_blank" rel="noopener">🌐 Homepage</a>`:""}
       </div>
     </div>
+    ${logo}
+  </div>
 
-    <!-- Stats -->
-    <div class="stats">
-      <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">${(m.stars ?? 0).toLocaleString()}</div><div class="stat-sub">on GitHub</div></div>
-      <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">${m.forks ?? 0}</div></div>
-      <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.4rem"><span class="dot ${langDot}"></span>${esc(m.language ?? "—")}</div></div>
-      <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.05rem;padding-top:.3rem">${m.created_at?.slice(0,4) ?? "?"}</div></div>
-      <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.85rem;padding-top:.38rem">${m.pushed_at?.slice(0,7) ?? "?"}</div></div>
+  <div class="stats">
+    <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">${(m.stars??0).toLocaleString()}</div><div class="stat-sub">on GitHub</div></div>
+    <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">${m.forks??0}</div></div>
+    <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.4rem"><span class="lang-dot" style="background:${dot}"></span>${esc(m.language??"—")}</div></div>
+    <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1rem;padding-top:.3rem">${m.created_at?.slice(0,4)??"?"}</div></div>
+    <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.85rem;padding-top:.38rem">${m.pushed_at?.slice(0,7)??"?"}</div></div>
+    ${actSpan}
+  </div>
+
+  <div class="sec">
+    <div class="eyebrow">Overview</div>
+    <p class="about">${esc(c.about.trim())}</p>
+  </div>
+
+  <div class="sec">
+    <div class="eyebrow">Under the hood</div>
+    <div class="sec-title">How it works</div>
+    <div class="how">${how}</div>
+  </div>
+
+  <div class="sec">
+    <div class="eyebrow">Capabilities</div>
+    <div class="sec-title">What it does</div>
+    <div class="features">
+      ${c.features.map(f=>`<div class="feat"><div class="feat-icon">${f.icon}</div><div class="feat-title">${esc(f.title)}</div><div class="feat-body">${esc(f.body)}</div></div>`).join("")}
     </div>
+  </div>
 
-    <div class="sec" id="s-about">
-      <div class="eyebrow">Overview</div>
-      <p class="about">${esc(c.about.trim())}</p>
-    </div>
+  ${diag}
 
-    <div class="sec" id="s-how">
-      <div class="eyebrow">Under the hood</div>
-      <div class="sec-title">How it works</div>
-      <div class="how">${howParas}</div>
-    </div>
+  <div class="sec">
+    <div class="eyebrow">History</div>
+    <div class="sec-title">Releases</div>
+    <div class="releases" id="rl"><p class="rel-loading">Loading…</p></div>
+  </div>
 
-    <div class="sec" id="s-features">
-      <div class="eyebrow">Capabilities</div>
-      <div class="sec-title">What it does</div>
-      <div class="features">
-        ${c.features.map(f => `<div class="ve-card"><div class="ve-icon">${f.icon}</div><div class="ve-title">${esc(f.title)}</div><div class="ve-body">${esc(f.body)}</div></div>`).join("")}
-      </div>
-    </div>
-
-    ${mermaidHtml}
-
-    <div class="sec" id="s-releases">
-      <div class="eyebrow">History</div>
-      <div class="sec-title">Releases</div>
-      <div id="releases-list"><p class="rel-loading">Loading releases…</p></div>
-    </div>
-
-    ${postsHtml}
-  </div><!-- /main -->
-</div><!-- /outer -->
+  ${postsHtml}
+</div>
 
 <footer>
-  <div class="foot-l">last indexed ${m.pushed_at?.slice(0,10) ?? "?"}</div>
+  <div class="foot-l">last push ${m.pushed_at?.slice(0,10)??"?"}</div>
   <div class="foot-r">
     <a href="/">← all projects</a>
-    <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
-    <a href="https://github.com/rcarmo" target="_blank" rel="noopener">github.com/rcarmo</a>
+    <a href="https://taoofmac.com" target="_blank">taoofmac.com</a>
+    <a href="https://github.com/rcarmo" target="_blank">github.com/rcarmo</a>
   </div>
 </footer>
+${activityScript(actId, labels, values, accent)}
 ${releasesScript(m.full_name)}
-${scrollSpyScript()}
 </body>
 </html>`;
 }
 
-
-// ── Build ──────────────────────────────────────────────────────────────────
+// ── Build ─────────────────────────────────────────────────────────────────
 let built = 0, skipped = 0;
 for (const f of (readdirSync(DATA) as string[]).filter(f => f.endsWith(".dossier.json"))) {
   const proj = f.replace(".dossier.json","");
   const d: Dossier = JSON.parse(readFileSync(join(DATA, f), "utf-8"));
   const c = C[proj];
-  if (!c) { console.log(`  SKIP ${proj}`); skipped++; continue; }
+  if (!c) { skipped++; continue; }
   writeFileSync(join(OUT, `${proj}.html`), page(d, c));
   console.log(`  ✓ ${proj}`);
   built++;
