@@ -112,6 +112,26 @@ function renderCardMeta(el, repo) {
   `;
 }
 
+function sortIndexSections(repoMap) {
+  const grids = document.querySelectorAll('.idx-section .card-grid');
+  for (const grid of grids) {
+    if (grid.classList.contains('card-grid-featured')) continue;
+    const cards = Array.from(grid.querySelectorAll('.card[data-repo]'));
+    cards
+      .sort((a, b) => {
+        const repoA = repoMap[a.dataset.repo] || null;
+        const repoB = repoMap[b.dataset.repo] || null;
+        const starsA = repoA?.stargazers_count ?? -1;
+        const starsB = repoB?.stargazers_count ?? -1;
+        if (starsA !== starsB) return starsB - starsA;
+        const nameA = a.querySelector('.card-name')?.textContent?.trim() || '';
+        const nameB = b.querySelector('.card-name')?.textContent?.trim() || '';
+        return nameA.localeCompare(nameB);
+      })
+      .forEach((card) => grid.appendChild(card));
+  }
+}
+
 function renderHeroMeta(el, repo) {
   if (!el) return;
   if (!repo) {
@@ -227,6 +247,7 @@ export function mountIndex(allFullNames) {
       const id = fullName.split('/').pop();
       renderCardMeta(document.getElementById(`card-meta-${id}`), repoMap[fullName] || null);
     }
+    sortIndexSections(repoMap);
   }).catch(() => {
     for (const fullName of allFullNames) {
       const id = fullName.split('/').pop();
