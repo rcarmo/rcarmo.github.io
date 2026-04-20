@@ -1,0 +1,197 @@
+{
+  "id": "macemu-jit",
+  "meta": {
+    "name": "macemu-jit",
+    "full_name": "rcarmo/macemu-jit",
+    "description": "Basilisk II and SheepShaver Macintosh emulators with an ARM64 JIT.",
+    "homepage": null,
+    "stars": 3,
+    "forks": 0,
+    "language": "C++",
+    "created_at": "2025-12-30T12:41:18Z",
+    "pushed_at": "2026-04-18T23:57:27Z",
+    "updated_at": "2026-04-18T23:57:27Z",
+    "topics": []
+  },
+  "readme": "# macemu - Macintosh Emulators\n\n## Raspberry Pi Builds\n\nThis fork provides experimental pre-built packages and Docker images optimized for Raspberry Pi, using SDL2 with framebuffer/KMS display (no X11 or desktop environment required).\n\n### Pre-built .deb Packages\n\nDownload from [GitHub Releases](https://github.com/rcarmo/macemu/releases) or build from source.\n\n#### Install from release:\n```bash\nwget https://github.com/rcarmo/macemu/releases/latest/download/basiliskii-sdl_<version>_arm64.deb\nsudo dpkg -i basiliskii-sdl_<version>_arm64.deb\n```\n\n#### Build from source on Raspberry Pi:\n```bash\n# Install dependencies\nsudo apt-get install build-essential autoconf automake wget\n\n# Build SDL2 (optimized for Pi, no X11/Wayland)\nwget https://www.libsdl.org/release/SDL2-2.32.8.tar.gz\ntar -zxvf SDL2-2.32.8.tar.gz\ncd SDL2-2.32.8\n./configure --disable-video-opengl --disable-video-x11 --disable-pulseaudio --disable-esd --disable-video-wayland\nmake -j4 && sudo make install\ncd ..\n\n# Build BasiliskII\ncd macemu/BasiliskII/src/Unix\nNO_CONFIGURE=1 ./autogen.sh\n./configure --enable-sdl-audio --enable-sdl-framework --enable-sdl-video \\\n            --disable-vosf --without-mon --without-esd --without-gtk \\\n            --disable-jit-compiler --disable-nls\nCPATH=$CPATH:/usr/local/include/SDL2 make -j4\nsudo make install\n```\n\n### Docker Container\n\nA Docker image is available for running BasiliskII in a privileged container with direct hardware access.\n\n#### Quick start:\n```bash\ncd BasiliskII/docker\nmkdir -p data\ncp /path/to/mac.rom data/rom\ncp /path/to/disk.img data/hd.img\ncp data/basiliskii_prefs.example data/basiliskii_prefs\n# Edit data/basiliskii_prefs as needed\n\ndocker compose up -d\n```\n\n#### Pull pre-built image:\n```bash\ndocker pull ghcr.io/rcarmo/basiliskii-sdl:latest\n```\n\nThe container requires privileged mode for access to:\n- `/dev/fb0` - Framebuffer\n- `/dev/dri` - KMS/DRM video\n- `/dev/input` - Keyboard/mouse\n- `/dev/snd` - Audio\n\nSee [BasiliskII/docker/README.md](BasiliskII/docker/README.md) for detailed configuration options.\n\n### GitHub Actions CI\n\nThis repository includes automated builds:\n- **`.github/workflows/build-deb-rpi.yml`** - Builds `.deb` packages for ARM64 and ARMhf\n- **`.github/workflows/docker-rpi.yml`** - Builds and pushes Docker images to GHCR\n\nPackages are automatically uploaded to GitHub Releases when a version tag is pushed.\n\n---\n\n## Supported Platforms\n\n#### BasiliskII\n```\nmacOS     x86_64 JIT / arm64 non-JIT\nLinux x86 x86_64 JIT\nLinux arm64      JIT (boots Mac OS \u2014 see below)\nMinGW x86        JIT\n```\n#### SheepShaver\n```\nmacOS     x86_64 JIT / arm64 non-JIT\nLinux x86 x86_64 JIT / arm64 JIT (boots Mac OS)\nMinGW x86        JIT\n```\n\n---\n\n## How To Build\n\nThese builds need SDL2.0.14+ framework/library installed.\n\nhttps://www.libsdl.org\n\n### BasiliskII\n\n#### macOS\npreparation:\n\nDownload gmp-6.2.1.tar.xz from https://gmplib.org.\n```\n$ cd ~/Downloads\n$ tar xf gmp-6.2.1.tar.xz\n$ cd gmp-6.2.1\n$ ./configure --disable-shared\n$ make\n$ make check\n$ sudo make install\n```\nDownload mpfr-4.2.0.tar.xz from https://www.mpfr.org.\n```\n$ cd ~/Downloads\n$ tar xf mpfr-4.2.0.tar.xz\n$ cd mpfr-4.2.0\n$ ./configure --disable-shared\n$ make\n$ make check\n$ sudo make install\n```\nOn an Intel Mac, the libraries should be cross-built.  \nChange the `configure` command for both GMP and MPFR as follows, and ignore the `make check` command:\n```\n$ CFLAGS=\"-arch arm64\" CXXFLAGS=\"$CFLAGS\" ./configure -host=aarch64-apple-darwin --disable-shared \n```\n(from https://github.com/kanjitalk755/macemu/pull/96)\n\nabout changing Deployment Target:  \nIf you build with an older version of Xcode, you can change Deployment Target to the minimum it supports or 10.7, whichever is greater.\n\nbuild:\n```\n$ cd macemu/BasiliskII/src/MacOSX\n$ xcodebuild build -project BasiliskII.xcodeproj -configuration Release\n```\nor same as Linux\n\n#### Linux\npreparation (arm64 only): Install GMP and MPFR.\n```\n$ cd macemu/BasiliskII/src/Unix\n$ ./autogen.sh\n$ make\n```\n\n#### Linux AArch64 with JIT (experimental)\n\nThis fork includes an experimental AArch64 JIT backend. The JIT translates\n68k instructions to native ARM64 code at runtime for significantly faster\nemulation.\n\n**Prerequisites:**\n```bash\nsudo apt install build-essential autoconf automake libsdl2-dev \\\n  libmpfr-dev libgmp-dev libvncserver-dev libpng-dev\n```\n\n**Build:**\n```bash\ncd macemu/BasiliskII/src/Unix\nac_cv_have_asm_extended_signals=yes ./configure --enable-aarch64-jit-experimental\nmake -j$(nproc)\n```\n\nThe build produces `BasiliskII` in `src/Unix/`.\n\n**Key build notes:**\n- LTO (`-flto=auto`) is intentionally disabled on AArch64 \u2014 it strips JIT\n  gate checks that the compiler determines are \"dead code\" but are actually\n  needed at runtime.\n- The default JIT optimization level is L2 (native ARM64 codegen). Set\n  `B2_JIT_MAX_OPTLEV=1` to fall back to interpreter-only JIT dispatch.\n\n**Running:**\n```bash\n./BasiliskII --config /path/to/prefs\n```\n\n**Useful environment variables:**\n\n| Variable | Default | Description |\n|---|---|---|\n| `B2_JIT_MAX_OPTLEV` | `2` | Max JIT optimization level (0=interpreter, 1=JIT dispatch, 2=native codegen) |\n| `B2_JIT_MANAGED_IRQ` | `0` | Enable managed IRQ delivery model (recommended: `1`) |\n\n**VNC server:**\n\nAdd to your prefs file for remote access:\n```\nvncserver true\nvncport 5900\n```\n\n#### AArch64 JIT Status\n\nThe AArch64 JIT backend is under active development.\n\n**BasiliskII (68K):**\n- \u2705 Boots to Mac OS Finder desktop at JIT optlev=1 (interpreter dispatch)\n- \u2705 Speedometer 4.02 Graphics benchmark runs (score: 210.368 vs Mac Classic = 1.0)\n- \u2705 VNC server with correct coordinate mapping\n- \u2705 Managed IRQ delivery for stable interrupt handling\n- \u2705 96-vector opcode equivalence test suite with DBRA loop fix\n- \u26a0\ufe0f Native ARM64 codegen (optlev=2) has remaining SR flag leakage in DBRA blocks\n\n**SheepShaver (PPC):**\n- \u2705 **Mac OS boots to \"Welcome to Mac OS\" with JIT** (`SS_USE_JIT=1`)\n- \u2705 **Mac OS boots to desktop** in interpreter mode (VNC on port 5999)\n- \u2705 **209/209** opcode test vectors pass (score=100)\n- \u2705 **663/766 ROM blocks pass** (86.6%) \u2014 headless ROM harness\n- \u2705 **382 MIPS** on tight loops (2.2x over interpreter's 167 MIPS)\n- \u2705 PPC \u2192 ARM64 opcode handlers: integer ALU, FPU (double+single),\n  AltiVec (NEON), CR logical ops, all branch variants\n- \u2705 ROM harness (`rom-harness/`) \u2014 standalone headless JIT exerciser,\n  no display or hardware deps, found 5 JIT bugs the opcode harness missed\n- See [SheepShaver/AARCH64_JIT_PLAN.md](SheepShaver/AARCH64_JIT_PLAN.md) for full details\n- See [JIT-STATUS.md](JIT-STATUS.md) for current test results\n\n**Bugs fixed in BasiliskII JIT (this fork):**\n1. IRQ deliverability bug \u2014 latching pending interrupts while masked\n2. `HAVE_GET_WORD_UNSWAPPED` extraction mismatch in compiled handlers\n3. Interpreter fallback dispatch byte-order bug (`cpufunctbl` indexing)\n4. Flag liveness metadata byte-order bug (`prop[]` indexing)\n5. L2 compiled handler dispatch byte-order bug (`comptbl[]` indexing)\n6. LTO stripping JIT gate checks\n7. VNC mouse coordinate scaling with SDL logical size\n8. DBRA multi-iteration loop termination (block tracer following backward branches)\n9. DBRA/DBcc CCR leakage through block chaining\n10. `flags_to_stack` carry inversion when flags already valid\n\n#### MinGW32/MSYS2\npreparation:\n```\n$ pacman -S base-devel mingw-w64-i686-toolchain autoconf automake mingw-w64-i686-SDL2\n```\nnote: MinGW32 dropped GTK2 package.\nSee msys2/MINGW-packages#24490\n\nbuild (from a mingw32.exe prompt):\n```\n$ cd macemu/BasiliskII/src/Windows\n$ ../Unix/autogen.sh\n$ make\n```\n\n### SheepShaver\n\n#### AArch64 (with JIT)\n```bash\ncd macemu/SheepShaver/src/Unix\n./autogen.sh\n./configure --enable-sdl-video --enable-sdl-audio\nmake -j12\n# For JIT: rebuild ppc-cpu.cpp with -DUSE_AARCH64_JIT and link ppc-jit-aarch64.o\n# Requires: sudo sysctl -w vm.mmap_min_addr=0\n```\n\n#### macOS\nabout changing Deployment Target: see BasiliskII\n```\n$ cd macemu/SheepShaver/src/MacOSX\n$ xcodebuild build -project SheepShave\n",
+  "commits": [
+    {
+      "sha": "afbc6b31",
+      "date": "2026-04-18T23:57:26Z",
+      "msg": "jit: rom-harness forces optlev=2 + force-translate exclusively"
+    },
+    {
+      "sha": "e9f74f6b",
+      "date": "2026-04-18T22:48:59Z",
+      "msg": "fix: VNC mouse click/release \u2014 direct ADB injection from VNC thread"
+    },
+    {
+      "sha": "d2864b24",
+      "date": "2026-04-18T22:44:11Z",
+      "msg": "jit: headless Mac ROM harness \u2014 no display server needed"
+    },
+    {
+      "sha": "5ac40bca",
+      "date": "2026-04-18T18:58:14Z",
+      "msg": "fix: VNC keyboard/mouse input now reaches Mac OS event loop"
+    },
+    {
+      "sha": "1f20629f",
+      "date": "2026-04-18T18:54:34Z",
+      "msg": "jit: add ROM boot harness \u2014 headless JIT exercise via Xvfb"
+    },
+    {
+      "sha": "a7acfcf2",
+      "date": "2026-04-18T18:07:21Z",
+      "msg": "docs: update README, JIT plan, and screenshot for ROM harness + JIT boot milestone"
+    },
+    {
+      "sha": "9f590ecf",
+      "date": "2026-04-18T17:22:18Z",
+      "msg": "Update JIT-STATUS.md: SheepShaver JIT boots Mac OS, ROM harness added"
+    },
+    {
+      "sha": "895cd82e",
+      "date": "2026-04-18T17:21:06Z",
+      "msg": "SheepShaver JIT: remove n_insns limit, JIT boots Mac OS to splash screen"
+    },
+    {
+      "sha": "4fbe2006",
+      "date": "2026-04-18T17:05:16Z",
+      "msg": "SheepShaver JIT: ROM harness + fix 5 bugs found by it"
+    },
+    {
+      "sha": "5b08e8af",
+      "date": "2026-04-18T15:48:15Z",
+      "msg": "jit: add 16 vectors for remaining call_helper opcodes \u2014 293/293 pass"
+    },
+    {
+      "sha": "5e5f010c",
+      "date": "2026-04-18T15:39:33Z",
+      "msg": "SheepShaver JIT: fix callee-saved register save/restore, NOP-default fixes"
+    },
+    {
+      "sha": "88b6d82e",
+      "date": "2026-04-18T15:17:09Z",
+      "msg": "SheepShaver: stable desktop boot with VNC + JIT gated behind SS_USE_JIT"
+    },
+    {
+      "sha": "015bf5c8",
+      "date": "2026-04-18T15:05:38Z",
+      "msg": "SheepShaver: fix VNC server, prefs registration, ignoreillegal for stable boot"
+    },
+    {
+      "sha": "1a7c1627",
+      "date": "2026-04-18T14:49:21Z",
+      "msg": "SheepShaver JIT harness: comprehensive fuzzing for all opcode classes \u2014 209 vectors"
+    },
+    {
+      "sha": "7d25384f",
+      "date": "2026-04-18T14:33:58Z",
+      "msg": "SheepShaver JIT harness: add AltiVec + FP load/store vectors \u2014 175 total, 100%"
+    },
+    {
+      "sha": "29c2f45d",
+      "date": "2026-04-18T14:27:48Z",
+      "msg": "SheepShaver JIT harness: expand to 161 vectors \u2014 100% coverage across all opcode classes"
+    },
+    {
+      "sha": "18c3ccd9",
+      "date": "2026-04-18T14:22:42Z",
+      "msg": "docs: update all documentation to final JIT coverage \u2014 321 handlers, 113 vectors, zero fallbacks"
+    },
+    {
+      "sha": "02c1dac4",
+      "date": "2026-04-18T14:09:08Z",
+      "msg": "SheepShaver JIT: eliminate all interpreter fallbacks \u2014 321 return-true, 2 return-false"
+    },
+    {
+      "sha": "81e944f8",
+      "date": "2026-04-18T13:50:51Z",
+      "msg": "jit: inline SR paths \u2014 eliminate flush+call_helper for MV2SR/ORSR/ANDSR/EORSR word"
+    },
+    {
+      "sha": "6915e803",
+      "date": "2026-04-18T13:32:32Z",
+      "msg": "jit: convert 7 more opcodes to native codegen, hybrid CCR/SR split for 4"
+    },
+    {
+      "sha": "9cad5730",
+      "date": "2026-04-18T13:30:51Z",
+      "msg": "SheepShaver JIT: implement remaining AltiVec ops \u2014 311 return-true, zero NOP fallbacks"
+    },
+    {
+      "sha": "1cd4aa65",
+      "date": "2026-04-18T12:13:58Z",
+      "msg": "jit: convert 13 opcodes from call_helper to native ARM64 codegen"
+    },
+    {
+      "sha": "9be47150",
+      "date": "2026-04-18T11:57:45Z",
+      "msg": "SheepShaver JIT: massive AltiVec expansion \u2014 301 return-true paths"
+    },
+    {
+      "sha": "b20f464e",
+      "date": "2026-04-18T10:57:54Z",
+      "msg": "jit: wire up 30+ native helpers in gencomp \u2014 82/105 opcodes native (78%)"
+    },
+    {
+      "sha": "42825d5c",
+      "date": "2026-04-18T10:40:25Z",
+      "msg": "jit: native helpers for 30+ fallback opcodes + 50 fuzz vectors (277/277 pass)"
+    },
+    {
+      "sha": "23d94c1b",
+      "date": "2026-04-18T10:29:02Z",
+      "msg": "docs: revised JIT design leadership document \u2014 compressed timeline, paraphrased architectural inputs"
+    },
+    {
+      "sha": "1b28cd99",
+      "date": "2026-04-18T10:21:56Z",
+      "msg": "docs: add JIT design leadership and decision log (HTML presentation)"
+    },
+    {
+      "sha": "c621b857",
+      "date": "2026-04-18T08:43:52Z",
+      "msg": "SheepShaver JIT: rename ppc-jit-aarch64 \u2192 ppc-jit + add ~70 more AltiVec NEON ops"
+    },
+    {
+      "sha": "bace08e5",
+      "date": "2026-04-18T08:39:03Z",
+      "msg": "SheepShaver JIT: implement ~60 AltiVec ops via ARM64 NEON"
+    },
+    {
+      "sha": "799b45c6",
+      "date": "2026-04-18T08:36:02Z",
+      "msg": "SheepShaver JIT: implement AltiVec via ARM64 NEON \u2014 ~60 vector ops"
+    }
+  ],
+  "releases": [],
+  "posts": [
+    {
+      "title": "Notes for July 2024",
+      "date": "2024-07-21",
+      "url": "https://taoofmac.com/space/notes/2024/07/21/1800"
+    },
+    {
+      "title": "Notes, 2025-12-31",
+      "date": "2025-12-31",
+      "url": "https://taoofmac.com/space/notes/2025/12/31/1830"
+    },
+    {
+      "title": "Notes for March 23-29",
+      "date": "2026-03-29",
+      "url": "https://taoofmac.com/space/notes/2026/03/29/1300"
+    },
+    {
+      "title": "Notes for March 30 \u2013 April 5",
+      "date": "2026-04-05",
+      "url": "https://taoofmac.com/space/notes/2026/04/05/1700"
+    }
+  ],
+  "dossier_generated": "2026-04-19",
+  "logo": null,
+  "logo_data_uri": null,
+  "diagram": null,
+  "diagram_inline": null
+}
