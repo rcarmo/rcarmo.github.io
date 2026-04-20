@@ -1,5 +1,5 @@
 ---
-section: infrastructure
+section: cloud
 status: archived
 tagline: Azure ARM template to deploy a lightweight Kubernetes cluster using k3s — one make target, running in minutes.
 logo: assets/logos-opt/azure-k3s-cluster.png
