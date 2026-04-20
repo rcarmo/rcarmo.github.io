@@ -1,0 +1,33 @@
+{
+  "id": "azure-docker-swarm-cluster",
+  "meta": {
+    "name": "azure-docker-swarm-cluster",
+    "full_name": "rcarmo/azure-docker-swarm-cluster",
+    "description": "Auto-scaling Docker Swarm cluster template for Azure.",
+    "homepage": "",
+    "stars": 47,
+    "forks": 11,
+    "language": "Makefile",
+    "created_at": "2016-09-13T13:00:36Z",
+    "pushed_at": "2020-02-04T14:51:04Z",
+    "updated_at": "2020-02-04T14:51:04Z",
+    "topics": [
+      "azure",
+      "docker",
+      "swarm",
+      "arm-template",
+      "autoscaling",
+      "containers"
+    ]
+  },
+  "readme": "",
+  "commits": [],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-20T11:03:00Z",
+  "logo": null,
+  "logo_data_uri": null,
+  "logo_ext": null,
+  "diagram": null,
+  "diagram_inline": null
+}
