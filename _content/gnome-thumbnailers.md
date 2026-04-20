@@ -1,5 +1,5 @@
 ---
-section: infrastructure
+section: libraries
 status: stable
 created: 2022-12-13
 tagline: File thumbnails for RAW, HEIC, and 3D models in GNOME Files.

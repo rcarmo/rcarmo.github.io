@@ -1,5 +1,5 @@
 ---
-section: infrastructure
+section: terminal
 status: maintained
 created: 2013-10-24
 tagline: Incremental IMAP mailbox backup to local mbox files — works with Gmail, Exchange, and any IMAP server.
