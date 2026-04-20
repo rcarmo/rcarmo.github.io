@@ -489,11 +489,9 @@ function buildIndex(projects: Project[]): string {
 
   <header class="hero hero-index" id="hero">
     <div class="hero-inner">
-      <img class="hero-avatar" src="/assets/avatar.png" alt="Rui Carmo" width="256" height="256">
       <h1 class="hero-title">Open / <strong>source</strong> / craft.</h1>
-      <div id="hero-stats-island" class="hero-stats">
-        <!-- live: total stars, repo count, top languages -->
-      </div>
+      <img class="hero-avatar" src="/assets/avatar.png" alt="Rui Carmo" width="256" height="256">
+      <div id="hero-stats-island" class="hero-stats"></div>
     </div>
   </header>
 
