@@ -1,0 +1,33 @@
+{
+  "id": "asterisk-embedding-model",
+  "meta": {
+    "name": "asterisk-embedding-model",
+    "full_name": "rcarmo/asterisk-embedding-model",
+    "description": "A small text embedding model trained for low-resource hardware.",
+    "homepage": "",
+    "stars": 9,
+    "forks": 0,
+    "language": "Python",
+    "created_at": "2026-01-03T18:09:21Z",
+    "pushed_at": "2026-01-10T22:39:41Z",
+    "updated_at": "2026-01-10T22:39:41Z",
+    "topics": [
+      "embeddings",
+      "text-processing",
+      "transformers",
+      "low-resource",
+      "semantic-search",
+      "onnx"
+    ]
+  },
+  "readme": "",
+  "commits": [],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-20T10:55:00Z",
+  "logo": null,
+  "logo_data_uri": null,
+  "logo_ext": null,
+  "diagram": null,
+  "diagram_inline": null
+}
