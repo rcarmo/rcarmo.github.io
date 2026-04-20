@@ -133,6 +133,11 @@ code {
   margin: 0 auto;
   padding: 3rem var(--gap) 2.5rem;
 }
+.hero-index {
+  max-width: none;
+  background: var(--bg-subtle);
+  border-bottom: 1px solid var(--border);
+}
 .hero-inner {
   display: flex;
   align-items: flex-start;
@@ -490,6 +495,8 @@ footer {
   text-align: center;
 }
 .hero-index .hero-inner {
+  max-width: var(--max-w);
+  margin: 0 auto;
   flex-direction: column;
   align-items: center;
 }
