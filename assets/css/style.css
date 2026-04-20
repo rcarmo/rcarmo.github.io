@@ -22,7 +22,7 @@
 
   --text:       #111111;
   --text-dim:   #555555;
-  --text-faint: #999999;
+  --text-faint: #6a7080;
 
   --blue:       #2563eb;
   --blue-dim:   rgba(37, 99, 235, 0.08);
@@ -49,7 +49,7 @@
 
     --text:       #eeeeee;
     --text-dim:   #999999;
-    --text-faint: #555555;
+    --text-faint: #8090a0;
 
     --blue:       #3b82f6;
     --blue-dim:   rgba(59, 130, 246, 0.12);
