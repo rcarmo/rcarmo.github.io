@@ -400,8 +400,17 @@ function buildIndex(projects: Project[]): string {
   const sectionOrder = [...groups.keys()].sort((a, b) => a.localeCompare(b));
 
   // Section display names (derive from key)
+  const SECTION_LABELS: Record<string,string> = {
+    'ai-agents': 'AI Agents',
+    'ai-ml': 'AI & ML',
+    'macos': 'macOS',
+    'infrastructure': 'Infrastructure',
+    'terminal': 'Terminal & CLI',
+    'hardware': 'Hardware',
+    'libraries': 'Libraries',
+  };
   function sectionLabel(key: string): string {
-    return key.split("-").map(w => w[0].toUpperCase() + w.slice(1)).join(" ");
+    return SECTION_LABELS[key] || key.split("-").map(w => w[0].toUpperCase() + w.slice(1)).join(" ");
   }
 
   // Collect all fullNames for the hero stats bulk fetch

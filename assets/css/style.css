@@ -656,7 +656,7 @@ footer {
 
 /* ── Featured cards ───────────────────────────────────────────────────────── */
 .card-grid-featured {
-  grid-template-columns: repeat(auto-fill, minmax(360px, 1fr));
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
 }
 .card-featured {
   border-color: var(--accent-dim);
@@ -666,6 +666,6 @@ footer {
   border-color: var(--accent);
 }
 .card-logo-lg {
-  width: 64px;
-  height: 64px;
+  width: 56px;
+  height: 56px;
 }
