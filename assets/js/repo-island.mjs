@@ -65,10 +65,12 @@ async function fetchAllRepos(fullNames) {
   if (cached) return cached;
 
   const repoMap = {};
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), 8000); // 8s max
 
   // Bulk fetch rcarmo/* (top 100 by stars — covers all significant repos in 1 call)
   try {
-    const res = await fetch('https://api.github.com/users/rcarmo/repos?per_page=100&type=owner&sort=stars&direction=desc');
+    const res = await fetch('https://api.github.com/users/rcarmo/repos?per_page=100&type=owner&sort=stars&direction=desc', { signal: controller.signal });
     if (res.ok) {
       const repos = await res.json();
       if (Array.isArray(repos)) {
@@ -88,7 +90,8 @@ async function fetchAllRepos(fullNames) {
     })
   );
 
-  setCache(repoMap);
+  clearTimeout(timeout);
+  if (Object.keys(repoMap).length > 0) setCache(repoMap);
   return repoMap;
 }
 
@@ -96,7 +99,7 @@ async function fetchAllRepos(fullNames) {
 
 /** Hero meta bar: ★ stars · ⑂ forks · Language */
 function HeroMeta({ repo }) {
-  if (!repo) return html`<div class="hero-meta"><${Skel} w="12rem"/></div>`;
+  if (!repo) return html`<div class="hero-meta"><span class="metric">GitHub data unavailable</span></div>`;
   const lang = realLang(repo.language);
   const color = langColor(lang);
   return html`
@@ -117,19 +120,19 @@ function StatsBar({ repo }) {
     <div class="stats-bar">
       <div class="stat">
         <div class="stat-label">Stars</div>
-        <div class="stat-value">${repo ? fmtNum(repo.stargazers_count) : html`<${Skel} w="2rem"/>`}</div>
+        <div class="stat-value">${repo ? fmtNum(repo.stargazers_count) : '—'}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Forks</div>
-        <div class="stat-value">${repo ? fmtNum(repo.forks_count) : html`<${Skel} w="1.5rem"/>`}</div>
+        <div class="stat-value">${repo ? fmtNum(repo.forks_count) : '—'}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Open issues</div>
-        <div class="stat-value">${repo ? repo.open_issues_count : html`<${Skel} w="1.5rem"/>`}</div>
+        <div class="stat-value">${repo ? repo.open_issues_count : '—'}</div>
       </div>
       <div class="stat">
         <div class="stat-label">Created</div>
-        <div class="stat-value stat-value-sm">${repo ? repo.created_at?.slice(0,4) : html`<${Skel} w="2.5rem"/>`}</div>
+        <div class="stat-value stat-value-sm">${repo ? repo.created_at?.slice(0,4) : '—'}</div>
       </div>
     </div>`;
 }
@@ -175,7 +178,7 @@ function CardMeta({ repo, lang }) {
 
 /** Index page hero stats: total stars, repo count, top languages */
 function HeroStats({ allRepos, repoCount }) {
-  if (!allRepos) return html`<div class="hero-stats"><${Skel} w="16rem"/></div>`;
+  if (!allRepos) return html`<div class="hero-stats"><span class="metric" style="color:var(--text-faint)">Loading stats…</span></div>`;
 
   const repos = Object.values(allRepos);
   const totalStars = repos.reduce((s, r) => s + (r.stargazers_count ?? 0), 0);
