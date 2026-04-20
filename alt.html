@@ -747,20 +747,21 @@ Object.entries(CLUSTERS).forEach(([key,cluster])=>{
 // Based on Maxime Heckel's "On Crafting Painterly Shaders" (Oct 2024).
 
 BABYLON.Effect.ShadersStore["painterlyFragmentShader"]=`
-  precision highp float;
+  precision mediump float;
   varying vec2 vUV;
   uniform sampler2D textureSampler;
   uniform vec2 texelSize;
   uniform float levels;
 
+  float lum(vec3 c){ return dot(c, vec3(0.299, 0.587, 0.114)); }
+
   void main(){
     vec2 ts = texelSize;
 
-    // 4-quadrant Kuwahara, radius=3 (4x4 samples per quadrant)
-    // Each quadrant covers one "corner" around the pixel
-    vec3 m0=vec3(0.),m1=vec3(0.),m2=vec3(0.),m3=vec3(0.);
-    vec3 q0=vec3(0.),q1=vec3(0.),q2=vec3(0.),q3=vec3(0.);
-    float n=16.0; // 4x4
+    // 4-quadrant Kuwahara, radius=3 (4x4 samples per quadrant, constant bounds)
+    vec3 m0=vec3(0.0),m1=vec3(0.0),m2=vec3(0.0),m3=vec3(0.0);
+    vec3 q0=vec3(0.0),q1=vec3(0.0),q2=vec3(0.0),q3=vec3(0.0);
+    float n = 16.0;
 
     for(int j=0; j<=3; j++){
       for(int i=0; i<=3; i++){
@@ -775,16 +776,11 @@ BABYLON.Effect.ShadersStore["painterlyFragmentShader"]=`
     m0/=n; m1/=n; m2/=n; m3/=n;
     q0/=n; q1/=n; q2/=n; q3/=n;
 
-    // Variance of each quadrant (sum of channel variances)
-    // Don't Kuwahara-blur the dark sky — keep clearColor clean
-    float origLum=dot(texture2D(textureSampler,vUV).rgb,vec3(0.299,0.587,0.114));
-    if(origLum < 0.04){ gl_FragColor=texture2D(textureSampler,vUV); return; }
-    float v0=dot(max(vec3(0.),q0-m0*m0),vec3(1.));
-    float v1=dot(max(vec3(0.),q1-m1*m1),vec3(1.));
-    float v2=dot(max(vec3(0.),q2-m2*m2),vec3(1.));
-    float v3=dot(max(vec3(0.),q3-m3*m3),vec3(1.));
+    float v0=dot(max(vec3(0.0),q0-m0*m0),vec3(1.0));
+    float v1=dot(max(vec3(0.0),q1-m1*m1),vec3(1.0));
+    float v2=dot(max(vec3(0.0),q2-m2*m2),vec3(1.0));
+    float v3=dot(max(vec3(0.0),q3-m3*m3),vec3(1.0));
 
-    // Blend all quadrants weighted by 1/variance (minimum-variance wins)
     float w0=1.0/(v0*80.0+0.004);
     float w1=1.0/(v1*80.0+0.004);
     float w2=1.0/(v2*80.0+0.004);
@@ -793,23 +789,30 @@ BABYLON.Effect.ShadersStore["painterlyFragmentShader"]=`
 
     vec3 paint = (m0*w0+m1*w1+m2*w2+m3*w3)/tw;
 
-    // Colour quantisation: posterise to N levels
+    // Colour quantisation
     paint = floor(paint * levels + 0.5) / levels;
 
-    // Subtle dark outline: edge detect on Kuwahara output
-    float lum=dot(paint,vec3(0.299,0.587,0.114));
-    float el=dot(texture2D(textureSampler,vUV+vec2(-ts.x,0.)).rgb,vec3(0.299,0.587,0.114));
-    float er=dot(texture2D(textureSampler,vUV+vec2( ts.x,0.)).rgb,vec3(0.299,0.587,0.114));
-    float et=dot(texture2D(textureSampler,vUV+vec2(0.,-ts.y)).rgb,vec3(0.299,0.587,0.114));
-    float eb=dot(texture2D(textureSampler,vUV+vec2(0., ts.y)).rgb,vec3(0.299,0.587,0.114));
+    // Subtle outline from luminance gradient
+    float el=lum(texture2D(textureSampler,vUV+vec2(-ts.x,0.0)).rgb);
+    float er=lum(texture2D(textureSampler,vUV+vec2( ts.x,0.0)).rgb);
+    float et=lum(texture2D(textureSampler,vUV+vec2(0.0,-ts.y)).rgb);
+    float eb=lum(texture2D(textureSampler,vUV+vec2(0.0, ts.y)).rgb);
     float edge=abs(er-el)+abs(eb-et);
     float outline=smoothstep(0.02,0.06,edge);
     paint=mix(paint,vec3(0.01,0.015,0.03),outline*0.65);
 
-    // Vignette
-    vec2 cv=vUV-0.5; paint*=1.0-dot(cv,cv)*0.5;
+    // Skip filter for very dark pixels (sky/void) — avoids teal bleeding into clearColor
+    // No early return (Safari incompatible): use mix() instead
+    vec4 original = texture2D(textureSampler, vUV);
+    float origLum = lum(original.rgb);
+    float isSky   = 1.0 - step(0.04, origLum);  // 1 if dark sky, 0 otherwise
+    vec3 result   = mix(paint, original.rgb, isSky);
 
-    gl_FragColor=vec4(clamp(paint,0.0,1.0),1.0);
+    // Vignette
+    vec2 cv = vUV - 0.5;
+    result *= 1.0 - dot(cv, cv) * 0.5;
+
+    gl_FragColor = vec4(clamp(result, 0.0, 1.0), 1.0);
   }
 `;
 
