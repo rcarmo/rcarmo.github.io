@@ -2,6 +2,7 @@
 section: ai-agents
 status: active
 tagline: Live coding music environment with AI agent chat — compose and perform with Strudel, talk to an agent mid-set.
+logo: assets/logos-opt/apfelstrudel.png
 ---
 
 ## About

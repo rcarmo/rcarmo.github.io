@@ -2,6 +2,7 @@
 section: infrastructure
 status: maintained
 tagline: Incremental IMAP mailbox backup to local mbox files — works with Gmail, Exchange, and any IMAP server.
+logo: assets/logos-opt/imapbackup.png
 ---
 
 ## About

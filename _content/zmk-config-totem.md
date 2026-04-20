@@ -2,6 +2,7 @@
 section: hardware
 status: stable
 tagline: ZMK keymap for the Totem — home row mods, combos, ZMK Studio.
+logo: assets/logos-opt/zmk-config-totem.png
 ---
 
 ## About

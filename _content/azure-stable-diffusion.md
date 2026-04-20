@@ -2,6 +2,7 @@
 section: cloud
 status: stable
 tagline: One-command Stable Diffusion on Azure GPU spot instances.
+logo: assets/logos-opt/azure-stable-diffusion.png
 ---
 
 ## About

@@ -2,6 +2,7 @@
 section: ai-agents
 status: active
 tagline: Mobile-first web UI for AI agents — ACP and Pi over RPC, zero build step.
+logo: assets/logos-opt/vibes.png
 ---
 
 ## About

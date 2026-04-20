@@ -2,6 +2,7 @@
 section: infrastructure
 status: active
 tagline: Idempotent Linux bootstrap — YAML-driven, like cloud-init for bare metal.
+logo: assets/logos-opt/ground-init.png
 ---
 
 ## About

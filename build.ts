@@ -176,20 +176,13 @@ function mdToHtml(md: string): string {
 
 // ── Logo handling ────────────────────────────────────────────────────────────
 
-function logoDataUri(project: Project): string | null {
+function logoSrc(project: Project): string | null {
   const fallbackPath = "assets/logos-opt/default.png";
   const logoPath = project.fm.logo || fallbackPath;
   const fullPath = join(ROOT, logoPath);
-  if (!existsSync(fullPath)) {
-    const fallbackFullPath = join(ROOT, fallbackPath);
-    if (!existsSync(fallbackFullPath)) return null;
-    const raw = readFileSync(fallbackFullPath);
-    return `data:image/png;base64,${raw.toString("base64")}`;
-  }
-  const raw = readFileSync(fullPath);
-  const ext = logoPath.split(".").pop()?.toLowerCase();
-  const mime = ext === "svg" ? "image/svg+xml" : ext === "png" ? "image/png" : ext === "gif" ? "image/gif" : "image/jpeg";
-  return `data:${mime};base64,${raw.toString("base64")}`;
+  if (existsSync(fullPath)) return `/${logoPath}`;
+  const fallbackFullPath = join(ROOT, fallbackPath);
+  return existsSync(fallbackFullPath) ? `/${fallbackPath}` : null;
 }
 
 // ── Section helpers ──────────────────────────────────────────────────────────
@@ -211,7 +204,7 @@ function buildProjectPage(project: Project): string {
   const { id, fm } = project;
   const fullName = fm.repo || `rcarmo/${id}`;
   const ghUrl = `https://github.com/${fullName}`;
-  const logo = logoDataUri(project);
+  const logo = logoSrc(project);
 
   // Gather content sections
   const aboutHtml    = getSectionHtml(project, "About");
@@ -423,7 +416,7 @@ function buildIndex(projects: Project[]): string {
   // Featured projects card(s)
   if (featured.length) {
     const featCards = featured.map(p => {
-      const logo = logoDataUri(p);
+      const logo = logoSrc(p);
       const fullName = p.fm.repo || `rcarmo/${p.id}`;
       const logoHtml = `<div class="card-logo card-logo-lg"><img src="${logo}" alt="" loading="lazy"></div>`;
       return `
@@ -447,7 +440,7 @@ function buildIndex(projects: Project[]): string {
   for (const sKey of sectionOrder) {
     const sProjects = groups.get(sKey)!;
     const cardsHtml = sProjects.filter(p => !p.fm.featured).map(p => {
-      const logo = logoDataUri(p);
+      const logo = logoSrc(p);
       const fullName = p.fm.repo || `rcarmo/${p.id}`;
       const logoHtml = `<div class="card-logo"><img src="${logo}" alt="" loading="lazy"></div>`;
       return `
@@ -552,7 +545,7 @@ function injectRelated(html: string, project: Project, allProjects: Project[]): 
   }
 
   const links = related.map(r => {
-    const logo = logoDataUri(r);
+    const logo = logoSrc(r);
     const img = `<img src="${logo}" alt="" class="related-logo">`;
     return `<a href="/projects/${r.id}.html" class="related-link">${img}<span>${esc(r.id)}</span></a>`;
   }).join("\n        ");

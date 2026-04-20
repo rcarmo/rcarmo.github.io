@@ -2,6 +2,7 @@
 section: ai-ml
 status: active
 tagline: Go inference for the GTE Small text embedding model — local semantic search with no Python required.
+logo: assets/logos-opt/gte-go.png
 ---
 
 ## About

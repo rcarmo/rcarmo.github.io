@@ -2,6 +2,7 @@
 section: libraries
 status: experimental
 tagline: A Go library for reading, writing, and manipulating Office Open XML documents.
+logo: assets/logos-opt/go-ooxml.png
 ---
 
 ## About

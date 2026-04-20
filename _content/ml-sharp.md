@@ -2,6 +2,7 @@
 section: ai-ml
 status: active
 tagline: Sharp monocular view synthesis for Apple Silicon — depth-aware novel view generation on-device via MPS.
+logo: assets/logos-opt/ml-sharp.gif
 ---
 
 ## About

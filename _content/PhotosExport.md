@@ -2,6 +2,7 @@
 section: macos
 status: stable
 tagline: Export your complete Apple Photos library — originals, edits, Live Photos, metadata.
+logo: assets/logos-opt/PhotosExport.png
 ---
 
 ## About

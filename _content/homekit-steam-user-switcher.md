@@ -2,6 +2,7 @@
 section: macos
 status: stable
 tagline: Switch Steam accounts on a shared PC via HomeKit.
+logo: assets/logos-opt/homekit-steam-user-switcher.png
 ---
 
 ## About

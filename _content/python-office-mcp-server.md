@@ -2,6 +2,7 @@
 section: ai-agents
 status: active
 tagline: MCP server for Microsoft Office automation — read, write, and manipulate Word, Excel, and PowerPoint files.
+logo: assets/logos-opt/python-office-mcp-server.png
 ---
 
 ## About

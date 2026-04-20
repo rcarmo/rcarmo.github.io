@@ -2,6 +2,7 @@
 section: infrastructure
 status: stable
 tagline: ZFS pool metrics for Proxmox — exported to Graphite, cron only.
+logo: assets/logos-opt/proxmox-zpool-monitoring.png
 ---
 
 ## About

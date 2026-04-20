@@ -2,6 +2,7 @@
 section: ai-agents
 status: active
 tagline: 57 BusyBox utilities in Go — 2 MB WASM binary, 387/387 tests passing.
+logo: assets/logos-opt/go-busybox.png
 ---
 
 ## About

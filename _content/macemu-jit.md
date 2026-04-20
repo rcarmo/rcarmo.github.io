@@ -2,6 +2,7 @@
 section: macos
 status: maintained
 tagline: Basilisk II and SheepShaver for Raspberry Pi — SDL2 framebuffer, pre-built .deb.
+logo: assets/logos-opt/macemu-jit.png
 ---
 
 ## About
