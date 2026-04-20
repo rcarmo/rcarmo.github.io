@@ -2,15 +2,15 @@
 section: infrastructure
 status: active
 created: 2026-04-18
-tagline: QEMU microvm for Proxmox VE — KVM isolation, under 200 ms boot.
+tagline: Firecracker-like microVMs for Proxmox VE — KVM isolation, under 200 ms boot.
 logo: assets/logos-opt/pve-microvm.png
 ---
 
 ## About
-Debian package patching qemu-server to add QEMU microvm machine type to the Proxmox UI. microvm VMs boot in under 200 ms, use only virtio-mmio, and give full KVM isolation. Uninstall restores original files.
+Debian package that adds QEMU `microvm` machine type to the Proxmox UI. microvm VMs boot in under 200 ms, use only `virtio-mmio`, and give full KVM isolation. Uninstall restores original files.
 
 ## How it works
-Patches two qemu-server files to add microvm as a selectable machine type. A standard Proxmox VM emulates a full x86 PC with PCI bus and BIOS. A microvm skips all that — direct kernel load, virtio-mmio only, much smaller attack surface. The result is KVM-grade isolation at LXC-comparable boot times. Currently the only Proxmox integration for QEMU microvm.
+Patches two `qemu-server` files to add `microvm` as a selectable machine type. A standard Proxmox VM emulates a full x86 PC with PCI bus and BIOS, but a microvm skips all that — direct kernel load, virtio-mmio only, much smaller attack surface. The result is KVM-grade isolation at LXC-comparable boot times. Currently the only Proxmox integration for QEMU microvm.
 
 ## Features
 ### ⚡ Under 200 ms boot
@@ -26,7 +26,7 @@ Appears as a machine type option. Managed like any VM.
 dpkg -r restores original qemu-server files.
 
 ## Posts
-- [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
+- [Notes for April 13-19](https://taoofmac.com/space/notes/2026/04/19/1400#proxmox-microvms) — 2026-04-19
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180" width="480" height="180">
