@@ -177,7 +177,7 @@ function CardMeta({ repo, lang }) {
 }
 
 /** Index page hero stats: total stars, repo count, top languages */
-function HeroStats({ allRepos }) {
+function HeroStats({ allRepos, repoCount }) {
   if (!allRepos) return html`<div class="hero-stats"><${Skel} w="16rem"/></div>`;
 
   const repos = Object.values(allRepos);
@@ -196,8 +196,8 @@ function HeroStats({ allRepos }) {
         <span class="hero-stat-label">Total stars</span>
       </div>
       <div class="hero-stat">
-        <span class="hero-stat-value">${repos.length}</span>
-        <span class="hero-stat-label">Repos</span>
+        <span class="hero-stat-value">${repoCount ?? repos.length}</span>
+        <span class="hero-stat-label">Featured repos</span>
       </div>
       <div class="hero-stat" style="align-items:flex-start">
         <span class="hero-stat-label">Top languages</span>
@@ -254,6 +254,6 @@ export function mountHeroStats(el, allFullNames) {
     for (const fn of allFullNames) {
       if (repoMap[fn]) featured[fn] = repoMap[fn];
     }
-    render(html`<${HeroStats} allRepos=${featured}/>`, el);
+    render(html`<${HeroStats} allRepos=${featured} repoCount=${allFullNames.length}/>`, el);
   });
 }
