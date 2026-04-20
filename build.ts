@@ -24,6 +24,7 @@ interface Frontmatter {
   section: string;      // section key (auto-discovered)
   status: string;       // stable | maintained | experimental | archived
   tagline: string;      // one-liner
+  created?: string;     // ISO date (YYYY-MM-DD) for maintainable fallback icon selection
   logo?: string;        // path to logo image (transparent bg)
   hidden?: boolean;     // omit from site
   featured?: boolean;    // pin to top of index
@@ -176,13 +177,49 @@ function mdToHtml(md: string): string {
 
 // ── Logo handling ────────────────────────────────────────────────────────────
 
+let RANDOM_FALLBACK_PROJECT_ID: string | null = null;
+
+function projectAgeYears(project: Project): number {
+  const currentYear = new Date().getUTCFullYear();
+  const createdYear = Number(project.fm.created?.slice(0, 4));
+  return Number.isFinite(createdYear) && createdYear > 0
+    ? Math.max(0, currentYear - createdYear)
+    : 4;
+}
+
+function hasRealLogo(project: Project): boolean {
+  if (!project.fm.logo) return false;
+  return existsSync(join(ROOT, project.fm.logo));
+}
+
+function selectRandomFallbackProject(projects: Project[]): void {
+  const eligible = projects.filter(project => !hasRealLogo(project) && projectAgeYears(project) >= 2);
+  if (!eligible.length) {
+    RANDOM_FALLBACK_PROJECT_ID = null;
+    return;
+  }
+  const pick = eligible[Math.floor(Math.random() * eligible.length)];
+  RANDOM_FALLBACK_PROJECT_ID = pick.id;
+}
+
+function fallbackLogoPath(project: Project): string | null {
+  const age = projectAgeYears(project);
+  const fallbackName = project.id === RANDOM_FALLBACK_PROJECT_ID
+    ? "default-05.png"
+    : `default-0${Math.min(age, 4)}.png`;
+  const fallbackPath = `assets/logos-opt/${fallbackName}`;
+  const fullPath = join(ROOT, fallbackPath);
+  return existsSync(fullPath) ? `/${fallbackPath}` : null;
+}
+
 function logoSrc(project: Project): string | null {
-  const fallbackPath = "assets/logos-opt/default.png";
-  const logoPath = project.fm.logo || fallbackPath;
-  const fullPath = join(ROOT, logoPath);
-  if (existsSync(fullPath)) return `/${logoPath}`;
-  const fallbackFullPath = join(ROOT, fallbackPath);
-  return existsSync(fallbackFullPath) ? `/${fallbackPath}` : null;
+  const logoPath = project.fm.logo;
+  if (logoPath) {
+    const fullPath = join(ROOT, logoPath);
+    if (existsSync(fullPath)) return `/${logoPath}`;
+  }
+
+  return fallbackLogoPath(project);
 }
 
 // ── Section helpers ──────────────────────────────────────────────────────────
@@ -260,6 +297,7 @@ function buildProjectPage(project: Project): string {
 <title>${esc(id)} — rcarmo</title>
 <meta name="description" content="${esc(fm.tagline || "")}">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" href="/assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/projects/${id}.html">
 </head>
@@ -473,6 +511,7 @@ function buildIndex(projects: Project[]): string {
 <title>rcarmo — open source</title>
 <meta name="description" content="Open source projects by Rui Carmo">
 <link rel="stylesheet" href="/assets/css/style.css">
+<link rel="icon" href="/assets/favicon.ico" sizes="any">
 <link rel="icon" type="image/png" href="/assets/favicon.png">
 <link rel="canonical" href="https://rcarmo.github.io/">
 </head>
@@ -561,7 +600,9 @@ function injectRelated(html: string, project: Project, allProjects: Project[]): 
 // ── Main ─────────────────────────────────────────────────────────────────────
 
 const projects = readProjects();
+selectRandomFallbackProject(projects);
 console.log(`Read ${projects.length} projects from _content/`);
+if (RANDOM_FALLBACK_PROJECT_ID) console.log(`Random fallback icon: ${RANDOM_FALLBACK_PROJECT_ID}`);
 
 // Build project pages
 let built = 0;
