@@ -1,0 +1,33 @@
+{
+  "id": "node-red-dashboard",
+  "meta": {
+    "name": "node-red-dashboard",
+    "full_name": "rcarmo/node-red-dashboard",
+    "description": "A dashboard UI for Node-RED \u2014 custom widgets and layout tweaks for homelab sensor data.",
+    "homepage": "",
+    "stars": 0,
+    "forks": 0,
+    "language": "HTML",
+    "created_at": "2025-12-21T11:28:38Z",
+    "pushed_at": "2026-01-06T22:43:23Z",
+    "updated_at": "2026-01-06T22:43:23Z",
+    "topics": [
+      "node-red",
+      "dashboard",
+      "homelab",
+      "iot",
+      "sensors",
+      "automation"
+    ]
+  },
+  "readme": "",
+  "commits": [],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-20T10:56:00Z",
+  "logo": null,
+  "logo_data_uri": null,
+  "logo_ext": null,
+  "diagram": null,
+  "diagram_inline": null
+}
