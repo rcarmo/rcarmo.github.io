@@ -1068,8 +1068,6 @@ function indexPage(
     <div class="idx-name">${esc(dispN)}</div>
     <div class="idx-desc">${esc(c.tagline)}</div>
     <div id="card-meta-${proj}" class="idx-meta">
-      <span class="idx-stars">★ ${(m.stars??0).toLocaleString()}</span>
-      ${realLang(m.language) ? `<span><span class="dot ${langD}"></span>${esc(realLang(m.language)!)}</span>` : ""}
     </div>
   </div>
 </a>`;

@@ -1,5 +1,5 @@
 ---
-section: ai-agents
+section: infrastructure
 status: active
 tagline: Coding kata practice environment with AI-assisted feedback — repetition makes perfect.
 ---
