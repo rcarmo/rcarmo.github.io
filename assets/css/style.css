@@ -358,7 +358,7 @@ code {
   padding: 0.5rem 0;
 }
 .diagram-wrap svg {
-  max-width: 100%;
+  width: 100%;
   height: auto;
 }
 
