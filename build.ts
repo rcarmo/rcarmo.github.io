@@ -177,13 +177,18 @@ function mdToHtml(md: string): string {
 // ── Logo handling ────────────────────────────────────────────────────────────
 
 function logoDataUri(project: Project): string | null {
-  const logoPath = project.fm.logo;
-  if (!logoPath) return null;
+  const fallbackPath = "assets/logos-opt/default.png";
+  const logoPath = project.fm.logo || fallbackPath;
   const fullPath = join(ROOT, logoPath);
-  if (!existsSync(fullPath)) return null;
+  if (!existsSync(fullPath)) {
+    const fallbackFullPath = join(ROOT, fallbackPath);
+    if (!existsSync(fallbackFullPath)) return null;
+    const raw = readFileSync(fallbackFullPath);
+    return `data:image/png;base64,${raw.toString("base64")}`;
+  }
   const raw = readFileSync(fullPath);
   const ext = logoPath.split(".").pop()?.toLowerCase();
-  const mime = ext === "svg" ? "image/svg+xml" : ext === "png" ? "image/png" : "image/jpeg";
+  const mime = ext === "svg" ? "image/svg+xml" : ext === "png" ? "image/png" : ext === "gif" ? "image/gif" : "image/jpeg";
   return `data:${mime};base64,${raw.toString("base64")}`;
 }
 
@@ -420,9 +425,7 @@ function buildIndex(projects: Project[]): string {
     const featCards = featured.map(p => {
       const logo = logoDataUri(p);
       const fullName = p.fm.repo || `rcarmo/${p.id}`;
-      const logoHtml = logo
-        ? `<div class="card-logo card-logo-lg"><img src="${logo}" alt="" loading="lazy"></div>`
-        : `<div class="card-logo card-logo-lg card-logo-placeholder"></div>`;
+      const logoHtml = `<div class="card-logo card-logo-lg"><img src="${logo}" alt="" loading="lazy"></div>`;
       return `
         <a href="/projects/${p.id}.html" class="card card-featured" data-repo="${esc(fullName)}">
           ${logoHtml}
@@ -446,9 +449,7 @@ function buildIndex(projects: Project[]): string {
     const cardsHtml = sProjects.filter(p => !p.fm.featured).map(p => {
       const logo = logoDataUri(p);
       const fullName = p.fm.repo || `rcarmo/${p.id}`;
-      const logoHtml = logo
-        ? `<div class="card-logo"><img src="${logo}" alt="" loading="lazy"></div>`
-        : `<div class="card-logo card-logo-placeholder"></div>`;
+      const logoHtml = `<div class="card-logo"><img src="${logo}" alt="" loading="lazy"></div>`;
       return `
         <a href="/projects/${p.id}.html" class="card" data-repo="${esc(fullName)}">
           ${logoHtml}
@@ -552,7 +553,7 @@ function injectRelated(html: string, project: Project, allProjects: Project[]): 
 
   const links = related.map(r => {
     const logo = logoDataUri(r);
-    const img = logo ? `<img src="${logo}" alt="" class="related-logo">` : "";
+    const img = `<img src="${logo}" alt="" class="related-logo">`;
     return `<a href="/projects/${r.id}.html" class="related-link">${img}<span>${esc(r.id)}</span></a>`;
   }).join("\n        ");
 
