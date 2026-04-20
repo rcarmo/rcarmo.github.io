@@ -7,24 +7,24 @@
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
   * { margin: 0; padding: 0; box-sizing: border-box; }
-  html, body { width: 100%; height: 100%; overflow: hidden; background: #a1b3f0; }
+  html, body { width: 100%; height: 100%; overflow: hidden; background: #78aaff; }
   #cv { width: 100%; height: 100%; display: block; }
 
   #topbar {
     position: fixed; top: 0; left: 0; right: 0; z-index: 50;
     display: flex; justify-content: space-between; align-items: center;
     padding: .55rem 1.25rem;
-    background: linear-gradient(to bottom, rgba(5,10,20,.85) 0%, rgba(5,10,20,.6) 100%);
+    background: linear-gradient(to bottom, rgba(40,28,18,.9) 0%, rgba(30,20,12,.85) 100%);
     backdrop-filter: blur(8px);
     border-bottom: 1px solid rgba(80,160,255,.2);
     font-family: ui-monospace, "SF Mono", monospace; font-size: .72rem;
     color: rgba(180,210,255,.55); pointer-events: auto;
     box-shadow: 0 2px 12px rgba(0,0,0,.5);
   }
-  #topbar a { color: #90c8ff; text-decoration: none; font-weight: 700; letter-spacing: .04em; }
+  #topbar a { color: #f5d98a; text-decoration: none; font-weight: 700; letter-spacing: .04em; }
   #topbar .right { display: flex; gap: 1.25rem; }
   #topbar .right a { color: rgba(140,190,255,.45); font-weight: 400; }
-  #topbar .right a:hover { color: #90c8ff; }
+  #topbar .right a:hover { color: #f5d98a; }
 
   #nav {
     position: fixed; bottom: 1.25rem; left: 50%; transform: translateX(-50%);
@@ -41,10 +41,10 @@
     white-space: nowrap; text-transform: uppercase; letter-spacing: .06em;
     box-shadow: 0 2px 8px rgba(0,0,0,.4), inset 0 1px 0 rgba(255,255,255,.06);
   }
-  .nav-btn:hover { background: linear-gradient(135deg, rgba(30,80,180,.7) 0%, rgba(20,60,150,.7) 100%);
-    border-color: rgba(100,180,255,.6); color: #c0e0ff; box-shadow: 0 0 12px rgba(60,130,255,.3); }
-  .nav-btn.active { background: linear-gradient(135deg, rgba(40,100,220,.8) 0%, rgba(25,70,180,.8) 100%);
-    border-color: #5090ff; color: #d0ecff; box-shadow: 0 0 16px rgba(80,150,255,.4); }
+  .nav-btn:hover { background: linear-gradient(135deg, rgba(80,60,30,.8) 0%, rgba(60,45,20,.8) 100%);
+    border-color: rgba(200,160,80,.6); color: #f0d88a; box-shadow: none; }
+  .nav-btn.active { background: linear-gradient(135deg, rgba(100,78,32,.9) 0%, rgba(80,60,24,.9) 100%);
+    border-color: #c89040; color: #ffe0a0; box-shadow: none; }
 
   #focus-panel {
     position: fixed; bottom: 0; left: 0; right: 0; z-index: 60;
@@ -54,7 +54,7 @@
   #focus-panel.open { transform: translateY(0); pointer-events: auto; }
   #focus-content {
     max-width: 640px; margin: 0 auto;
-    background: rgba(10,14,22,.93); backdrop-filter: blur(20px);
+    background: rgba(42,28,14,.96); backdrop-filter: blur(16px);
     border: 1px solid rgba(255,255,255,.14); border-bottom: none;
     border-radius: 18px 18px 0 0; padding: 1.25rem 1.75rem 2.25rem;
     position: relative; font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Helvetica, Arial, sans-serif;
@@ -65,15 +65,15 @@
     display: flex; align-items: center; justify-content: center;
     border-radius: 50%; border: 1px solid rgba(255,255,255,.12); transition: all .15s;
   }
-  #focus-close:hover { color: #fff; border-color: rgba(255,255,255,.4); }
+  #focus-close:hover { color: #fceab0; border-color: rgba(252,234,176,.4); }
   .f-row { display: flex; align-items: center; gap: .85rem; margin-bottom: .55rem; }
   #focus-logo { width: 52px; height: 52px; border-radius: 11px; object-fit: contain; display: none; }
-  #focus-name { font-size: 1.15rem; font-weight: 700; color: #f0f4ff; letter-spacing: -.01em; }
-  #focus-stars { font-size: .75rem; color: #fbbf24; font-family: ui-monospace, monospace; }
-  #focus-desc { font-size: .86rem; color: #8898b8; line-height: 1.65; margin-bottom: 1.1rem; }
+  #focus-name { font-size: 1.15rem; font-weight: 700; color: #fceab0; letter-spacing: -.01em; }
+  #focus-stars { font-size: .75rem; color: #f5c842; font-family: ui-monospace, monospace; }
+  #focus-desc { font-size: .86rem; color: #c8b890; line-height: 1.65; margin-bottom: 1.1rem; }
   #focus-link {
     display: inline-flex; align-items: center; gap: .35rem;
-    background: #4f8ef7; color: #fff; font-size: .88rem; font-weight: 600;
+    background: #5b8a2c; color: #fff; font-size: .88rem; font-weight: 600;
     padding: .55rem 1.35rem; border-radius: 8px; text-decoration: none; transition: filter .15s;
   }
   #focus-link:hover { filter: brightness(1.12); }
@@ -127,13 +127,13 @@
 <script>
 // ── Data ────────────────────────────────────────────────────────────────
 const CLUSTERS = {
-  highlight: { pos: [0,0,0],     col: '#00d4ff', projects: [
+  highlight: { pos: [0,0,0],     col: '#3e7e3e', projects: [
     { id:'piclaw', name:'piclaw', stars:526, lang:'TypeScript', desc:'Self-hosted AI agent workspace — streaming UI, persistent state, built-in tools.', url:'/projects/piclaw.html' }
   ]},
-  piku:      { pos: [-22,0,-8],  col: '#ffcc00', projects: [
+  piku:      { pos: [-22,0,-8],  col: '#b89030', projects: [
     { id:'piku', name:'piku/piku', stars:6569, lang:'Python', desc:'The tiniest PaaS — git push deployments to your own server.', url:'/projects/piku.html' }
   ]},
-  ai:        { pos: [20,0,-12],  col: '#00e870', projects: [
+  ai:        { pos: [20,0,-12],  col: '#3a6ea8', projects: [
     { id:'vibes',        name:'vibes',        stars:142, lang:'Python',     desc:'Mobile-first web UI for AI agents — ACP and Pi over RPC.', url:'/projects/vibes.html' },
     { id:'agentbox',     name:'agentbox',     stars:97,  lang:'Dockerfile', desc:'Docker sandbox for coding agents — opt-in services, DinD.', url:'/projects/agentbox.html' },
     { id:'umcp',         name:'umcp',         stars:11,  lang:'Python',     desc:'Micro MCP server — zero deps, decorator-based.', url:'/projects/umcp.html' },
@@ -141,20 +141,20 @@ const CLUSTERS = {
     { id:'feed-summarizer', name:'feed-summarizer', stars:27, lang:'Python', desc:'LLM-powered RSS digest — powers feeds.carmo.io.', url:'/projects/feed-summarizer.html' },
     { id:'pve-microvm',  name:'pve-microvm',  stars:3,   lang:'Shell',      desc:'QEMU microvm for Proxmox — KVM isolation, <200ms boot.', url:'/projects/pve-microvm.html' },
   ]},
-  terminal:  { pos: [22,0,14],   col: '#cc44ff', projects: [
+  terminal:  { pos: [22,0,14],   col: '#6a6a72', projects: [
     { id:'webterm',      name:'webterm',      stars:106, lang:'Go',         desc:'Go web terminal — multi-session dashboard for AI agents.', url:'/projects/webterm.html' },
     { id:'ghostty-web',  name:'ghostty-web',  stars:5,   lang:'TypeScript', desc:'Ghostty terminal sessions in a browser.', url:'/projects/ghostty-web.html' },
     { id:'go-rdp',       name:'go-rdp',       stars:9,   lang:'Go',         desc:'Browser-based RDP client — full MS-RDPBCGR spec.', url:'/projects/go-rdp.html' },
     { id:'go-te',        name:'go-te',        stars:7,   lang:'Go',         desc:'VT100/VT520 terminal library for Go — pyte-faithful.', url:'/projects/go-te.html' },
     { id:'gotel',        name:'gotel',        stars:5,   lang:'Go',         desc:'Self-contained OTel collector — SQLite + built-in viewer.', url:'/projects/gotel.html' },
   ]},
-  macos:     { pos: [-18,0,16],  col: '#ff7730', projects: [
+  macos:     { pos: [-18,0,16],  col: '#b06838', projects: [
     { id:'PhotosExport', name:'PhotosExport', stars:280, lang:'Swift',      desc:'Export your complete Apple Photos library.', url:'/projects/PhotosExport.html' },
     { id:'drawterm',     name:'drawterm',     stars:26,  lang:'C',          desc:'Plan 9 drawterm — HiDPI, Metal rendering, clipboard bridge.', url:'/projects/drawterm.html' },
     { id:'homekit-steam-user-switcher', name:'homekit-steam', stars:41, lang:'Python', desc:'Switch Steam accounts via HomeKit.', url:'/projects/homekit-steam-user-switcher.html' },
     { id:'macemu',       name:'macemu',       stars:3,   lang:'C++',        desc:'Basilisk II / SheepShaver for Raspberry Pi.', url:'/projects/macemu.html' },
   ]},
-  infra:     { pos: [2,0,26],    col: '#ff3060', projects: [
+  infra:     { pos: [2,0,26],    col: '#4a7030', projects: [
     { id:'piku2',        name:'piku/piku',    stars:6569, lang:'Python',    desc:'See the piku garden — listed here for routing.', url:'/projects/piku.html' },
     { id:'ground-init',  name:'ground-init',  stars:64,  lang:'Python',     desc:'Idempotent Linux bootstrap — YAML-driven, zero deps.', url:'/projects/ground-init.html' },
     { id:'azure-stable-diffusion', name:'azure-SD', stars:44, lang:'Makefile', desc:'One-command Stable Diffusion on Azure GPU spot.', url:'/projects/azure-stable-diffusion.html' },
@@ -223,7 +223,8 @@ function nearestClusterKey(x, z) {
 const canvas = document.getElementById('cv');
 const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer:true });
 const scene  = new BABYLON.Scene(engine);
-scene.clearColor = new BABYLON.Color4(0x08/255, 0x18/255, 0x40/255, 1);  // deep game sky
+scene.clearColor = new BABYLON.Color4(0.47, 0.67, 1.0, 1.0);  // Minecraft sky blue
+scene.ambientColor = new BABYLON.Color3(0.35, 0.42, 0.28);
 
 // Camera (ArcRotateCamera — orbit built in)
 const camera = new BABYLON.ArcRotateCamera('cam',
@@ -238,37 +239,16 @@ camera.attachControl(canvas, true);
 
 // Lights
 const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.4, -0.8, -0.3), scene);
-sun.intensity = 0.85;  // strong enough to cast nice shadows
+sun.intensity = 1.1;  // strong Minecraft noon sun
 const fill = new BABYLON.HemisphericLight('fill', new BABYLON.Vector3(0, 1, 0), scene);
-fill.intensity     = 0.5;  // lower fill — let shadows be dramatic
-fill.diffuse       = new BABYLON.Color3(0.98, 0.96, 0.88);
-fill.groundColor   = new BABYLON.Color3(0.08, 0.12, 0.25);  // cool dark bounce
+fill.intensity     = 0.65;  // bright fill — minecraft is a well-lit world
+fill.diffuse       = new BABYLON.Color3(0.85, 0.90, 0.78);
+fill.groundColor   = new BABYLON.Color3(0.22, 0.32, 0.14);  // warm grass bounce
 
-// ── Effects layers (shadows, glow, highlight, post-processing) ───────────
-const shadowGen = new BABYLON.ShadowGenerator(2048, sun);
-shadowGen.useBlurExponentialShadowMap = true;
-shadowGen.blurKernel = 16;
-
-const glowLayer = new BABYLON.GlowLayer('glow', scene);
-glowLayer.intensity = 0.9;
-
-const hlLayer = new BABYLON.HighlightLayer('hl', scene);
-hlLayer.innerGlow = false;
-
-const pipeline = new BABYLON.DefaultRenderingPipeline('pp', true, scene, [camera]);
-pipeline.bloomEnabled   = true;
-pipeline.bloomThreshold = 0.42;
-pipeline.bloomWeight    = 0.8;
-pipeline.bloomKernel    = 48;
-pipeline.bloomScale     = 0.65;
-pipeline.imageProcessing.contrast  = 1.3;
-pipeline.imageProcessing.exposure  = 1.1;
-pipeline.imageProcessing.colorCurvesEnabled = true;
-const cc = new BABYLON.ColorCurves();
-cc.globalSaturation  = 35;
-cc.highlightsHue     = 50;
-cc.shadowsDensity    = 25;
-pipeline.imageProcessing.colorCurves = cc;
+// ── Effects layers (shadow only) ─────────────────────────────────────────
+const shadowGen = new BABYLON.ShadowGenerator(1024, sun);
+shadowGen.useBlurExponentialShadowMap = false;
+shadowGen.usePoissonSampling = true;
 
 // ── Material helpers ──────────────────────────────────────────────────────
 function hex3(h) {
@@ -282,7 +262,7 @@ function darkHex(h) {
 function toonMat(name, hexCol, emFactor) {
   const m = new BABYLON.StandardMaterial(name, scene);
   m.diffuseColor  = hex3(hexCol);
-  m.emissiveColor = hex3(hexCol).scale(emFactor || 0.05);
+  m.emissiveColor = BABYLON.Color3.Black();
   m.specularColor = BABYLON.Color3.Black();
   return m;
 }
@@ -294,25 +274,27 @@ function outlineOn(mesh, hexCol, width) {
 
 // ── Ground ────────────────────────────────────────────────────────────────
 const ground = BABYLON.MeshBuilder.CreateGround('ground', {width:160, height:160, subdivisions:2}, scene);
-ground.material = toonMat('gmat', '#2a6a18', 0.04);  // dark vivid grass
+ground.material = toonMat('gmat', '#5a8c2a', 0);  // minecraft grass green
 
-// ── Cluster disc ─────────────────────────────────────────────────────────
+// ── Cluster zone (raised Minecraft grass platform) ───────────────────────
 function makeDisc(pos, col) {
   const r = 9;
-  const disc = BABYLON.MeshBuilder.CreateDisc('disc', {radius:r, tessellation:32}, scene);
-  disc.rotation.x = Math.PI/2;
-  disc.position.set(pos[0], 0.04, pos[2]);
-  disc.material = toonMat('dmat'+pos, col, 0.18);  // bright emissive disc
-  glowLayer && glowLayer.addIncludedOnlyMesh(disc);
-  // Glowing ring at perimeter
-  const ring = BABYLON.MeshBuilder.CreateTorus('ring'+pos, {diameter:r*2+0.4, thickness:0.25, tessellation:48}, scene);
-  ring.position.set(pos[0], 0.08, pos[2]);
-  const rmat = new BABYLON.StandardMaterial('rmat'+pos, scene);
-  rmat.diffuseColor  = hex3(col);
-  rmat.emissiveColor = hex3(col).scale(0.9);
-  rmat.specularColor = BABYLON.Color3.Black();
-  ring.material = rmat;
-  glowLayer && glowLayer.addIncludedOnlyMesh(ring);
+  const halfR = r * 1.05;
+  // Grass-top slab: thin raised platform
+  const slab = BABYLON.MeshBuilder.CreateBox('disc', {width:halfR*2, height:0.5, depth:halfR*2}, scene);
+  slab.position.set(pos[0], 0.25, pos[2]);
+  const topMat = toonMat('dmat'+pos, col, 0);
+  slab.material = topMat;
+  slab.receiveShadows = true;
+  // Dirt-edge trim (slightly darker band at base)
+  const trim = BABYLON.MeshBuilder.CreateBox('dtrim'+pos, {width:halfR*2+0.15, height:0.28, depth:halfR*2+0.15}, scene);
+  trim.position.set(pos[0], 0.14, pos[2]);
+  const n = parseInt(col.replace('#',''), 16);
+  const dirtCol = new BABYLON.Color3(((n>>16&255)*0.55)/255, ((n>>8&255)*0.55)/255, ((n&255)*0.55)/255);
+  const trimMat = new BABYLON.StandardMaterial('trimmat'+pos, scene);
+  trimMat.diffuseColor = dirtCol;
+  trimMat.specularColor = BABYLON.Color3.Black();
+  trim.material = trimMat;
 }
 
 // ── Path strip ────────────────────────────────────────────────────────────
@@ -361,15 +343,17 @@ function makePath(edgeKey, ax, az, bx, bz, trimA, trimB) {
   const ribbon = BABYLON.MeshBuilder.CreateRibbon('path', {
     pathArray: [left, right], sideOrientation: BABYLON.Mesh.DOUBLESIDE
   }, scene);
-  ribbon.material = toonMat('pmat', '#c8aa78', 0.07);
+  ribbon.material = toonMat('pmat', '#8b6030', 0);
   // Store curve for camera path-following
   if (edgeKey) PATH_CURVES[edgeKey] = pts;
 }
 
 // ── Bush (stacked cubes facing centre) ────────────────────────────────────
 const bushMats = [
-  toonMat('b0','#204a10',0.04), toonMat('b1','#183a0a',0.03), toonMat('b2','#2a5c14',0.05)
+  toonMat('b0','#3a6a1a',0), toonMat('b1','#2e5414',0), toonMat('b2','#487c22',0),
+  toonMat('b3','#4e8a1c',0), toonMat('b4','#345e10',0)
 ];
+const bushMatsLen = bushMats.length;
 function makeBush(x, z, scale, cx, cz) {
   const angle  = Math.atan2(cz-z, cx-x);
   const layers = 2 + Math.floor(Math.random()*2);
@@ -381,10 +365,10 @@ function makeBush(x, z, scale, cx, cz) {
     const h = i===0 ? h0 : Math.max(0.2, scale*frac*(0.7+Math.random()*0.4));
     const d = scale*frac*(0.75+Math.random()*0.25);
     const box = BABYLON.MeshBuilder.CreateBox('b', {width:w, height:h, depth:d}, scene);
-    box.material  = bushMats[Math.floor(Math.random()*3)];
+    box.material  = bushMats[Math.floor(Math.random()*bushMatsLen)];
     box.rotation.y = angle + (Math.random()-0.5)*0.45 + i*0.15;
     box.position.set(x+(Math.random()-0.5)*0.12*scale, yBase+h*0.5, z+(Math.random()-0.5)*0.12*scale);
-    outlineOn(box, '#0a1a06', 0.022);
+    outlineOn(box, '#1a3208', 0.018);
     yBase += h*0.75;
   }
 }
@@ -399,51 +383,42 @@ function makeBillboard(x, z, proj, accentHex, logoImg) {
   const r=n>>16&255, g=n>>8&255, b=n&255;
   const dk=`#${[r,g,b].map(v=>Math.round(v*0.40).toString(16).padStart(2,'0')).join('')}`;
 
-  // Dark game card background
-  const grad=ctx.createLinearGradient(0,0,0,H);
-  grad.addColorStop(0,'#0a0e1a'); grad.addColorStop(1,'#060810');
+  // Wooden plank background
+  const grad=ctx.createLinearGradient(0,0,W,H);
+  grad.addColorStop(0,'#c8913e'); grad.addColorStop(0.5,'#b87c32'); grad.addColorStop(1,'#a06828');
   ctx.fillStyle=grad; ctx.fillRect(0,0,W,H);
-  // Subtle hex-grid pattern
-  ctx.strokeStyle='rgba(255,255,255,0.04)'; ctx.lineWidth=0.5;
-  for(let gx=0;gx<W;gx+=18) for(let gy=0;gy<H;gy+=18) {
-    ctx.strokeRect(gx+0.5,gy+0.5,17,17);
-  }
-  // Vivid top band with glow
-  ctx.fillStyle=`rgba(${r},${g},${b},1)`; ctx.fillRect(0,0,W,10);
-  ctx.shadowColor=`rgba(${r},${g},${b},0.8)`; ctx.shadowBlur=20;
-  ctx.fillRect(0,0,W,10);
-  ctx.shadowBlur=0;
-  // Glowing border
-  ctx.shadowColor=`rgba(${r},${g},${b},0.9)`; ctx.shadowBlur=18;
-  ctx.strokeStyle=`rgb(${r},${g},${b})`; ctx.lineWidth=3;
+  // Wood grain lines
+  ctx.strokeStyle='rgba(0,0,0,0.08)'; ctx.lineWidth=2;
+  for(let gy=18;gy<H;gy+=18) { ctx.beginPath(); ctx.moveTo(0,gy); ctx.lineTo(W,gy); ctx.stroke(); }
+  // Accent top band (biome colour)
+  ctx.fillStyle=`rgb(${r},${g},${b})`; ctx.fillRect(0,0,W,8);
+  // Dark border
+  ctx.strokeStyle='rgba(40,20,8,0.9)'; ctx.lineWidth=4;
   ctx.strokeRect(2,2,W-4,H-4);
-  ctx.shadowBlur=0;
-  // Inner dim border
-  ctx.strokeStyle='rgba(255,255,255,0.08)'; ctx.lineWidth=1;
-  ctx.strokeRect(6,14,W-12,H-18);
+  ctx.strokeStyle='rgba(200,150,60,0.4)'; ctx.lineWidth=1;
+  ctx.strokeRect(7,12,W-14,H-16);
 
   const hasLogo = logoImg && logoImg.complete && logoImg.naturalWidth>0;
   const lW=140, pad=18, textX=hasLogo?lW+pad*2:pad*2, textW=W-textX-pad;
 
   if (hasLogo) {
-    ctx.fillStyle='#ece7d8'; ctx.fillRect(pad,pad+8,lW-pad,H-pad*2-8);
+    ctx.fillStyle='rgba(240,220,170,0.6)'; ctx.fillRect(pad,pad+8,lW-pad,H-pad*2-8);
     ctx.strokeStyle=dk; ctx.lineWidth=2; ctx.strokeRect(pad,pad+8,lW-pad,H-pad*2-8);
     try { ctx.drawImage(logoImg, pad+(lW-pad-96)/2, (H-96)/2, 96, 96); } catch(e){}
   }
 
-  ctx.fillStyle='#ffffff'; ctx.shadowColor=`rgba(${r},${g},${b},0.6)`; ctx.shadowBlur=8;
+  ctx.fillStyle='#1a0e04'; ctx.shadowBlur=0;
   ctx.font='bold 52px ui-monospace,"SF Mono",Menlo,Consolas,monospace';
   ctx.fillText(proj.name.length>14?proj.name.slice(0,13)+'…':proj.name, textX, 76);
-  ctx.shadowBlur=0;
 
-  ctx.fillStyle=`rgb(${Math.min(255,r+80)},${Math.min(255,g+80)},${Math.min(255,b+60)})`;  // bright accent
+  ctx.fillStyle=`rgb(${Math.max(0,r-30)},${Math.max(0,g-30)},${Math.max(0,b-30)})`;
   ctx.font='bold 29px ui-monospace,monospace';
   ctx.fillText('★ '+proj.stars.toLocaleString()+'   '+proj.lang, textX, 116);
 
-  ctx.strokeStyle=`rgba(${r},${g},${b},0.4)`; ctx.lineWidth=1.5;
+  ctx.strokeStyle='rgba(40,20,8,0.35)'; ctx.lineWidth=1.5;
   ctx.beginPath(); ctx.moveTo(textX,132); ctx.lineTo(W-pad,132); ctx.stroke();
 
-  ctx.fillStyle='rgba(200,220,255,0.82)';
+  ctx.fillStyle='rgba(40,20,8,0.82)';
   ctx.font='25px -apple-system,"Helvetica Neue",Arial,sans-serif';
   const words=proj.desc.split(' ');
   let line='', y=168;
@@ -456,7 +431,7 @@ function makeBillboard(x, z, proj, accentHex, logoImg) {
   }
   if (line&&y<=H-52) ctx.fillText(line,textX,y);
 
-  ctx.fillStyle=`rgb(${Math.min(255,r+80)},${Math.min(255,g+80)},${Math.min(255,b+60)})`;  // bright accent ctx.font='bold 20px ui-monospace,monospace';
+  ctx.fillStyle='rgba(40,20,8,0.75)'; ctx.font='bold 20px ui-monospace,monospace';
   ctx.textAlign='right'; ctx.fillText('→ click to open',W-pad,H-18); ctx.textAlign='left';
 
   const tex  = new BABYLON.DynamicTexture('bbtex', {width:W,height:H}, scene, false);
@@ -466,14 +441,14 @@ function makeBillboard(x, z, proj, accentHex, logoImg) {
 
   const mat = new BABYLON.StandardMaterial('bbmat', scene);
   mat.diffuseTexture  = tex;
-  mat.emissiveTexture = tex;   // fully emissive — no shading on billboard face
+  mat.emissiveTexture = tex;   // signs glow slightly to stay legible
   mat.specularColor   = BABYLON.Color3.Black();
   mat.backFaceCulling = false;
 
   // Post (stake)
-  const post = BABYLON.MeshBuilder.CreateCylinder('post',
-    {diameter:0.16, height:1.8, tessellation:6}, scene);
-  post.material = toonMat('postmat','#3a2a1a',0.02);
+  const post = BABYLON.MeshBuilder.CreateBox('post',
+    {width:0.28, height:1.8, depth:0.28}, scene);
+  post.material = toonMat('postmat','#6b4420',0);
   post.position.set(x, 0.1, z);     // top reaches billboard lower edge
 
   // Panel
@@ -551,7 +526,7 @@ Object.entries(CLUSTERS).forEach(([key,cluster]) => {
   lcv.width=lW; lcv.height=lH;
   const lctx=lcv.getContext('2d');
   const n=parseInt(col.replace('#',''),16);
-  lctx.fillStyle=`rgb(${Math.round((n>>16&255)*0.5)},${Math.round((n>>8&255)*0.5)},${Math.round((n&255)*0.5)})`;
+  lctx.fillStyle=`rgb(${Math.round((n>>16&255)*0.35)},${Math.round((n>>8&255)*0.35)},${Math.round((n&255)*0.35)})`;
   lctx.font='bold 64px ui-monospace,"SF Mono",monospace';
   lctx.textAlign='center'; lctx.textBaseline='middle';
   lctx.fillText(key.toUpperCase(), lW/2, lH/2);
@@ -601,24 +576,37 @@ Object.entries(CLUSTERS).forEach(([key,cluster]) => {
 });
 
 // piclaw hero icosahedron
-const heroMesh = BABYLON.MeshBuilder.CreateIcoSphere('hero',{radius:1.2,subdivisions:1},scene);
-heroMesh.material=toonMat('hmat','#00d4ff',0.18);
-heroMesh.position.set(0,5.5,0);
-outlineOn(heroMesh,'#004466',0.06);
+// Hero: floating emerald/diamond block stack
+const heroBase = BABYLON.MeshBuilder.CreateBox('hero',{width:2.0,height:2.0,depth:2.0},scene);
+heroBase.material=toonMat('hmat','#2e8b2e',0);
+heroBase.position.set(0,1.5,0);
+outlineOn(heroBase,'#0a2a0a',0.05);
+const heroTop = BABYLON.MeshBuilder.CreateBox('hero2',{width:1.4,height:1.4,depth:1.4},scene);
+heroTop.material=toonMat('hmat2','#50c050',0);
+heroTop.position.set(0,3.4,0);
+outlineOn(heroTop,'#0a2a0a',0.04);
+const heroMesh = heroTop;  // alias for animation
 
 // piku obelisk
-const mono = BABYLON.MeshBuilder.CreateBox('mono',{width:0.8,height:7,depth:0.8},scene);
-mono.material=toonMat('mmat','#ffcc00',0.15);
+// Piku: stone pillar/obelisk
+const mono = BABYLON.MeshBuilder.CreateBox('mono',{width:1.0,height:6,depth:1.0},scene);
+mono.material=toonMat('mmat','#888070',0);
 mono.position.set(-22,3,-8);
-outlineOn(mono,'#886820',0.05);
+outlineOn(mono,'#404040',0.04);
+const monoCap = BABYLON.MeshBuilder.CreateBox('monocap',{width:1.4,height:0.6,depth:1.4},scene);
+monoCap.material=toonMat('mmat2','#a09880',0);
+monoCap.position.set(-22,6.3,-8);
+outlineOn(monoCap,'#404040',0.03);
 
 // Animations + wind
 scene.registerBeforeRender(()=>{
   const t = performance.now() * 0.001;
-  heroMesh.rotation.y += 0.009;
-  heroMesh.rotation.x  = Math.sin(t*0.4)*0.08;
-  heroMesh.position.y  = 5.5 + Math.sin(t*0.8)*0.35;
-  mono.position.y      = 3   + Math.sin(t*0.5)*0.18;
+  heroBase.position.y = 1.5 + Math.sin(t*0.7)*0.18;
+  heroMesh.position.y  = 3.4 + Math.sin(t*0.7)*0.18;
+  heroBase.rotation.y += 0.007;
+  heroMesh.rotation.y += 0.007;
+  mono.position.y      = 3   + Math.sin(t*0.5)*0.06;  // subtle
+  monoCap.position.y   = 6.3 + Math.sin(t*0.5)*0.06;
   // Wind sway on bushes
   bushMeshes && bushMeshes.forEach((m, i) => {
     const phase = i*0.61;
@@ -645,33 +633,14 @@ scene.meshes.forEach(m => {
   if (m.name.startsWith('b') || m.name === 'hero' || m.name === 'mono' || m.name === 'post') {
     shadowGen.addShadowCaster(m, true);
   }
-  if (m.name === 'ground' || m.name.startsWith('disc') || m.name.startsWith('path') ||
+  if (m.name === 'ground' || m.name.startsWith('disc') || m.name.startsWith('dtrim') || m.name.startsWith('path') ||
       m.name.startsWith('label') || m.name.startsWith('panel')) {
     m.receiveShadows = true;
   }
 });
-// Glow on hero and monolith (already emissive, this amplifies them)
-glowLayer.addIncludedOnlyMesh(heroMesh);
-glowLayer.addIncludedOnlyMesh(mono);
+// (no glow layer)
 
-// Firefly particles scattered across the scene
-const fireflies = new BABYLON.ParticleSystem('ff', 300, scene);
-fireflies.particleTexture = new BABYLON.Texture('data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAAgAAAAICAYAAADED76LAAAAAXNSR0IArs4c6QAAABtJREFUKFNj/P///38GKgIjVYGBgYGKxgEAAAD//+AAAAAASUVORK5CYII=', scene);
-fireflies.emitter = new BABYLON.Vector3(0, 2, 10);
-fireflies.minEmitBox = new BABYLON.Vector3(-55, 0.5, -25);
-fireflies.maxEmitBox = new BABYLON.Vector3(55, 4.5, 40);
-fireflies.color1 = new BABYLON.Color4(0.8, 1.0, 0.4, 1.0);
-fireflies.color2 = new BABYLON.Color4(0.4, 0.9, 1.0, 0.9);
-fireflies.colorDead = new BABYLON.Color4(0, 0, 0, 0);
-fireflies.minSize = 0.06; fireflies.maxSize = 0.14;
-fireflies.minLifeTime = 4; fireflies.maxLifeTime = 10;
-fireflies.emitRate = 30;
-fireflies.blendMode = BABYLON.ParticleSystem.BLENDMODE_ADD;
-fireflies.direction1 = new BABYLON.Vector3(-0.05, 0.1, -0.05);
-fireflies.direction2 = new BABYLON.Vector3(0.05, 0.3, 0.05);
-fireflies.minEmitPower = 0.05; fireflies.maxEmitPower = 0.2;
-fireflies.updateSpeed = 0.006;
-fireflies.start();
+// (fireflies removed — clean Minecraft daylight)
 
 // Wind animation on bushes — collect all bush meshes
 const bushMeshes = scene.meshes.filter(m => m.name === 'b');
@@ -865,15 +834,10 @@ scene.onPointerObservable.add(e=>{
     const hit=scene.pick(scene.pointerX,scene.pointerY);
     const bill=billboards.find(b=>b===hit.pickedMesh);
     if (bill!==hovered) {
-      if (hovered) hlLayer.removeMesh(hovered);
+      if (hovered) { hovered.renderOutline=false; hovered.scaling.setAll(1); }
       hovered=bill||null;
       canvas.style.cursor=hovered?'pointer':'';
-      if (hovered) {
-        const clKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===hovered.metadata.proj.url))?.[0]||'highlight';
-        const colHex=CLUSTERS[clKey]?.col||'#ffffff';
-        const n=parseInt(colHex.replace('#',''),16);
-        hlLayer.addMesh(hovered, new BABYLON.Color3((n>>16&255)/255,(n>>8&255)/255,(n&255)/255));
-      }
+      if (hovered) { hovered.renderOutline=true; hovered.outlineColor=new BABYLON.Color3(0.9,0.7,0.2); hovered.outlineWidth=0.06; hovered.scaling.setAll(1.04); }
     }
   }
   if (e.type===BABYLON.PointerEventTypes.POINTERDOWN && e.event.button===0) {
