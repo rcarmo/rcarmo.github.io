@@ -191,9 +191,6 @@ code {
   width: clamp(172px, 20vw, 232px);
   height: clamp(172px, 20vw, 232px);
   border-radius: 50%;
-  border: 3px solid var(--border-strong);
-  background: var(--surface);
-  padding: 0.35rem;
 }
 .hero-stats {
   display: flex; justify-content: flex-start; align-items: flex-start; gap: 3.5rem; flex-wrap: wrap;
