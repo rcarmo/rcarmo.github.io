@@ -1,0 +1,35 @@
+{
+  "id": "byos_fastapi",
+  "meta": {
+    "name": "byos_fastapi",
+    "full_name": "usetrmnl/byos_fastapi",
+    "description": "TRMNL BYOS (Bring Your Own Server) \u2014 self-hosted FastAPI backend for the TRMNL e-ink display device.",
+    "homepage": "",
+    "stars": 19,
+    "forks": 5,
+    "language": "Python",
+    "created_at": "2025-12-13T15:45:32Z",
+    "pushed_at": "2025-12-27T00:30:50Z",
+    "updated_at": "2025-12-27T00:30:50Z",
+    "topics": [
+      "trmnl",
+      "eink",
+      "byos",
+      "fastapi",
+      "python",
+      "display",
+      "self-hosted",
+      "hardware"
+    ]
+  },
+  "readme": "",
+  "commits": [],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-20T10:58:00Z",
+  "logo": null,
+  "logo_data_uri": null,
+  "logo_ext": null,
+  "diagram": null,
+  "diagram_inline": null
+}
