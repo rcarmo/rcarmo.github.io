@@ -1,0 +1,35 @@
+{
+  "id": "azure-transcription-helper",
+  "meta": {
+    "name": "azure-transcription-helper",
+    "full_name": "rcarmo/azure-transcription-helper",
+    "description": "Extract audio from media files and build transcripts and subtitles via Azure Speech.",
+    "homepage": "",
+    "stars": 0,
+    "forks": 0,
+    "language": "Python",
+    "created_at": "2025-11-22T19:35:43Z",
+    "pushed_at": "2025-11-22T19:37:28Z",
+    "updated_at": "2025-11-22T19:37:28Z",
+    "topics": [
+      "azure",
+      "speech",
+      "transcription",
+      "subtitles",
+      "srt",
+      "python",
+      "ffmpeg",
+      "whisper"
+    ]
+  },
+  "readme": "",
+  "commits": [],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-20T10:59:00Z",
+  "logo": null,
+  "logo_data_uri": null,
+  "logo_ext": null,
+  "diagram": null,
+  "diagram_inline": null
+}
