@@ -249,11 +249,7 @@ export function mountHeroStats(el, allFullNames) {
   render(html`<${HeroStats} allRepos=${null}/>`, el);
 
   fetchAllRepos(allFullNames).then(repoMap => {
-    // Filter to only featured repos
-    const featured = {};
-    for (const fn of allFullNames) {
-      if (repoMap[fn]) featured[fn] = repoMap[fn];
-    }
-    render(html`<${HeroStats} allRepos=${featured} repoCount=${allFullNames.length}/>`, el);
+    // Pass ALL repos for total stars, featured count as separate prop
+    render(html`<${HeroStats} allRepos=${repoMap} repoCount=${allFullNames.length}/>`, el);
   });
 }

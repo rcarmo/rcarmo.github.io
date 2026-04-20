@@ -27,6 +27,7 @@ interface Frontmatter {
   logo?: string;        // path to logo image (transparent bg)
   hidden?: boolean;     // omit from site
   featured?: boolean;    // pin to top of index
+  related?: string;       // comma-separated project ids for cross-section related
 }
 
 interface Section {
@@ -524,9 +525,27 @@ function buildIndex(projects: Project[]): string {
 // ── Related projects (build-time) ────────────────────────────────────────────
 
 function injectRelated(html: string, project: Project, allProjects: Project[]): string {
-  const related = allProjects
-    .filter(p => p.fm.section === project.fm.section && p.id !== project.id)
-    .slice(0, 4);
+  // Explicit related: from frontmatter (comma-separated ids)
+  const explicitIds = (project.fm.related || "")
+    .split(",").map(s => s.trim()).filter(Boolean);
+  const explicit = explicitIds
+    .map(id => allProjects.find(p => p.id === id))
+    .filter(Boolean) as Project[];
+
+  // Same-section projects
+  const sectionMates = allProjects
+    .filter(p => p.fm.section === project.fm.section && p.id !== project.id);
+
+  // Merge: explicit first, then section-mates, deduplicated
+  const seen = new Set<string>();
+  const related: Project[] = [];
+  for (const p of [...explicit, ...sectionMates]) {
+    if (!seen.has(p.id) && p.id !== project.id) {
+      seen.add(p.id);
+      related.push(p);
+    }
+    if (related.length >= 6) break;
+  }
 
   if (!related.length) {
     return html.replace(
