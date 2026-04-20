@@ -1,0 +1,33 @@
+{
+  "id": "apfelstrudel",
+  "meta": {
+    "name": "apfelstrudel",
+    "full_name": "rcarmo/apfelstrudel",
+    "description": "Live coding music environment with AI agent chat.",
+    "homepage": "",
+    "stars": 8,
+    "forks": 1,
+    "language": "TypeScript",
+    "created_at": "2026-02-07T15:59:11Z",
+    "pushed_at": "2026-02-13T18:50:34Z",
+    "updated_at": "2026-02-13T18:50:34Z",
+    "topics": [
+      "livecoding",
+      "music",
+      "ai",
+      "agents",
+      "typescript",
+      "strudel"
+    ]
+  },
+  "readme": "",
+  "commits": [],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-20T10:52:00Z",
+  "logo": null,
+  "logo_data_uri": null,
+  "logo_ext": null,
+  "diagram": null,
+  "diagram_inline": null
+}
