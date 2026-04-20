@@ -812,3 +812,304 @@ for (const f of (readdirSync(DATA) as string[]).filter(f => f.endsWith(".dossier
   built++;
 }
 console.log(`\nBuilt ${built}, skipped ${skipped}`);
+
+// ── Index page ─────────────────────────────────────────────────────────────
+
+const SECTION_ORDER = ['highlight','ai-agents','terminal','macos','infrastructure','hardware'];
+const SECTION_LABELS: Record<string,string> = {
+  'highlight':     'Highlight',
+  'ai-agents':     'AI & Agent tooling',
+  'terminal':      'Terminal stack',
+  'macos':         'macOS & Apple',
+  'infrastructure':'Infrastructure & homelab',
+  'hardware':      'Hardware & keyboards',
+};
+
+function readFrontmatter(proj: string): { section: string; status: string; tagline: string } {
+  try {
+    const text = readFileSync(join(ROOT, "_content", `${proj}.md`), "utf-8");
+    const section = text.match(/^section:\s*(.+)$/m)?.[1]?.trim() ?? "infrastructure";
+    const status  = text.match(/^status:\s*(.+)$/m)?.[1]?.trim() ?? "active";
+    const tagline = text.match(/^tagline:\s*(.+)$/m)?.[1]?.trim() ?? "";
+    return { section, status, tagline };
+  } catch { return { section: "infrastructure", status: "active", tagline: "" }; }
+}
+
+const INDEX_CSS = `
+/* ── Index-specific styles ── */
+.site-hero{background:linear-gradient(135deg,#060810 0%,#0d1a2e 50%,#061418 100%);
+  border-bottom:1px solid var(--border2);position:relative;overflow:hidden;}
+.site-hero::before{content:'';position:absolute;inset:0;
+  background-image:radial-gradient(circle,rgba(255,255,255,.035) 1px,transparent 1px);
+  background-size:28px 28px;pointer-events:none;}
+.site-hero-inner{max-width:var(--max);margin:0 auto;padding:4rem var(--gap) 3.5rem;
+  display:flex;align-items:center;gap:3rem;position:relative;}
+.profile-text{flex:1;min-width:0;}
+.profile-name{font-size:clamp(2rem,5vw,3rem);font-weight:800;letter-spacing:-.04em;
+  color:#fff;line-height:1.0;margin-bottom:.4rem;}
+.profile-title{font-size:.95rem;color:rgba(255,255,255,.6);margin-bottom:1.1rem;font-family:ui-monospace,monospace;}
+.profile-bio{font-size:1.05rem;color:rgba(255,255,255,.8);line-height:1.7;max-width:560px;margin-bottom:1.4rem;}
+.profile-links{display:flex;flex-wrap:wrap;gap:.6rem;}
+.profile-link{display:inline-flex;align-items:center;gap:.4rem;padding:.35rem .85rem;
+  border-radius:2em;font-size:.8rem;font-weight:500;border:1px solid rgba(255,255,255,.15);
+  color:rgba(255,255,255,.75);text-decoration:none;transition:all .15s;}
+.profile-link:hover{border-color:var(--accent);color:#fff;background:rgba(79,142,247,.1);text-decoration:none;}
+.profile-avatar{flex-shrink:0;width:140px;height:140px;border-radius:50%;
+  border:3px solid rgba(255,255,255,.15);box-shadow:0 8px 40px rgba(0,0,0,.5);object-fit:cover;}
+.profile-stats{display:flex;gap:2rem;margin-bottom:1.4rem;flex-wrap:wrap;}
+.profile-stat{display:flex;flex-direction:column;gap:.1rem;}
+.profile-stat-v{font-size:1.5rem;font-weight:700;color:#fff;letter-spacing:-.03em;}
+.profile-stat-l{font-size:.7rem;text-transform:uppercase;letter-spacing:.1em;color:rgba(255,255,255,.4);
+  font-family:ui-monospace,monospace;}
+@media(max-width:700px){
+  .site-hero-inner{flex-direction:column-reverse;align-items:flex-start;gap:1.5rem;padding:2.5rem var(--gap);}
+  .profile-avatar{width:80px;height:80px;} .profile-name{font-size:1.8rem;}
+}
+
+/* ── Index sections & cards ── */
+.idx-outer{max-width:var(--max);margin:0 auto;padding:0 var(--gap) 4rem;}
+.idx-section{padding:2.5rem 0;border-top:1px solid var(--border);}
+.idx-section:first-child{border-top:none;padding-top:2rem;}
+.idx-eyebrow{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
+  color:var(--accent);margin-bottom:.3rem;font-family:ui-monospace,monospace;}
+.idx-title{font-size:1.15rem;font-weight:700;letter-spacing:-.02em;margin-bottom:1.2rem;}
+.idx-grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(260px,1fr));gap:1px;
+  background:var(--border);border:1px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;}
+.idx-card{display:flex;gap:.9rem;padding:1rem 1.1rem;background:var(--surface);
+  text-decoration:none;color:inherit;transition:background .15s;align-items:flex-start;}
+.idx-card:hover{background:var(--surface2);text-decoration:none;}
+.idx-logo{width:40px;height:40px;object-fit:contain;flex-shrink:0;border-radius:8px;margin-top:.1rem;}
+.idx-logo-ph{width:40px;height:40px;flex-shrink:0;border-radius:8px;background:var(--surface2);
+  display:flex;align-items:center;justify-content:center;font-size:1.1rem;margin-top:.1rem;}
+.idx-body{min-width:0;flex:1;}
+.idx-name{font-size:.88rem;font-weight:600;color:var(--text);margin-bottom:.2rem;
+  white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.idx-desc{font-size:.78rem;color:var(--muted);line-height:1.5;
+  display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden;}
+.idx-meta{display:flex;align-items:center;gap:.6rem;margin-top:.4rem;font-size:.72rem;color:var(--dim);}
+.idx-stars{color:var(--amber);font-weight:700;}
+
+/* ── Highlight card ── */
+.hl-wrap{border:1px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;
+  background:var(--surface);}
+.hl-inner{display:grid;grid-template-columns:1fr auto;gap:2rem;align-items:center;
+  padding:2rem;cursor:pointer;transition:background .15s;}
+.hl-inner:hover{background:var(--surface2);}
+.hl-body{min-width:0;}
+.hl-name{font-size:1.5rem;font-weight:700;letter-spacing:-.03em;margin-bottom:.3rem;}
+.hl-name a{color:var(--text);text-decoration:none;}.hl-name a:hover{color:var(--accent);}
+.hl-tagline{color:var(--muted);font-size:.95rem;margin-bottom:1rem;line-height:1.6;max-width:540px;}
+.hl-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;font-size:.82rem;color:var(--muted);}
+.hl-stars{color:var(--amber);font-weight:700;font-size:.95rem;}
+.hl-actions{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.1rem;}
+.hl-logo{width:140px;height:140px;object-fit:contain;flex-shrink:0;
+  filter:drop-shadow(0 4px 24px rgba(0,0,0,.4));}
+@media(max-width:640px){
+  .hl-inner{grid-template-columns:1fr;}
+  .hl-logo{width:80px;height:80px;}
+  .idx-grid{grid-template-columns:1fr;}
+}
+`;
+
+function indexPage(
+  dossiers: Map<string, Dossier>,
+  contents: Map<string, { section:string; status:string; tagline:string }>
+): string {
+
+  // Group projects by section
+  const groups = new Map<string, string[]>();
+  for (const [proj, c] of contents) {
+    const s = c.section;
+    if (!groups.has(s)) groups.set(s, []);
+    groups.get(s)!.push(proj);
+  }
+
+  const langDotIdx = (lang: string|null) =>
+    "dot-" + ({"C++":"Cpp"}[lang ?? ""] ?? lang ?? "misc");
+
+  function card(proj: string): string {
+    const d = dossiers.get(proj);
+    const c = contents.get(proj);
+    if (!d || !c) return "";
+    const m = d.meta;
+    const dispN = m.full_name.split("/")[0] !== "rcarmo" ? m.full_name : m.name;
+    const langD = langDotIdx(m.language);
+    const logoImg = d.logo_data_uri
+      ? `<img class="idx-logo" src="${d.logo_data_uri}" alt="${esc(dispN)} logo">`
+      : `<div class="idx-logo-ph">📦</div>`;
+    return `<a class="idx-card" href="/projects/${proj}.html" data-repo="${m.full_name}">
+  ${logoImg}
+  <div class="idx-body">
+    <div class="idx-name">${esc(dispN)}</div>
+    <div class="idx-desc">${esc(c.tagline)}</div>
+    <div class="idx-meta">
+      <span class="idx-stars" data-stars="${m.full_name}">★ ${(m.stars??0).toLocaleString()}</span>
+      ${m.language ? `<span><span class="dot ${langD}"></span>${esc(m.language)}</span>` : ""}
+    </div>
+  </div>
+</a>`;
+  }
+
+  function highlightCard(proj: string): string {
+    const d = dossiers.get(proj);
+    const c = contents.get(proj);
+    if (!d || !c) return "";
+    const m = d.meta;
+    const ghUrl = `https://github.com/${m.full_name}`;
+    const langD = langDotIdx(m.language);
+    const logoImg = d.logo_data_uri
+      ? `<img class="hl-logo" src="${d.logo_data_uri}" alt="${esc(m.name)} logo">`
+      : "";
+    return `<div class="hl-wrap">
+  <div class="hl-inner" onclick="location.href='/projects/${proj}.html'" role="link" tabindex="0">
+    <div class="hl-body">
+      <div class="hl-name"><a href="/projects/${proj}.html">${esc(m.name)}</a></div>
+      <p class="hl-tagline">${esc(c.tagline)}</p>
+      <div class="hl-meta">
+        <span class="hl-stars" data-stars="${m.full_name}">★ ${(m.stars??0).toLocaleString()}</span>
+        ${(m.forks??0)>0 ? `<span>⑂ ${m.forks}</span>` : ""}
+        ${m.language ? `<span><span class="dot ${langD}"></span>${esc(m.language)}</span>` : ""}
+        <span class="badge badge-${c.status}">${c.status}</span>
+      </div>
+      <div class="hl-actions">
+        <a class="btn btn-p" href="/projects/${proj}.html">View project →</a>
+        <a class="btn btn-g" href="${ghUrl}" target="_blank" rel="noopener">${ghSvg()} GitHub</a>
+      </div>
+    </div>
+    ${logoImg}
+  </div>
+</div>`;
+  }
+
+  const sections = SECTION_ORDER
+    .filter(s => groups.has(s))
+    .map(s => {
+      const projs = groups.get(s)!;
+      const label = SECTION_LABELS[s] ?? s;
+      if (s === "highlight") {
+        return `<div class="idx-section">
+  <div class="idx-eyebrow">Featured project</div>
+  <div class="idx-title">${label}</div>
+  ${projs.map(p => highlightCard(p)).join("\n")}
+</div>`;
+      }
+      return `<div class="idx-section">
+  <div class="idx-eyebrow">Projects</div>
+  <div class="idx-title">${label}</div>
+  <div class="idx-grid">
+    ${projs.map(p => card(p)).join("\n    ")}
+  </div>
+</div>`;
+    }).join("\n\n");
+
+  // All full_names for the island
+  const allRepos = [...contents.values()]
+    .map((_, i) => [...dossiers.values()][i]?.meta.full_name)
+    .filter(Boolean);
+
+  return `<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Rui Carmo — Open Source Projects</title>
+<meta name="description" content="Open source projects by Rui Carmo — AI agents, terminals, deployment, macOS tools, and more.">
+<meta property="og:image" content="https://github.com/rcarmo.png?size=400">
+<link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
+<style>${CSS}${INDEX_CSS}</style>
+</head>
+<body>
+<header class="topbar">
+  <div class="topbar-inner">
+    <a href="/">rcarmo.github.io</a>
+    <div style="flex:1"></div>
+    <a href="https://taoofmac.com" target="_blank" rel="noopener" style="color:var(--muted);font-size:.78rem">taoofmac.com</a>
+    <a href="https://github.com/rcarmo" target="_blank" rel="noopener" style="color:var(--muted);font-size:.78rem">github.com/rcarmo</a>
+  </div>
+</header>
+
+<div class="site-hero">
+  <div class="site-hero-inner">
+    <div class="profile-text">
+      <div class="profile-name">Rui Carmo</div>
+      <div class="profile-title">Principal Architect / Software Engineer &amp; Hardware Tinkerer</div>
+      <div id="profile-stats-island">
+        <div class="profile-stats">
+          <div class="profile-stat"><span class="profile-stat-v" id="total-stars">—</span><span class="profile-stat-l">Total stars</span></div>
+          <div class="profile-stat"><span class="profile-stat-v">${dossiers.size}</span><span class="profile-stat-l">Repos</span></div>
+          <div class="profile-stat"><span class="profile-stat-v" id="top-lang">—</span><span class="profile-stat-l">Top language</span></div>
+        </div>
+      </div>
+      <p class="profile-bio">Building tools for AI agents, terminals, deployment, macOS, and homelab infrastructure. Most things run on a Raspberry Pi somewhere.</p>
+      <div class="profile-links">
+        <a class="profile-link" href="https://taoofmac.com" target="_blank" rel="noopener">✍️ taoofmac.com</a>
+        <a class="profile-link" href="https://github.com/rcarmo" target="_blank" rel="noopener">${ghSvg()} github.com/rcarmo</a>
+        <a class="profile-link" href="https://rcarmo.github.io/alt.html">🌿 3D garden</a>
+      </div>
+    </div>
+    <img class="profile-avatar" src="https://github.com/rcarmo.png?size=280" alt="Rui Carmo" loading="eager">
+  </div>
+</div>
+
+<div class="idx-outer">
+${sections}
+</div>
+
+<footer>
+  <div class="foot-l">rcarmo.github.io</div>
+  <div class="foot-r">
+    <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
+    <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
+    <a href="alt.html">3D garden</a>
+  </div>
+</footer>
+
+<script type="module">
+import { h, render } from '/assets/js/preact.module.js';
+import { useState, useEffect } from '/assets/js/preact-hooks.module.js';
+import htm from '/assets/js/htm.module.js';
+const html = htm.bind(h);
+
+// Fetch all repos once, update all [data-stars] and profile stats
+fetch('https://api.github.com/users/rcarmo/repos?per_page=100&type=owner')
+  .then(r => r.json())
+  .then(repos => {
+    if (!Array.isArray(repos)) return;
+    // Update star counts on cards
+    const byFullName = Object.fromEntries(repos.map(r => [r.full_name, r]));
+    document.querySelectorAll('[data-stars]').forEach(el => {
+      const repo = byFullName[el.getAttribute('data-stars')];
+      if (repo) el.textContent = '★ ' + (repo.stargazers_count >= 1000
+        ? (repo.stargazers_count/1000).toFixed(1)+'k' : repo.stargazers_count);
+    });
+    // Profile summary stats
+    const totalStars = repos.reduce((s, r) => s + r.stargazers_count, 0);
+    const langCount = {};
+    repos.forEach(r => { if (r.language) langCount[r.language] = (langCount[r.language]||0) + 1; });
+    const topLang = Object.entries(langCount).sort((a,b)=>b[1]-a[1])[0]?.[0] ?? '—';
+    const ts = document.getElementById('total-stars');
+    const tl = document.getElementById('top-lang');
+    if (ts) ts.textContent = totalStars >= 1000 ? (totalStars/1000).toFixed(1)+'k' : String(totalStars);
+    if (tl) tl.textContent = topLang;
+  })
+  .catch(() => {});
+</script>
+</body>
+</html>`;
+}
+
+// ── Build index ───────────────────────────────────────────────────────────
+{
+  const dossierMap = new Map<string, Dossier>();
+  const contentMap = new Map<string, { section:string; status:string; tagline:string }>();
+
+  for (const f of (readdirSync(DATA) as string[]).filter(f => f.endsWith(".dossier.json"))) {
+    const proj = f.replace(".dossier.json","");
+    const d: Dossier = JSON.parse(readFileSync(join(DATA, f), "utf-8"));
+    dossierMap.set(proj, d);
+    contentMap.set(proj, readFrontmatter(proj));
+  }
+
+  writeFileSync(join(ROOT, "index.html"), indexPage(dossierMap, contentMap));
+  console.log("  ✓ index.html");
+}
