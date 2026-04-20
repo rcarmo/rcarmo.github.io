@@ -1,0 +1,32 @@
+{
+  "id": "syncthing-kicker",
+  "meta": {
+    "name": "syncthing-kicker",
+    "full_name": "rcarmo/syncthing-kicker",
+    "description": "Make Syncthing rescan when you want it to.",
+    "homepage": "",
+    "stars": 2,
+    "forks": 0,
+    "language": "Go",
+    "created_at": "2026-01-06T13:12:00Z",
+    "pushed_at": "2026-01-06T13:27:32Z",
+    "updated_at": "2026-01-06T13:27:32Z",
+    "topics": [
+      "docker",
+      "scheduler",
+      "syncthing",
+      "rescan",
+      "automation"
+    ]
+  },
+  "readme": "",
+  "commits": [],
+  "releases": [],
+  "posts": [],
+  "dossier_generated": "2026-04-20T10:57:00Z",
+  "logo": null,
+  "logo_data_uri": null,
+  "logo_ext": null,
+  "diagram": null,
+  "diagram_inline": null
+}
