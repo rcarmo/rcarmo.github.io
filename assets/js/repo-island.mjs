@@ -253,6 +253,7 @@ export function mountIndex(allFullNames) {
       const id = fullName.split('/').pop();
       renderCardMeta(document.getElementById(`card-meta-${id}`), null);
     }
+    sortIndexSections({});
   });
 }
 

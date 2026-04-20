@@ -3,12 +3,12 @@ section: ai-agents
 featured: true
 status: active
 created: 2026-02-17
-tagline: A self-hosted AI agent workspace — streaming UI, persistent state, no CDN.
+tagline: A self-hosted AI agent workspace — mobile-first streaming UI, infinite tools
 logo: assets/logos-opt/piclaw.png
 ---
 
 ## About
-PiClaw packages the Pi Coding Agent runtime into a Docker container with a streaming web UI, multi-provider LLM support, and built-in tools including a Ghostty terminal, code editor, document viewers, draw.io, kanban boards, VNC client, and MCP access. One docker run command, no CDN, no setup wizard.
+PiClaw packages the [Pi Coding Agent](https://pi.dev) runtime into a Docker container with a streaming web UI, multi-provider LLM support, and built-in tools including a Ghostty terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access. One `docker run` command, one live workspace.
 
 ## How it works
 Supervisor runs as PID 1 inside the container, managing the Bun-based Pi agent runtime, an optional Ghostty-backed web terminal, and an optional VNC display. All persistent state lives on a bind-mounted /workspace volume — the container is stateless and replaceable.
