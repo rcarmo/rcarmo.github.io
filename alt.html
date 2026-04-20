@@ -126,52 +126,52 @@ const LOGOS = {
 <script>
 'use strict';
 // ── Cluster data ─────────────────────────────────────────────────────────────
+// ── Cluster data (positions computed by force-directed layout below) ────────────
 const CLUSTERS = {
-  highlight: {pos:[0,0,0],      col:'#2255ff', shape:'needle',   label:'Piclaw',       projects:[
+  highlight: {col:'#2255ff', shape:'needle',   label:'Piclaw',       projects:[
     {id:'piclaw',name:'piclaw',stars:526,lang:'TypeScript',desc:'Self-hosted AI agent workspace — streaming UI, persistent state, no CDN.',url:'/projects/piclaw.html'},
   ]},
-  piku:      {pos:[-24,0,-10],  col:'#c09020', shape:'column',   label:'Piku',         projects:[
+  piku:      {col:'#c09020', shape:'column',   label:'Piku',         projects:[
     {id:'piku',name:'piku/piku',stars:6569,lang:'Python',desc:'The tiniest PaaS — git push deployments to your own server, Heroku-style.',url:'/projects/piku.html'},
   ]},
-  ai:        {pos:[22,0,-14],   col:'#22cc70', shape:'neural',   label:'AI Agents',    projects:[
+  ai:        {col:'#22cc70', shape:'neural',   label:'AI Agents',    projects:[
     {id:'vibes',name:'vibes',stars:142,lang:'Python',desc:'Mobile-first web UI for AI agents — ACP and Pi over RPC, zero build step.',url:'/projects/vibes.html'},
     {id:'agentbox',name:'agentbox',stars:97,lang:'Python',desc:'Docker sandbox for coding agents — Copilot CLI, Codex, Pi preinstalled.',url:'/projects/agentbox.html'},
     {id:'feed-summarizer',name:'feed-summarizer',stars:27,lang:'Python',desc:'LLM-powered RSS digest — full-text extraction, runs on a Raspberry Pi.',url:'/projects/feed-summarizer.html'},
     {id:'go-busybox',name:'go-busybox',stars:10,lang:'Go',desc:'57 BusyBox utilities in Go — 2 MB WASM binary for agent sandboxing.',url:'/projects/go-busybox.html'},
   ]},
-  terminal:  {pos:[24,0,16],    col:'#f0a020', shape:'skyline',  label:'Terminal',     projects:[
+  terminal:  {col:'#f0a020', shape:'skyline',  label:'Terminal',     projects:[
     {id:'webterm',name:'webterm',stars:106,lang:'Go',desc:'Go web terminal — multi-session dashboard mode, watches AI agents.',url:'/projects/webterm.html'},
     {id:'go-rdp',name:'go-rdp',stars:9,lang:'Go',desc:'Browser-based RDP client — full MS-RDPBCGR spec, Go backend, WASM frontend.',url:'/projects/go-rdp.html'},
     {id:'go-te',name:'go-te',stars:7,lang:'Go',desc:'VT100/VT520 terminal library for Go — pyte-faithful, SVG export.',url:'/projects/go-te.html'},
     {id:'gotel',name:'gotel',stars:5,lang:'Go',desc:'Self-contained OTel collector — SQLite storage, built-in trace viewer.',url:'/projects/gotel.html'},
   ]},
-  macos:     {pos:[-20,0,18],   col:'#ee4466', shape:'pavilion', label:'macOS',        projects:[
+  macos:     {col:'#ee4466', shape:'pavilion', label:'macOS',        projects:[
     {id:'PhotosExport',name:'PhotosExport',stars:280,lang:'Swift',desc:'Export your complete Apple Photos library — originals, edits, Live Photos.',url:'/projects/PhotosExport.html'},
     {id:'drawterm',name:'drawterm',stars:26,lang:'C',desc:'Plan 9 drawterm for modern macOS — HiDPI, Metal rendering.',url:'/projects/drawterm.html'},
     {id:'homekit-steam-user-switcher',name:'homekit-steam',stars:41,lang:'Python',desc:'Switch Steam accounts via HomeKit.',url:'/projects/homekit-steam-user-switcher.html'},
   ]},
-  infra:     {pos:[2,0,30],     col:'#20aacc', shape:'rack',     label:'Infrastructure',projects:[
+  infra:     {col:'#20aacc', shape:'rack',     label:'Infrastructure',projects:[
     {id:'imapbackup',name:'imapbackup',stars:343,lang:'Python',desc:'Incremental IMAP mailbox backup — Gmail, Exchange, any IMAP server.',url:'/projects/imapbackup.html'},
     {id:'ground-init',name:'ground-init',stars:64,lang:'Python',desc:'Idempotent Linux bootstrap — YAML desired-state, like cloud-init.',url:'/projects/ground-init.html'},
-    {id:'gnome-thumbnailers',name:'gnome-thumbnailers',stars:26,lang:'Python',desc:'RAW/HEIC/3D thumbnails for GNOME Files — make install.',url:'/projects/gnome-thumbnailers.html'},
     {id:'piku',name:'piku/piku',stars:6569,lang:'Python',desc:'The tiniest PaaS — git push deployments to your own server.',url:'/projects/piku.html'},
   ]},
-  ml:       {pos:[-14,0,-24], col:'#9940ee', shape:'lattice', label:'ML & Models', projects:[
+  ml:        {col:'#9940ee', shape:'lattice',  label:'ML & Models',  projects:[
     {id:'ml-sharp',name:'ml-sharp',stars:26,lang:'Python',desc:'Sharp monocular view synthesis for Apple Silicon — depth-aware novel views.',url:'/projects/ml-sharp.html'},
     {id:'asterisk-embedding-model',name:'asterisk',stars:9,lang:'Python',desc:'Small embedding model for low-resource hardware — semantic search on a Pi.',url:'/projects/asterisk-embedding-model.html'},
     {id:'gte-go',name:'gte-go',stars:0,lang:'Go',desc:'Go inference for GTE Small text embeddings — local semantic search, no Python.',url:'/projects/gte-go.html'},
     {id:'azure-stable-diffusion',name:'azure-stable-diff',stars:44,lang:'Python',desc:'One-command Stable Diffusion on Azure GPU spot instances.',url:'/projects/azure-stable-diffusion.html'},
   ]},
-  hardware: {pos:[14,0,-28],  col:'#d06820', shape:'pcb',     label:'Hardware', projects:[
+  hardware:  {col:'#d06820', shape:'pcb',      label:'Hardware',     projects:[
     {id:'zmk-config-totem',name:'zmk-config-totem',stars:2,lang:'misc',desc:'ZMK keymap for the Totem 34-key split keyboard — home row mods, combos.',url:'/projects/zmk-config-totem.html'},
     {id:'byos_fastapi',name:'byos_fastapi',stars:19,lang:'Python',desc:'TRMNL BYOS — self-hosted FastAPI server for the TRMNL e-ink display.',url:'/projects/byos_fastapi.html'},
   ]},
-  libraries:{pos:[-12,0,30],  col:'#c89030', shape:'shelves', label:'Libraries', projects:[
+  libraries: {col:'#c89030', shape:'shelves',  label:'Libraries',    projects:[
     {id:'pngcanvas',name:'pngcanvas',stars:44,lang:'Python',desc:'Pure-Python PNG rendering, zero dependencies.',url:'/projects/pngcanvas.html'},
     {id:'soup-strainer',name:'soup-strainer',stars:34,lang:'Python',desc:'Readability/Decruft article extraction using BeautifulSoup.',url:'/projects/soup-strainer.html'},
     {id:'go-te',name:'go-te',stars:7,lang:'Go',desc:'VT100/VT520 terminal library for Go — pyte-faithful, SVG export.',url:'/projects/go-te.html'},
     {id:'umcp',name:'umcp',stars:11,lang:'Python',desc:'Micro MCP server — zero deps, decorator-based tool registration.',url:'/projects/umcp.html'},
-    {id:'imapbackup',name:'imapbackup',stars:343,lang:'Python',desc:'Incremental IMAP mailbox backup — the most-starred pure-utility.',url:'/projects/imapbackup.html'},
+    {id:'imapbackup',name:'imapbackup',stars:343,lang:'Python',desc:'Incremental IMAP backup — the most-starred pure-utility.',url:'/projects/imapbackup.html'},
   ]},
 };
 
@@ -189,18 +189,93 @@ const PATH_GRAPH = {
 const PATH_EDGES = [...new Set(
   Object.entries(PATH_GRAPH).flatMap(([a,bs])=>bs.map(b=>[a,b].sort().join('--')))
 )];
-const CAM_VIEWS = {
-  overview:  {target:[0,0,0],    alpha:-Math.PI/2, beta:Math.PI/3.2, radius:82},
-  highlight: {target:[0,0,0],    alpha:-Math.PI/2, beta:Math.PI/4.2, radius:14},
-  piku:      {target:[-14,0,-24],alpha:-Math.PI/2, beta:Math.PI/4,   radius:16},
-  ai:        {target:[22,0,-14], alpha:-Math.PI/2, beta:Math.PI/4,   radius:22},
-  terminal:  {target:[24,0,16],  alpha:-Math.PI/2, beta:Math.PI/4,   radius:22},
-  macos:     {target:[-20,0,18], alpha:-Math.PI/2, beta:Math.PI/4,   radius:20},
-  infra:     {target:[2,0,30],   alpha:-Math.PI/2, beta:Math.PI/4,   radius:24},
-  ml:        {target:[-14,0,-24],alpha:-Math.PI/2, beta:Math.PI/4,   radius:20},
-  hardware:  {target:[14,0,-28], alpha:-Math.PI/2, beta:Math.PI/4,   radius:18},
-  libraries: {target:[-12,0,30], alpha:-Math.PI/2, beta:Math.PI/4,   radius:22},
-};
+
+// ── Force-directed layout (Fruchterman-Reingold) ──────────────────────────────
+(function layoutClusters(){
+  const keys = Object.keys(CLUSTERS);
+  const n = keys.length;
+  const SCENE_R = 30;   // target radius for the layout
+  const IDEAL_K = SCENE_R * 1.2 / Math.sqrt(n);   // ideal spring length
+
+  // Initialise on a circle so the layout starts spread out
+  const pos = {};
+  keys.forEach((k, i) => {
+    const a = (i / n) * Math.PI * 2;
+    pos[k] = { x: Math.cos(a) * IDEAL_K * 1.5, z: Math.sin(a) * IDEAL_K * 1.5 };
+  });
+
+  const vel = {};
+  keys.forEach(k => (vel[k] = { x: 0, z: 0 }));
+
+  const ITERS = 600;
+  for (let iter = 0; iter < ITERS; iter++) {
+    const temp = IDEAL_K * Math.max(0.05, 1 - iter / ITERS);   // cooling schedule
+    const force = {};
+    keys.forEach(k => (force[k] = { x: 0, z: 0 }));
+
+    // Repulsion between every pair
+    for (let i = 0; i < n; i++) for (let j = i + 1; j < n; j++) {
+      const a = keys[i], b = keys[j];
+      const dx = pos[b].x - pos[a].x, dz = pos[b].z - pos[a].z;
+      const d = Math.hypot(dx, dz) + 0.001;
+      const f = (IDEAL_K * IDEAL_K) / d;
+      const nx = dx / d, nz = dz / d;
+      force[a].x -= f * nx;  force[a].z -= f * nz;
+      force[b].x += f * nx;  force[b].z += f * nz;
+    }
+
+    // Attraction along edges
+    PATH_EDGES.forEach(e => {
+      const [a, b] = e.split('--');
+      const dx = pos[b].x - pos[a].x, dz = pos[b].z - pos[a].z;
+      const d = Math.hypot(dx, dz) + 0.001;
+      const f = (d * d) / IDEAL_K;
+      const nx = dx / d, nz = dz / d;
+      force[a].x += f * nx;  force[a].z += f * nz;
+      force[b].x -= f * nx;  force[b].z -= f * nz;
+    });
+
+    // Apply with temperature cap
+    keys.forEach(k => {
+      const d = Math.hypot(force[k].x, force[k].z) + 0.001;
+      const cap = Math.min(d, temp);
+      pos[k].x += (force[k].x / d) * cap;
+      pos[k].z += (force[k].z / d) * cap;
+      // Soft boundary — pull back toward origin if too far
+      const r = Math.hypot(pos[k].x, pos[k].z);
+      if (r > SCENE_R * 1.4) {
+        pos[k].x *= SCENE_R * 1.4 / r;
+        pos[k].z *= SCENE_R * 1.4 / r;
+      }
+    });
+
+    // Pin highlight cluster near origin (it's the hub)
+    pos['highlight'].x *= 0.15;
+    pos['highlight'].z *= 0.15;
+  }
+
+  // Scale so the bounding box fits nicely
+  let maxR = 0;
+  keys.forEach(k => maxR = Math.max(maxR, Math.hypot(pos[k].x, pos[k].z)));
+  const scale = (SCENE_R * 1.1) / (maxR + 0.001);
+  keys.forEach(k => {
+    pos[k].x *= scale;
+    pos[k].z *= scale;
+    CLUSTERS[k].pos = [Math.round(pos[k].x * 10) / 10, 0, Math.round(pos[k].z * 10) / 10];
+  });
+})();
+
+// ── Camera views — derived from computed cluster positions ─────────────────────
+const CAM_VIEWS = { overview: {target:[0,0,0], alpha:-Math.PI/2, beta:Math.PI/3.2, radius:88} };
+Object.entries(CLUSTERS).forEach(([key, cl]) => {
+  CAM_VIEWS[key] = {
+    target: [...cl.pos],
+    alpha:  -Math.PI / 2,
+    beta:   Math.PI / 4,
+    radius: cl.projects.length <= 1 ? 16 : cl.projects.length <= 3 ? 20 : 24,
+  };
+});
+
 
 function bfsPath(start,end){
   if(start===end)return[start];
@@ -216,8 +291,8 @@ function nearestCluster(x,z){
 const canvas = document.getElementById('cv');
 const engine = new BABYLON.Engine(canvas, true, {stencil:true, preserveDrawingBuffer:false});
 const scene  = new BABYLON.Scene(engine);
-scene.clearColor   = new BABYLON.Color4(0.004, 0.010, 0.022, 1.0);
-scene.ambientColor = new BABYLON.Color3(0.025, 0.04, 0.08);
+scene.clearColor   = new BABYLON.Color4(0.012, 0.025, 0.055, 1.0);
+scene.ambientColor = new BABYLON.Color3(0.12, 0.18, 0.30);
 
 // Camera
 const camera = new BABYLON.ArcRotateCamera('cam', -Math.PI/2, Math.PI/3.4, 68, new BABYLON.Vector3(0,0,8), scene);
@@ -226,19 +301,20 @@ camera.lowerBetaLimit=0.08; camera.upperBetaLimit=Math.PI*0.46;
 camera.wheelPrecision=10; camera.attachControl(canvas, true);
 
 // Lighting
-const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.55,-1.0,-0.35), scene);
-sun.intensity = 2.4;
+const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.4,-0.8,-0.3), scene);
+sun.intensity = 3.2;
 sun.diffuse   = new BABYLON.Color3(0.85, 0.90, 1.0);
 
 const fill = new BABYLON.HemisphericLight('fill', new BABYLON.Vector3(0,1,0), scene);
-fill.intensity   = 0.55;
-fill.diffuse     = new BABYLON.Color3(0.55, 0.65, 0.90);
+fill.intensity   = 1.1;
+fill.diffuse     = new BABYLON.Color3(0.65, 0.75, 1.0);
+fill.groundColor = new BABYLON.Color3(0.08, 0.12, 0.20);
 fill.groundColor = new BABYLON.Color3(0.01, 0.02, 0.06);
 
 // Rim light from above-behind (blue-white sky fill)
 const rim = new BABYLON.DirectionalLight('rim', new BABYLON.Vector3(0.3, -0.4, 0.8), scene);
-rim.intensity = 0.7;
-rim.diffuse   = new BABYLON.Color3(0.65, 0.80, 1.0);
+rim.intensity = 1.0;
+rim.diffuse   = new BABYLON.Color3(0.7, 0.85, 1.0);
 const shadowGen = new BABYLON.ShadowGenerator(1024, sun);
 shadowGen.usePoissonSampling = true;
 shadowGen.bias = 0.002;
@@ -248,7 +324,7 @@ function hex3(h){const n=parseInt(h.replace('#',''),16);return new BABYLON.Color
 function mat(name,hexCol,opts={}){
   const m=new BABYLON.StandardMaterial(name,scene);
   const c=hex3(hexCol);
-  m.diffuseColor  = c.scale(opts.diff ?? 0.55);
+  m.diffuseColor  = c.scale(opts.diff ?? 0.75);
   m.specularColor = c.scale(opts.spec ?? 0.8);
   m.emissiveColor = c.scale(opts.emis ?? 0.05);
   m.specularPower = opts.power ?? 48;
@@ -261,15 +337,15 @@ function glowMat(name,hexCol,str){return mat(name,hexCol,{diff:0.3,spec:0.1,emis
 Object.entries(CLUSTERS).forEach(([key,cl])=>{
   const pl=new BABYLON.PointLight('pl_'+key, new BABYLON.Vector3(cl.pos[0],4,cl.pos[2]),scene);
   pl.diffuse   = hex3(cl.col).scale(1.2);
-  pl.intensity = 2.2;
-  pl.range     = 38;
-  pl.specular  = hex3(cl.col).scale(0.5);
+  pl.intensity = 3.5;
+  pl.range     = 45;
+  pl.specular  = hex3(cl.col).scale(0.8);
 });
 
 // ── Ground ───────────────────────────────────────────────────────────────────
 const ground = BABYLON.MeshBuilder.CreateGround('ground',{width:240,height:240,subdivisions:1},scene);
 const gm = new BABYLON.StandardMaterial('gmat',scene);
-gm.diffuseColor  = new BABYLON.Color3(0.008,0.016,0.036);
+gm.diffuseColor  = new BABYLON.Color3(0.04,0.07,0.14);
 gm.specularColor = new BABYLON.Color3(0.04,0.07,0.16);
 gm.specularPower = 120;
 ground.material  = gm;
@@ -698,6 +774,9 @@ const depthRenderer = scene.enableDepthRenderer(camera,false);
 const gbr = scene.enableGeometryBufferRenderer(0.5);  // half-res for perf
 const normalTex = gbr ? gbr.getGBuffer().textures[1] : null;
 
+// ── Post-processing: clean Sobel ink outlines + very light halftone ─────────────
+// Principle: outlines give form, halftone adds print character, nothing more.
+
 BABYLON.Effect.ShadersStore["inkFragmentShader"]=`
   precision highp float;
   varying vec2 vUV;
@@ -707,85 +786,72 @@ BABYLON.Effect.ShadersStore["inkFragmentShader"]=`
   uniform vec2 texelSize;
   uniform float outlineStr;
   uniform float hasNormals;
-  uniform float time;
 
   float sD(vec2 uv){return texture2D(depthSampler,uv).r;}
+
   float sobelDepth(){
     float tl=sD(vUV+vec2(-texelSize.x,-texelSize.y));
-    float t =sD(vUV+vec2(0.0,           -texelSize.y));
-    float tr=sD(vUV+vec2( texelSize.x,  -texelSize.y));
-    float l =sD(vUV+vec2(-texelSize.x,   0.0));
-    float rr=sD(vUV+vec2( texelSize.x,   0.0));
-    float bl=sD(vUV+vec2(-texelSize.x,   texelSize.y));
-    float b =sD(vUV+vec2( 0.0,            texelSize.y));
-    float br=sD(vUV+vec2( texelSize.x,    texelSize.y));
-    float gx=-tl-2.0*l-bl+tr+2.0*rr+br;
+    float t =sD(vUV+vec2( 0.0,         -texelSize.y));
+    float tr=sD(vUV+vec2( texelSize.x, -texelSize.y));
+    float l =sD(vUV+vec2(-texelSize.x,  0.0));
+    float r2=sD(vUV+vec2( texelSize.x,  0.0));
+    float bl=sD(vUV+vec2(-texelSize.x,  texelSize.y));
+    float b =sD(vUV+vec2( 0.0,           texelSize.y));
+    float br=sD(vUV+vec2( texelSize.x,   texelSize.y));
+    float gx=-tl-2.0*l-bl+tr+2.0*r2+br;
     float gy=-tl-2.0*t-tr+bl+2.0*b+br;
     return sqrt(gx*gx+gy*gy);
   }
+
   float sobelNormal(){
     if(hasNormals<0.5) return 0.0;
-    vec3 tl=texture2D(normalSampler,vUV+vec2(-texelSize.x,-texelSize.y)).rgb;
-    vec3 tr=texture2D(normalSampler,vUV+vec2( texelSize.x,-texelSize.y)).rgb;
-    vec3 bl=texture2D(normalSampler,vUV+vec2(-texelSize.x, texelSize.y)).rgb;
-    vec3 br=texture2D(normalSampler,vUV+vec2( texelSize.x, texelSize.y)).rgb;
     vec3 l =texture2D(normalSampler,vUV+vec2(-texelSize.x, 0.0)).rgb;
     vec3 r2=texture2D(normalSampler,vUV+vec2( texelSize.x, 0.0)).rgb;
     vec3 t2=texture2D(normalSampler,vUV+vec2( 0.0,-texelSize.y)).rgb;
     vec3 b2=texture2D(normalSampler,vUV+vec2( 0.0, texelSize.y)).rgb;
-    vec3 gx=(-tl-2.0*l-bl+tr+2.0*r2+br);
-    vec3 gy=(-tl-2.0*t2-tr+bl+2.0*b2+br);
-    return length(gx)+length(gy);
+    return length(r2-l)+length(b2-t2);
   }
-  float crosshatch(vec2 uv,float density,float angle){
-    float c=cos(angle),si=sin(angle);
-    vec2 p=(uv*density)*mat2(c,-si,si,c);
-    return step(0.5,fract(p.x))*step(0.5,fract(p.y));
-  }
-  float grain(vec2 uv,float t){
-    vec3 p3=fract(vec3(uv.xyx)*vec3(443.897,441.423,437.195)+t*0.011);
-    p3+=dot(p3,p3.yxz+19.19);
-    return fract((p3.x+p3.y)*p3.z);
-  }
+
   void main(){
-    vec4 color=texture2D(textureSampler,vUV);
-    float luma=dot(color.rgb,vec3(0.299,0.587,0.114));
-    float edgeD=sobelDepth();
-    float edgeN=sobelNormal();
-    float edge=max(edgeD,edgeN*0.4);
-    float outline=smoothstep(0.005,0.016,edge);
-    float shadow=1.0-smoothstep(0.0,0.22,luma);
-    float h1=crosshatch(vUV,240.0, 0.524)*shadow*0.35;
-    float h2=crosshatch(vUV,160.0,-0.524)*shadow*0.22;
-    float h3=crosshatch(vUV,320.0, 0.0)*(1.0-smoothstep(0.18,0.52,luma))*(1.0-smoothstep(0.0,0.18,luma))*0.12;
-    float hiThresh=0.78;
-    float specPatch=smoothstep(hiThresh+0.06,hiThresh+0.10,luma);
-    vec3 inkColor=vec3(0.008,0.015,0.04);
-    vec3 result=mix(color.rgb,inkColor,outline*outlineStr);
-    result=mix(result,inkColor*0.6,(h1+h2+h3)*(1.0-outline));
-    result=mix(result,vec3(1.0,0.98,0.92),specPatch*(1.0-outline)*0.55);
-    float g=grain(vUV,time);
-    result=mix(result,result*(0.92+g*0.16),0.18);
-    vec2 c=vUV-0.5; result*=1.0-dot(c,c)*0.75;
-    gl_FragColor=vec4(result,1.0);
+    vec4 color = texture2D(textureSampler, vUV);
+
+    // Combined edge: depth gives hard edges, normals give silhouette curves
+    float edgeD = sobelDepth();
+    float edgeN = sobelNormal();
+    float edge  = max(edgeD, edgeN * 0.35);
+    float outline = smoothstep(0.005, 0.018, edge);
+
+    // Ink colour: very dark navy (not pure black — keeps warmth of scene)
+    vec3 ink = vec3(0.01, 0.02, 0.05);
+    vec3 result = mix(color.rgb, ink, outline * outlineStr);
+
+    // Subtle vignette
+    vec2 c = vUV - 0.5;
+    result *= 1.0 - dot(c,c) * 0.55;
+
+    gl_FragColor = vec4(result, 1.0);
   }
 `;
-const inkPass=new BABYLON.PostProcess('ink','ink',
-  ['texelSize','outlineStr','hasNormals','time'],
+
+const inkPass = new BABYLON.PostProcess('ink','ink',
+  ['texelSize','outlineStr','hasNormals'],
   ['depthSampler','normalSampler'],
-  1.0,camera);
-let _inkTime=0;
-inkPass.onApply=effect=>{
-  _inkTime+=0.016;
-  effect.setTexture('depthSampler',depthRenderer.getDepthMap());
-  if(normalTex){effect.setTexture('normalSampler',normalTex);effect.setFloat('hasNormals',1.0);}
-  else{effect.setTexture('normalSampler',depthRenderer.getDepthMap());effect.setFloat('hasNormals',0.0);}
-  effect.setFloat2('texelSize',1/engine.getRenderWidth(),1/engine.getRenderHeight());
-  effect.setFloat('outlineStr',0.82);
-  effect.setFloat('time',_inkTime);
+  1.0, camera);
+
+inkPass.onApply = effect => {
+  effect.setTexture('depthSampler', depthRenderer.getDepthMap());
+  if (normalTex) {
+    effect.setTexture('normalSampler', normalTex);
+    effect.setFloat('hasNormals', 1.0);
+  } else {
+    effect.setTexture('normalSampler', depthRenderer.getDepthMap());
+    effect.setFloat('hasNormals', 0.0);
+  }
+  effect.setFloat2('texelSize', 1/engine.getRenderWidth(), 1/engine.getRenderHeight());
+  effect.setFloat('outlineStr', 0.85);
 };
 
-// Halftone: rotated grid at 15°, luminance-driven dot radius (from Heckel halftone article)
+// Very light halftone — large cells, low strength, just enough to suggest print texture
 BABYLON.Effect.ShadersStore["halftoneFragmentShader"]=`
   precision highp float;
   varying vec2 vUV;
@@ -793,40 +859,35 @@ BABYLON.Effect.ShadersStore["halftoneFragmentShader"]=`
   uniform vec2 resolution;
   uniform float gridCells;
   uniform float dotStrength;
-  uniform float angle;
 
   void main(){
-    vec4 color=texture2D(textureSampler,vUV);
-    float aspect=resolution.x/resolution.y;
+    vec4 color = texture2D(textureSampler, vUV);
+    float aspect = resolution.x / resolution.y;
+    vec2 gUV = vec2(vUV.x * aspect, vUV.y) * gridCells;
 
-    // Rotate UV by angle (15°) — produces angled dot grid
-    vec2 uv=vec2(vUV.x*aspect,vUV.y);
-    float c=cos(angle),si=sin(angle);
-    vec2 rotUV=(uv*mat2(c,-si,si,c))*gridCells;
+    // Sample cell colour (pixelated)
+    vec2 cell   = (floor(gUV) + 0.5) / gridCells;
+    vec2 sampleUV = vec2(cell.x / aspect, cell.y);
+    sampleUV = clamp(sampleUV, 0.001, 0.999);
+    float luma = dot(texture2D(textureSampler, sampleUV).rgb, vec3(0.299,0.587,0.114));
 
-    // Pixelate: floor to cell center, sample cell color
-    vec2 cellCenter=floor(rotUV)+0.5;
-    vec2 sampleUV=mat2(c,si,-si,c)*(cellCenter/gridCells);
-    sampleUV=vec2(sampleUV.x/aspect,sampleUV.y);
-    sampleUV=clamp(sampleUV,0.001,0.999);
-    vec4 cellColor=texture2D(textureSampler,sampleUV);
-    float luma=dot(cellColor.rgb,vec3(0.299,0.587,0.114));
+    // Dot radius: darker area → slightly larger dot
+    float radius = sqrt(max(0.0, 1.0 - luma)) * 0.40;
+    vec2 cellUV  = fract(gUV) - 0.5;
+    float inDot  = 1.0 - smoothstep(radius - 0.03, radius + 0.03, length(cellUV));
 
-    // Radius driven by darkness
-    float radius=sqrt(max(0.0,1.0-luma))*0.44;
-    vec2 cellUV=fract(rotUV)-0.5;
-    float inDot=1.0-smoothstep(radius-0.02,radius+0.02,length(cellUV));
-
-    vec3 result=color.rgb*(1.0-inDot*dotStrength);
-    gl_FragColor=vec4(result,1.0);
+    // Blend: very subtle — just a texture hint, not a filter
+    vec3 result = color.rgb * (1.0 - inDot * dotStrength);
+    gl_FragColor = vec4(result, 1.0);
   }
 `;
-const halftonePass=new BABYLON.PostProcess('halftone','halftone',['resolution','gridCells','dotStrength','angle'],[],1.0,camera);
-halftonePass.onApply=effect=>{
-  effect.setFloat2('resolution',engine.getRenderWidth(),engine.getRenderHeight());
-  effect.setFloat('gridCells',70.0);
-  effect.setFloat('dotStrength',0.20);
-  effect.setFloat('angle',0.2618);  // 15 degrees
+
+const halftonePass = new BABYLON.PostProcess('halftone','halftone',
+  ['resolution','gridCells','dotStrength'],[],1.0,camera);
+halftonePass.onApply = effect => {
+  effect.setFloat2('resolution', engine.getRenderWidth(), engine.getRenderHeight());
+  effect.setFloat('gridCells',   45.0);   // large cells = coarse dots, less busy
+  effect.setFloat('dotStrength', 0.08);   // 8% — a hint, not a statement
 };
 
 // ── Animations ───────────────────────────────────────────────────────────────
