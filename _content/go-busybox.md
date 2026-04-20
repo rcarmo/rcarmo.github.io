@@ -1,5 +1,5 @@
 ---
-section: ai-agents
+section: infrastructure
 status: active
 created: 2026-02-07
 tagline: 57 BusyBox utilities in Go — 2 MB WASM binary, 387/387 tests passing.

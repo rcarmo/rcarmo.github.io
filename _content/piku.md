@@ -1,6 +1,6 @@
 ---
 repo: piku/piku
-section: kata
+section: cloud
 status: stable
 created: 2016-03-26
 tagline: git push deployments to your own server — no Docker, no ops.
