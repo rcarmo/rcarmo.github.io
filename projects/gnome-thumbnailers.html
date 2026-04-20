@@ -5,226 +5,265 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>gnome-thumbnailers — Rui Carmo</title>
 <meta name="description" content="File thumbnails for RAW, HEIC, and 3D models in GNOME Files.">
-<meta property="og:type" content="website">
-<meta property="og:title" content="gnome-thumbnailers — Rui Carmo">
-<meta property="og:description" content="File thumbnails for RAW, HEIC, and 3D models in GNOME Files.">
-<meta property="og:image" content="https://rcarmo.github.io/assets/og/gnome-thumbnailers.png">
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:image" content="https://rcarmo.github.io/assets/og/gnome-thumbnailers.png">
+<meta property="og:image" content="/assets/banners/gnome-thumbnailers.png">
 <link rel="icon" href="https://github.com/rcarmo.png?size=32" type="image/png">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0;}
 :root{
-  --bg:#080c18;--surface:#0e1424;--surface2:#141c30;
-  --border:rgba(60,120,255,.1);--border2:rgba(80,140,255,.18);
-  --text:#dde8ff;--muted:#6a88bb;--dim:#344668;
-  --accent:#4a8aff;--accent-glow:rgba(74,138,255,.15);
-  --amber:#fbbf24;--green:#34d399;
-  --radius:8px;--radius-lg:14px;
-  --gap:clamp(1rem,4vw,2rem);--max:880px;
+  --bg:#0b0d12;--surface:#111419;--surface2:#181c24;--border:rgba(255,255,255,.07);--border2:rgba(255,255,255,.12);
+  --text:#e8edf5;--muted:#6878a0;--dim:#3a4460;
+  --accent:#4f8ef7;--accent-dim:rgba(79,142,247,.12);
+  --amber:#f0b840;--radius:10px;--radius-lg:16px;
+  --gap:clamp(1rem,4vw,2rem);--max:960px;
+}
+@media(prefers-color-scheme:light){
+  :root{--bg:#f2f5fb;--surface:#fff;--surface2:#e8edf5;--border:rgba(0,0,0,.07);--border2:rgba(0,0,0,.14);
+    --text:#0d1219;--muted:#4a5880;--dim:#9aa8c8;--accent:#1e6ef4;--accent-dim:rgba(30,110,244,.08);--amber:#c08820;}
 }
 html{scroll-behavior:smooth;}
-body{
-  background-color:var(--bg);
-  background-image:radial-gradient(circle,rgba(60,120,255,.055) 1px,transparent 1px);
-  background-size:24px 24px;
-  color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
-  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;
-}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;
+  font-size:15px;line-height:1.65;-webkit-font-smoothing:antialiased;}
 a{color:var(--accent);text-decoration:none;}a:hover{text-decoration:underline;}
-code{font-family:ui-monospace,"SF Mono",Menlo,monospace;font-size:.875em;
-  background:var(--surface2);padding:.1em .35em;border-radius:4px;border:1px solid var(--border);}
-.topbar{position:sticky;top:0;z-index:100;background:rgba(8,12,24,.92);backdrop-filter:blur(16px);
-  border-bottom:1px solid var(--border2);box-shadow:0 2px 16px rgba(0,0,0,.5);}
-.topbar-inner{max-width:var(--max);margin:0 auto;padding:.65rem var(--gap);
-  display:flex;align-items:center;gap:.5rem;font-size:.72rem;
-  font-family:ui-monospace,monospace;color:var(--muted);}
-.topbar-inner a{color:rgba(140,190,255,.9);font-weight:600;}
-.topbar-inner a:hover{color:#fff;text-decoration:none;}
+code{font-family:ui-monospace,"SF Mono",Menlo,Consolas,monospace;font-size:.875em;background:var(--surface2);
+  padding:.1em .35em;border-radius:4px;border:1px solid var(--border);}
+
+/* ── Topbar ── */
+.topbar{position:sticky;top:0;z-index:200;background:rgba(11,13,18,.85);backdrop-filter:blur(16px);
+  border-bottom:1px solid var(--border2);}
+.topbar-inner{max-width:var(--max);margin:0 auto;padding:.65rem var(--gap);display:flex;align-items:center;
+  gap:.6rem;font-size:.78rem;font-family:ui-monospace,monospace;color:var(--muted);}
+.topbar-inner a{color:var(--muted);}.topbar-inner a:hover{color:var(--text);text-decoration:none;}
 .sep{color:var(--border2);}.current{color:var(--text);font-weight:600;}
-.outer{max-width:var(--max);margin:0 auto;padding:2rem var(--gap) 4rem;}
-.hero{padding:2.5rem 0 2rem;display:flex;gap:1.5rem;align-items:flex-start;justify-content:space-between;}
-@media(max-width:520px){.hero{flex-direction:column-reverse;}.hero-logo{display:none;}}
-.hero-logo img{width:88px;height:88px;border-radius:18px;flex-shrink:0;
-  box-shadow:0 0 0 1px var(--border2),0 0 36px rgba(74,138,255,.22),0 8px 24px rgba(0,0,0,.6);}
-h1{font-size:clamp(1.8rem,5vw,2.6rem);font-weight:800;letter-spacing:-.03em;line-height:1.1;}
-h1 a{color:var(--text);}h1 a:hover{color:var(--accent);text-decoration:none;}
-.tagline{font-size:clamp(.95rem,2.2vw,1.15rem);color:var(--muted);margin:.55rem 0 1.1rem;max-width:560px;line-height:1.55;}
-.meta{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;font-size:.79rem;color:var(--muted);margin-bottom:1.1rem;}
-.stars{color:var(--amber);font-weight:800;font-size:.95rem;text-shadow:0 0 12px rgba(251,191,36,.35);}
-.lang-dot{width:9px;height:9px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:3px;}
-.badge{display:inline-flex;align-items:center;padding:.18rem .55rem;border-radius:2em;font-size:.68rem;font-weight:700;letter-spacing:.04em;}
-.badge-active  {background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.25);}
-.badge-stable  {background:rgba(74,138,255,.1);color:#4a8aff;border:1px solid rgba(74,138,255,.25);}
-.badge-maintained{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.25);}
-.badge-archived{background:rgba(248,113,113,.1);color:#f87171;border:1px solid rgba(248,113,113,.25);}
-.topics{display:flex;flex-wrap:wrap;gap:.3rem;margin-bottom:1.1rem;}
-.topic{font-size:.7rem;background:var(--surface2);border:1px solid var(--border2);
-  color:var(--muted);padding:.13rem .5rem;border-radius:2em;font-family:ui-monospace,monospace;}
-.cta{display:flex;flex-wrap:wrap;gap:.55rem;}
-.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.48rem 1rem;
-  border-radius:var(--radius);font-size:.83rem;font-weight:600;transition:all .15s;}
-.btn-p{background:linear-gradient(135deg,#3a7aff 0%,#2860e0 100%);color:#fff;
-  box-shadow:0 2px 12px rgba(60,130,255,.3);}
-.btn-p:hover{filter:brightness(1.12);text-decoration:none;}
-.btn-g{background:var(--surface2);color:var(--text);border:1px solid var(--border2);}
+@media(prefers-color-scheme:light){.topbar{background:rgba(242,245,251,.88);}}
+
+/* ── Hero banner ── */
+.hero-banner{position:relative;overflow:hidden;height:260px;background:var(--surface2);}
+.hero-banner img{width:100%;height:100%;object-fit:cover;object-position:center;display:block;}
+.hero-overlay{position:absolute;inset:0;
+  background:linear-gradient(to right,rgba(11,13,18,.96) 0%,rgba(11,13,18,.75) 55%,rgba(11,13,18,.20) 100%);}
+@media(prefers-color-scheme:light){
+  .hero-overlay{background:linear-gradient(to right,rgba(242,245,251,.96) 0%,rgba(242,245,251,.75) 55%,rgba(242,245,251,.20) 100%);}}
+.hero-content{position:absolute;inset:0;display:flex;flex-direction:column;justify-content:center;
+  padding:2rem var(--gap);max-width:var(--max);margin:0 auto;left:0;right:0;}
+.hero-content h1{font-size:clamp(1.6rem,5vw,2.4rem);font-weight:700;letter-spacing:-.03em;line-height:1.1;}
+.hero-content h1 a{color:var(--text);}.hero-content h1 a:hover{color:var(--accent);text-decoration:none;}
+.tagline{font-size:clamp(.9rem,2vw,1.05rem);color:var(--muted);margin:.5rem 0 1.1rem;max-width:540px;line-height:1.5;}
+.hero-meta{display:flex;flex-wrap:wrap;align-items:center;gap:.5rem 1rem;font-size:.8rem;color:var(--muted);}
+.stars{color:var(--amber);font-weight:700;}
+.dot{width:9px;height:9px;border-radius:50%;display:inline-block;vertical-align:middle;margin-right:3px;}
+.dot-TypeScript{background:#3178c6}.dot-Python{background:#3572A5}.dot-Go{background:#00ADD8}
+.dot-Swift{background:#F05138}.dot-C{background:#555}.dot-Cpp{background:#f34b7d}
+.dot-Dockerfile{background:#384d54}.dot-Shell{background:#89e051}.dot-misc{background:#7a8190}
+.badge{display:inline-flex;align-items:center;padding:.18rem .55rem;border-radius:2em;font-size:.69rem;font-weight:700;letter-spacing:.03em;}
+.badge-active{background:rgba(52,211,153,.1);color:#34d399;border:1px solid rgba(52,211,153,.2);}
+.badge-stable{background:rgba(79,142,247,.1);color:#4f8ef7;border:1px solid rgba(79,142,247,.2);}
+.badge-maintained{background:rgba(251,191,36,.1);color:#fbbf24;border:1px solid rgba(251,191,36,.2);}
+.badge-archived{background:rgba(248,113,113,.1);color:#f87171;border:1px solid rgba(248,113,113,.2);}
+@media(prefers-color-scheme:light){
+  .badge-active{background:#d1fae5;color:#065f46;border-color:#6ee7b7}
+  .badge-stable{background:#dbeafe;color:#1d4ed8;border-color:#93c5fd}
+  .badge-maintained{background:#fef3c7;color:#92400e;border-color:#fcd34d}
+  .badge-archived{background:#fee2e2;color:#991b1b;border-color:#fca5a5}
+}
+.topics{display:flex;flex-wrap:wrap;gap:.35rem;margin-top:.75rem;}
+.topic{font-size:.7rem;background:var(--surface2);border:1px solid var(--border2);color:var(--muted);
+  padding:.13rem .5rem;border-radius:2em;font-family:ui-monospace,monospace;}
+.cta{display:flex;flex-wrap:wrap;gap:.6rem;margin-top:1.1rem;}
+.btn{display:inline-flex;align-items:center;gap:.4rem;padding:.45rem 1rem;border-radius:var(--radius);
+  font-size:.82rem;font-weight:500;transition:all .15s;}
+.btn-p{background:var(--accent);color:#fff;}.btn-p:hover{filter:brightness(1.1);text-decoration:none;}
+.btn-g{background:transparent;color:var(--text);border:1px solid var(--border2);}
 .btn-g:hover{border-color:var(--accent);color:var(--accent);text-decoration:none;}
-.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));
-  gap:1px;background:var(--border);border:1px solid var(--border2);
-  border-radius:var(--radius-lg);overflow:hidden;margin-bottom:2.5rem;}
+
+/* ── Page layout: TOC + content ── */
+.outer{max-width:var(--max);margin:0 auto;display:grid;grid-template-columns:160px 1fr;gap:0 36px;padding:2rem var(--gap) 4rem;}
+.main{min-width:0;}
+.toc{position:sticky;top:56px;align-self:start;padding:14px 0;grid-row:1/-1;max-height:calc(100dvh - 80px);overflow-y:auto;}
+.toc::-webkit-scrollbar{width:3px;}.toc::-webkit-scrollbar-thumb{background:var(--surface2);border-radius:2px;}
+.toc-title{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;color:var(--dim);
+  padding:0 0 10px;margin-bottom:8px;border-bottom:1px solid var(--border);font-family:ui-monospace,monospace;}
+.toc a{display:block;font-size:.76rem;color:var(--muted);text-decoration:none;padding:4px 8px;border-radius:5px;
+  border-left:2px solid transparent;transition:all .15s;line-height:1.4;margin-bottom:1px;}
+.toc a:hover{color:var(--text);background:var(--surface2);}.toc a.active{color:var(--text);border-left-color:var(--accent);}
+@media(max-width:860px){
+  .outer{grid-template-columns:1fr;padding-top:0;}
+  .toc{position:sticky;top:44px;z-index:100;max-height:none;display:flex;gap:4px;overflow-x:auto;
+    background:var(--bg);border-bottom:1px solid var(--border2);padding:8px 0;margin:0 calc(-1*var(--gap));
+    padding-left:var(--gap);padding-right:var(--gap);grid-row:auto;-webkit-overflow-scrolling:touch;}
+  .toc::-webkit-scrollbar{display:none;}.toc-title{display:none;}
+  .toc a{white-space:nowrap;flex-shrink:0;border-left:none;border-bottom:2px solid transparent;
+    border-radius:4px 4px 0 0;padding:5px 10px;font-size:.72rem;}
+  .toc a.active{border-left:none;border-bottom-color:var(--accent);background:var(--surface2);}
+  .hero-banner{height:200px;}
+}
+
+/* ── Stats ── */
+.stats{display:grid;grid-template-columns:repeat(auto-fill,minmax(110px,1fr));gap:1px;
+  background:var(--border);border:1px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;margin-bottom:2rem;}
 .stat{background:var(--surface);padding:.85rem 1rem;}
-.stat-l{font-size:.64rem;text-transform:uppercase;letter-spacing:.1em;
-  color:var(--dim);margin-bottom:.2rem;font-family:ui-monospace,monospace;}
-.stat-v{font-size:1.35rem;font-weight:800;letter-spacing:-.02em;color:var(--text);}
-.stat-sub{font-size:.68rem;color:var(--muted);margin-top:.1rem;}
-.activity-chart{height:80px;}
-.sec{padding:2rem 0;border-top:1px solid var(--border);}
-.eyebrow{font-size:.65rem;font-weight:700;text-transform:uppercase;letter-spacing:.12em;
-  color:var(--accent);margin-bottom:.4rem;font-family:ui-monospace,monospace;}
-.sec-title{font-size:1.2rem;font-weight:700;letter-spacing:-.02em;margin-bottom:1.1rem;}
-.about{font-size:.98rem;line-height:1.8;color:var(--muted);max-width:680px;}
-.how{display:flex;flex-direction:column;gap:.9rem;max-width:680px;}
-.how p{font-size:.92rem;line-height:1.8;color:var(--muted);}
-.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(210px,1fr));
-  gap:1px;background:var(--border);border:1px solid var(--border2);
-  border-radius:var(--radius-lg);overflow:hidden;}
-.feat{background:var(--surface);padding:1.2rem;display:flex;flex-direction:column;gap:.4rem;transition:background .15s;}
-.feat:hover{background:var(--surface2);}
-.feat-icon{font-size:1.2rem;line-height:1;}
-.feat-title{font-size:.86rem;font-weight:600;color:var(--text);}
-.feat-body{font-size:.79rem;color:var(--muted);line-height:1.6;}
-.diagram-wrap{background:var(--surface);border:1px solid var(--border2);
-  border-radius:var(--radius-lg);overflow:hidden;padding:1.25rem;}
+.stat-l{font-size:.66rem;text-transform:uppercase;letter-spacing:.1em;color:var(--dim);
+  margin-bottom:.2rem;font-family:ui-monospace,monospace;}
+.stat-v{font-size:1.35rem;font-weight:700;letter-spacing:-.02em;}
+
+/* ── Sections ── */
+.sec{padding:2.5rem 0;border-top:1px solid var(--border);}
+.eyebrow{font-size:.68rem;font-weight:700;text-transform:uppercase;letter-spacing:.1em;color:var(--accent);
+  margin-bottom:.4rem;font-family:ui-monospace,monospace;}
+.sec-title{font-size:1.25rem;font-weight:700;letter-spacing:-.02em;margin-bottom:1.1rem;}
+.about{font-size:.98rem;line-height:1.8;color:var(--text);max-width:700px;}
+.how{display:flex;flex-direction:column;gap:.95rem;max-width:700px;}
+.how p{font-size:.93rem;line-height:1.8;color:var(--muted);}
+
+/* ── Feature grid ── */
+.features{display:grid;grid-template-columns:repeat(auto-fill,minmax(220px,1fr));gap:1px;
+  background:var(--border);border:1px solid var(--border2);border-radius:var(--radius-lg);overflow:hidden;}
+.ve-card{background:var(--surface);padding:1.3rem;display:flex;flex-direction:column;gap:.4rem;transition:background .15s;}
+.ve-card:hover{background:var(--surface2);}
+.ve-icon{font-size:1.25rem;line-height:1;}
+.ve-title{font-size:.86rem;font-weight:600;color:var(--text);}
+.ve-body{font-size:.8rem;color:var(--muted);line-height:1.6;}
+
+/* ── Architecture diagram ── */
+.diagram-wrap{background:var(--surface);border:1px solid var(--border2);border-radius:var(--radius-lg);
+  overflow:hidden;padding:1.5rem;}
 .diagram-wrap svg{width:100%;height:auto;display:block;}
-.releases{display:flex;flex-direction:column;position:relative;padding-left:1.2rem;}
-.releases::before{content:'';position:absolute;left:.35rem;top:.5rem;bottom:0;
-  width:1px;background:linear-gradient(to bottom,var(--accent),transparent 90%);}
-.release{position:relative;padding:.6rem 0 .6rem .5rem;border-bottom:1px solid var(--border);}
-.release:last-child{border-bottom:none;}
-.release::before{content:'';position:absolute;left:-.6rem;top:.9rem;
-  width:.5rem;height:.5rem;border-radius:50%;
-  background:var(--accent);box-shadow:0 0 6px var(--accent);}
-.rel-head{display:flex;flex-wrap:wrap;align-items:baseline;gap:.5rem;margin-bottom:.2rem;}
-.rel-date{color:var(--dim);font-size:.72rem;font-family:ui-monospace,monospace;}
-.rel-tag{font-family:ui-monospace,monospace;font-size:.72rem;font-weight:700;
-  color:var(--accent);background:var(--accent-glow);padding:.06rem .38rem;border-radius:4px;}
-.rel-name{color:var(--text);font-size:.84rem;}
-.rel-note{font-size:.76rem;color:var(--muted);line-height:1.5;}
-.rel-loading{color:var(--dim);font-size:.82rem;}
-.posts{display:flex;flex-direction:column;gap:.4rem;}
-.post{display:grid;grid-template-columns:5.5rem 1fr;gap:.75rem;font-size:.86rem;}
-.post-date{color:var(--dim);font-size:.72rem;padding-top:.1rem;
-  white-space:nowrap;font-family:ui-monospace,monospace;}
-footer{max-width:var(--max);margin:0 auto;padding:1.5rem var(--gap);
-  border-top:1px solid var(--border);
+
+/* ── ECharts release timeline ── */
+.release-chart{width:100%;height:220px;margin-bottom:.5rem;}
+.release-legend{font-size:.75rem;color:var(--muted);margin-top:.5rem;}
+
+/* ── Posts ── */
+.posts{display:flex;flex-direction:column;gap:.45rem;}
+.post{display:grid;grid-template-columns:6rem 1fr;gap:.75rem;font-size:.875rem;}
+.post-date{color:var(--dim);font-size:.73rem;padding-top:.1rem;white-space:nowrap;font-family:ui-monospace,monospace;}
+
+/* ── Footer ── */
+footer{max-width:var(--max);margin:0 auto;padding:1.5rem var(--gap);border-top:1px solid var(--border);
   display:flex;align-items:center;justify-content:space-between;flex-wrap:wrap;gap:1rem;}
-.foot-l{font-size:.72rem;color:var(--dim);font-family:ui-monospace,monospace;}
-.foot-r{display:flex;gap:1.5rem;font-size:.72rem;}
-.foot-r a{color:var(--muted);}  .foot-r a:hover{color:var(--text);}
+.foot-l{font-size:.75rem;color:var(--dim);font-family:ui-monospace,monospace;}
+.foot-r{display:flex;gap:1.5rem;font-size:.75rem;}
+.foot-r a{color:var(--muted);}.foot-r a:hover{color:var(--text);}
 </style>
-<script src="/assets/js/echarts.min.js"></script>
+
 </head>
 <body>
 <header class="topbar">
   <div class="topbar-inner">
-    <a href="/">rcarmo.github.io</a><span class="sep">/</span>
+    <a href="/">rcarmo.github.io</a>
+    <span class="sep">/</span>
     <span class="current">gnome-thumbnailers</span>
   </div>
 </header>
 
-<div class="outer">
-  <div class="hero">
-    <div>
-      <h1><a href="https://github.com/rcarmo/gnome-thumbnailers" target="_blank" rel="noopener">gnome-thumbnailers</a></h1>
-      <p class="tagline">File thumbnails for RAW, HEIC, and 3D models in GNOME Files.</p>
-      <div class="meta">
-        <span class="stars">★ 26</span>
-        <span>⑂ 5</span>
-        <span><span class="lang-dot" style="background:#3572A5"></span>Python</span>
-        <span class="badge badge-stable">stable</span>
-      </div>
-      <div class="topics"><span class="topic">3dprinting</span><span class="topic">gnome</span><span class="topic">nautilus</span></div>
-      <div class="cta">
-        <a class="btn btn-p" href="https://github.com/rcarmo/gnome-thumbnailers" target="_blank" rel="noopener"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub</a>
-        
-      </div>
+<!-- Hero banner -->
+<div class="hero-banner">
+  <img src="/assets/banners/gnome-thumbnailers.png" alt="gnome-thumbnailers banner" loading="eager">
+  <div class="hero-overlay"></div>
+  <div class="hero-content">
+    <h1><a href="https://github.com/rcarmo/gnome-thumbnailers" target="_blank" rel="noopener">gnome-thumbnailers</a></h1>
+    <p class="tagline">File thumbnails for RAW, HEIC, and 3D models in GNOME Files.</p>
+    <div class="hero-meta">
+      <span class="stars">★ 26</span>
+      <span>⑂ 5</span>
+      <span><span class="dot dot-Python"></span>Python</span>
+      <span class="badge badge-stable">stable</span>
     </div>
-    <div class="hero-logo"><img src="data:image/png;base64,iVBORw0KGgoAAAANSUhEUgAAAIAAAACACAYAAADDPmHLAAAACXBIWXMAAAsTAAALEwEAmpwYAAAYi0lEQVR4Xu1ceXCUx5Wf3cqf2U1hGwyS5h4JSTMjzYyk0TG60C1037eQxCkOhUucxhjMYRBIWOgABLoPhLiR7WAIPlLJZrOb2kqqEsfepHa3tvaf3ar1OsyMgBje1q+lHoaRhBRTuzjuj6pX3V9f0/3er3/vdX+fkMlkMpJEaB0IvXgJ/NLuFx4EwitAdBYQXgESACQ3IDQIhF68BH5p9wsPAuEVIDoLCK8ACQCSGxAaBEIvXgK/tPuFB4HwChCdBYRXgAQAyQ0IDQKhFy+BX9r9woNAeAWIzgLCK0ACgOQGhAaB0IuXwC/tfuFBILwCRGcB4RUgAUByA0KDQOjFS+CXdr/wIBBeAaKzgPAKkAAguQGhQSD04iXwS7tfeBAIrwDRWUB4BUgAkNyA0CAQevES+KXdLzwIhFeA6CwgvAIkAEhuQGgQCL14CfzS7hceBMIrQHQWEF4BEgAkNyA0CIRevAR+afcLDwLZXwEFer1eGxgYlOYbYEzyNxiSdf6GZIO/IdkfqWF+4u/v7xKdTsfyPEUd8lzUavUzeTxzQRv3vPszL5fL5a48L0OK8ufVubdxb8vnxcu+LSlf22xr4vWe6UztFQpFko+PT5pOp9PC5rIp28u8vLxeNZnNn4eGhFCYxfK1xWJ+bA01P7aEWB5bwixPLGbLY4vlqZjNZpeYTCaXBAcHM0E9ypGizGAwMAkKCnK1RX1gYCAT1KOOi7+/PxPU+/n5MVm6dKkrRXlAQMBjnU73WKvVPiO8PS/39fWdlkc/jAdBXqVSPVYqlSxFf173MlM+D8yPi0ajca2Fr2+mFO39/PyeoE6tVjNB3s/P7+ulS5eSRqP5HDafAoFMplUoLIHBpj/mRVqdP0pOebghP8h576jyUXxdqDPzvPWRJTjkfkjIpISGhrK8xWJxpWazmYnJZGKSmJh4Pzc31w6pq6tz1NTUsDQnJ8ceHR19f9myZfdXrFhhr6qqclRXVzsSEhJYeXx8vL22ttZRWVnpQB3yqEe+vLycpUVFRfaoqKj74eHh97Ozs+2oLy4utpeVlTlKSkocKSkp9pqaGpYvLS11rFixwoE65Ovr69HWkZWVZY+IiGBraWhocB49enRi165dzsbGxgnMLygoiK2Pr+v/O4UeIyMjmeh0OszTDh1pNJr7Wq32uYI2AQEB91NTU+0qlep+RESEPTY21i6Xy++np6fbU1JSnGq1+o+vvfaaxQUA70WLIoJMpi9toSHO4ogIR7zN7ChNNzqtcaGOqJwQZ4g5xBES8lTMZrNLTCaTS4KCghxGo9ERFRXlSE1NdURGRrKJJyYmMomOjrZbrVYmmBQmuWzZMhjDHhYWZg8JCbHHxMSwOqQQGDQuLo71xTPams1mu9FoRF8H+uN3bDYbqwsODmbP+K2oqCiIA3V45v0xB/TX6/VsjLS0NEdSUhKbs8lksgcEBNgDAwNfqmBuEJ1OxwTr0mg08xKtVsv6oj36+/r62tVqNcYAuB0qlerLV155JcIFAC8vryiTyfSVyWx2+geb7Aaj2e6vt9hNRpMjOMBkh5E5ANyNj7w7AHgePxIQEODw8/N7qNPpHmm1WibI+/n5PfL19WXPGo2GCcq5qNVqJiqViolSqZwmvI1CoXgkl8ufEbT3LMOzj48PE+TRD+3wGyj38vJyCS/nv/8iKebJ18jzfO4ony3v/ptog2fMmbefK0V7rIO3wzPySqXyoUql+pNKpXIuWLAg6hkABAUFfRVts03ExsRgVznjYmMckVGRjti4GEd0dDQzNgfBXCkoKzg4eEKr1ZJOp3MJnj3FvR55Xu9ZPtOzr6/vt1rUajUplUomPK9SKUmtVrEylUrlKkc9ntFeo9G41sXX/SJrdRvjCcYB+BYuXPgsAIxG41fJyckTKSkp8J/OVatWTZSUlEysXLlyoqCgYAK7fS7D83oAwGg0TgMAAhCIn58f+fv7U2BgIMtzo2u1OlbGy3l7TJovYqYU9RiTK2mmPC+bqf//RRnmEhISQlFRUUysYVay2SIpIjKSwqxhFB0dSZERVgoPt1K0zUZWazhFRERQdHQ0BQcHM514zgvAcBfoTaNWszKdzpe0EK2ONCh3a4t2U2M9QTojAOACLBaLE34Y/ga+nKcGgwH+2WXgufKeAMAEoBCuDJvNRklJSZSYmMgUUr9uLb355l5KTk6iuLg4Sk5OZoqIjIxkbYOCgtwXwRfDUixULpeTt7c3+fj4uPIowzPKeT1ST6W6P2Osp2CcVCJ/xg6dUp6rDHW8j/s4KNfr9XTgwEEaGxujGzeuU0vzSRq7cotGRoaptbWdrl6/S2e7hqm9o5vee/82tbe3UW9vD3344Ye0du1aNleAlo+LMeUKlUsUKg0t8fImuVJNPgolLVy4kBYtWkSLl3iRt4+ClaMN+iiUKj7O7ACAC4iPj59ISEhwZGdnOwsLCyeQZmZmOouLi52RkZHzdgMzAQCLgXHj4+OZ4cPDwyk1NYWOHDlEA/3dNDjQS2c626iyooLCreGsHdouW7aMzGYzUzRXBlIACspHXW5uHlVWVlJRURHl5uZSdXU1KysoKKSqqirKzs6hsrIyVoc+7uPwPMYzGo0uBgoICGA7Ua83MCYCCLEG7E4wFBc8oy0M5D4vg8FA/f39DAD9fT00dvU23R0/QV/+Oo7+/e9T6Xc/XU0/v7uPfnSzjYYHz9PY5XHqH7zK2u/evZuBdxoAlGpmWKVay4xtiVpGW04O0YZD56i4fg8l5FZScHgsaZcGMiC8vnjxJBCUk+DV6eYAQGxsrDM2NtaRmJjozM3NdWZlZTnT0tKc+fn5zvDw8BcCABSMXQ+B8WHozo7TNNDXTRfOn6XzXWeot6eL+novUOP2rRQ7BZaUlBSmfE/DQTnY0RkZGTQ4OEh37tyhy5cvU19fH3388cc0MDBAo6OjdO/ePbpw4QJ98MEHdP78eeZnudHdU4wXGxvLABcTE8PAGh0dw9ho9+6d1Nb2LgOWLTqatYuNiWEp1hMaGsoYAmvkwAQAuru76eLoKHVduES//OQoPfitgb7+3I8ef7GUnnyhoSdf+NGj3xnoP//RSv/163z6+e0NdPHiKO3cuXN2AKg0tGjhIopOy6f9PR/SkdGf0ZGLP6Vjl3/B8gcHP6YdbZdp3YFOyqraSHKlZn4MwF2AxWKxh4aG8oge7gBHOxy95qR+7hpmYwCbLZqSEhNpz55dzNC9PeeZ8bsvnGMCIEAG+nuoubmJigoLmDFmYgAYDPReWFhId+/epY6OThoZuUi3bt2i1tY2unHjBl26NEbt7R00Pv4eU+yuXbunAYmDAIYDMAGChIQE5n5yc3Oo+eRxGhzoYXMFOLdt28LAwdmM+2wAFGNgPI1m0gUcOnSYrl4bp3/+xW6a+I2WHn0WSA9+a6QHnxnp4WdB9JClevr6Cz09/lxOP7lspdsffkTr168nudxnRgbw9pZTetkaOjT8KTP2W7136UDfj+mtvsn04MBHdGjoE2q69kuq2XmCfJgLmAcDIAhMTU0F7eOixFlbWztRWVnJgkCwAo54AAaEG3q21BMAUAoMZrVaae2a1dTf180Uil3Pjc9TlF24cI6Gh/po/5tvMACAmjnFcoNhPPj4rKwsGh29RJcuXaKRkREaHh5mTABWwG66fPkK9fUN0NWr1+jkyZMuX87H4SnG4zvfFm2jHzZsdBmdzckNnK3vNlNeXi6LaRDHINhDjODOAEFGAw0MjdHf/aie7L9S0pPfBxH9IYjo90b60+cGevjZpEz81kD0+2D61biKOt6JoqHhMXpj795pDIB5wucnF9bS20OfMiMfHv4Jk7cHP6YD/feYvNX3Y1a3+cQQJRfWsXhAoZoHAIKDg7+Kiopy4sgHY1utVmbsiIgI9oyzPYJCMMJshuflngCA8RDRY3cVFxdRQ8MGamk5wYAAw0O5SKFo7LJzZzuoYdNGysnJZhRrsVim7VwYDC5g+fLl1NfXz3b88PAInT7dTj29fdRyqpU6Os7Q9evXqavrPF27dp3a2tpmdQEwHt/ViDsOvPUmm1dPd5eLmbovnKW+3vN0uvUUlZeXMXcAFzWTC0AQ2NFxls4ej6X2/a/SlXYV/WxMS//66VK6/2s9A8KTPxiJ/iWI/uNngTRw4jUa6syhW+O3aeuWzdMAAB16yxUUm1lKuat3UOkPD9CaA520/d0xerP7NmOEwyM/Ye5gV8d1Ktv8NiXl15CXtw8LBqeAPnsQCAZISEhgx8CkpCQnBAFhfHy8Mzk5mT0jHsAdwVzuYCYAQMFQ1ooVVbRqVR2tXFXHlAzD9/R0sRTM0HT8KFVVVTDjFxYWMAPPdAoAAOACEPjB54PqL45cpLPnztHRY8cZ3SPOAA0jPgAb7NixcxqQOANgfnABYAGAqrZ2BTVs2kCt77a43BXAAPdVUFBAWVmZlJCwjJ1SEAg+6wI0pA8MoJPNp6mzKY+advyAju3woncaF9OJ3Yvp3GFvutqpoH+4pqV/+3Qp3Tinpt5jr9JYTw3dvvMJbdy4YToAdDry8vIma0IGZdZsoZTStZRSuo7SytdTzqpGKt9yiOrfPkeNrZepavs7VLLpAMVllv55AEhLS5vIyMjA1Sg7BSD6Ly4unigqKnKWlpayewEEhN8EAGAA7LDS0hJat241AwGUvHXrZupob2UA2LmjkfLz8yg/P5eKigpZHkHW8xggPX059fb20c2bN5kLaDpxgk60tFBlRSVlZ2VTb28vC8auXbtG7e3tz2UAGB8nDxxD16xZRSvratk8Dx86SG2nTzH3lZ2dxeaGFOuBC8D8PF2AwaCnscu3aKirnpoav0/v7vOhU28soZa9S+jErsV0bMdiOrp9MbXuW0JDLQoabllI51vraHDoCu3bN90FcABYopMpq3YrLa/aRBnVDSxNq9hAqWX1lFy6lpUVrX+DyjYfoojEbFriNU8GgAsIDQ1lQSAMjMAPd9G4AzAYDA7cjeMZroBT/WypJwNgl2GH4VwPAKxdOwkAKBkgWL9+Ha1evZIpFbueS0FBPlPyXDEAztoXL15kcuFCNx1vaqK62jratm0bDQ0O0dDQEF25coWamppmjAFAr2AUUD+MihRzxJzAVpDyslIWFGJuxcWFlJmZwXZ/amoqhYWFuQCAtYIN9PoAaj7VSd0dDdS8awG17PVmxgcAAAQOho4DXjT8rooGml6hiz076PadT2nTpo0zBIE6tpuN1hjKrNlMyys3MuMDCO5gyKrdQsXr91H55kMUGpvC4galynX0nd0FAABJSUkTeImTk5PDdnxFRQVYYKKsrIwJAkOwA+KA5wWDngDgMQAugMrKwABrmFKhYIAACsaO54bnKQCAiNxkMk2jbu4C+CngzJkzDADvvfcenW5rY8fBq1ev0tmz52h8fJydCPbs2TttHHcXAIAiTgHrVFdXuUCAeQK4fF5IcfwEWGJjYzxcwOT9hF4fSG3tXdTXtY+ady+klr1eLgAABJDmPUuo46A3Dbf40NApDY0MtrEYYPPmmWIAHXn7yCkgOIyWVzVMAwBAkF65kQGgZON+Klq/j5YazH9eEGiz2Zx422az2RxxcXHsPiA+Ph6va52pqalOXBPjRPBNXAAYAHSJwK6mptrFAlDupIKLmcGfKjmfMUJKSrJLwdxYk4wyGQSmpaXRuXNdzMiI/Ds7z7DbNDAB6P/9999nwR9OAZ2dnbO6AAAKwRxAChBA4OsBUEhpaTGbG1wUAAJ3AUH7mYJAo0FPl8au0chACx1r/NupHQ8WeAoEAODMITkNnniFrg2uo6GRa9Tf30f79u2bHgNoteQjV5AuwEgZKzYzEMDgEM4CHADlWw5TzPIiFjPgNnBeF0FggPDwcAR7eH3KBJc/OAVM3QWwUwBOCLNRPy+fiQGgYPhXKA0+tqSk2KVcAKCkpIQBoKiogB2xQK1oO9tNIGcAGOnOnbvsKHj9+g125sex8ObNW3Tjxk2282/dGqfx8ffp+PHpLgDAhP+GH29ubmZBJa6suX/HMXPlylqqrJwMTBHIog5zQ3rw4NvM1SxevJjNadIF4B4gkA4feYfGRgep60QCHd+5kJp3L6Dm3a9S857F1PKGNzXv9aYzBxfRpU4znTnTSoNDI/TRR/eovr5+1qtgpcaXYjJLaXnlJhYLZDIwTO7+tIrJgDB/9U5S+/qzK+LJi6B5HANxCkhPT5/AHUBpaakTL4Hq6uomysvLnTgScuPOJ/UEwOSOnYwBsGOgYLABjFdbW8OAAECA8nH5AiXz9wZIcaTCDniWAXyZknCdfPr0adq2bTsdPHiQnfU3b97C/P2RI0do69ZtzLAwFK6FPW8UAYBJn62n/fv3U0NDA/PpONvjAgonEJwOMA+4IkT8qLNYzOyqGW4F18y4kwAo+Xi4Cezq6qKRkVHq7R2gsZFOOn2skpr3h9CpN3zo+Pbv0/EdC6jzrR9Qd/t6Gr10kwYG+hl4GxsbXePxNWP9/CoYd/9gArMtkeJyKii9YgOjfgSFBev2UFh8OvP97F2AUj1/BrBarSwIxEcREHx4gaAPASGe52N8tPEEACaP+/KkpGRGrWAACBgBRy64BJyrMzNxtEpgFAsQgIbBBLht41E2VwgHFV6hLlmyhCnMy8uLCe4HkOcvglCPZ4VC8Ux/97EwR7RDXwACv4eU5/E77s/Io4yPC8PzOaEOgSuC08n44xL9+N4ndPX6B3Tjxi0av9FHo73bqftkHA20p7GLq9u3b7O7DMQwACLmDkDxOboDAEbFnQDO+HjZw8AQlUDLcqsosaCWFCotuwHkgJm3C8jKyprAyx+8B0AgiDwkLy+PuYb50P9MAIBCsItBm9gZ2EkABF4J43iIFyvBwUHsGYtGHdqgD0CAfjMBgCuH7zwoiRsOeRgIz8jzNrzPTClvA2PysfgYfFw8Q9Af7Xgf9/HQF+uC+6itxVFyFeXn5zOgV1RUUH5BMa1avZFKSkupsCCPVq1eQ8XFxeyFVn39Oub2ZlqvQqkkuUJBcgVSJYsJcDu46PXXadGihbQEG8BHTj5y+VQ7tFWQcmq+c74MysjImIDxcfmDaH/58uXsWjg/Px8XRM5vCgAoB0rBxw5YGBSIZ1ArfDyYAHQLtwBmAM1iJ6Itdi368R3mrmieB8DQB+OAMUDXGBeMgvHgq9GGt58rxdwQEwB46enpjIEwBpgIASDYCQZGu9nGQh12MWKD119/na0DoI6KjGTfABgMgczVREREsnK0AQPhlS7WPPN68XuTotViUwWyl1KpU2yJ+SYlJU7N6WnbyT7s9fnzj4EIAvF93RTVMxcw9U3AvK6AuYvwdAFcSVgUF+wcxANQKH/5gmcoGTsffXjbmZXx9LsAKBu+GkYHiKAIjMPdDI53zzMWnx9P0RYAgNExNwiOfZgfLwN7zTUm1gigIAWroS/Ag/EAVswXcwRg8dtoC5lrvWiL3wZzYky+ZrAlH4uvxSN9PgCKiooeIOgDC+DMj0AQL4QKCgqczzv3c8PzdDYAeEzGxQbuzMDZwbPtXM/Y4eiLsZBCOHuASebq71nvPh4fk7MXnucyvud4aI/+6MvH4/P9JvPD+BiTj8HXjNTzt92eZwVAJF4H4yYQxoMg8scREIIva7lx55POFwB8YvNBPG87n5SPx9P59JmrjftY7vm5+s1Uj/4vOobnuPMcb3YA6PX6L/Py8iYKCwvxAgifY+PjUFwG4eKHfbKNz8XmI/jbAaPR6NRqtfhBSb49OsAfyoBxHj7zVbBCoYjCXf/KlSsfrVu37iFuBMvKyh5UV1c/yMvLe4DjYUhICNhhXgL2wFfBQClHu5Q+jX9eoi7YV8H4TP+Zr4JlMpnOz8/vn/DiR6/X/zfYICAgwCUGg+HPEqPR+KW/v///KJXKByqVSpJviQ7UavUE/lTMx8fnNzKZzNf1dwEymexvZDJZtkwm2yGTyRol+U7rADaGrWFz17/vyWSyBTKZzEsmk/lI8p3WAWwMW8Pmz/zDn4n/tSRC6ID9lwD8n/S/ZIj9n0RIAJAAIIFAZBAIvXiRDc/X7srwAikVSyeSwQUzuOd6pxV4NpCev9s6kgz8HTfwXOubs8FcA0j1f9k6lAz4F27AF53/Cw/wohOQ+r9cG0gGeMkGeNm//9In8LIVIPrvC68ACQCCU6Do6xdeARIAJAYQGgRCL14Cv7T7hQeB8AoQnQWEV4AEAMkNCA0CoRcvgV/a/cKDQHgFiM4CwitAAoDkBoQGgdCLl8Av7X7hQSC8AkRnAeEVIAFAcgNCg0DoxUvgl3a/8CAQXgGis4DwCpAAILkBoUEg9OIl8Eu7X3gQCK8A0VlAeAVIAJDcgNAgEHrxEvil3S88CIRXgOgsILwCJABIbkBoEAi9eOHB/792s3ugNYDpSgAAAABJRU5ErkJggg==" alt="gnome-thumbnailers logo"></div>
-  </div>
-
-  <div class="stats">
-    <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">26</div><div class="stat-sub">on GitHub</div></div>
-    <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">5</div></div>
-    <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.4rem"><span class="lang-dot" style="background:#3572A5"></span>Python</div></div>
-    <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1rem;padding-top:.3rem">2022</div></div>
-    <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.85rem;padding-top:.38rem">2022-12</div></div>
-    
-  </div>
-
-  <div class="sec">
-    <div class="eyebrow">Overview</div>
-    <p class="about">Python thumbnailer scripts adding GNOME Files thumbnail support for RAW photos (CR2/NEF/ARW/ORF/RW2), HEIC/HEIF, and FBX/OBJ/STL 3D models. Register with make install — no restart required.</p>
-  </div>
-
-  <div class="sec">
-    <div class="eyebrow">Under the hood</div>
-    <div class="sec-title">How it works</div>
-    <div class="how"><p>Each script takes a source path and target PNG path. GNOME's thumbnailer infrastructure calls these in a bwrap sandbox when it encounters a registered MIME type. Scripts exit cleanly if a required library is missing — GNOME silently skips that file type without crashing anything.</p></div>
-  </div>
-
-  <div class="sec">
-    <div class="eyebrow">Capabilities</div>
-    <div class="sec-title">What it does</div>
-    <div class="features">
-      <div class="feat"><div class="feat-icon">📷</div><div class="feat-title">RAW formats</div><div class="feat-body">CR2, NEF, ARW, ORF, RW2 via rawpy.</div></div><div class="feat"><div class="feat-icon">🍎</div><div class="feat-title">HEIC/HEIF</div><div class="feat-body">Via Pillow's HEIF plugin.</div></div><div class="feat"><div class="feat-icon">🧊</div><div class="feat-title">3D files</div><div class="feat-body">FBX, OBJ, STL thumbnail renders.</div></div><div class="feat"><div class="feat-icon">🔧</div><div class="feat-title">Drop-in</div><div class="feat-body">make install, thumbnails appear immediately.</div></div>
-    </div>
-  </div>
-
-  
-
-  <div class="sec">
-    <div class="eyebrow">History</div>
-    <div class="sec-title">Releases</div>
-    <div class="releases" id="rl"><p class="rel-loading">Loading…</p></div>
-  </div>
-
-  
-
-  
-  <div class="sec">
-    <div class="eyebrow">Writing</div>
-    <div class="sec-title">On taoofmac.com</div>
-    <div class="posts">
-      <div class="post"><span class="post-date">2022-04-02</span><a href="https://taoofmac.com/space/blog/2022/04/02/2130" target="_blank" rel="noopener">You Can Leave Your Hat On</a></div>
+    <div class="topics"><span class="topic">3dprinting</span><span class="topic">gnome</span><span class="topic">nautilus</span></div>
+    <div class="cta">
+      <a class="btn btn-p" href="https://github.com/rcarmo/gnome-thumbnailers" target="_blank" rel="noopener"><svg width="13" height="13" viewBox="0 0 16 16" fill="currentColor"><path d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"/></svg> GitHub</a>
+      
     </div>
   </div>
 </div>
 
+<div class="outer">
+  <!-- TOC -->
+  <nav class="toc" id="toc">
+    <div class="toc-title">Contents</div>
+    <a href="#s-about">Overview</a>
+    <a href="#s-how">How it works</a>
+    <a href="#s-features">Features</a>
+    <a href="#s-posts">Posts</a>
+  </nav>
+
+  <!-- Main content -->
+  <div class="main">
+    <!-- Stats bar -->
+    <div class="stats" style="margin-top:1.5rem">
+      <div class="stat"><div class="stat-l">Stars</div><div class="stat-v">26</div></div>
+      <div class="stat"><div class="stat-l">Forks</div><div class="stat-v">5</div></div>
+      <div class="stat"><div class="stat-l">Language</div><div class="stat-v" style="font-size:.9rem;padding-top:.35rem"><span class="dot dot-Python"></span>Python</div></div>
+      <div class="stat"><div class="stat-l">Created</div><div class="stat-v" style="font-size:1.05rem;padding-top:.3rem">2022</div></div>
+      <div class="stat"><div class="stat-l">Last push</div><div class="stat-v" style="font-size:.85rem;padding-top:.35rem">2022-12</div></div>
+    </div>
+
+    <div class="sec" id="s-about">
+      <div class="eyebrow">Overview</div>
+      <p class="about">Python thumbnailer scripts adding GNOME Files thumbnail support for RAW photos (CR2/NEF/ARW/ORF/RW2), HEIC/HEIF, and FBX/OBJ/STL 3D models. Register with make install — no restart required.</p>
+    </div>
+
+    <div class="sec" id="s-how">
+      <div class="eyebrow">Under the hood</div>
+      <div class="sec-title">How it works</div>
+      <div class="how"><p>Each script takes a source path and target PNG path. GNOME's thumbnailer infrastructure calls these in a bwrap sandbox when it encounters a registered MIME type. Scripts exit cleanly if a required library is missing — GNOME silently skips that file type without crashing anything.</p></div>
+    </div>
+
+    <div class="sec" id="s-features">
+      <div class="eyebrow">Capabilities</div>
+      <div class="sec-title">What it does</div>
+      <div class="features">
+        <div class="ve-card"><div class="ve-icon">📷</div><div class="ve-title">RAW formats</div><div class="ve-body">CR2, NEF, ARW, ORF, RW2 via rawpy.</div></div><div class="ve-card"><div class="ve-icon">🍎</div><div class="ve-title">HEIC/HEIF</div><div class="ve-body">Via Pillow's HEIF plugin.</div></div><div class="ve-card"><div class="ve-icon">🧊</div><div class="ve-title">3D files</div><div class="ve-body">FBX, OBJ, STL thumbnail renders.</div></div><div class="ve-card"><div class="ve-icon">🔧</div><div class="ve-title">Drop-in</div><div class="ve-body">make install, thumbnails appear immediately.</div></div>
+      </div>
+    </div>
+
+    
+    
+    
+  <div class="sec" id="s-posts">
+    <div class="eyebrow">Writing</div>
+    <div class="sec-title">On taoofmac.com</div>
+    <div class="posts">
+      
+      <div class="post">
+        <span class="post-date">2022-04-02</span>
+        <a href="https://taoofmac.com/space/blog/2022/04/02/2130" target="_blank" rel="noopener">You Can Leave Your Hat On</a>
+      </div>
+    </div>
+  </div>
+  </div>
+</div>
+
 <footer>
-  <div class="foot-l">last push 2022-12-13</div>
+  <div class="foot-l">Last indexed 2022-12-13</div>
   <div class="foot-r">
-    <a href="/">← all projects</a>
-    <a href="https://taoofmac.com" target="_blank">taoofmac.com</a>
-    <a href="https://github.com/rcarmo" target="_blank">github.com/rcarmo</a>
+    <a href="/">← All projects</a>
+    <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com</a>
+    <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
   </div>
 </footer>
 
+
 <script>
+// Scroll-spy for TOC
 (function(){
-  var el=document.getElementById('rl');if(!el)return;
-  fetch('https://api.github.com/repos/rcarmo/gnome-thumbnailers/releases?per_page=12')
-    .then(r=>r.ok?r.json():[])
-    .then(function(rs){
-      if(!rs||!rs.length){el.innerHTML='<p class="rel-loading">No releases yet.</p>';return;}
-      rs.sort(function(a,b){return new Date(b.published_at)-new Date(a.published_at);});
-      el.innerHTML=rs.slice(0,10).map(function(r){
-        var d=new Date(r.published_at).toLocaleDateString('en-GB',{day:'numeric',month:'short',year:'numeric'});
-        var note=(r.body||'').trim().split('\n')[0].replace(/</g,'&lt;').slice(0,130);
-        var nm=r.name&&r.name!==r.tag_name?'<span class="rel-name">'+r.name.replace(/</g,'&lt;')+'</span>':'';
-        return '<div class="release"><div class="rel-head"><span class="rel-date">'+d+'</span><span class="rel-tag">'+r.tag_name+'</span>'+nm+'</div>'+(note?'<div class="rel-note">'+note+'</div>':'')+'</div>';
-      }).join('');
-    })
-    .catch(function(){el.innerHTML='<p class="rel-loading">Could not load releases.</p>';});
-})();</script>
+  const toc=document.getElementById('toc');
+  if(!toc)return;
+  const links=toc.querySelectorAll('a');
+  const sections=[];
+  links.forEach(l=>{const el=document.getElementById(l.getAttribute('href').slice(1));if(el)sections.push({el,link:l});});
+  const obs=new IntersectionObserver(es=>{
+    es.forEach(e=>{if(e.isIntersecting){
+      links.forEach(l=>l.classList.remove('active'));
+      const m=sections.find(s=>s.el===e.target);
+      if(m){m.link.classList.add('active');
+        if(window.innerWidth<=860)m.link.scrollIntoView({behavior:'smooth',block:'nearest',inline:'center'});}
+    }});
+  },{rootMargin:'-10% 0px -80% 0px'});
+  sections.forEach(s=>obs.observe(s.el));
+  links.forEach(l=>{l.addEventListener('click',e=>{e.preventDefault();
+    const el=document.getElementById(l.getAttribute('href').slice(1));
+    if(el){el.scrollIntoView({behavior:'smooth',block:'start'});history.replaceState(null,'','#'+el.id);}});});
+})();
+</script>
 </body>
 </html>
