@@ -288,7 +288,7 @@ code {
 /* ── Page layout ──────────────────────────────────────────────────────────── */
 .page-layout {
   display: grid; grid-template-columns: 11rem 1fr; gap: 3rem;
-  max-width: var(--max-w); margin: 0 auto; padding: 0 var(--gap) 4rem;
+  max-width: var(--max-w); margin: 0 auto; padding: 2.5rem var(--gap) 4rem;
 }
 @media (max-width: 768px) { .page-layout { grid-template-columns: 1fr; gap: 0; } }
 
