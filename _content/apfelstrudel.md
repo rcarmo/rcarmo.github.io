@@ -99,7 +99,7 @@ Swap out the AI backend by pointing the WebSocket URL at any OpenAI-compatible e
   <line x1="561" y1="114" x2="561" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 
   <!-- Return: suggestions right edge -> below -> web audio right edge -->
-  <polyline points="476,170 331,170 331,215 186,215 186,170" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ah)"/>
+  <polyline points="476,195 210,195 210,170 188,170" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ah)"/>
 
   <text x="331" y="232" text-anchor="middle" class="sub">audio stays client-side · agent communicates over WebSocket</text>
 </svg>
