@@ -22,7 +22,9 @@ Azure OpenAI, OpenAI, any OpenAI-compatible host, and a local echo provider for 
 ### 🔧 Copilot-style tools
 File read/write, shell execution, web search, code running — the practical toolset for a coding agent.
 
-### 🔄 Streaming
+### 📦 pip installable
+No build step, no Node.js, no separate install beyond Python.
+
 Real-time streaming output with tool call interleaving.
 
 ## Diagram
