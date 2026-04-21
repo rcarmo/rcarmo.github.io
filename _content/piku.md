@@ -38,10 +38,17 @@ Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016.
 - [Third Python's The Charm](https://taoofmac.com/space/blog/2016/12/04/1351) — 2016-12-04
 - [A Random Asynchronous Walk](https://taoofmac.com/space/blog/2017/04/02/2150) — 2017-04-02
 - [My Quest for Home Automation, Part 2](https://taoofmac.com/space/blog/2018/03/25/2244) — 2018-03-25
+- [The Obligatory GPDR Notice](https://taoofmac.com/space/blog/2018/05/24/2150) — 2018-05-24
 - [The Third Python](https://taoofmac.com/space/blog/2018/07/08/1330) — 2018-07-08
 - [My Quest for Home Automation, Part 3](https://taoofmac.com/space/blog/2018/09/23/1840) — 2018-09-23
 - [Dealing With a Million Legacy Files Every Day](https://taoofmac.com/space/blog/2019/08/11/2230) — 2019-08-11
+- [Post-Vacation Blues](https://taoofmac.com/space/blog/2019/09/15/1930) — 2019-09-15
 - [Deployment Pains](https://taoofmac.com/space/blog/2019/10/13/1630) — 2019-10-13
+- [Red Season](https://taoofmac.com/space/blog/2019/12/01/2000) — 2019-12-01
+- [Living The Static Life](https://taoofmac.com/space/blog/2021/03/06/1130) — 2021-03-06
+- [Building My Own Yahoo! Pipes](https://taoofmac.com/space/blog/2021/03/20/1945) — 2021-03-20
+- [My Quest for Home Automation, Part 5](https://taoofmac.com/space/blog/2021/11/28/2230) — 2021-11-28
+- [Getting Takahē to run on Piku](https://taoofmac.com/space/blog/2022/12/21/0900) — 2022-12-21
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 240">
