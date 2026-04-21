@@ -31,7 +31,7 @@ Interactive web UI for uploading an image and previewing depth and synthesised v
 Standard Python package with pinned dependencies — `pip install -r requirements.txt` and it runs.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 230">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -65,24 +65,32 @@ Standard Python package with pinned dependencies — `pip install -r requirement
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="70" width="120" height="80" rx="8" class="box"/>
-  <text x="80" y="108" text-anchor="middle" class="label">Single RGB</text>
-  <text x="80" y="123" text-anchor="middle" class="sub">image input</text>
-  <rect x="200" y="20" width="140" height="60" rx="8" class="box-purple"/>
-  <text x="270" y="53" text-anchor="middle" class="label">Transformer</text>
-  <text x="270" y="68" text-anchor="middle" class="sub">encoder (Sharp)</text>
-  <rect x="200" y="110" width="140" height="60" rx="8" class="box-accent"/>
-  <text x="270" y="143" text-anchor="middle" class="label">Depth head</text>
-  <text x="270" y="158" text-anchor="middle" class="sub">per-pixel depth</text>
-  <rect x="420" y="20" width="130" height="60" rx="8" class="box-green"/>
-  <text x="485" y="53" text-anchor="middle" class="label">Depth map</text>
-  <text x="485" y="68" text-anchor="middle" class="sub">16-bit EXR/PNG</text>
-  <rect x="420" y="110" width="130" height="60" rx="8" class="box-warm"/>
-  <text x="485" y="143" text-anchor="middle" class="label">Novel views</text>
-  <text x="485" y="158" text-anchor="middle" class="sub">point-cloud warp</text>
-  <line x1="140" y1="110" x2="200" y2="80" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="340" y1="50" x2="420" y2="50" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="270" y1="80" x2="270" y2="110" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="340" y1="140" x2="420" y2="140" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <text x="305" y="96" text-anchor="middle" class="sub">MPS/GPU</text>
+
+  <rect x="20" y="75" width="150" height="70" rx="8" class="box"/>
+  <text x="95" y="103" text-anchor="middle" class="label">Single RGB image</text>
+  <text x="95" y="120" text-anchor="middle" class="sub">input frame</text>
+
+  <rect x="250" y="20" width="170" height="70" rx="8" class="box-purple"/>
+  <text x="335" y="48" text-anchor="middle" class="label">Sharp transformer</text>
+  <text x="335" y="65" text-anchor="middle" class="sub">monocular depth encoder</text>
+
+  <rect x="250" y="120" width="170" height="70" rx="8" class="box-accent"/>
+  <text x="335" y="148" text-anchor="middle" class="label">Depth head</text>
+  <text x="335" y="165" text-anchor="middle" class="sub">dense per-pixel depth</text>
+
+  <rect x="500" y="20" width="170" height="70" rx="8" class="box-green"/>
+  <text x="585" y="48" text-anchor="middle" class="label">Depth map export</text>
+  <text x="585" y="65" text-anchor="middle" class="sub">16-bit EXR or PNG</text>
+
+  <rect x="500" y="120" width="170" height="70" rx="8" class="box-warm"/>
+  <text x="585" y="148" text-anchor="middle" class="label">Novel view synthesis</text>
+  <text x="585" y="165" text-anchor="middle" class="sub">point-cloud warp</text>
+
+  <rect x="270" y="95" width="130" height="20" rx="8" class="box"/>
+  <text x="335" y="109" text-anchor="middle" class="sub">PyTorch MPS / Apple GPU</text>
+
+  <line x1="170" y1="110" x2="246" y2="58" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="335" y1="90" x2="335" y2="118" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="420" y1="55" x2="496" y2="55" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="420" y1="155" x2="496" y2="155" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 </svg>
