@@ -33,11 +33,7 @@
           <a class="btn btn-primary" href="https://github.com/rcarmo/haiku-arm64-build" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
-      <div id="hero-related" class="hero-related">
-        <div class="related-label">Related</div>
-        <a href="/projects/byos_fastapi.html" class="related-link"><img src="/assets/logos-opt/byos_fastapi.png" alt="" class="related-logo"><span>byos_fastapi</span></a>
-        <a href="/projects/zmk-config-totem.html" class="related-link"><img src="/assets/logos-opt/default-01.png" alt="" class="related-logo"><span>zmk-config-totem</span></a>
-      </div>
+      <div id="hero-related-haiku-arm64-build" class="hero-related" hidden></div>
     </div>
   </header>
 
@@ -182,15 +178,16 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/haiku-arm64-build">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo7qxgis"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo89e5dr"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo7qxgis';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo89e5dr';
     mount({
       fullName: 'rcarmo/haiku-arm64-build',
       heroMetaEl: document.getElementById('hero-meta-island-haiku-arm64-build'),
       statsEl:    document.getElementById('stats-island-haiku-arm64-build'),
       releasesEl: document.getElementById('rel-island-haiku-arm64-build'),
-      relatedEl:  document.getElementById('related-island-haiku-arm64-build'),
+      relatedEl:  document.getElementById('hero-related-haiku-arm64-build'),
+      relatedCandidates: [{"id":"byos_fastapi","fullName":"usetrmnl/byos_fastapi","logo":"/assets/logos-opt/byos_fastapi.png"},{"id":"zmk-config-totem","fullName":"rcarmo/zmk-config-totem","logo":"/assets/logos-opt/default-01.png"}],
     });
   </script>
   <script>

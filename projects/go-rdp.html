@@ -33,14 +33,7 @@
           <a class="btn btn-primary" href="https://github.com/rcarmo/go-rdp" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
-      <div id="hero-related" class="hero-related">
-        <div class="related-label">Related</div>
-        <a href="/projects/ghostty-web.html" class="related-link"><img src="/assets/logos-opt/default-00.png" alt="" class="related-logo"><span>ghostty-web</span></a>
-        <a href="/projects/go-busybox.html" class="related-link"><img src="/assets/logos-opt/go-busybox.png" alt="" class="related-logo"><span>go-busybox</span></a>
-        <a href="/projects/go-te.html" class="related-link"><img src="/assets/logos-opt/go-te.png" alt="" class="related-logo"><span>go-te</span></a>
-        <a href="/projects/imapbackup.html" class="related-link"><img src="/assets/logos-opt/default-04.png" alt="" class="related-logo"><span>imapbackup</span></a>
-        <a href="/projects/webterm.html" class="related-link"><img src="/assets/logos-opt/webterm.png" alt="" class="related-logo"><span>webterm</span></a>
-      </div>
+      <div id="hero-related-go-rdp" class="hero-related" hidden></div>
     </div>
   </header>
 
@@ -184,15 +177,16 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/go-rdp">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo7qxgis"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo89e5dr"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo7qxgis';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo89e5dr';
     mount({
       fullName: 'rcarmo/go-rdp',
       heroMetaEl: document.getElementById('hero-meta-island-go-rdp'),
       statsEl:    document.getElementById('stats-island-go-rdp'),
       releasesEl: document.getElementById('rel-island-go-rdp'),
-      relatedEl:  document.getElementById('related-island-go-rdp'),
+      relatedEl:  document.getElementById('hero-related-go-rdp'),
+      relatedCandidates: [{"id":"ghostty-web","fullName":"rcarmo/ghostty-web","logo":"/assets/logos-opt/default-00.png"},{"id":"go-busybox","fullName":"rcarmo/go-busybox","logo":"/assets/logos-opt/go-busybox.png"},{"id":"go-te","fullName":"rcarmo/go-te","logo":"/assets/logos-opt/go-te.png"},{"id":"imapbackup","fullName":"rcarmo/imapbackup","logo":"/assets/logos-opt/default-04.png"},{"id":"webterm","fullName":"rcarmo/webterm","logo":"/assets/logos-opt/webterm.png"}],
     });
   </script>
   <script>

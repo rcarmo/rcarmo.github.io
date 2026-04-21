@@ -33,14 +33,7 @@
           <a class="btn btn-primary" href="https://github.com/rcarmo/vibes" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
-      <div id="hero-related" class="hero-related">
-        <div class="related-label">Related</div>
-        <a href="/projects/agentbox.html" class="related-link"><img src="/assets/logos-opt/agentbox.png" alt="" class="related-logo"><span>agentbox</span></a>
-        <a href="/projects/apfelstrudel.html" class="related-link"><img src="/assets/logos-opt/apfelstrudel.png" alt="" class="related-logo"><span>apfelstrudel</span></a>
-        <a href="/projects/piclaw.html" class="related-link"><img src="/assets/logos-opt/piclaw.png" alt="" class="related-logo"><span>piclaw</span></a>
-        <a href="/projects/python-office-mcp-server.html" class="related-link"><img src="/assets/logos-opt/default-00.png" alt="" class="related-logo"><span>python-office-mcp-server</span></a>
-        <a href="/projects/python-steward.html" class="related-link"><img src="/assets/logos-opt/python-steward.png" alt="" class="related-logo"><span>python-steward</span></a>
-      </div>
+      <div id="hero-related-vibes" class="hero-related" hidden></div>
     </div>
   </header>
 
@@ -168,15 +161,16 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/vibes">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo7qxgis"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo89e5dr"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo7qxgis';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo89e5dr';
     mount({
       fullName: 'rcarmo/vibes',
       heroMetaEl: document.getElementById('hero-meta-island-vibes'),
       statsEl:    document.getElementById('stats-island-vibes'),
       releasesEl: document.getElementById('rel-island-vibes'),
-      relatedEl:  document.getElementById('related-island-vibes'),
+      relatedEl:  document.getElementById('hero-related-vibes'),
+      relatedCandidates: [{"id":"agentbox","fullName":"rcarmo/agentbox","logo":"/assets/logos-opt/agentbox.png"},{"id":"apfelstrudel","fullName":"rcarmo/apfelstrudel","logo":"/assets/logos-opt/apfelstrudel.png"},{"id":"piclaw","fullName":"rcarmo/piclaw","logo":"/assets/logos-opt/piclaw.png"},{"id":"python-office-mcp-server","fullName":"rcarmo/python-office-mcp-server","logo":"/assets/logos-opt/default-00.png"},{"id":"python-steward","fullName":"rcarmo/python-steward","logo":"/assets/logos-opt/python-steward.png"},{"id":"umcp","fullName":"rcarmo/umcp","logo":"/assets/logos-opt/default-01.png"}],
     });
   </script>
   <script>

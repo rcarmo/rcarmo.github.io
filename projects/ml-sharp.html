@@ -33,12 +33,7 @@
           <a class="btn btn-primary" href="https://github.com/rcarmo/ml-sharp" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
-      <div id="hero-related" class="hero-related">
-        <div class="related-label">Related</div>
-        <a href="/projects/asterisk-embedding-model.html" class="related-link"><img src="/assets/logos-opt/asterisk-embedding-model.png" alt="" class="related-logo"><span>asterisk-embedding-model</span></a>
-        <a href="/projects/feed-summarizer.html" class="related-link"><img src="/assets/logos-opt/feed-summarizer.png" alt="" class="related-logo"><span>feed-summarizer</span></a>
-        <a href="/projects/gte-go.html" class="related-link"><img src="/assets/logos-opt/default-00.png" alt="" class="related-logo"><span>gte-go</span></a>
-      </div>
+      <div id="hero-related-ml-sharp" class="hero-related" hidden></div>
     </div>
   </header>
 
@@ -184,15 +179,16 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/ml-sharp">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo7qxgis"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo89e5dr"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo7qxgis';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo89e5dr';
     mount({
       fullName: 'rcarmo/ml-sharp',
       heroMetaEl: document.getElementById('hero-meta-island-ml-sharp'),
       statsEl:    document.getElementById('stats-island-ml-sharp'),
       releasesEl: document.getElementById('rel-island-ml-sharp'),
-      relatedEl:  document.getElementById('related-island-ml-sharp'),
+      relatedEl:  document.getElementById('hero-related-ml-sharp'),
+      relatedCandidates: [{"id":"asterisk-embedding-model","fullName":"rcarmo/asterisk-embedding-model","logo":"/assets/logos-opt/asterisk-embedding-model.png"},{"id":"feed-summarizer","fullName":"rcarmo/feed-summarizer","logo":"/assets/logos-opt/feed-summarizer.png"},{"id":"gte-go","fullName":"rcarmo/gte-go","logo":"/assets/logos-opt/default-00.png"}],
     });
   </script>
   <script>

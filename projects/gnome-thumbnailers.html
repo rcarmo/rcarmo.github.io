@@ -33,12 +33,7 @@
           <a class="btn btn-primary" href="https://github.com/rcarmo/gnome-thumbnailers" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
-      <div id="hero-related" class="hero-related">
-        <div class="related-label">Related</div>
-        <a href="/projects/go-ooxml.html" class="related-link"><img src="/assets/logos-opt/go-ooxml.png" alt="" class="related-logo"><span>go-ooxml</span></a>
-        <a href="/projects/pngcanvas.html" class="related-link"><img src="/assets/logos-opt/default-05.png" alt="" class="related-logo"><span>pngcanvas</span></a>
-        <a href="/projects/soup-strainer.html" class="related-link"><img src="/assets/logos-opt/default-04.png" alt="" class="related-logo"><span>soup-strainer</span></a>
-      </div>
+      <div id="hero-related-gnome-thumbnailers" class="hero-related" hidden></div>
     </div>
   </header>
 
@@ -185,15 +180,16 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/gnome-thumbnailers">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo7qxgis"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo89e5dr"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo7qxgis';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo89e5dr';
     mount({
       fullName: 'rcarmo/gnome-thumbnailers',
       heroMetaEl: document.getElementById('hero-meta-island-gnome-thumbnailers'),
       statsEl:    document.getElementById('stats-island-gnome-thumbnailers'),
       releasesEl: document.getElementById('rel-island-gnome-thumbnailers'),
-      relatedEl:  document.getElementById('related-island-gnome-thumbnailers'),
+      relatedEl:  document.getElementById('hero-related-gnome-thumbnailers'),
+      relatedCandidates: [{"id":"go-ooxml","fullName":"rcarmo/go-ooxml","logo":"/assets/logos-opt/go-ooxml.png"},{"id":"pngcanvas","fullName":"rcarmo/pngcanvas","logo":"/assets/logos-opt/default-04.png"},{"id":"soup-strainer","fullName":"rcarmo/soup-strainer","logo":"/assets/logos-opt/default-05.png"}],
     });
   </script>
   <script>

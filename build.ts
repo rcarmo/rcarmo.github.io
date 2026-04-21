@@ -238,7 +238,7 @@ function getSectionHtml(project: Project, heading: string): string {
 
 // ── Build project page ───────────────────────────────────────────────────────
 
-function buildProjectPage(project: Project): string {
+function buildProjectPage(project: Project, allProjects: Project[]): string {
   const { id, fm } = project;
   const fullName = fm.repo || `rcarmo/${id}`;
   const ghUrl = `https://github.com/${fullName}`;
@@ -281,6 +281,14 @@ function buildProjectPage(project: Project): string {
       <span class="post-date">${esc(p.date)}</span>
       <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
     </div>`).join("\n");
+
+  const relatedCandidates = allProjects
+    .filter(p => p.fm.section === fm.section && p.id !== id)
+    .map(p => ({
+      id: p.id,
+      fullName: p.fm.repo || `rcarmo/${p.id}`,
+      logo: logoSrc(p),
+    }));
 
   const logoImg = logo
     ? `<img class="hero-logo" src="${logo}" alt="${esc(fm.tagline || id)} logo">`
@@ -325,7 +333,7 @@ function buildProjectPage(project: Project): string {
           <a class="btn btn-primary" href="${ghUrl}" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
-      <div id="hero-related" class="hero-related"></div>
+      <div id="hero-related-${id}" class="hero-related" hidden></div>
     </div>
   </header>
 
@@ -389,7 +397,8 @@ ${posts.length ? `      <section class="sec" id="s-posts">
       heroMetaEl: document.getElementById('hero-meta-island-${id}'),
       statsEl:    document.getElementById('stats-island-${id}'),
       releasesEl: document.getElementById('rel-island-${id}'),
-      relatedEl:  document.getElementById('related-island-${id}'),
+      relatedEl:  document.getElementById('hero-related-${id}'),
+      relatedCandidates: ${JSON.stringify(relatedCandidates)},
     });
   </script>
   <script>
@@ -556,48 +565,6 @@ function buildIndex(projects: Project[]): string {
 </html>`;
 }
 
-// ── Related projects (build-time) ────────────────────────────────────────────
-
-function injectRelated(html: string, project: Project, allProjects: Project[]): string {
-  const explicitIds = (project.fm.related || "")
-    .split(",").map(s => s.trim()).filter(Boolean);
-  const explicit = explicitIds
-    .map(id => allProjects.find(p => p.id === id))
-    .filter(Boolean) as Project[];
-
-  const sectionMates = allProjects
-    .filter(p => p.fm.section === project.fm.section && p.id !== project.id);
-
-  const seen = new Set<string>();
-  const related: Project[] = [];
-  for (const p of [...explicit, ...sectionMates]) {
-    if (!seen.has(p.id) && p.id !== project.id) {
-      seen.add(p.id);
-      related.push(p);
-    }
-    if (related.length >= 5) break;
-  }
-
-  const placeholder = '<div id="hero-related" class="hero-related"></div>';
-
-  if (!related.length) {
-    return html.replace(placeholder, '<div id="hero-related" class="hero-related" hidden></div>');
-  }
-
-  const links = related.map(r => {
-    const logo = logoSrc(r);
-    const img = `<img src="${logo}" alt="" class="related-logo">`;
-    return `<a href="/projects/${r.id}.html" class="related-link">${img}<span>${esc(r.id)}</span></a>`;
-  }).join("\n        ");
-
-  const replacement = `<div id="hero-related" class="hero-related">
-        <div class="related-label">Related</div>
-        ${links}
-      </div>`;
-
-  return html.replace(placeholder, replacement);
-}
-
 // ── Main ─────────────────────────────────────────────────────────────────────
 
 const projects = readProjects();
@@ -608,8 +575,7 @@ if (RANDOM_FALLBACK_PROJECT_ID) console.log(`Random fallback icon: ${RANDOM_FALL
 // Build project pages
 let built = 0;
 for (const p of projects) {
-  let html = buildProjectPage(p);
-  html = injectRelated(html, p, projects);
+  const html = buildProjectPage(p, projects);
   writeFileSync(join(OUT, `${p.id}.html`), html);
   console.log(`  ✓ ${p.id}`);
   built++;

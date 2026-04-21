@@ -33,14 +33,7 @@
           <a class="btn btn-primary" href="https://github.com/piku/piku" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
-      <div id="hero-related" class="hero-related">
-        <div class="related-label">Related</div>
-        <a href="/projects/azure-docker-swarm-cluster.html" class="related-link"><img src="/assets/logos-opt/default-04.png" alt="" class="related-logo"><span>azure-docker-swarm-cluster</span></a>
-        <a href="/projects/azure-k3s-cluster.html" class="related-link"><img src="/assets/logos-opt/default-04.png" alt="" class="related-logo"><span>azure-k3s-cluster</span></a>
-        <a href="/projects/azure-stable-diffusion.html" class="related-link"><img src="/assets/logos-opt/default-04.png" alt="" class="related-logo"><span>azure-stable-diffusion</span></a>
-        <a href="/projects/azure-transcription-helper.html" class="related-link"><img src="/assets/logos-opt/default-01.png" alt="" class="related-logo"><span>azure-transcription-helper</span></a>
-        <a href="/projects/kata.html" class="related-link"><img src="/assets/logos-opt/kata.png" alt="" class="related-logo"><span>kata</span></a>
-      </div>
+      <div id="hero-related-piku" class="hero-related" hidden></div>
     </div>
   </header>
 
@@ -248,15 +241,16 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/piku/piku">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo7qxgis"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo89e5dr"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo7qxgis';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo89e5dr';
     mount({
       fullName: 'piku/piku',
       heroMetaEl: document.getElementById('hero-meta-island-piku'),
       statsEl:    document.getElementById('stats-island-piku'),
       releasesEl: document.getElementById('rel-island-piku'),
-      relatedEl:  document.getElementById('related-island-piku'),
+      relatedEl:  document.getElementById('hero-related-piku'),
+      relatedCandidates: [{"id":"azure-docker-swarm-cluster","fullName":"rcarmo/azure-docker-swarm-cluster","logo":"/assets/logos-opt/default-04.png"},{"id":"azure-k3s-cluster","fullName":"rcarmo/azure-k3s-cluster","logo":"/assets/logos-opt/default-04.png"},{"id":"azure-stable-diffusion","fullName":"rcarmo/azure-stable-diffusion","logo":"/assets/logos-opt/default-04.png"},{"id":"azure-transcription-helper","fullName":"rcarmo/azure-transcription-helper","logo":"/assets/logos-opt/default-01.png"},{"id":"kata","fullName":"rcarmo/kata","logo":"/assets/logos-opt/kata.png"}],
     });
   </script>
   <script>

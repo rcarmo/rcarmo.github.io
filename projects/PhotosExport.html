@@ -33,13 +33,7 @@
           <a class="btn btn-primary" href="https://github.com/rcarmo/PhotosExport" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
-      <div id="hero-related" class="hero-related">
-        <div class="related-label">Related</div>
-        <a href="/projects/daisy.html" class="related-link"><img src="/assets/logos-opt/daisy.png" alt="" class="related-logo"><span>daisy</span></a>
-        <a href="/projects/drawterm.html" class="related-link"><img src="/assets/logos-opt/drawterm.png" alt="" class="related-logo"><span>drawterm</span></a>
-        <a href="/projects/homekit-steam-user-switcher.html" class="related-link"><img src="/assets/logos-opt/default-01.png" alt="" class="related-logo"><span>homekit-steam-user-switcher</span></a>
-        <a href="/projects/macemu-jit.html" class="related-link"><img src="/assets/logos-opt/default-01.png" alt="" class="related-logo"><span>macemu-jit</span></a>
-      </div>
+      <div id="hero-related-PhotosExport" class="hero-related" hidden></div>
     </div>
   </header>
 
@@ -169,15 +163,16 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/PhotosExport">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo7qxgis"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo89e5dr"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo7qxgis';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo89e5dr';
     mount({
       fullName: 'rcarmo/PhotosExport',
       heroMetaEl: document.getElementById('hero-meta-island-PhotosExport'),
       statsEl:    document.getElementById('stats-island-PhotosExport'),
       releasesEl: document.getElementById('rel-island-PhotosExport'),
-      relatedEl:  document.getElementById('related-island-PhotosExport'),
+      relatedEl:  document.getElementById('hero-related-PhotosExport'),
+      relatedCandidates: [{"id":"daisy","fullName":"rcarmo/daisy","logo":"/assets/logos-opt/daisy.png"},{"id":"drawterm","fullName":"rcarmo/drawterm","logo":"/assets/logos-opt/drawterm.png"},{"id":"homekit-steam-user-switcher","fullName":"rcarmo/homekit-steam-user-switcher","logo":"/assets/logos-opt/default-01.png"},{"id":"macemu-jit","fullName":"rcarmo/macemu-jit","logo":"/assets/logos-opt/default-01.png"}],
     });
   </script>
   <script>

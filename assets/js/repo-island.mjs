@@ -204,6 +204,39 @@ function renderHeroStats(el, repoMap, repoCount) {
   `;
 }
 
+function renderHeroRelated(el, currentFullName, relatedCandidates, repoMap) {
+  if (!el) return;
+
+  const ranked = (relatedCandidates || [])
+    .map((candidate) => ({
+      ...candidate,
+      repo: repoMap[candidate.fullName] || null,
+    }))
+    .filter((candidate) => candidate.fullName !== currentFullName && candidate.repo)
+    .sort((a, b) => {
+      const starsA = a.repo?.stargazers_count ?? -1;
+      const starsB = b.repo?.stargazers_count ?? -1;
+      if (starsA !== starsB) return starsB - starsA;
+      return a.id.localeCompare(b.id);
+    })
+    .slice(0, 5);
+
+  if (!ranked.length) {
+    el.innerHTML = '';
+    el.hidden = true;
+    return;
+  }
+
+  el.innerHTML = `
+    <div class="related-label">Related</div>
+    ${ranked.map((candidate) => {
+      const img = candidate.logo ? `<img src="${candidate.logo}" alt="" class="related-logo">` : '<span class="related-logo" aria-hidden="true"></span>';
+      return `<a href="/projects/${candidate.id}.html" class="related-link">${img}<span>${candidate.id}</span></a>`;
+    }).join('')}
+  `;
+  el.hidden = false;
+}
+
 async function renderReleaseList(el, fullName) {
   if (!el || !fullName) return;
   el.innerHTML = `<div class="rel-loading"><span class="skel" style="width:10rem"></span></div>`;
@@ -228,14 +261,17 @@ async function renderReleaseList(el, fullName) {
   }
 }
 
-export function mount({ fullName, heroMetaEl, statsEl, releasesEl }) {
-  fetchAllRepos([fullName]).then((repoMap) => {
+export function mount({ fullName, heroMetaEl, statsEl, releasesEl, relatedEl, relatedCandidates = [] }) {
+  const fetchNames = [fullName, ...relatedCandidates.map((candidate) => candidate.fullName)];
+  fetchAllRepos(fetchNames).then((repoMap) => {
     const repo = repoMap[fullName] || null;
     renderHeroMeta(heroMetaEl, repo);
     renderStatsBar(statsEl, repo);
+    renderHeroRelated(relatedEl, fullName, relatedCandidates, repoMap);
   }).catch(() => {
     renderHeroMeta(heroMetaEl, null);
     renderStatsBar(statsEl, null);
+    renderHeroRelated(relatedEl, fullName, relatedCandidates, {});
   });
 
   if (releasesEl) renderReleaseList(releasesEl, fullName);

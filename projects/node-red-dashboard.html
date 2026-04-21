@@ -33,14 +33,7 @@
           <a class="btn btn-primary" href="https://github.com/rcarmo/node-red-dashboard" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
-      <div id="hero-related" class="hero-related">
-        <div class="related-label">Related</div>
-        <a href="/projects/bun-opds-server.html" class="related-link"><img src="/assets/logos-opt/default-00.png" alt="" class="related-logo"><span>bun-opds-server</span></a>
-        <a href="/projects/codebits-tv.html" class="related-link"><img src="/assets/logos-opt/codebits-tv.png" alt="" class="related-logo"><span>codebits-tv</span></a>
-        <a href="/projects/gotel.html" class="related-link"><img src="/assets/logos-opt/gotel.png" alt="" class="related-logo"><span>gotel</span></a>
-        <a href="/projects/ground-init.html" class="related-link"><img src="/assets/logos-opt/ground-init.png" alt="" class="related-logo"><span>ground-init</span></a>
-        <a href="/projects/mdnsbridge.html" class="related-link"><img src="/assets/logos-opt/mdnsbridge.png" alt="" class="related-logo"><span>mdnsbridge</span></a>
-      </div>
+      <div id="hero-related-node-red-dashboard" class="hero-related" hidden></div>
     </div>
   </header>
 
@@ -177,15 +170,16 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/node-red-dashboard">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo7qxgis"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo89e5dr"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo7qxgis';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo89e5dr';
     mount({
       fullName: 'rcarmo/node-red-dashboard',
       heroMetaEl: document.getElementById('hero-meta-island-node-red-dashboard'),
       statsEl:    document.getElementById('stats-island-node-red-dashboard'),
       releasesEl: document.getElementById('rel-island-node-red-dashboard'),
-      relatedEl:  document.getElementById('related-island-node-red-dashboard'),
+      relatedEl:  document.getElementById('hero-related-node-red-dashboard'),
+      relatedCandidates: [{"id":"bun-opds-server","fullName":"rcarmo/bun-opds-server","logo":"/assets/logos-opt/default-00.png"},{"id":"codebits-tv","fullName":"rcarmo/codebits-tv","logo":"/assets/logos-opt/codebits-tv.png"},{"id":"gotel","fullName":"rcarmo/gotel","logo":"/assets/logos-opt/gotel.png"},{"id":"ground-init","fullName":"rcarmo/ground-init","logo":"/assets/logos-opt/ground-init.png"},{"id":"mdnsbridge","fullName":"rcarmo/mdnsbridge","logo":"/assets/logos-opt/mdnsbridge.png"},{"id":"onepage-by-spec","fullName":"rcarmo/onepage-by-spec","logo":"/assets/logos-opt/default-01.png"},{"id":"proxmox-zpool-monitoring","fullName":"rcarmo/proxmox-zpool-monitoring","logo":"/assets/logos-opt/default-01.png"},{"id":"pve-microvm","fullName":"rcarmo/pve-microvm","logo":"/assets/logos-opt/pve-microvm.png"},{"id":"syncthing-kicker","fullName":"rcarmo/syncthing-kicker","logo":"/assets/logos-opt/syncthing-kicker.png"}],
     });
   </script>
   <script>
