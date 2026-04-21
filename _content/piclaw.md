@@ -75,8 +75,8 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
     .tiny { font-size: 10px; }
   </style>
   <defs>
-    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" class="conn" fill="currentColor" stroke="none"/></marker>
-    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" class="conn-strong" fill="currentColor" stroke="none"/></marker>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/></marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/></marker>
   </defs>
 
   <!-- User -->

@@ -56,10 +56,10 @@ Tracks recently forwarded records and suppresses re-forwarding to avoid amplific
   </style>
   <defs>
     <marker id="dns-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L0,8 L8,4 z" fill="currentColor" class="arrow-dns" style="stroke:none"/>
+      <path d="M0,0 L0,8 L8,4 z" fill="#5070a0" stroke="none"/>
     </marker>
     <marker id="mdns-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L0,8 L8,4 z" fill="currentColor" class="arrow-mdns" style="stroke:none"/>
+      <path d="M0,0 L0,8 L8,4 z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
 

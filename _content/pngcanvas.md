@@ -62,8 +62,7 @@ The entire library is one Python file — copy it into your project and import i
   </style>
   <defs>
     <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" class="arrow" style="fill:currentColor;stroke:none"/>
-    </marker>
+      <path d="M0,0 L0,6 L8,3 z" fill="#5070a0"/></marker>
   </defs>
   <rect x="20" y="50" width="130" height="80" rx="8" class="box"/>
   <text x="85" y="87" text-anchor="middle" class="label">Python script</text>

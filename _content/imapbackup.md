@@ -62,8 +62,7 @@ No dependencies beyond the Python standard library — copy one file, run it, do
   </style>
   <defs>
     <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" class="arrow" style="fill:currentColor;stroke:none"/>
-    </marker>
+      <path d="M0,0 L0,6 L8,3 z" fill="#5070a0"/></marker>
   </defs>
   <rect x="20" y="20" width="140" height="60" rx="8" class="box-accent"/>
   <text x="90" y="55" text-anchor="middle" class="label">IMAP Server</text>

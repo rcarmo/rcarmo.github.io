@@ -65,11 +65,9 @@ Powers the terminal in agentbox, piclaw, and ghostty-web.
   </style>
   <defs>
     <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" class="arrow" style="fill:currentColor;stroke:none"/>
-    </marker>
+      <path d="M0,0 L0,6 L8,3 z" fill="#5070a0"/></marker>
     <marker id="arr-accent" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" class="arrow-accent" style="fill:currentColor;stroke:none"/>
-    </marker>
+      <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/></marker>
   </defs>
   <rect width="520" height="200" class="bg" rx="8"/>
   
