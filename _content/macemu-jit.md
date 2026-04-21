@@ -80,10 +80,10 @@ Lower latency than X11.
 
   <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
   <text x="560" y="50" text-anchor="middle" class="label">ARM64 host</text>
-  <text x="560" y="68" text-anchor="middle" class="sub">native execution</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">Apple Silicon / Raspberry Pi</text>
 
 
-  <text x="330" y="168" text-anchor="middle" class="sub">68K via BasiliskII JIT · PPC via SheepShaver JIT</text>
+  <text x="330" y="168" text-anchor="middle" class="sub">68K via BasiliskII JIT · PPC via SheepShaver JIT on ARM64</text>
 
   <path d="M180,54 L250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
   <path d="M410,54 L480,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
