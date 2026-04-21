@@ -52,7 +52,8 @@
 
       <section class="sec" id="s-about">
         <div class="sec-label">Overview</div>
-        <p>ml-sharp runs the Sharp monocular depth estimation and novel view synthesis pipeline natively on Apple Silicon using PyTorch MPS acceleration. Feed it a single image and it produces depth maps and synthesised views from alternative camera angles — no NVIDIA GPU, no cloud API, just the M-series Neural Engine and GPU doing the work locally.</p>
+        <p>Forked from <a href="https://github.com/apple/ml-sharp" target="_blank" rel="noopener">apple/ml-sharp</a>. Adds Apple Silicon MPS support and Gradio demo to Apple's official Sharp depth model.</p>
+<p>ml-sharp runs the Sharp monocular depth estimation and novel view synthesis pipeline natively on Apple Silicon using PyTorch MPS acceleration. Feed it a single image and it produces depth maps and synthesised views from alternative camera angles — no NVIDIA GPU, no cloud API, just the M-series Neural Engine and GPU doing the work locally.</p>
       </section>
 
       <section class="sec" id="s-how">
@@ -179,9 +180,9 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/ml-sharp">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo89e5dr"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo8givnp"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo89e5dr';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo8givnp';
     mount({
       fullName: 'rcarmo/ml-sharp',
       heroMetaEl: document.getElementById('hero-meta-island-ml-sharp'),

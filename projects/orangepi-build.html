@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>orangepi-build — rcarmo</title>
+<meta name="description" content="Debian image builder for Orange Pi 6 Plus — Cix P1 SoC patches on top of the official build system.">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link id="dynamic-favicon" rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="canonical" href="https://rcarmo.github.io/projects/orangepi-build.html">
+</head>
+<body>
+  <nav class="topnav">
+    <a href="/" class="nav-home">rcarmo</a>
+    <a href="https://github.com/rcarmo/orangepi-build" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
+  </nav>
+
+  <header class="hero hero-project" id="hero" data-section="hardware">
+    <div class="hero-inner">
+      <img class="hero-logo" src="/assets/logos-opt/orangepi-build.png" alt="Debian image builder for Orange Pi 6 Plus — Cix P1 SoC patches on top of the official build system. logo">
+      <div class="hero-text">
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>orangepi-build</h1>
+          <span class="badge badge-active">active</span>
+        </div>
+        <p class="hero-tagline">Debian image builder for Orange Pi 6 Plus — Cix P1 SoC patches on top of the official build system.</p>
+        <div id="hero-meta-island-orangepi-build" class="hero-meta">
+          <!-- live: stars, forks, language -->
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://github.com/rcarmo/orangepi-build" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </div>
+      <div id="hero-related-orangepi-build" class="hero-related" hidden></div>
+    </div>
+  </header>
+
+  <div class="page-layout">
+    <aside class="toc-sidebar">
+      <a href="#s-about" class="toc-link" data-section="s-about">Overview</a>
+      <a href="#s-how" class="toc-link" data-section="s-how">How it works</a>
+      <a href="#s-features" class="toc-link" data-section="s-features">Features</a>
+      <a href="#s-diagram" class="toc-link" data-section="s-diagram">Diagram</a>
+    </aside>
+
+    <main class="content">
+      <div id="stats-island-orangepi-build" class="stats-bar">
+        <!-- live: stars, forks, issues, created -->
+      </div>
+
+      <section class="sec" id="s-about">
+        <div class="sec-label">Overview</div>
+        <p>Forked from <a href="https://github.com/orangepi-xunlong/orangepi-build" target="_blank" rel="noopener">orangepi-xunlong/orangepi-build</a>. Carries patches for the Orange Pi 6 Plus (Cix P1 SoC) Debian image build, on top of the official Orange Pi build system that covers Allwinner, Rockchip, Starfive, and Cix boards.</p>
+      </section>
+
+      <section class="sec" id="s-how">
+        <div class="sec-label">How it works</div>
+        <p>The build system runs on Ubuntu 22.04 and cross-compiles a full Debian image for the target board. It handles U-Boot, kernel, device tree, rootfs assembly, and image packaging. The fork adds board-specific patches and configuration for the Orange Pi 6 Plus and its Cix P1 SoC — a newer addition to the Orange Pi lineup that isn't fully upstream yet.</p>
+      </section>
+
+      <section class="sec" id="s-features">
+        <div class="sec-label">Features</div>
+        <div class="features-grid">
+          
+    <div class="feature">
+      <div class="feature-icon">🍊</div>
+      <div>
+        <div class="feature-title">Orange Pi 6 Plus</div>
+        <div class="feature-body"><p>Board-specific patches for the Cix P1 SoC — a powerful ARM SoC for SBC workloads.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">📦</div>
+      <div>
+        <div class="feature-title">Full Debian images</div>
+        <div class="feature-body"><p>Produces ready-to-flash SD card or eMMC images with a working Debian userland.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🔧</div>
+      <div>
+        <div class="feature-title">Official build system</div>
+        <div class="feature-body"><p>Based on the well-maintained orangepi-build toolchain — same workflow as all other Orange Pi boards.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🖥</div>
+      <div>
+        <div class="feature-title">Multi-board support</div>
+        <div class="feature-body"><p>The upstream build system covers 20+ boards across Allwinner H6/H616/T527, Rockchip RK3399/RK3566/RK3588, Starfive JH7110, and Cix P1.</p></div>
+      </div>
+    </div>
+        </div>
+      </section>
+
+      <section class="sec" id="s-diagram">
+        <div class="sec-label">Architecture</div>
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" width="520" height="180">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #21262d; stroke: #30363d; }
+      .box-accent { fill: #0d2340; stroke: #2b6cb0; }
+      .box-green { fill: #0d2a1f; stroke: #2a7a3a; }
+      .box-warm { fill: #2a1e18; stroke: #c87020; }
+      .label { fill: #e8e8e8; font-size: 13px; font-weight: 600; }
+      .sub { fill: #8b949e; font-size: 11px; }
+      .arrow { stroke: #3a5070; fill: none; }
+      .arr-accent { stroke: #2b5cb0; fill: none; }
+    }
+    @media (prefers-color-scheme: light) {
+      .bg { fill: transparent; }
+      .box { fill: #ffffff; stroke: #d0d7de; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; }
+      .box-green { fill: #d1fae5; stroke: #059669; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; }
+      .label { fill: #1a2a40; font-size: 13px; font-weight: 600; }
+      .sub { fill: #6b7280; font-size: 11px; }
+      .arrow { stroke: #90a8c0; fill: none; }
+      .arr-accent { stroke: #3b82f6; fill: none; }
+    }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+  </style>
+  <defs>
+    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
+      <path d="M0,0 L0,6 L8,3 z" class="arrow" style="fill:currentColor;stroke:none"/>
+    </marker>
+  </defs>
+  <rect x="20" y="30" width="100" height="50" rx="8" class="box-accent"/>
+  <text x="70" y="52" text-anchor="middle" class="label">U-Boot</text>
+  <text x="70" y="68" text-anchor="middle" class="sub">bootloader</text>
+  <rect x="20" y="100" width="100" height="50" rx="8" class="box-accent"/>
+  <text x="70" y="122" text-anchor="middle" class="label">Kernel + DT</text>
+  <text x="70" y="138" text-anchor="middle" class="sub">Cix P1 patches</text>
+  <rect x="180" y="60" width="130" height="60" rx="8" class="box-green"/>
+  <text x="245" y="87" text-anchor="middle" class="label">orangepi-build</text>
+  <text x="245" y="103" text-anchor="middle" class="sub">cross-compile</text>
+  <rect x="370" y="60" width="120" height="60" rx="8" class="box-warm"/>
+  <text x="430" y="87" text-anchor="middle" class="label">Debian image</text>
+  <text x="430" y="103" text-anchor="middle" class="sub">SD / eMMC</text>
+  <line x1="120" y1="55" x2="180" y2="80" class="arr-accent" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="120" y1="125" x2="180" y2="100" class="arr-accent" stroke-width="1.5" marker-end="url(#arr)"/>
+  <line x1="310" y1="90" x2="370" y2="90" class="arrow" stroke-width="1.5" marker-end="url(#arr)"/>
+  <text x="260" y="165" text-anchor="middle" class="sub">Ubuntu 22.04 host — produces flashable ARM images</text>
+</svg></div>
+      </section>
+
+
+
+
+    </main>
+  </div>
+
+  <footer>
+    <span class="foot-l">rcarmo.github.io</span>
+    <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/orangepi-build">Source</a></span>
+  </footer>
+
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo8givnp"></script>
+  <script type="module">
+    import { mount } from '/assets/js/repo-island.mjs?v=mo8givnp';
+    mount({
+      fullName: 'rcarmo/orangepi-build',
+      heroMetaEl: document.getElementById('hero-meta-island-orangepi-build'),
+      statsEl:    document.getElementById('stats-island-orangepi-build'),
+      releasesEl: document.getElementById('rel-island-orangepi-build'),
+      relatedEl:  document.getElementById('hero-related-orangepi-build'),
+      relatedCandidates: [{"id":"byos_fastapi","fullName":"usetrmnl/byos_fastapi","logo":"/assets/logos-opt/byos_fastapi.png"},{"id":"haiku-arm64-build","fullName":"rcarmo/haiku-arm64-build","logo":"/assets/logos-opt/haiku-arm64-build.png"},{"id":"zmk-config-totem","fullName":"rcarmo/zmk-config-totem","logo":"/assets/logos-opt/default-01.png"}],
+    });
+  </script>
+  <script>
+    // Scroll-spy for TOC
+    const tocLinks = document.querySelectorAll('.toc-link');
+    if (tocLinks.length) {
+      const sections = [...tocLinks].map(l => ({
+        link: l,
+        el: document.getElementById(l.dataset.section)
+      })).filter(s => s.el);
+      const obs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            tocLinks.forEach(l => l.classList.remove('active'));
+            const match = sections.find(s => s.el === e.target);
+            if (match) match.link.classList.add('active');
+          }
+        }
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      sections.forEach(s => obs.observe(s.el));
+    }
+  </script>
+</body>
+</html>

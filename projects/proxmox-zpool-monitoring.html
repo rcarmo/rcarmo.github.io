@@ -53,7 +53,8 @@
 
       <section class="sec" id="s-about">
         <div class="sec-label">Overview</div>
-        <p>Python cron script exporting ZFS pool health, I/O, and capacity from Proxmox VE to Graphite. No daemon, no agent. Just a script and a metrics endpoint.</p>
+        <p>Forked from <a href="https://github.com/overcuriousity/proxmox-zpool-monitoring" target="_blank" rel="noopener">overcuriousity/proxmox-zpool-monitoring</a>. Adds Graphite push support and multi-pool parsing improvements.</p>
+<p>Python cron script exporting ZFS pool health, I/O, and capacity from Proxmox VE to Graphite. No daemon, no agent. Just a script and a metrics endpoint.</p>
       </section>
 
       <section class="sec" id="s-how">
@@ -167,9 +168,9 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/proxmox-zpool-monitoring">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo89e5dr"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo8givnp"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo89e5dr';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo8givnp';
     mount({
       fullName: 'rcarmo/proxmox-zpool-monitoring',
       heroMetaEl: document.getElementById('hero-meta-island-proxmox-zpool-monitoring'),

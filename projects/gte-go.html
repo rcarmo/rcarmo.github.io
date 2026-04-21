@@ -52,7 +52,8 @@
 
       <section class="sec" id="s-about">
         <div class="sec-label">Overview</div>
-        <p>gte-go runs the GTE Small sentence embedding model entirely in Go using ONNX Runtime. Feed it a string, get back a 384-dimensional float32 vector — ready for cosine similarity, nearest-neighbour search, or any other semantic retrieval task. No Python, no PyTorch, no GPU required; compiles to a single binary that works on any platform ONNX Runtime supports.</p>
+        <p>Forked from <a href="https://github.com/antirez/gte-pure-C" target="_blank" rel="noopener">antirez/gte-pure-C</a>. Complete rewrite in Go with ONNX Runtime backend for embeddable library use.</p>
+<p>gte-go runs the GTE Small sentence embedding model entirely in Go using ONNX Runtime. Feed it a string, get back a 384-dimensional float32 vector — ready for cosine similarity, nearest-neighbour search, or any other semantic retrieval task. No Python, no PyTorch, no GPU required; compiles to a single binary that works on any platform ONNX Runtime supports.</p>
       </section>
 
       <section class="sec" id="s-how">
@@ -175,9 +176,9 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/gte-go">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo89e5dr"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo8givnp"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo89e5dr';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo8givnp';
     mount({
       fullName: 'rcarmo/gte-go',
       heroMetaEl: document.getElementById('hero-meta-island-gte-go'),
