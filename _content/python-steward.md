@@ -22,9 +22,6 @@ Azure OpenAI, OpenAI, any OpenAI-compatible host, and a local echo provider for 
 ### 🔧 Copilot-style tools
 File read/write, shell execution, web search, code running — the practical toolset for a coding agent.
 
-### 📦 pip installable
-`pip install git+https://github.com/rcarmo/python-steward.git` — no build step, no Node.js required.
-
 ### 🔄 Streaming
 Real-time streaming output with tool call interleaving.
 
