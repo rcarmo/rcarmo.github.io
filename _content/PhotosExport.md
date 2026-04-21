@@ -81,7 +81,8 @@ Nothing fails silently — export_errors.log for every failure.
   <text x="560" y="140" text-anchor="middle" class="label">EXIF / XMP intact</text>
 
   <rect x="480" y="188" width="160" height="60" rx="8" class="box"/>
-  <text x="560" y="222" text-anchor="middle" class="label">YYYY/MM hierarchy + JSON</text>
+  <text x="560" y="214" text-anchor="middle" class="label">YYYY/MM hierarchy</text>
+  <text x="560" y="232" text-anchor="middle" class="sub">+ JSON</text>
 
   <text x="330" y="300" text-anchor="middle" class="sub">macOS PhotoKit framework — no private APIs</text>
 
