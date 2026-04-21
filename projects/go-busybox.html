@@ -101,7 +101,7 @@
 
       <section class="sec" id="s-diagram">
         <div class="sec-label">Architecture</div>
-        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180">
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 220">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -135,23 +135,39 @@
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="480" height="180" class="bg" rx="8"/>
-  
-  <rect x="20" y="60" width="90" height="55" rx="5" class="box-accent"/><text x="65" y="84" text-anchor="middle" class="label">busybox</text><text x="65" y="98" text-anchor="middle" class="sub">multi-call binary</text>
-  <line x1="110" y1="87" x2="150" y2="60" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="110" y1="87" x2="150" y2="90" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="110" y1="87" x2="150" y2="120" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="150" y="45" width="100" height="30" rx="5" class="box"/><text x="200" y="65" text-anchor="middle" class="label">ls / cat / grep</text>
-  <rect x="150" y="82" width="100" height="30" rx="5" class="box"/><text x="200" y="102" text-anchor="middle" class="label">find / sed / awk</text>
-  <rect x="150" y="120" width="100" height="30" rx="5" class="box"/><text x="200" y="140" text-anchor="middle" class="label">ps / kill / xargs…</text>
-  <text x="20" y="40" class="sub">Native binary</text>
-  <text x="270" y="40" class="sub">WASM target</text>
-  <line x1="260" y1="30" x2="260" y2="155" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="270" y="55" width="100" height="30" rx="5" class="box-green"/><text x="320" y="67" text-anchor="middle" class="label">busybox.wasm</text><text x="320" y="81" text-anchor="middle" class="sub">2 MB</text>
-  <rect x="270" y="95" width="100" height="30" rx="5" class="box-warm"/><text x="320" y="107" text-anchor="middle" class="label">wasmtime sandbox</text><text x="320" y="121" text-anchor="middle" class="sub">no host access</text>
-  <rect x="270" y="135" width="100" height="30" rx="5" class="box"/><text x="320" y="147" text-anchor="middle" class="label">57 applets, 100%</text><text x="320" y="161" text-anchor="middle" class="sub">test coverage</text>
-  <text x="240" y="168" text-anchor="middle" class="sub">Compiles to native binary or 2MB WASM — runs in any sandbox</text>
+  <rect width="620" height="220" class="bg" rx="8"/>
 
+  <rect x="20" y="76" width="120" height="68" rx="8" class="box-accent"/>
+  <text x="80" y="104" text-anchor="middle" class="label">busybox</text>
+  <text x="80" y="121" text-anchor="middle" class="sub">multi-call binary</text>
+
+  <rect x="210" y="24" width="140" height="48" rx="8" class="box"/>
+  <text x="280" y="44" text-anchor="middle" class="label">ls · cat · grep</text>
+  <text x="280" y="59" text-anchor="middle" class="sub">native applets</text>
+
+  <rect x="210" y="86" width="140" height="48" rx="8" class="box"/>
+  <text x="280" y="106" text-anchor="middle" class="label">find · sed · awk</text>
+  <text x="280" y="121" text-anchor="middle" class="sub">native applets</text>
+
+  <rect x="210" y="148" width="140" height="48" rx="8" class="box"/>
+  <text x="280" y="168" text-anchor="middle" class="label">ps · kill · xargs</text>
+  <text x="280" y="183" text-anchor="middle" class="sub">native applets</text>
+
+  <rect x="420" y="56" width="160" height="72" rx="8" class="box-green"/>
+  <text x="500" y="84" text-anchor="middle" class="label">busybox.wasm</text>
+  <text x="500" y="101" text-anchor="middle" class="sub">TinyGo · ~2 MB</text>
+
+  <rect x="420" y="138" width="160" height="56" rx="8" class="box-warm"/>
+  <text x="500" y="162" text-anchor="middle" class="label">WASM sandbox</text>
+  <text x="500" y="179" text-anchor="middle" class="sub">stubbed OS features</text>
+
+  <line x1="140" y1="110" x2="206" y2="48" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="140" y1="110" x2="206" y2="110" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="140" y1="110" x2="206" y2="172" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="350" y1="110" x2="416" y2="92" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="500" y1="128" x2="500" y2="134" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="310" y="212" text-anchor="middle" class="sub">Compiles to a native multi-call binary or a sandboxable WASM module</text>
 </svg></div>
       </section>
 
@@ -183,9 +199,9 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/go-busybox">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo8zq4yv"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo8zvdpk"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo8zq4yv';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo8zvdpk';
     mount({
       fullName: 'rcarmo/go-busybox',
       heroMetaEl: document.getElementById('hero-meta-island-go-busybox'),

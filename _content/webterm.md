@@ -30,7 +30,7 @@ Powers the terminal in agentbox, piclaw, and ghostty-web.
 - [Notes for February 8-15](https://taoofmac.com/space/notes/2026/02/15/1530) — 2026-02-15
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 220">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -64,24 +64,28 @@ Powers the terminal in agentbox, piclaw, and ghostty-web.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="520" height="200" class="bg" rx="8"/>
-  
-  <rect x="20" y="60" width="110" height="80" rx="6" class="box-accent" stroke-width="1.5"/>
-    <text x="75" y="96" text-anchor="middle" class="label">Browser</text>
-    <text x="75" y="109" text-anchor="middle" class="sublabel">xterm canvas</text>
-  <line x1="130" y1="100" x2="170" y2="100" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <text x="150" y="90" text-anchor="middle" class="sublabel">WebSocket</text>
-  <rect x="170" y="60" width="110" height="80" rx="6" class="box-green" stroke-width="1.5"/>
-    <text x="225" y="96" text-anchor="middle" class="label">Go server</text>
-    <text x="225" y="109" text-anchor="middle" class="sublabel">go-te state</text>
-  <line x1="280" y1="80" x2="320" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="280" y1="120" x2="320" y2="120" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="320" y="60" width="110" height="38" rx="6" class="box" stroke-width="1.5"/>
-    <text x="375" y="75" text-anchor="middle" class="label">PTY</text>
-    <text x="375" y="88" text-anchor="middle" class="sublabel">shell process</text>
-  <rect x="320" y="102" width="110" height="38" rx="6" class="box" stroke-width="1.5"/>
-    <text x="375" y="117" text-anchor="middle" class="label">WASM renderer</text>
-    <text x="375" y="130" text-anchor="middle" class="sublabel">vt100 parser</text>
-  <text x="260" y="185" text-anchor="middle" class="sublabel">Multi-session dashboard: tile N terminals side-by-side</text>
+  <rect width="620" height="220" class="bg" rx="8"/>
 
+  <rect x="20" y="78" width="140" height="68" rx="8" class="box-accent"/>
+  <text x="90" y="106" text-anchor="middle" class="label">Browser UI</text>
+  <text x="90" y="123" text-anchor="middle" class="sub">dashboard + keybar</text>
+
+  <rect x="230" y="78" width="150" height="68" rx="8" class="box-green"/>
+  <text x="305" y="106" text-anchor="middle" class="label">Go server</text>
+  <text x="305" y="123" text-anchor="middle" class="sub">PTY + go-te state</text>
+
+  <rect x="450" y="28" width="130" height="56" rx="8" class="box"/>
+  <text x="515" y="52" text-anchor="middle" class="label">PTY session</text>
+  <text x="515" y="69" text-anchor="middle" class="sub">shell process</text>
+
+  <rect x="450" y="122" width="130" height="56" rx="8" class="box-warm"/>
+  <text x="515" y="146" text-anchor="middle" class="label">WASM renderer</text>
+  <text x="515" y="163" text-anchor="middle" class="sub">VT100 / xterm parser</text>
+
+  <line x1="160" y1="112" x2="226" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <text x="193" y="100" text-anchor="middle" class="sub">WebSocket</text>
+  <line x1="380" y1="112" x2="446" y2="56" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="380" y1="112" x2="446" y2="150" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="310" y="206" text-anchor="middle" class="sub">Multi-session dashboard: tile N terminals side-by-side</text>
 </svg>
