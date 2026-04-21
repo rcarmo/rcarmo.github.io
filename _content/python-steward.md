@@ -2,19 +2,20 @@
 section: ai-agents
 status: experimental
 created: 2025-12-20
-tagline: Python CLI harness for running LLMs with a Copilot-style toolset — Azure OpenAI, local providers, tool use.
+tagline: The simplest coding agent harness that could possibly work — Python, tool use, done.
 logo: assets/logos-opt/python-steward.png
 ---
 
 ## About
-Steward is a Python CLI agent that runs LLMs with a practical toolset — file operations, shell commands, web search, and code execution. Developed primarily against Azure OpenAI but also supports OpenAI-compatible hosts and a local echo provider. Bootstrapped from an earlier Bun prototype, then rewritten in Python for broader compatibility.
+Steward is the simplest coding agent harness that could possibly work. A Python CLI that connects to an LLM, gives it tools (files, shell, web search), and runs a conversation loop. That's it. No framework, no plugin system, no abstractions — just a streaming tool-use loop in readable Python. Bootstrapped from an earlier Bun prototype, then rewritten in Python because sometimes you just want `pip install` and go.
 
 ## How it works
-Steward connects to an LLM provider (Azure OpenAI, OpenAI, or any compatible API) and exposes a set of tools the model can call: reading/writing files, running shell commands, searching the web, and managing context. The CLI runs a conversation loop where the model can chain tool calls to accomplish tasks, with streaming output and conversation history.
-
-Configuration is via environment variables or a `.env` file. Tools are registered as Python functions with JSON schema descriptions that the model sees as available actions.
+One conversation loop: the user types a prompt, Steward sends it to the LLM with a list of available tools, the model calls tools, Steward executes them and feeds results back. Repeat until the model is done. Tools are plain Python functions with type annotations — the JSON schema the model sees is generated automatically. Configuration is a `.env` file. The whole thing fits in your head.
 
 ## Features
+### 🧠 The simplest thing that works
+No framework, no plugin system, no abstractions. One file, one loop, readable Python. The whole agent fits in your head.
+
 ### 🤖 Multi-provider
 Azure OpenAI, OpenAI, any OpenAI-compatible host, and a local echo provider for testing.
 

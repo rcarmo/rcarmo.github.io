@@ -4,7 +4,7 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>python-steward — rcarmo</title>
-<meta name="description" content="Python CLI harness for running LLMs with a Copilot-style toolset — Azure OpenAI, local providers, tool use.">
+<meta name="description" content="The simplest coding agent harness that could possibly work — Python, tool use, done.">
 <link rel="stylesheet" href="/assets/css/style.css">
 <link id="dynamic-favicon" rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/favicon.png">
@@ -18,14 +18,14 @@
 
   <header class="hero hero-project" id="hero" data-section="ai-agents">
     <div class="hero-inner">
-      <img class="hero-logo" src="/assets/logos-opt/python-steward.png" alt="Python CLI harness for running LLMs with a Copilot-style toolset — Azure OpenAI, local providers, tool use. logo">
+      <img class="hero-logo" src="/assets/logos-opt/python-steward.png" alt="The simplest coding agent harness that could possibly work — Python, tool use, done. logo">
       <div class="hero-text">
         <div class="hero-kicker">Project</div>
         <div class="hero-title-row">
           <h1>python-steward</h1>
           <span class="badge badge-experimental">experimental</span>
         </div>
-        <p class="hero-tagline">Python CLI harness for running LLMs with a Copilot-style toolset — Azure OpenAI, local providers, tool use.</p>
+        <p class="hero-tagline">The simplest coding agent harness that could possibly work — Python, tool use, done.</p>
         <div id="hero-meta-island-python-steward" class="hero-meta">
           <!-- live: stars, forks, language -->
         </div>
@@ -52,19 +52,26 @@
 
       <section class="sec" id="s-about">
         <div class="sec-label">Overview</div>
-        <p>Steward is a Python CLI agent that runs LLMs with a practical toolset — file operations, shell commands, web search, and code execution. Developed primarily against Azure OpenAI but also supports OpenAI-compatible hosts and a local echo provider. Bootstrapped from an earlier Bun prototype, then rewritten in Python for broader compatibility.</p>
+        <p>Steward is the simplest coding agent harness that could possibly work. A Python CLI that connects to an LLM, gives it tools (files, shell, web search), and runs a conversation loop. That's it. No framework, no plugin system, no abstractions — just a streaming tool-use loop in readable Python. Bootstrapped from an earlier Bun prototype, then rewritten in Python because sometimes you just want <code>pip install</code> and go.</p>
       </section>
 
       <section class="sec" id="s-how">
         <div class="sec-label">How it works</div>
-        <p>Steward connects to an LLM provider (Azure OpenAI, OpenAI, or any compatible API) and exposes a set of tools the model can call: reading/writing files, running shell commands, searching the web, and managing context. The CLI runs a conversation loop where the model can chain tool calls to accomplish tasks, with streaming output and conversation history.</p>
-<p>Configuration is via environment variables or a <code>.env</code> file. Tools are registered as Python functions with JSON schema descriptions that the model sees as available actions.</p>
+        <p>One conversation loop: the user types a prompt, Steward sends it to the LLM with a list of available tools, the model calls tools, Steward executes them and feeds results back. Repeat until the model is done. Tools are plain Python functions with type annotations — the JSON schema the model sees is generated automatically. Configuration is a <code>.env</code> file. The whole thing fits in your head.</p>
       </section>
 
       <section class="sec" id="s-features">
         <div class="sec-label">Features</div>
         <div class="features-grid">
           
+    <div class="feature">
+      <div class="feature-icon">🧠</div>
+      <div>
+        <div class="feature-title">The simplest thing that works</div>
+        <div class="feature-body"><p>No framework, no plugin system, no abstractions. One file, one loop, readable Python. The whole agent fits in your head.</p></div>
+      </div>
+    </div>
+
     <div class="feature">
       <div class="feature-icon">🤖</div>
       <div>
@@ -161,9 +168,9 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/python-steward">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo8tt12s"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo8tu4pb"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo8tt12s';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo8tu4pb';
     mount({
       fullName: 'rcarmo/python-steward',
       heroMetaEl: document.getElementById('hero-meta-island-python-steward'),
