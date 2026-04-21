@@ -30,7 +30,7 @@ Import as a Go module into any service that needs local semantic search — agen
 Model weights are bundled or loaded from disk at startup — no network calls, no external API keys.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -64,20 +64,29 @@ Model weights are bundled or loaded from disk at startup — no network calls, n
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="50" width="110" height="80" rx="8" class="box"/>
-  <text x="75" y="88" text-anchor="middle" class="label">Go string</text>
-  <text x="75" y="103" text-anchor="middle" class="sub">text input</text>
-  <rect x="190" y="20" width="130" height="60" rx="8" class="box-accent"/>
-  <text x="255" y="53" text-anchor="middle" class="label">Tokenizer</text>
-  <text x="255" y="68" text-anchor="middle" class="sub">WordPiece (Go)</text>
-  <rect x="190" y="100" width="130" height="60" rx="8" class="box-purple"/>
-  <text x="255" y="133" text-anchor="middle" class="label">ONNX Runtime</text>
-  <text x="255" y="148" text-anchor="middle" class="sub">cgo bindings</text>
-  <rect x="390" y="50" width="130" height="80" rx="8" class="box-green"/>
-  <text x="455" y="88" text-anchor="middle" class="label">[]float32</text>
-  <text x="455" y="103" text-anchor="middle" class="sub">384-dim vector</text>
-  <line x1="130" y1="90" x2="190" y2="70" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="130" y1="105" x2="190" y2="130" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="320" y1="70" x2="390" y2="80" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="320" y1="130" x2="390" y2="100" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
+
+  <rect x="20" y="74" width="140" height="72" rx="8" class="box"/>
+  <text x="90" y="102" text-anchor="middle" class="label">Go string</text>
+  <text x="90" y="119" text-anchor="middle" class="sub">text input</text>
+
+  <rect x="220" y="74" width="150" height="72" rx="8" class="box-accent"/>
+  <text x="295" y="102" text-anchor="middle" class="label">Tokenizer</text>
+  <text x="295" y="119" text-anchor="middle" class="sub">WordPiece in Go</text>
+
+  <rect x="430" y="74" width="150" height="72" rx="8" class="box-purple"/>
+  <text x="505" y="102" text-anchor="middle" class="label">GTE Small ONNX</text>
+  <text x="505" y="119" text-anchor="middle" class="sub">inference via cgo</text>
+
+  <rect x="640" y="74" width="100" height="72" rx="8" class="box-green"/>
+  <text x="690" y="102" text-anchor="middle" class="label">[]float32</text>
+  <text x="690" y="119" text-anchor="middle" class="sub">384-dim</text>
+
+  <rect x="450" y="24" width="110" height="28" rx="8" class="box"/>
+  <text x="505" y="42" text-anchor="middle" class="sub">ONNX Runtime</text>
+
+  <line x1="160" y1="110" x2="216" y2="110" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="370" y1="110" x2="426" y2="110" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="580" y1="110" x2="636" y2="110" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="380" y="188" text-anchor="middle" class="sub">fully offline semantic embeddings in a single Go binary</text>
 </svg>
