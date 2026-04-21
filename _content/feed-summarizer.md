@@ -7,17 +7,17 @@ logo: assets/logos-opt/feed-summarizer.png
 ---
 
 ## About
-Cron-job RSS/Atom summarizer. Fetches feeds, extracts full article text with trafilatura, batches prompts to a local Ollama or cloud LLM, writes a static HTML digest. No daemon, no database. Powers feeds.carmo.io.
+Cron-job RSS/Atom summarizer. Fetches feeds, extracts full article text with readability-lxml, batches prompts to Azure OpenAI, and writes static HTML and JSON digests. No daemon, no database. Powers feeds.carmo.io.
 
 ## How it works
-trafilatura extracts the actual article body from the linked page, not the RSS description snippet. Summaries batch to the LLM — about 50 articles/hour on a Raspberry Pi 4 with a quantised model. Output is a static HTML file and JSON. Add to crontab and forget it.
+The fetcher pulls feed entries, fetches linked pages when needed, and uses readability-lxml to extract the article body. Summaries are generated via Azure OpenAI, then published as static HTML and JSON output. Add it to crontab and forget it.
 
 ## Features
 ### 📰 Full-text extraction
-trafilatura extracts the article body, not the RSS description.
+readability-lxml extracts the article body, not just the RSS description.
 
-### 🤖 Local or cloud LLM
-Ollama on Raspberry Pi 4, or any OpenAI-compatible API.
+### 🤖 Azure OpenAI summarization
+Uses the OpenAI Python client against Azure OpenAI for async summarization.
 
 ### ⏰ Cron-friendly
 One Python script, no daemon.
@@ -70,12 +70,12 @@ Writes both HTML and JSON digests for publishing.
   <text x="90" y="126" text-anchor="middle" class="sub">poll links + metadata</text>
 
   <rect x="210" y="80" width="150" height="70" rx="8" class="box-accent"/>
-  <text x="285" y="109" text-anchor="middle" class="label">trafilatura</text>
+  <text x="285" y="109" text-anchor="middle" class="label">readability-lxml</text>
   <text x="285" y="126" text-anchor="middle" class="sub">extract full article text</text>
 
   <rect x="410" y="80" width="150" height="70" rx="8" class="box-warm"/>
-  <text x="485" y="109" text-anchor="middle" class="label">LLM summarizer</text>
-  <text x="485" y="126" text-anchor="middle" class="sub">local Ollama or API</text>
+  <text x="485" y="109" text-anchor="middle" class="label">Azure OpenAI</text>
+  <text x="485" y="126" text-anchor="middle" class="sub">async summarization</text>
 
   <rect x="610" y="80" width="130" height="70" rx="8" class="box-green"/>
   <text x="675" y="109" text-anchor="middle" class="label">Digest</text>
