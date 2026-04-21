@@ -22,12 +22,15 @@ Ollama on Raspberry Pi 4, or any OpenAI-compatible API.
 ### ⏰ Cron-friendly
 One Python script, no daemon.
 
+### 📄 Static output
+Writes both HTML and JSON digests for publishing.
+
 ## Posts
 - [My Rube Goldberg RSS Pipeline](https://taoofmac.com/space/blog/2026/01/17/2130) — 2026-01-17
 - [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 230">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -61,20 +64,30 @@ One Python script, no daemon.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="70" width="120" height="80" rx="8" class="box"/>
-  <text x="80" y="108" text-anchor="middle" class="label">RSS feeds</text>
-  <text x="80" y="123" text-anchor="middle" class="sub">full-text fetch</text>
-  <rect x="200" y="20" width="130" height="60" rx="8" class="box-accent"/>
-  <text x="265" y="53" text-anchor="middle" class="label">Extractor</text>
-  <text x="265" y="68" text-anchor="middle" class="sub">Readability</text>
-  <rect x="200" y="110" width="130" height="60" rx="8" class="box-warm"/>
-  <text x="265" y="143" text-anchor="middle" class="label">LLM</text>
-  <text x="265" y="158" text-anchor="middle" class="sub">local/remote</text>
-  <rect x="400" y="70" width="130" height="80" rx="8" class="box-green"/>
-  <text x="465" y="108" text-anchor="middle" class="label">Digest</text>
-  <text x="465" y="123" text-anchor="middle" class="sub">feeds.carmo.io</text>
-  <line x1="140" y1="110" x2="200" y2="80" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="140" y1="120" x2="200" y2="140" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="80" x2="400" y2="90" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="150" x2="400" y2="120" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
+
+  <rect x="20" y="80" width="140" height="70" rx="8" class="box"/>
+  <text x="90" y="109" text-anchor="middle" class="label">RSS / Atom feeds</text>
+  <text x="90" y="126" text-anchor="middle" class="sub">poll links + metadata</text>
+
+  <rect x="210" y="80" width="150" height="70" rx="8" class="box-accent"/>
+  <text x="285" y="109" text-anchor="middle" class="label">trafilatura</text>
+  <text x="285" y="126" text-anchor="middle" class="sub">extract full article text</text>
+
+  <rect x="410" y="80" width="150" height="70" rx="8" class="box-warm"/>
+  <text x="485" y="109" text-anchor="middle" class="label">LLM summarizer</text>
+  <text x="485" y="126" text-anchor="middle" class="sub">local Ollama or API</text>
+
+  <rect x="610" y="80" width="130" height="70" rx="8" class="box-green"/>
+  <text x="675" y="109" text-anchor="middle" class="label">Digest</text>
+  <text x="675" y="126" text-anchor="middle" class="sub">HTML + JSON</text>
+
+  <rect x="410" y="20" width="150" height="40" rx="8" class="box-purple"/>
+  <text x="485" y="45" text-anchor="middle" class="label">cron job</text>
+
+  <line x1="160" y1="115" x2="208" y2="115" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="360" y1="115" x2="408" y2="115" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="560" y1="115" x2="608" y2="115" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="485" y1="60" x2="485" y2="78" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="380" y="195" text-anchor="middle" class="sub">batch prompts · static output · Raspberry Pi friendly</text>
 </svg>
