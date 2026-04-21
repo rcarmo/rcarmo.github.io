@@ -29,7 +29,7 @@ Creates and uses predictable paths for code, data, config, logs, env/runtime sta
 Includes helper commands for Swarm secrets, Traefik inspection, mode switching, and simple git push deployment hooks.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 240">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -63,19 +63,36 @@ Includes helper commands for Swarm secrets, Traefik inspection, mode switching, 
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="50" width="120" height="80" rx="8" class="box"/>
-  <text x="80" y="88" text-anchor="middle" class="label">Kata module</text>
-  <text x="80" y="103" text-anchor="middle" class="sub">problem + tests</text>
-  <rect x="200" y="50" width="130" height="80" rx="8" class="box-accent"/>
-  <text x="265" y="88" text-anchor="middle" class="label">Test runner</text>
-  <text x="265" y="103" text-anchor="middle" class="sub">bun test / pytest</text>
-  <rect x="390" y="20" width="120" height="60" rx="8" class="box-warm"/>
-  <text x="450" y="53" text-anchor="middle" class="label">LLM feedback</text>
-  <text x="450" y="68" text-anchor="middle" class="sub">style · edge cases</text>
-  <rect x="390" y="100" width="120" height="60" rx="8" class="box-green"/>
-  <text x="450" y="133" text-anchor="middle" class="label">Progress log</text>
-  <text x="450" y="148" text-anchor="middle" class="sub">SQLite</text>
-  <line x1="140" y1="90" x2="200" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="330" y1="80" x2="390" y2="50" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="100" x2="390" y2="130" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
+
+  <rect x="20" y="82" width="150" height="72" rx="8" class="box"/>
+  <text x="95" y="110" text-anchor="middle" class="label">kata-compose.yaml</text>
+  <text x="95" y="127" text-anchor="middle" class="sub">app definition</text>
+
+  <rect x="230" y="82" width="170" height="72" rx="8" class="box-accent"/>
+  <text x="315" y="110" text-anchor="middle" class="label">kata wrapper</text>
+  <text x="315" y="127" text-anchor="middle" class="sub">expand helpers + merge config</text>
+
+  <rect x="460" y="22" width="150" height="60" rx="8" class="box-purple"/>
+  <text x="535" y="48" text-anchor="middle" class="label">Runtime helpers</text>
+  <text x="535" y="65" text-anchor="middle" class="sub">Python · Node · PHP · Bun</text>
+
+  <rect x="460" y="92" width="150" height="60" rx="8" class="box-green"/>
+  <text x="535" y="118" text-anchor="middle" class="label">Generated compose</text>
+  <text x="535" y="135" text-anchor="middle" class="sub">.docker-compose.yaml</text>
+
+  <rect x="460" y="162" width="150" height="60" rx="8" class="box-warm"/>
+  <text x="535" y="188" text-anchor="middle" class="label">App layout</text>
+  <text x="535" y="205" text-anchor="middle" class="sub">code · data · config · logs</text>
+
+  <rect x="650" y="82" width="90" height="72" rx="8" class="box-green"/>
+  <text x="695" y="110" text-anchor="middle" class="label">Deploy</text>
+  <text x="695" y="127" text-anchor="middle" class="sub">Compose / Swarm</text>
+
+  <line x1="170" y1="118" x2="226" y2="118" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="400" y1="118" x2="456" y2="52" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="400" y1="118" x2="456" y2="122" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="400" y1="118" x2="456" y2="192" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="610" y1="122" x2="646" y2="118" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+
+  <text x="380" y="236" text-anchor="middle" class="sub">optional Traefik routing and deploy hooks sit on top of a predictable per-app Docker layout</text>
 </svg>
