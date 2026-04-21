@@ -29,7 +29,7 @@ Compiled Go — no runtime, no dependencies, drops into any Linux system or mini
 Tracks recently forwarded records and suppresses re-forwarding to avoid amplification loops in meshed networks.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -63,25 +63,34 @@ Tracks recently forwarded records and suppresses re-forwarding to avoid amplific
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="660" height="180" class="bg" rx="8"/>
+  <rect width="760" height="220" class="bg" rx="8"/>
 
-  <rect x="20" y="24" width="160" height="60" rx="8" class="box"/>
-  <text x="100" y="50" text-anchor="middle" class="label">Tailscale</text>
-  <text x="100" y="68" text-anchor="middle" class="sub">DNS query source</text>
+  <rect x="20" y="50" width="180" height="90" rx="8" class="box"/>
+  <text x="110" y="82" text-anchor="middle" class="label">Tailscale</text>
+  <text x="110" y="100" text-anchor="middle" class="sub">client</text>
+  <text x="110" y="118" text-anchor="middle" class="sub">DNS query source</text>
 
-  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
-  <text x="330" y="42" text-anchor="middle" class="label">mdnsbridge</text>
-  <text x="330" y="59" text-anchor="middle" class="sub">exit node</text>
-  <text x="330" y="74" text-anchor="middle" class="sub">DNS ↔ mDNS relay</text>
+  <rect x="290" y="50" width="180" height="90" rx="8" class="box-accent"/>
+  <text x="380" y="82" text-anchor="middle" class="label">mdnsbridge</text>
+  <text x="380" y="100" text-anchor="middle" class="sub">exit node</text>
+  <text x="380" y="118" text-anchor="middle" class="sub">DNS ↔ mDNS relay</text>
 
-  <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
-  <text x="560" y="42" text-anchor="middle" class="label">LAN device</text>
-  <text x="560" y="59" text-anchor="middle" class="sub">printer / NAS</text>
-  <text x="560" y="74" text-anchor="middle" class="sub">answers via mDNS</text>
+  <rect x="560" y="50" width="180" height="90" rx="8" class="box-green"/>
+  <text x="650" y="82" text-anchor="middle" class="label">LAN device</text>
+  <text x="650" y="100" text-anchor="middle" class="sub">printer / NAS</text>
+  <text x="650" y="118" text-anchor="middle" class="sub">answers via mDNS</text>
 
+  <line x1="200" y1="85" x2="290" y2="85" marker-end="url(#ahs)" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="245" y="72" text-anchor="middle" class="sub">DNS query</text>
+  <text x="245" y="102" text-anchor="middle" class="sub">printer.local</text>
 
-  <text x="330" y="168" text-anchor="middle" class="sub">192.168.1.50</text>
+  <line x1="290" y1="135" x2="200" y2="135" marker-end="url(#ah)" stroke="#5070a0" stroke-width="1.5"/>
+  <text x="245" y="164" text-anchor="middle" class="sub">192.168.1.50</text>
 
-  <polyline points="410,54 480,54" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <polyline points="480,54 410,54" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="470" y1="85" x2="560" y2="85" marker-end="url(#ahs)" stroke="#3b82f6" stroke-width="1.5"/>
+  <text x="515" y="72" text-anchor="middle" class="sub">mDNS query</text>
+  <text x="515" y="102" text-anchor="middle" class="sub">printer.local</text>
+
+  <line x1="560" y1="135" x2="470" y2="135" marker-end="url(#ah)" stroke="#5070a0" stroke-width="1.5"/>
+  <text x="515" y="164" text-anchor="middle" class="sub">192.168.1.50</text>
 </svg>
