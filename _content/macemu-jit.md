@@ -6,10 +6,10 @@ tagline: Basilisk II and SheepShaver for Raspberry Pi — SDL2 framebuffer, pre-
 ---
 
 ## About
-Fork targeting Raspberry Pi with SDL2 framebuffer/KMS — no X11, no desktop required. Pre-built arm64 .deb packages in releases. Basilisk II runs System 6–8; SheepShaver runs Mac OS 8.6–9.0.4.
+Fork targeting Raspberry Pi with SDL2 framebuffer/KMS — no X11, no desktop required. It includes ARM64 JIT implementations for both emulators: Basilisk II for 68K Macs and SheepShaver for PowerPC Macs. Pre-built arm64 .deb packages are available in releases.
 
 ## How it works
-SDL2 is compiled without OpenGL, Wayland, and X11 to reduce dependencies and startup time. The framebuffer/KMS backend writes directly to the display without a compositor. Pre-built .deb packages install with dpkg -i. Used as the emulation layer in the Maclock project.
+SDL2 is compiled without OpenGL, Wayland, and X11 to reduce dependencies and startup time. The framebuffer/KMS backend writes directly to the display without a compositor. The key addition is ARM64 JIT support in both emulator cores, translating 68K code in Basilisk II and PowerPC code in SheepShaver to native ARM64 at runtime. Pre-built .deb packages install with dpkg -i. Used as the emulation layer in the Maclock project.
 
 ## Features
 ### 🥧 Raspberry Pi optimised
@@ -18,8 +18,11 @@ SDL2 framebuffer/KMS, no X11. Pi Zero through Pi 5.
 ### 📦 Pre-built packages
 arm64 .deb in GitHub Releases. dpkg -i and run.
 
-### 💻 68k and PowerPC
-Basilisk II for System 6–8. SheepShaver for Mac OS 8.6–9.0.4.
+### ⚡ Basilisk II ARM64 JIT
+Native ARM64 JIT backend for emulating 68K Macs.
+
+### ⚡ SheepShaver ARM64 JIT
+Native ARM64 JIT backend for emulating PowerPC Macs.
 
 ### 🖥 Direct framebuffer
 Lower latency than X11.
@@ -68,19 +71,19 @@ Lower latency than X11.
   <rect width="660" height="180" class="bg" rx="8"/>
 
   <rect x="20" y="24" width="160" height="60" rx="8" class="box-warm"/>
-  <text x="100" y="50" text-anchor="middle" class="label">68k / PPC</text>
-  <text x="100" y="68" text-anchor="middle" class="sub">guest code</text>
+  <text x="100" y="50" text-anchor="middle" class="label">68K / PPC</text>
+  <text x="100" y="68" text-anchor="middle" class="sub">guest Mac code</text>
 
   <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
-  <text x="330" y="50" text-anchor="middle" class="label">ARM64 JIT</text>
-  <text x="330" y="68" text-anchor="middle" class="sub">code translator</text>
+  <text x="330" y="50" text-anchor="middle" class="label">ARM64 JITs</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">BasiliskII + SheepShaver</text>
 
   <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
-  <text x="560" y="50" text-anchor="middle" class="label">Apple Silicon</text>
+  <text x="560" y="50" text-anchor="middle" class="label">ARM64 host</text>
   <text x="560" y="68" text-anchor="middle" class="sub">native execution</text>
 
 
-  <text x="330" y="168" text-anchor="middle" class="sub">Basilisk II · SheepShaver</text>
+  <text x="330" y="168" text-anchor="middle" class="sub">68K via BasiliskII JIT · PPC via SheepShaver JIT</text>
 
   <path d="M180,54 L250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
   <path d="M410,54 L480,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
