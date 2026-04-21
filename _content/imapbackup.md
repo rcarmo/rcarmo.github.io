@@ -28,7 +28,7 @@ Tested with Gmail (app passwords), Microsoft 365, Fastmail, Dovecot, and Cyrus I
 No dependencies beyond the Python standard library — copy one file, run it, done.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 230">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 220">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -62,27 +62,28 @@ No dependencies beyond the Python standard library — copy one file, run it, do
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="660" height="230" class="bg" rx="8"/>
+  <rect width="700" height="220" class="bg" rx="8"/>
 
-  <rect x="20" y="65" width="160" height="60" rx="8" class="box-accent"/>
-  <text x="100" y="91" text-anchor="middle" class="label">IMAP Server</text>
-  <text x="100" y="109" text-anchor="middle" class="sub">Gmail · Exchange</text>
+  <rect x="20" y="54" width="170" height="68" rx="8" class="box-accent"/>
+  <text x="105" y="81" text-anchor="middle" class="label">IMAP server</text>
+  <text x="105" y="99" text-anchor="middle" class="sub">Gmail · Exchange · Fastmail</text>
 
-  <rect x="250" y="24" width="160" height="60" rx="8" class="box"/>
-  <text x="330" y="42" text-anchor="middle" class="label">imapbackup</text>
-  <text x="330" y="59" text-anchor="middle" class="sub">→ append</text>
-  <text x="330" y="74" text-anchor="middle" class="sub">Python script</text>
+  <rect x="265" y="54" width="170" height="68" rx="8" class="box"/>
+  <text x="350" y="81" text-anchor="middle" class="label">imapbackup</text>
+  <text x="350" y="99" text-anchor="middle" class="sub">Python script · append-only</text>
 
-  <rect x="480" y="65" width="160" height="60" rx="8" class="box-green"/>
-  <text x="560" y="91" text-anchor="middle" class="label">Local mbox</text>
-  <text x="560" y="109" text-anchor="middle" class="sub">one file/folder</text>
+  <rect x="510" y="54" width="170" height="68" rx="8" class="box-green"/>
+  <text x="595" y="81" text-anchor="middle" class="label">Local mbox files</text>
+  <text x="595" y="99" text-anchor="middle" class="sub">one file per IMAP folder</text>
 
-  <rect x="250" y="106" width="160" height="60" rx="8" class="box-warm"/>
-  <text x="330" y="132" text-anchor="middle" class="label">State file</text>
-  <text x="330" y="150" text-anchor="middle" class="sub">last UID/folder</text>
+  <rect x="265" y="142" width="170" height="56" rx="8" class="box-warm"/>
+  <text x="350" y="166" text-anchor="middle" class="label">State file</text>
+  <text x="350" y="183" text-anchor="middle" class="sub">last UID per folder</text>
 
-  <text x="330" y="218" text-anchor="middle" class="sub">← SSL/TLS</text>
+  <path d="M190,88 L265,88" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+  <text x="228" y="76" text-anchor="middle" class="sub">SSL/TLS</text>
+  <path d="M435,88 L510,88" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M350,122 L350,142" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
 
-  <path d="M180,95 L205,95 Q215,95 215,85 L215,64 Q215,54 225,54 L250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
-  <path d="M330,84 L330,106" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <text x="350" y="214" text-anchor="middle" class="sub">Incremental runs fetch only unseen message UIDs</text>
 </svg>
