@@ -118,6 +118,7 @@ When editing a project diagram:
 - Reflect actual architecture from docs/repo behavior, not generic boxes.
 - Keep sizes reasonable and allow natural scaling in page CSS.
 - Mermaid is acceptable only if it clearly improves maintainability and rendering is reliable in this site.
+- Read `.pi/skills/graph-design/SKILL.md` before non-trivial diagram audits or redraws.
 
 ## Build and verification
 
