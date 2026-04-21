@@ -43,113 +43,111 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
 - [So You Want To Do Agentic Development](https://taoofmac.com/space/blog/2026/03/08/2130) — 2026-03-08
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 340" width="760" height="340">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="720" height="320">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: #0f141b; }
-      .panel { fill: #171d26; stroke: #2a3443; }
-      .panel2 { fill: #121923; stroke: #364255; }
-      .accent { fill: #0f2542; stroke: #3b82f6; }
-      .green { fill: #10261c; stroke: #2f855a; }
-      .warm { fill: #2a1d14; stroke: #dd8b3d; }
-      .purple { fill: #21162f; stroke: #8b5cf6; }
-      .label { fill: #e6edf6; }
-      .sub { fill: #9fb0c8; }
-      .muted { fill: #7f90aa; }
-      .arrow { stroke: #6b7f9a; fill: none; }
-      .arrow-strong { stroke: #7fb0ff; fill: none; }
-      .line-soft { stroke: #465569; fill: none; }
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
+      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
+      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+      .conn { stroke: #3a5070; }
+      .conn-strong { stroke: #5090d0; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: #f7fafc; }
-      .panel { fill: #ffffff; stroke: #c8d3e1; }
-      .panel2 { fill: #f8fbff; stroke: #cfd8e5; }
-      .accent { fill: #e8f1ff; stroke: #3b82f6; }
-      .green { fill: #e9f8ef; stroke: #2f855a; }
-      .warm { fill: #fff2e6; stroke: #dd8b3d; }
-      .purple { fill: #f3ecff; stroke: #8b5cf6; }
-      .label { fill: #142033; }
-      .sub { fill: #52647e; }
-      .muted { fill: #6b7280; }
-      .arrow { stroke: #8191a7; fill: none; }
-      .arrow-strong { stroke: #2563eb; fill: none; }
-      .line-soft { stroke: #b8c4d3; fill: none; }
+      .bg { fill: transparent; }
+      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+      .label { fill: #1a2a40; }
+      .sub { fill: #5070a0; }
+      .conn { stroke: #90a8c0; }
+      .conn-strong { stroke: #3b82f6; }
     }
-    text { font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Inter, sans-serif; }
-    .label { font-size: 15px; font-weight: 700; }
-    .sub { font-size: 11.5px; }
-    .tiny { font-size: 10.5px; }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
+    .tiny { font-size: 10px; }
   </style>
-
   <defs>
-    <marker id="arr" markerWidth="10" markerHeight="10" refX="8" refY="5" orient="auto">
-      <path d="M0,0 L10,5 L0,10 z" fill="currentColor"/>
-    </marker>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" class="conn" fill="currentColor" stroke="none"/></marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" class="conn-strong" fill="currentColor" stroke="none"/></marker>
   </defs>
 
-  <rect x="0" y="0" width="760" height="340" class="bg"/>
+  <!-- User -->
+  <rect x="16" y="110" width="100" height="70" rx="10" class="box"/>
+  <text x="66" y="140" text-anchor="middle" class="label">User</text>
+  <text x="66" y="157" text-anchor="middle" class="sub">web · mobile</text>
 
-  <rect x="28" y="125" width="118" height="86" rx="12" class="panel"/>
-  <text x="87" y="157" text-anchor="middle" class="label">User</text>
-  <text x="87" y="176" text-anchor="middle" class="sub">web</text>
-  <text x="87" y="192" text-anchor="middle" class="sub">mobile</text>
+  <!-- Streaming UI -->
+  <rect x="156" y="40" width="150" height="80" rx="10" class="box-accent"/>
+  <text x="231" y="70" text-anchor="middle" class="label">Streaming UI</text>
+  <text x="231" y="87" text-anchor="middle" class="sub">chat · cards · widgets</text>
+  <text x="231" y="102" text-anchor="middle" class="sub">attachments · timeline</text>
 
-  <rect x="182" y="56" width="166" height="94" rx="12" class="accent"/>
-  <text x="265" y="88" text-anchor="middle" class="label">Streaming UI</text>
-  <text x="265" y="107" text-anchor="middle" class="sub">chat timeline</text>
-  <text x="265" y="123" text-anchor="middle" class="sub">cards · widgets · attachments</text>
+  <!-- Agent runtime -->
+  <rect x="156" y="160" width="150" height="80" rx="10" class="box"/>
+  <text x="231" y="190" text-anchor="middle" class="label">Agent runtime</text>
+  <text x="231" y="207" text-anchor="middle" class="sub">tool calls · sessions</text>
+  <text x="231" y="222" text-anchor="middle" class="sub">compaction · prompts</text>
 
-  <rect x="182" y="188" width="166" height="86" rx="12" class="panel2"/>
-  <text x="265" y="220" text-anchor="middle" class="label">Agent runtime</text>
-  <text x="265" y="239" text-anchor="middle" class="sub">messages · tool calls · results</text>
-  <text x="265" y="255" text-anchor="middle" class="sub">session + compaction + prompts</text>
+  <!-- Extensions -->
+  <rect x="346" y="20" width="140" height="55" rx="10" class="box-purple"/>
+  <text x="416" y="44" text-anchor="middle" class="label">Extensions</text>
+  <text x="416" y="61" text-anchor="middle" class="sub">custom tools · UI hooks</text>
 
-  <rect x="390" y="28" width="152" height="68" rx="12" class="purple"/>
-  <text x="466" y="56" text-anchor="middle" class="label">Extensions</text>
-  <text x="466" y="74" text-anchor="middle" class="sub">custom tools</text>
-  <text x="466" y="88" text-anchor="middle" class="sub">commands · UI hooks</text>
+  <!-- Skills -->
+  <rect x="346" y="90" width="140" height="55" rx="10" class="box-purple"/>
+  <text x="416" y="114" text-anchor="middle" class="label">Skills</text>
+  <text x="416" y="131" text-anchor="middle" class="sub">on-demand workflows</text>
 
-  <rect x="390" y="108" width="152" height="68" rx="12" class="purple"/>
-  <text x="466" y="136" text-anchor="middle" class="label">Skills</text>
-  <text x="466" y="154" text-anchor="middle" class="sub">on-demand workflows</text>
-  <text x="466" y="168" text-anchor="middle" class="sub">README-driven capability packs</text>
+  <!-- Workspace state -->
+  <rect x="346" y="160" width="140" height="80" rx="10" class="box"/>
+  <text x="416" y="190" text-anchor="middle" class="label">Workspace</text>
+  <text x="416" y="207" text-anchor="middle" class="sub">files · notes · memory</text>
+  <text x="416" y="222" text-anchor="middle" class="sub">SQLite · keychain</text>
 
-  <rect x="390" y="188" width="152" height="86" rx="12" class="panel"/>
-  <text x="466" y="219" text-anchor="middle" class="label">Workspace state</text>
-  <text x="466" y="238" text-anchor="middle" class="sub">files · notes · daily memory</text>
-  <text x="466" y="254" text-anchor="middle" class="sub">sessions · SQLite messages</text>
+  <!-- Tools -->
+  <rect x="530" y="50" width="150" height="80" rx="10" class="box-green"/>
+  <text x="605" y="80" text-anchor="middle" class="label">Tools</text>
+  <text x="605" y="97" text-anchor="middle" class="sub">read · edit · bash · search</text>
+  <text x="605" y="112" text-anchor="middle" class="sub">images · office · schedule</text>
 
-  <rect x="390" y="286" width="152" height="38" rx="12" class="panel2"/>
-  <text x="466" y="309" text-anchor="middle" class="sub">prompt templates · themes</text>
+  <!-- External -->
+  <rect x="530" y="170" width="150" height="80" rx="10" class="box-warm"/>
+  <text x="605" y="200" text-anchor="middle" class="label">External</text>
+  <text x="605" y="217" text-anchor="middle" class="sub">Proxmox · Portainer · SSH</text>
+  <text x="605" y="232" text-anchor="middle" class="sub">GitHub · MCP · browser</text>
 
-  <rect x="582" y="72" width="150" height="94" rx="12" class="green"/>
-  <text x="657" y="104" text-anchor="middle" class="label">Tools</text>
-  <text x="657" y="123" text-anchor="middle" class="sub">read · edit · bash · search</text>
-  <text x="657" y="139" text-anchor="middle" class="sub">attachments · scheduling</text>
-  <text x="657" y="155" text-anchor="middle" class="sub">images · office · more</text>
+  <!-- Arrows: User → UI -->
+  <line x1="116" y1="135" x2="154" y2="90" class="conn-strong" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <!-- User → Agent -->
+  <line x1="116" y1="155" x2="154" y2="185" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
+  <!-- UI ↔ Agent -->
+  <line x1="231" y1="120" x2="231" y2="158" class="conn-strong" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <!-- Agent → Extensions -->
+  <line x1="306" y1="175" x2="344" y2="60" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
+  <!-- Agent → Skills -->
+  <line x1="306" y1="190" x2="344" y2="115" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
+  <!-- Agent → Workspace -->
+  <line x1="306" y1="200" x2="344" y2="200" class="conn-strong" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <!-- Extensions → Tools -->
+  <line x1="486" y1="47" x2="528" y2="75" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
+  <!-- Skills → Tools -->
+  <line x1="486" y1="117" x2="528" y2="100" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
+  <!-- Workspace → External -->
+  <line x1="486" y1="210" x2="528" y2="210" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
+  <!-- Tools → External -->
+  <line x1="605" y1="130" x2="605" y2="168" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
 
-  <rect x="582" y="206" width="150" height="94" rx="12" class="warm"/>
-  <text x="657" y="238" text-anchor="middle" class="label">External systems</text>
-  <text x="657" y="257" text-anchor="middle" class="sub">GitHub · APIs · MCP-like</text>
-  <text x="657" y="273" text-anchor="middle" class="sub">services · browsers · hosts</text>
-
-  <path d="M146 168 H174" class="arrow-strong" stroke-width="2.5" marker-end="url(#arr)" style="color:inherit"/>
-  <path d="M265 150 V180" class="arrow" stroke-width="2.5" marker-end="url(#arr)" style="color:inherit"/>
-
-  <path d="M348 88 H382" class="arrow" stroke-width="2.5" marker-end="url(#arr)" style="color:inherit"/>
-  <path d="M348 117 H374 Q382 117 382 125" class="line-soft" stroke-width="2"/>
-  <path d="M348 230 H382" class="arrow-strong" stroke-width="2.5" marker-end="url(#arr)" style="color:inherit"/>
-
-  <path d="M542 62 H566 Q582 62 582 88" class="line-soft" stroke-width="2"/>
-  <path d="M542 142 H566 Q582 142 582 119" class="line-soft" stroke-width="2"/>
-  <path d="M542 231 H574" class="arrow" stroke-width="2.5" marker-end="url(#arr)" style="color:inherit"/>
-
-  <path d="M542 219 H566 Q582 219 582 166" class="line-soft" stroke-width="2"/>
-  <path d="M657 166 V198" class="arrow" stroke-width="2.5" marker-end="url(#arr)" style="color:inherit"/>
-
-  <path d="M657 206 V174" class="arrow" stroke-width="2.5" marker-end="url(#arr)" style="color:inherit"/>
-
-  <text x="355" y="214" class="tiny muted">reads / writes</text>
-  <text x="550" y="214" class="tiny muted">invokes</text>
-  <text x="604" y="188" class="tiny muted">network / subprocess / APIs</text>
+  <!-- Labels -->
+  <text x="330" y="265" text-anchor="middle" class="tiny sub">reads / writes</text>
+  <text x="510" y="265" text-anchor="middle" class="tiny sub">invokes</text>
+  <text x="630" y="155" text-anchor="middle" class="tiny sub">network</text>
+  <text x="360" y="300" text-anchor="middle" class="tiny sub">single container · Supervisor · Bun runtime · /workspace volume</text>
 </svg>
