@@ -27,7 +27,7 @@ Pure Python 3 stdlib.
 - [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -61,20 +61,31 @@ Pure Python 3 stdlib.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="60" width="120" height="80" rx="8" class="box-warm"/>
-  <text x="80" y="98" text-anchor="middle" class="label">YAML config</text>
-  <text x="80" y="113" text-anchor="middle" class="sub">desired state</text>
-  <rect x="200" y="20" width="140" height="60" rx="8" class="box-accent"/>
-  <text x="270" y="55" text-anchor="middle" class="label">Parser</text>
-  <text x="270" y="70" text-anchor="middle" class="sub">validate schema</text>
-  <rect x="200" y="110" width="140" height="60" rx="8" class="box"/>
-  <text x="270" y="145" text-anchor="middle" class="label">State cache</text>
-  <text x="270" y="160" text-anchor="middle" class="sub">applied hashes</text>
-  <rect x="430" y="60" width="150" height="80" rx="8" class="box-green"/>
-  <text x="505" y="95" text-anchor="middle" class="label">Idempotent</text>
-  <text x="505" y="112" text-anchor="middle" class="label">executor</text>
-  <text x="505" y="127" text-anchor="middle" class="sub">pkg/file/svc</text>
-  <line x1="140" y1="100" x2="200" y2="80" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="340" y1="80" x2="430" y2="80" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="340" y1="140" x2="430" y2="120" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
+
+  <rect x="20" y="76" width="140" height="68" rx="8" class="box-warm"/>
+  <text x="90" y="104" text-anchor="middle" class="label">YAML config</text>
+  <text x="90" y="121" text-anchor="middle" class="sub">desired state</text>
+
+  <rect x="230" y="76" width="170" height="68" rx="8" class="box-accent"/>
+  <text x="315" y="104" text-anchor="middle" class="label">ground-init</text>
+  <text x="315" y="121" text-anchor="middle" class="sub">check current state first</text>
+
+  <rect x="470" y="24" width="160" height="56" rx="8" class="box-green"/>
+  <text x="550" y="48" text-anchor="middle" class="label">Packages</text>
+  <text x="550" y="65" text-anchor="middle" class="sub">apt / rpm-ostree</text>
+
+  <rect x="470" y="84" width="160" height="56" rx="8" class="box"/>
+  <text x="550" y="108" text-anchor="middle" class="label">Files + users</text>
+  <text x="550" y="125" text-anchor="middle" class="sub">content, ownership, accounts</text>
+
+  <rect x="470" y="144" width="160" height="56" rx="8" class="box-purple"/>
+  <text x="550" y="168" text-anchor="middle" class="label">Services + scripts</text>
+  <text x="550" y="185" text-anchor="middle" class="sub">systemd, git, shell hooks</text>
+
+  <line x1="160" y1="110" x2="226" y2="110" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="400" y1="110" x2="466" y2="52" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="400" y1="110" x2="466" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="400" y1="110" x2="466" y2="172" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="360" y="214" text-anchor="middle" class="sub">re-running verifies and converges state instead of redoing work</text>
 </svg>
