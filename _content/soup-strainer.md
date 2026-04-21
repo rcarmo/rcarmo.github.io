@@ -28,10 +28,10 @@ No native extensions, no headless browser — runs anywhere Python and Beautiful
 The entire algorithm fits in one importable Python file — drop it into any scraping or content pipeline.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180" width="640" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 180">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: #111520; }
+      .bg { fill: transparent; }
       .box { fill: #1a1e2a; stroke: #2a3040; }
       .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
       .box-b { fill: #0d2220; stroke: #207060; }
@@ -44,7 +44,7 @@ The entire algorithm fits in one importable Python file — drop it into any scr
       .bg-fill { fill: #111520; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: #f0f4fa; }
+      .bg { fill: transparent; }
       .box { fill: #ffffff; stroke: #c8d0e0; }
       .box-accent { fill: #dbeafe; stroke: #3b82f6; }
       .box-b { fill: #d1fae5; stroke: #059669; }

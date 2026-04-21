@@ -30,10 +30,10 @@ Powers the terminal in agentbox, piclaw, and ghostty-web.
 - [Notes for February 8-15](https://taoofmac.com/space/notes/2026/02/15/1530) — 2026-02-15
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 200" width="520" height="200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 200">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: #1a1e24; }
+      .bg { fill: transparent; }
       .box { fill: #21262d; stroke: #30363d; }
       .box-accent { fill: #0d2340; stroke: #2b6cb0; }
       .box-green { fill: #0d2a1f; stroke: #2a7a3a; }
@@ -45,7 +45,7 @@ Powers the terminal in agentbox, piclaw, and ghostty-web.
       .line { stroke: #30363d; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: #f0f4fa; }
+      .bg { fill: transparent; }
       .box { fill: #ffffff; stroke: #d0d7de; }
       .box-accent { fill: #dbeafe; stroke: #3b82f6; }
       .box-green { fill: #d1fae5; stroke: #059669; }

@@ -25,10 +25,10 @@ Runs as systemd service.
 - [Notes, 2025-12-24](https://taoofmac.com/space/notes/2025/12/24/1400) — 2025-12-24
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200" width="640" height="200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: #111520; }
+      .bg { fill: transparent; }
       .box { fill: #1a1e2a; stroke: #2a3040; }
       .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
       .box-b { fill: #0d2220; stroke: #207060; }
@@ -41,7 +41,7 @@ Runs as systemd service.
       .bg-fill { fill: #111520; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: #f0f4fa; }
+      .bg { fill: transparent; }
       .box { fill: #ffffff; stroke: #c8d0e0; }
       .box-accent { fill: #dbeafe; stroke: #3b82f6; }
       .box-b { fill: #d1fae5; stroke: #059669; }

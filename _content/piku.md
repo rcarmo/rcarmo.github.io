@@ -44,10 +44,10 @@ Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016.
 - [Deployment Pains](https://taoofmac.com/space/blog/2019/10/13/1630) — 2019-10-13
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 240" width="640" height="240">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 240">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: #1a1e24; }
+      .bg { fill: transparent; }
       .box { fill: #21262d; stroke: #30363d; }
       .box-accent { fill: #0d2340; stroke: #2b6cb0; }
       .box-green { fill: #0d2a1f; stroke: #2a7a3a; }
@@ -59,7 +59,7 @@ Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016.
       .line { stroke: #30363d; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: #f0f4fa; }
+      .bg { fill: transparent; }
       .box { fill: #ffffff; stroke: #d0d7de; }
       .box-accent { fill: #dbeafe; stroke: #3b82f6; }
       .box-green { fill: #d1fae5; stroke: #059669; }

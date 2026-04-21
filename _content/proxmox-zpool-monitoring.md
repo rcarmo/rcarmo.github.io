@@ -27,10 +27,10 @@ Compatible with Carbon, InfluxDB, and others.
 - [Proxmox VE on the FriendlyELEC CM3588 NAS](https://taoofmac.com/space/notes/2024/11/09/1940) — 2024-11-09
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180" width="620" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: #111520; }
+      .bg { fill: transparent; }
       .box { fill: #1a1e2a; stroke: #2a3040; }
       .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
       .box-b { fill: #0d2220; stroke: #207060; }
@@ -43,7 +43,7 @@ Compatible with Carbon, InfluxDB, and others.
       .bg-fill { fill: #111520; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: #f0f4fa; }
+      .bg { fill: transparent; }
       .box { fill: #ffffff; stroke: #c8d0e0; }
       .box-accent { fill: #dbeafe; stroke: #3b82f6; }
       .box-b { fill: #d1fae5; stroke: #059669; }

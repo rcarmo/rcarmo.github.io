@@ -28,10 +28,10 @@ Bundled bitmap font for rendering ASCII labels directly onto the canvas — usef
 The entire library is one Python file — copy it into your project and import it with no installation.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 180" width="600" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 180">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: #111520; }
+      .bg { fill: transparent; }
       .box { fill: #1a1e2a; stroke: #2a3040; }
       .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
       .box-b { fill: #0d2220; stroke: #207060; }
@@ -44,7 +44,7 @@ The entire library is one Python file — copy it into your project and import i
       .bg-fill { fill: #111520; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: #f0f4fa; }
+      .bg { fill: transparent; }
       .box { fill: #ffffff; stroke: #c8d0e0; }
       .box-accent { fill: #dbeafe; stroke: #3b82f6; }
       .box-b { fill: #d1fae5; stroke: #059669; }

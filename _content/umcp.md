@@ -28,7 +28,7 @@ Docstring → description. Annotations → JSON Schema.
 - [Notes on SKILL.md vs MCP](https://taoofmac.com/space/notes/2026/01/14/0830) — 2026-01-14
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180" width="480" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }

@@ -29,7 +29,7 @@ Compiled Go — no runtime, no dependencies, drops into any Linux system or mini
 Tracks recently forwarded records and suppresses re-forwarding to avoid amplification loops in meshed networks.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220" width="760" height="220">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220">
   <style>
     @media (prefers-color-scheme: dark) {
       .box { fill: #161b26; stroke: #364155; }

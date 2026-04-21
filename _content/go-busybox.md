@@ -31,7 +31,7 @@ OS-dependent applets stub under WASM.
 - [Notes for February 8-15](https://taoofmac.com/space/notes/2026/02/15/1530) — 2026-02-15
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180" width="480" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }

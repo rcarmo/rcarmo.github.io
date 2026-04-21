@@ -29,10 +29,10 @@ Simple REST endpoints to query status, update the playlist, and skip to the next
 Compiled Go — deploy on any Linux box with ffmpeg installed; no other dependencies.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180" width="620" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: #111520; }
+      .bg { fill: transparent; }
       .box { fill: #1a1e2a; stroke: #2a3040; }
       .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
       .box-b { fill: #0d2220; stroke: #207060; }
@@ -45,7 +45,7 @@ Compiled Go — deploy on any Linux box with ffmpeg installed; no other dependen
       .bg-fill { fill: #111520; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: #f0f4fa; }
+      .bg { fill: transparent; }
       .box { fill: #ffffff; stroke: #c8d0e0; }
       .box-accent { fill: #dbeafe; stroke: #3b82f6; }
       .box-b { fill: #d1fae5; stroke: #059669; }

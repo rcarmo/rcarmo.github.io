@@ -28,7 +28,7 @@ Read and write .pptx — slides, shapes, text frames, layouts.
 No CGo, no external dependencies. Builds to a static binary on any Go-supported platform.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" width="520" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }

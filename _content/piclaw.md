@@ -43,7 +43,7 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
 - [So You Want To Do Agentic Development](https://taoofmac.com/space/blog/2026/03/08/2130) — 2026-03-08
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320" width="720" height="320">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 320">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }

@@ -28,7 +28,7 @@ File read/write, shell execution, web search, code running — the practical too
 Real-time streaming output with tool call interleaving.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" width="520" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }

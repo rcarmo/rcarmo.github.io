@@ -28,10 +28,10 @@ Odd-numbered manager VMSS ensures Raft quorum survives a single node failure wit
 Documents the Docker Swarm era architecture; useful for comparing operational complexity against modern Kubernetes templates.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220" width="640" height="220">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: #111520; }
+      .bg { fill: transparent; }
       .box { fill: #1a1e2a; stroke: #2a3040; }
       .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
       .box-b { fill: #0d2220; stroke: #207060; }
@@ -44,7 +44,7 @@ Documents the Docker Swarm era architecture; useful for comparing operational co
       .bg-fill { fill: #111520; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: #f0f4fa; }
+      .bg { fill: transparent; }
       .box { fill: #ffffff; stroke: #c8d0e0; }
       .box-accent { fill: #dbeafe; stroke: #3b82f6; }
       .box-b { fill: #d1fae5; stroke: #059669; }

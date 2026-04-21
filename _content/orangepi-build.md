@@ -26,7 +26,7 @@ Based on the well-maintained orangepi-build toolchain — same workflow as all o
 The upstream build system covers 20+ boards across Allwinner H6/H616/T527, Rockchip RK3399/RK3566/RK3588, Starfive JH7110, and Cix P1.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180" width="520" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }

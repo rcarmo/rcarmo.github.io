@@ -30,7 +30,7 @@ Nothing fails silently — export_errors.log for every failure.
 - [Renaming and Filing Photos and Videos in the HEIC/HEIF era](https://taoofmac.com/space/blog/2023/01/14/1745) — 2023-01-14
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160" width="480" height="160">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }

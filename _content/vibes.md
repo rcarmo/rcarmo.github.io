@@ -30,7 +30,7 @@ One Python file. One HTML file. Clone and run.
 - [Notes for February 2-7](https://taoofmac.com/space/notes/2026/02/07/2000) — 2026-02-07
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180" width="480" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }

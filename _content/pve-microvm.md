@@ -29,7 +29,7 @@ dpkg -r restores original qemu-server files.
 - [Notes for April 13-19](https://taoofmac.com/space/notes/2026/04/19/1400#proxmox-microvms) — 2026-04-19
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180" width="480" height="180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
