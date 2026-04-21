@@ -32,17 +32,33 @@ Nothing fails silently — export_errors.log for every failure.
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160" width="480" height="160">
   <style>
-    .bg{ fill: transparent; }
-    .box{ fill: #161b22; stroke: #30363d; stroke-width:1.5; }
-    .box-accent{ fill: #0d2040; stroke: #2b6cb0; stroke-width:1.5; }
-    .box-green{ fill: #0a2218; stroke: #2a7a3a; stroke-width:1.5; }
-    .box-warm{ fill: #221810; stroke: #c87020; stroke-width:1.5; }
-    text{ font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; fill: #c9d1d9; }
-    .label{ font-size: 12px; font-weight: 600; }
-    .sub{ font-size: 10px; fill: #8b949e; }
-    line{ stroke-width:1.5; }
-    .arr{ stroke: #58a6ff; marker-end: url(#a); }
-    .arrd{ stroke: #8b949e; marker-end: url(#ad); stroke-dasharray:4,3; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #21262d; stroke: #30363d; }
+      .box-accent { fill: #0d2340; stroke: #2b6cb0; }
+      .box-green { fill: #0d2a1f; stroke: #2a7a3a; }
+      .box-warm { fill: #2a1e18; stroke: #c87020; }
+      text { fill: #c9d1d9; }
+      .label { fill: #e8e8e8; font-size: 12px; font-weight: 600; }
+      .sub { fill: #8b949e; font-size: 10px; }
+      line { stroke: #58a6ff; }
+      .arr { stroke: #58a6ff; }
+      .arrd { stroke: #8b949e; }
+    }
+    @media (prefers-color-scheme: light) {
+      .bg { fill: transparent; }
+      .box { fill: #ffffff; stroke: #d0d7de; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; }
+      .box-green { fill: #d1fae5; stroke: #059669; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; }
+      text { fill: #1f2937; }
+      .label { fill: #1a2a40; font-size: 12px; font-weight: 600; }
+      .sub { fill: #6b7280; font-size: 10px; }
+      line { stroke: #3b82f6; }
+      .arr { stroke: #3b82f6; }
+      .arrd { stroke: #9ca3af; }
+    }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
   </style>
   <defs>
     <marker id="a" markerWidth="6" markerHeight="6" refX="5" refY="3" orient="auto">

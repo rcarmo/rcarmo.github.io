@@ -6,6 +6,8 @@ tagline: Go inference for the GTE Small text embedding model — local semantic 
 ---
 
 ## About
+Forked from [antirez/gte-pure-C](https://github.com/antirez/gte-pure-C). Complete rewrite in Go with ONNX Runtime backend for embeddable library use.
+
 gte-go runs the GTE Small sentence embedding model entirely in Go using ONNX Runtime. Feed it a string, get back a 384-dimensional float32 vector — ready for cosine similarity, nearest-neighbour search, or any other semantic retrieval task. No Python, no PyTorch, no GPU required; compiles to a single binary that works on any platform ONNX Runtime supports.
 
 ## How it works

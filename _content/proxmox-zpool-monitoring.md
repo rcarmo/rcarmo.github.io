@@ -6,6 +6,8 @@ tagline: ZFS pool metrics for Proxmox — exported to Graphite, cron only.
 ---
 
 ## About
+Forked from [overcuriousity/proxmox-zpool-monitoring](https://github.com/overcuriousity/proxmox-zpool-monitoring). Adds Graphite push support and multi-pool parsing improvements.
+
 Python cron script exporting ZFS pool health, I/O, and capacity from Proxmox VE to Graphite. No daemon, no agent. Just a script and a metrics endpoint.
 
 ## How it works

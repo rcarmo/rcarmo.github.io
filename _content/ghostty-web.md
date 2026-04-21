@@ -6,6 +6,8 @@ tagline: Ghostty terminal sessions in a browser — xterm.js compatibility.
 ---
 
 ## About
+Forked from [coder/ghostty-web](https://github.com/coder/ghostty-web). Adapted for integration with webterm and go-te for AI agent terminal workflows.
+
 ghostty-web runs Ghostty in server mode, proxies sessions to a browser via WebSocket, and implements an xterm.js-compatible API. Shares go-te with webterm and go-rdp.
 
 ## How it works

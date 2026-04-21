@@ -1,6 +1,6 @@
 ---
 section: libraries
-status: stable
+status: maintained
 created: 2022-12-13
 tagline: File thumbnails for RAW, HEIC, and 3D models in GNOME Files.
 logo: assets/logos-opt/gnome-thumbnailers.png
