@@ -44,7 +44,7 @@ Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016.
 - [Deployment Pains](https://taoofmac.com/space/blog/2019/10/13/1630) — 2019-10-13
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 240">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 240">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -78,37 +78,47 @@ Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="640" height="240" class="bg" rx="8"/>
-  
-  <rect x="20" y="80" width="120" height="52" rx="6" class="box-accent" stroke-width="1.5"/>
-    <text x="80" y="102" text-anchor="middle" class="label">Developer</text>
-    <text x="80" y="115" text-anchor="middle" class="sublabel">git push</text>
-  <line x1="140" y1="106" x2="190" y2="106" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="190" y="80" width="120" height="52" rx="6" class="box-accent" stroke-width="1.5"/>
-    <text x="250" y="102" text-anchor="middle" class="label">piku hook</text>
-    <text x="250" y="115" text-anchor="middle" class="sublabel">post-receive</text>
-  <line x1="310" y1="106" x2="350" y2="106" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="350" y="30" width="110" height="44" rx="6" class="box-green" stroke-width="1.5"/>
-    <text x="405" y="48" text-anchor="middle" class="label">uwsgi</text>
-    <text x="405" y="61" text-anchor="middle" class="sublabel">process mgr</text>
-  <rect x="350" y="86" width="110" height="44" rx="6" class="box-green" stroke-width="1.5"/>
-    <text x="405" y="104" text-anchor="middle" class="label">nginx</text>
-    <text x="405" y="117" text-anchor="middle" class="sublabel">reverse proxy</text>
-  <rect x="350" y="142" width="110" height="44" rx="6" class="box" stroke-width="1.5"/>
-    <text x="405" y="160" text-anchor="middle" class="label">virtualenv</text>
-    <text x="405" y="173" text-anchor="middle" class="sublabel">per-app deps</text>
-  <line x1="460" y1="52" x2="510" y2="52" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="460" y1="108" x2="510" y2="108" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="460" y1="164" x2="510" y2="164" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="510" y="30" width="110" height="44" rx="6" class="box" stroke-width="1.5"/>
-    <text x="565" y="48" text-anchor="middle" class="label">App workers</text>
-    <text x="565" y="61" text-anchor="middle" class="sublabel">Procfile</text>
-  <rect x="510" y="86" width="110" height="44" rx="6" class="box" stroke-width="1.5"/>
-    <text x="565" y="104" text-anchor="middle" class="label">TLS / vhosts</text>
-    <text x="565" y="117" text-anchor="middle" class="sublabel">Let's Encrypt</text>
-  <rect x="510" y="142" width="110" height="44" rx="6" class="box" stroke-width="1.5"/>
-    <text x="565" y="160" text-anchor="middle" class="label">Python / Node / Go…</text>
-    <text x="565" y="173" text-anchor="middle" class="sublabel">any language</text>
-  <text x="320" y="220" text-anchor="middle" class="sublabel">Any POSIX host — Raspberry Pi to cloud VM</text>
+  <rect width="680" height="240" class="bg" rx="8"/>
 
+  <rect x="20" y="84" width="130" height="56" rx="8" class="box-accent"/>
+  <text x="85" y="106" text-anchor="middle" class="label">Developer</text>
+  <text x="85" y="123" text-anchor="middle" class="sub">git push</text>
+
+  <rect x="200" y="84" width="140" height="56" rx="8" class="box-accent"/>
+  <text x="270" y="106" text-anchor="middle" class="label">piku hook</text>
+  <text x="270" y="123" text-anchor="middle" class="sub">post-receive</text>
+
+  <rect x="390" y="24" width="120" height="48" rx="8" class="box-green"/>
+  <text x="450" y="43" text-anchor="middle" class="label">uwsgi</text>
+  <text x="450" y="58" text-anchor="middle" class="sub">process manager</text>
+
+  <rect x="390" y="96" width="120" height="48" rx="8" class="box-green"/>
+  <text x="450" y="115" text-anchor="middle" class="label">nginx</text>
+  <text x="450" y="130" text-anchor="middle" class="sub">reverse proxy</text>
+
+  <rect x="390" y="168" width="120" height="48" rx="8" class="box"/>
+  <text x="450" y="187" text-anchor="middle" class="label">env + deps</text>
+  <text x="450" y="202" text-anchor="middle" class="sub">virtualenv / buildpacks</text>
+
+  <rect x="560" y="24" width="100" height="48" rx="8" class="box"/>
+  <text x="610" y="43" text-anchor="middle" class="label">Workers</text>
+  <text x="610" y="58" text-anchor="middle" class="sub">Procfile</text>
+
+  <rect x="560" y="96" width="100" height="48" rx="8" class="box"/>
+  <text x="610" y="115" text-anchor="middle" class="label">TLS + vhosts</text>
+  <text x="610" y="130" text-anchor="middle" class="sub">Let's Encrypt</text>
+
+  <rect x="560" y="168" width="100" height="48" rx="8" class="box"/>
+  <text x="610" y="187" text-anchor="middle" class="label">Any language</text>
+  <text x="610" y="202" text-anchor="middle" class="sub">Python / Node / Go</text>
+
+  <line x1="150" y1="112" x2="196" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="340" y1="112" x2="386" y2="48" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="340" y1="112" x2="386" y2="120" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="340" y1="112" x2="386" y2="192" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="510" y1="48" x2="556" y2="48" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="510" y1="120" x2="556" y2="120" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="510" y1="192" x2="556" y2="192" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="340" y="232" text-anchor="middle" class="sub">Any POSIX host — Raspberry Pi to cloud VM</text>
 </svg>
