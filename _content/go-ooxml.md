@@ -83,7 +83,7 @@ No CGo, no external dependencies. Builds to a static binary on any Go-supported 
 
   <text x="330" y="218" text-anchor="middle" class="sub">pure Go — no CGo, no external deps</text>
 
-  <polyline points="180,95 215,95 215,54 250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
-  <polyline points="330,84 330,106" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-  <polyline points="410,136 445,136 445,95 480,95" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M180,95 L205,95 Q215,95 215,85 L215,64 Q215,54 225,54 L250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+  <path d="M330,84 L330,106" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M410,136 L435,136 Q445,136 445,126 L445,105 Q445,95 455,95 L480,95" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
 </svg>

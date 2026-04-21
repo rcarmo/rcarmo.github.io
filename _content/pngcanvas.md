@@ -81,8 +81,8 @@ The entire library is one Python file — copy it into your project and import i
   <text x="560" y="109" text-anchor="middle" class="sub">any fileobj</text>
 
 
-  <polyline points="180,95 215,95 215,54 250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
-  <polyline points="180,95 215,95 215,136 250,136" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-  <polyline points="410,54 445,54 445,95 480,95" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-  <polyline points="410,136 445,136 445,95 480,95" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M180,95 L205,95 Q215,95 215,85 L215,64 Q215,54 225,54 L250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+  <path d="M180,95 L205,95 Q215,95 215,105 L215,126 Q215,136 225,136 L250,136" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M410,54 L435,54 Q445,54 445,64 L445,85 Q445,95 455,95 L480,95" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M410,136 L435,136 Q445,136 445,126 L445,105 Q445,95 455,95 L480,95" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
 </svg>

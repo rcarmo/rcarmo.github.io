@@ -83,6 +83,6 @@ dpkg -r restores original qemu-server files.
 
   <text x="330" y="218" text-anchor="middle" class="sub">any OCI image → microVM</text>
 
-  <polyline points="180,95 250,95" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-  <polyline points="410,95 445,95 445,54 480,54" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M180,95 L250,95" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M410,95 L435,95 Q445,95 445,85 L445,64 Q445,54 455,54 L480,54" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
 </svg>
