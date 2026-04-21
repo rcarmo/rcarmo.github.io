@@ -29,7 +29,7 @@ All synthesis runs in the browser with zero latency configuration — connect to
 Swap out the AI backend by pointing the WebSocket URL at any OpenAI-compatible endpoint.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 240">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 662 240">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -64,41 +64,42 @@ Swap out the AI backend by pointing the WebSocket URL at any OpenAI-compatible e
     </marker>
   </defs>
 
-  <!-- Row 1 -->
-  <rect x="16" y="20" width="170" height="80" rx="8" class="box-accent"/>
-  <text x="101" y="48" text-anchor="middle" class="label">Strudel editor</text>
-  <text x="101" y="65" text-anchor="middle" class="sub">multi-tab · undo/redo</text>
-  <text x="101" y="80" text-anchor="middle" class="sub">AI chat panel</text>
+  <!-- col1: x=16..186, col2: x=246..416, col3: x=476..646 -->
+  <!-- row1: y=20..110, row2: y=140..200 -->
 
-  <rect x="216" y="20" width="170" height="80" rx="8" class="box-green"/>
-  <text x="301" y="48" text-anchor="middle" class="label">Bun server</text>
-  <text x="301" y="65" text-anchor="middle" class="sub">static files · WebSocket</text>
-  <text x="301" y="80" text-anchor="middle" class="sub">session persistence</text>
+  <rect x="16" y="20" width="170" height="90" rx="8" class="box-accent"/>
+  <text x="101" y="52" text-anchor="middle" class="label">Strudel editor</text>
+  <text x="101" y="69" text-anchor="middle" class="sub">multi-tab · undo/redo</text>
+  <text x="101" y="84" text-anchor="middle" class="sub">AI chat panel</text>
 
-  <rect x="416" y="20" width="170" height="80" rx="8" class="box-purple"/>
-  <text x="501" y="48" text-anchor="middle" class="label">LLM</text>
-  <text x="501" y="65" text-anchor="middle" class="sub">OpenAI · Azure</text>
-  <text x="501" y="80" text-anchor="middle" class="sub">LM Studio</text>
+  <rect x="246" y="20" width="170" height="90" rx="8" class="box-green"/>
+  <text x="331" y="52" text-anchor="middle" class="label">Bun server</text>
+  <text x="331" y="69" text-anchor="middle" class="sub">static files · WebSocket</text>
+  <text x="331" y="84" text-anchor="middle" class="sub">session persistence</text>
 
-  <!-- Row 2 -->
-  <rect x="16" y="130" width="170" height="55" rx="8" class="box-warm"/>
-  <text x="101" y="154" text-anchor="middle" class="label">Web Audio</text>
-  <text x="101" y="171" text-anchor="middle" class="sub">synths · samples · MIDI</text>
+  <rect x="476" y="20" width="170" height="90" rx="8" class="box-purple"/>
+  <text x="561" y="52" text-anchor="middle" class="label">LLM</text>
+  <text x="561" y="69" text-anchor="middle" class="sub">OpenAI · Azure</text>
+  <text x="561" y="84" text-anchor="middle" class="sub">LM Studio</text>
 
-  <rect x="416" y="130" width="170" height="55" rx="8" class="box"/>
-  <text x="501" y="154" text-anchor="middle" class="label">Code suggestions</text>
-  <text x="501" y="171" text-anchor="middle" class="sub">one-click apply</text>
+  <rect x="16" y="140" width="170" height="60" rx="8" class="box-warm"/>
+  <text x="101" y="166" text-anchor="middle" class="label">Web Audio</text>
+  <text x="101" y="183" text-anchor="middle" class="sub">synths · samples · MIDI</text>
 
-  <!-- Row 1 horizontal arrows -->
-  <line x1="186" y1="60" x2="214" y2="60" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="386" y1="60" x2="414" y2="60" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <rect x="476" y="140" width="170" height="60" rx="8" class="box"/>
+  <text x="561" y="166" text-anchor="middle" class="label">Code suggestions</text>
+  <text x="561" y="183" text-anchor="middle" class="sub">one-click apply</text>
 
-  <!-- Down arrows -->
-  <line x1="101" y1="100" x2="101" y2="128" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="501" y1="100" x2="501" y2="128" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <!-- Row 1: editor -> server -> LLM (60px gaps, arrows span gap) -->
+  <line x1="190" y1="65" x2="242" y2="65" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="420" y1="65" x2="472" y2="65" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
 
-  <!-- Return: code suggestions → right edge of Web Audio, routed below -->
-  <polyline points="416,170 301,170 301,212 186,212 186,157" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ah)"/>
+  <!-- Down: editor -> web audio, LLM -> suggestions (30px gaps) -->
+  <line x1="101" y1="114" x2="101" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="561" y1="114" x2="561" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 
-  <text x="330" y="228" text-anchor="middle" class="sub">audio stays client-side · agent communicates over WebSocket</text>
+  <!-- Return: suggestions right edge -> below -> web audio right edge -->
+  <polyline points="476,170 331,170 331,215 186,215 186,170" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ah)"/>
+
+  <text x="331" y="232" text-anchor="middle" class="sub">audio stays client-side · agent communicates over WebSocket</text>
 </svg>
