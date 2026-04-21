@@ -28,7 +28,7 @@ No dependencies, no build step — copy one file to serve it from anywhere, incl
 Written to demonstrate LLM spec methodology — the original spec is included alongside the generated code.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -62,15 +62,18 @@ Written to demonstrate LLM spec methodology — the original spec is included al
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="50" width="110" height="80" rx="8" class="box-warm"/>
-  <text x="75" y="88" text-anchor="middle" class="label">Spec file</text>
-  <text x="75" y="103" text-anchor="middle" class="sub">structured comments</text>
-  <rect x="190" y="50" width="130" height="80" rx="8" class="box-accent"/>
-  <text x="255" y="88" text-anchor="middle" class="label">LLM codegen</text>
-  <text x="255" y="103" text-anchor="middle" class="sub">Copilot / GPT</text>
-  <rect x="390" y="50" width="130" height="80" rx="8" class="box-green"/>
-  <text x="455" y="88" text-anchor="middle" class="label">Single HTML</text>
-  <text x="455" y="103" text-anchor="middle" class="sub">browser homepage</text>
-  <line x1="130" y1="90" x2="190" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="320" y1="90" x2="390" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
+  <rect width="660" height="180" class="bg" rx="8"/>
+
+  <rect x="20" y="24" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="100" y="50" text-anchor="middle" class="label">Spec file</text>
+  <text x="100" y="68" text-anchor="middle" class="sub">structured comments</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">LLM codegen</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">Copilot / GPT</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="50" text-anchor="middle" class="label">Single HTML</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">browser homepage</text>
+
 </svg>

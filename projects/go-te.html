@@ -100,7 +100,7 @@
 
       <section class="sec" id="s-diagram">
         <div class="sec-label">Architecture</div>
-        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 180">
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 206">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -134,22 +134,24 @@
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="50" width="110" height="80" rx="8" class="box"/>
-  <text x="75" y="88" text-anchor="middle" class="label">byte stream</text>
-  <text x="75" y="103" text-anchor="middle" class="sub">PTY / pty data</text>
-  <rect x="190" y="20" width="130" height="60" rx="8" class="box-accent"/>
-  <text x="255" y="53" text-anchor="middle" class="label">VT parser</text>
-  <text x="255" y="68" text-anchor="middle" class="sub">ESC sequences</text>
-  <rect x="190" y="100" width="130" height="60" rx="8" class="box-warm"/>
-  <text x="255" y="133" text-anchor="middle" class="label">Screen model</text>
-  <text x="255" y="148" text-anchor="middle" class="sub">cells · attrs</text>
-  <rect x="390" y="50" width="120" height="80" rx="8" class="box-green"/>
-  <text x="450" y="88" text-anchor="middle" class="label">SVG / text</text>
-  <text x="450" y="103" text-anchor="middle" class="sub">renderer output</text>
-  <line x1="130" y1="90" x2="190" y2="70" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="255" y1="80" x2="255" y2="100" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="320" y1="70" x2="390" y2="80" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="320" y1="130" x2="390" y2="100" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
+  <rect width="660" height="206" class="bg" rx="8"/>
+
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box"/>
+  <text x="100" y="91" text-anchor="middle" class="label">byte stream</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">PTY / pty data</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">VT parser</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">ESC sequences</text>
+
+  <rect x="250" y="106" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="330" y="132" text-anchor="middle" class="label">Screen model</text>
+  <text x="330" y="150" text-anchor="middle" class="sub">cells · attrs</text>
+
+  <rect x="480" y="65" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="91" text-anchor="middle" class="label">SVG / text</text>
+  <text x="560" y="109" text-anchor="middle" class="sub">renderer output</text>
+
 </svg></div>
       </section>
 
@@ -164,9 +166,9 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/go-te">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo8zq4yv"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo90xmxw"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo8zq4yv';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo90xmxw';
     mount({
       fullName: 'rcarmo/go-te',
       heroMetaEl: document.getElementById('hero-meta-island-go-te'),

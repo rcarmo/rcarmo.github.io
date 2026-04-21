@@ -30,7 +30,7 @@ Host, user, password persist between launches.
 - [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 600 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 206">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -64,19 +64,22 @@ Host, user, password persist between launches.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="50" width="120" height="80" rx="8" class="box"/>
-  <text x="80" y="88" text-anchor="middle" class="label">Plan 9</text>
-  <text x="80" y="103" text-anchor="middle" class="sub">cpu server</text>
-  <rect x="200" y="50" width="130" height="80" rx="8" class="box-accent"/>
-  <text x="265" y="88" text-anchor="middle" class="label">drawterm</text>
-  <text x="265" y="103" text-anchor="middle" class="sub">macOS arm64</text>
-  <rect x="400" y="20" width="120" height="60" rx="8" class="box-warm"/>
-  <text x="460" y="53" text-anchor="middle" class="label">Metal GPU</text>
-  <text x="460" y="68" text-anchor="middle" class="sub">HiDPI render</text>
-  <rect x="400" y="100" width="120" height="60" rx="8" class="box-green"/>
-  <text x="460" y="133" text-anchor="middle" class="label">Cocoa UI</text>
-  <text x="460" y="148" text-anchor="middle" class="sub">keyboard/mouse</text>
-  <line x1="140" y1="90" x2="200" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="330" y1="80" x2="400" y2="50" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="100" x2="400" y2="130" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
+  <rect width="660" height="206" class="bg" rx="8"/>
+
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box"/>
+  <text x="100" y="91" text-anchor="middle" class="label">Plan 9</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">cpu server</text>
+
+  <rect x="250" y="65" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="91" text-anchor="middle" class="label">drawterm</text>
+  <text x="330" y="109" text-anchor="middle" class="sub">macOS arm64</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="560" y="50" text-anchor="middle" class="label">Metal GPU</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">HiDPI render</text>
+
+  <rect x="480" y="106" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="132" text-anchor="middle" class="label">Cocoa UI</text>
+  <text x="560" y="150" text-anchor="middle" class="sub">keyboard/mouse</text>
+
 </svg>

@@ -30,7 +30,7 @@ Nothing fails silently — export_errors.log for every failure.
 - [Renaming and Filing Photos and Videos in the HEIC/HEIF era](https://taoofmac.com/space/blog/2023/01/14/1745) — 2023-01-14
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 160">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 312">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -64,18 +64,28 @@ Nothing fails silently — export_errors.log for every failure.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="480" height="160" class="bg" rx="8"/>
-  
-  <rect x="20" y="50" width="90" height="60" rx="5" class="box-accent"/><text x="65" y="77" text-anchor="middle" class="label">Photos.app</text><text x="65" y="91" text-anchor="middle" class="sub">library</text>
-  <line x1="110" y1="80" x2="150" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <text x="130" y="70" class="sub">PhotoKit</text>
-  <rect x="150" y="50" width="110" height="60" rx="5" class="box-green"/><text x="205" y="77" text-anchor="middle" class="label">PhotosExport</text><text x="205" y="91" text-anchor="middle" class="sub">Swift CLI</text>
-  <line x1="260" y1="65" x2="300" y2="55" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="260" y1="80" x2="300" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="260" y1="95" x2="300" y2="105" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="300" y="42" width="140" height="30" rx="5" class="box"/><text x="370" y="62" text-anchor="middle" class="label">originals + edits</text>
-  <rect x="300" y="76" width="140" height="30" rx="5" class="box"/><text x="370" y="96" text-anchor="middle" class="label">EXIF / XMP intact</text>
-  <rect x="300" y="110" width="140" height="30" rx="5" class="box"/><text x="370" y="130" text-anchor="middle" class="label">YYYY/MM hierarchy + JSON</text>
-  <text x="240" y="150" text-anchor="middle" class="sub">macOS PhotoKit framework — no private APIs</text>
+  <rect width="660" height="312" class="bg" rx="8"/>
 
+  <rect x="20" y="106" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="100" y="132" text-anchor="middle" class="label">Photos.app</text>
+  <text x="100" y="150" text-anchor="middle" class="sub">library</text>
+
+  <rect x="250" y="106" width="160" height="60" rx="8" class="box-green"/>
+  <text x="330" y="132" text-anchor="middle" class="label">PhotosExport</text>
+  <text x="330" y="150" text-anchor="middle" class="sub">Swift CLI</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box"/>
+  <text x="560" y="58" text-anchor="middle" class="label">originals + edits</text>
+
+  <rect x="480" y="106" width="160" height="60" rx="8" class="box"/>
+  <text x="560" y="140" text-anchor="middle" class="label">EXIF / XMP intact</text>
+
+  <rect x="480" y="188" width="160" height="60" rx="8" class="box"/>
+  <text x="560" y="222" text-anchor="middle" class="label">YYYY/MM hierarchy + JSON</text>
+
+  <line x1="180" y1="136" x2="250" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="410" y1="136" x2="480" y2="54" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="410" y1="136" x2="480" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="330" y="300" text-anchor="middle" class="sub">macOS PhotoKit framework — no private APIs</text>
 </svg>

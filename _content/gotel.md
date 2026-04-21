@@ -26,7 +26,7 @@ Jaeger-like UI at :3000.
 gRPC 4317 + HTTP 4318. Drop-in collector.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 206">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -60,20 +60,22 @@ gRPC 4317 + HTTP 4318. Drop-in collector.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="60" width="120" height="80" rx="8" class="box"/>
-  <text x="80" y="98" text-anchor="middle" class="label">Services</text>
-  <text x="80" y="113" text-anchor="middle" class="sub">OTLP traces</text>
-  <rect x="200" y="20" width="130" height="60" rx="8" class="box-accent"/>
-  <text x="265" y="53" text-anchor="middle" class="label">OTLP receiver</text>
-  <text x="265" y="68" text-anchor="middle" class="sub">gRPC / HTTP</text>
-  <rect x="200" y="110" width="130" height="60" rx="8" class="box-warm"/>
-  <text x="265" y="143" text-anchor="middle" class="label">SQLite store</text>
-  <text x="265" y="158" text-anchor="middle" class="sub">spans + events</text>
-  <rect x="410" y="60" width="130" height="80" rx="8" class="box-green"/>
-  <text x="475" y="98" text-anchor="middle" class="label">Trace UI</text>
-  <text x="475" y="113" text-anchor="middle" class="sub">built-in viewer</text>
-  <line x1="140" y1="100" x2="200" y2="80" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="265" y1="80" x2="265" y2="110" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="80" x2="410" y2="80" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="140" x2="410" y2="110" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
+  <rect width="660" height="206" class="bg" rx="8"/>
+
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box"/>
+  <text x="100" y="91" text-anchor="middle" class="label">Services</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">OTLP traces</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">OTLP receiver</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">gRPC / HTTP</text>
+
+  <rect x="250" y="106" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="330" y="132" text-anchor="middle" class="label">SQLite store</text>
+  <text x="330" y="150" text-anchor="middle" class="sub">spans + events</text>
+
+  <rect x="480" y="65" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="91" text-anchor="middle" class="label">Trace UI</text>
+  <text x="560" y="109" text-anchor="middle" class="sub">built-in viewer</text>
+
 </svg>

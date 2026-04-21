@@ -29,7 +29,7 @@ Reads the Syncthing config XML to find the API key — no manual configuration n
 Trigger rescans on specific folder IDs rather than all folders — useful for large libraries where full rescans are expensive.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -63,15 +63,18 @@ Trigger rescans on specific folder IDs rather than all folders — useful for la
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="50" width="110" height="80" rx="8" class="box-warm"/>
-  <text x="75" y="88" text-anchor="middle" class="label">Cron / event</text>
-  <text x="75" y="103" text-anchor="middle" class="sub">trigger</text>
-  <rect x="190" y="50" width="130" height="80" rx="8" class="box-accent"/>
-  <text x="255" y="88" text-anchor="middle" class="label">kicker</text>
-  <text x="255" y="103" text-anchor="middle" class="sub">Go daemon</text>
-  <rect x="390" y="50" width="120" height="80" rx="8" class="box-green"/>
-  <text x="450" y="88" text-anchor="middle" class="label">Syncthing</text>
-  <text x="450" y="103" text-anchor="middle" class="sub">REST API rescan</text>
-  <line x1="130" y1="90" x2="190" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="320" y1="90" x2="390" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
+  <rect width="660" height="180" class="bg" rx="8"/>
+
+  <rect x="20" y="24" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="100" y="50" text-anchor="middle" class="label">Cron / event</text>
+  <text x="100" y="68" text-anchor="middle" class="sub">trigger</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">kicker</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">Go daemon</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="50" text-anchor="middle" class="label">Syncthing</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">REST API rescan</text>
+
 </svg>

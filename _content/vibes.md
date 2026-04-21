@@ -30,7 +30,7 @@ One Python file. One HTML file. Clone and run.
 - [Notes for February 2-7](https://taoofmac.com/space/notes/2026/02/07/2000) — 2026-02-07
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 230">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -64,16 +64,27 @@ One Python file. One HTML file. Clone and run.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="480" height="180" class="bg" rx="8"/>
-  
-  <rect x="20" y="60" width="90" height="55" rx="5" class="box-accent"/><text x="65" y="84" text-anchor="middle" class="label">Browser</text><text x="65" y="98" text-anchor="middle" class="sub">mobile UI</text>
-  <line x1="110" y1="87" x2="150" y2="87" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <text x="130" y="78" text-anchor="middle" class="sub">HTTP</text>
-  <rect x="150" y="60" width="90" height="55" rx="5" class="box-green"/><text x="195" y="84" text-anchor="middle" class="label">vibes server</text><text x="195" y="98" text-anchor="middle" class="sub">Python/aiohttp</text>
-  <line x1="240" y1="87" x2="280" y2="70" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="240" y1="87" x2="280" y2="110" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="280" y="50" width="110" height="40" rx="5" class="box"/><text x="335" y="67" text-anchor="middle" class="label">ACP agent</text><text x="335" y="81" text-anchor="middle" class="sub">copilot / codex</text>
-  <rect x="280" y="100" width="110" height="40" rx="5" class="box"/><text x="335" y="117" text-anchor="middle" class="label">Pi agent</text><text x="335" y="131" text-anchor="middle" class="sub">RPC / pi-mono</text>
-  <text x="240" y="165" text-anchor="middle" class="sub">Single Python file — zero build step</text>
+  <rect width="660" height="230" class="bg" rx="8"/>
 
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="100" y="91" text-anchor="middle" class="label">Browser</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">mobile UI</text>
+
+  <rect x="250" y="65" width="160" height="60" rx="8" class="box-green"/>
+  <text x="330" y="91" text-anchor="middle" class="label">vibes server</text>
+  <text x="330" y="109" text-anchor="middle" class="sub">Python/aiohttp</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box"/>
+  <text x="560" y="50" text-anchor="middle" class="label">ACP agent</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">copilot / codex</text>
+
+  <rect x="480" y="106" width="160" height="60" rx="8" class="box"/>
+  <text x="560" y="132" text-anchor="middle" class="label">Pi agent</text>
+  <text x="560" y="150" text-anchor="middle" class="sub">RPC / pi-mono</text>
+
+  <line x1="180" y1="95" x2="250" y2="95" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="410" y1="95" x2="480" y2="54" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="410" y1="95" x2="480" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="330" y="218" text-anchor="middle" class="sub">Single Python file — zero build step</text>
 </svg>

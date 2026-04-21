@@ -31,7 +31,7 @@ Lower latency than X11.
 - [Notes for March 30 – April 5](https://taoofmac.com/space/notes/2026/04/05/1700) — 2026-04-05
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -65,16 +65,20 @@ Lower latency than X11.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="50" width="130" height="80" rx="8" class="box-warm"/>
-  <text x="85" y="88" text-anchor="middle" class="label">68k / PPC</text>
-  <text x="85" y="103" text-anchor="middle" class="sub">guest code</text>
-  <rect x="210" y="50" width="130" height="80" rx="8" class="box-accent"/>
-  <text x="275" y="88" text-anchor="middle" class="label">ARM64 JIT</text>
-  <text x="275" y="103" text-anchor="middle" class="sub">code translator</text>
-  <rect x="400" y="50" width="130" height="80" rx="8" class="box-green"/>
-  <text x="465" y="88" text-anchor="middle" class="label">Apple Silicon</text>
-  <text x="465" y="103" text-anchor="middle" class="sub">native execution</text>
-  <line x1="150" y1="90" x2="210" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="340" y1="90" x2="400" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <text x="275" y="143" text-anchor="middle" class="sub">Basilisk II · SheepShaver</text>
+  <rect width="660" height="180" class="bg" rx="8"/>
+
+  <rect x="20" y="24" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="100" y="50" text-anchor="middle" class="label">68k / PPC</text>
+  <text x="100" y="68" text-anchor="middle" class="sub">guest code</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">ARM64 JIT</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">code translator</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="50" text-anchor="middle" class="label">Apple Silicon</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">native execution</text>
+
+
+  <text x="330" y="168" text-anchor="middle" class="sub">Basilisk II · SheepShaver</text>
 </svg>

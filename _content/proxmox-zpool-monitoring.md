@@ -27,7 +27,7 @@ Compatible with Carbon, InfluxDB, and others.
 - [Proxmox on the FriendlyELEC CM3588 NAS Kit](https://taoofmac.com/space/notes/2024/11/09/1940) — 2024-11-09
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 206">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -61,20 +61,23 @@ Compatible with Carbon, InfluxDB, and others.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="50" width="120" height="80" rx="8" class="box"/>
-  <text x="80" y="88" text-anchor="middle" class="label">Proxmox VE</text>
-  <text x="80" y="103" text-anchor="middle" class="sub">cron job</text>
-  <rect x="200" y="50" width="130" height="80" rx="8" class="box-accent"/>
-  <text x="265" y="88" text-anchor="middle" class="label">zpool status</text>
-  <text x="265" y="103" text-anchor="middle" class="sub">parse output</text>
-  <rect x="400" y="20" width="120" height="60" rx="8" class="box-warm"/>
-  <text x="460" y="53" text-anchor="middle" class="label">Graphite</text>
-  <text x="460" y="68" text-anchor="middle" class="sub">metrics push</text>
-  <rect x="400" y="100" width="120" height="60" rx="8" class="box-green"/>
-  <text x="460" y="133" text-anchor="middle" class="label">Grafana</text>
-  <text x="460" y="148" text-anchor="middle" class="sub">dashboard</text>
-  <line x1="140" y1="90" x2="200" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="330" y1="70" x2="400" y2="50" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="110" x2="400" y2="130" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="460" y1="80" x2="460" y2="100" stroke-width="1.5" stroke="#5070a0" marker-end="url(#ah)"/>
+  <rect width="660" height="206" class="bg" rx="8"/>
+
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box"/>
+  <text x="100" y="91" text-anchor="middle" class="label">Proxmox VE</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">cron job</text>
+
+  <rect x="250" y="65" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="91" text-anchor="middle" class="label">zpool status</text>
+  <text x="330" y="109" text-anchor="middle" class="sub">parse output</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="560" y="50" text-anchor="middle" class="label">Graphite</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">metrics push</text>
+
+  <rect x="480" y="106" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="132" text-anchor="middle" class="label">Grafana</text>
+  <text x="560" y="150" text-anchor="middle" class="sub">dashboard</text>
+
+  <line x1="560" y1="84" x2="560" y2="106" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 </svg>

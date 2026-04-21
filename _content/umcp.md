@@ -28,7 +28,7 @@ Docstring → description. Annotations → JSON Schema.
 - [Notes on SKILL.md vs MCP](https://taoofmac.com/space/notes/2026/01/14/0830) — 2026-01-14
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 230">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -62,17 +62,27 @@ Docstring → description. Annotations → JSON Schema.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="480" height="180" class="bg" rx="8"/>
-  
-  <rect x="20" y="65" width="100" height="50" rx="5" class="box-accent"/><text x="70" y="87" text-anchor="middle" class="label">MCP client</text><text x="70" y="101" text-anchor="middle" class="sub">Claude / Cursor</text>
-  <line x1="120" y1="90" x2="160" y2="90" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <text x="140" y="80" text-anchor="middle" class="sub">stdio</text>
-  <rect x="160" y="65" width="120" height="50" rx="5" class="box-green"/><text x="220" y="87" text-anchor="middle" class="label">umcp server</text><text x="220" y="101" text-anchor="middle" class="sub">zero deps</text>
-  <line x1="280" y1="90" x2="320" y2="70" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="280" y1="90" x2="320" y2="110" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="320" y="55" width="120" height="35" rx="5" class="box"/><text x="380" y="69" text-anchor="middle" class="label">@server.tool</text><text x="380" y="83" text-anchor="middle" class="sub">async handler</text>
-  <rect x="320" y="98" width="120" height="35" rx="5" class="box"/><text x="380" y="112" text-anchor="middle" class="label">@server.tool</text><text x="380" y="126" text-anchor="middle" class="sub">sync handler</text>
-  <text x="140" y="155" text-anchor="middle" class="sub">JSON-RPC 2.0 over stdio — MCP spec compliant</text>
-  <text x="350" y="155" text-anchor="middle" class="sub">plain Python functions</text>
+  <rect width="660" height="230" class="bg" rx="8"/>
 
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="100" y="91" text-anchor="middle" class="label">MCP client</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">Claude / Cursor</text>
+
+  <rect x="250" y="65" width="160" height="60" rx="8" class="box-green"/>
+  <text x="330" y="91" text-anchor="middle" class="label">umcp server</text>
+  <text x="330" y="109" text-anchor="middle" class="sub">zero deps</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box"/>
+  <text x="560" y="50" text-anchor="middle" class="label">@server.tool</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">async handler</text>
+
+  <rect x="480" y="106" width="160" height="60" rx="8" class="box"/>
+  <text x="560" y="132" text-anchor="middle" class="label">@server.tool</text>
+  <text x="560" y="150" text-anchor="middle" class="sub">sync handler</text>
+
+  <line x1="180" y1="95" x2="250" y2="95" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="410" y1="95" x2="480" y2="54" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="410" y1="95" x2="480" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="330" y="218" text-anchor="middle" class="sub">plain Python functions</text>
 </svg>

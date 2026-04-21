@@ -29,7 +29,7 @@ No build step, no Node.js, no separate install beyond Python.
 Real-time streaming output with tool call interleaving.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 230">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -63,20 +63,24 @@ Real-time streaming output with tool call interleaving.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="60" width="100" height="60" rx="8" class="box-accent"/>
-  <text x="70" y="87" text-anchor="middle" class="label">User</text>
-  <text x="70" y="103" text-anchor="middle" class="sub">CLI prompt</text>
-  <rect x="170" y="60" width="120" height="60" rx="8" class="box-green"/>
-  <text x="230" y="87" text-anchor="middle" class="label">Steward</text>
-  <text x="230" y="103" text-anchor="middle" class="sub">conversation loop</text>
-  <rect x="350" y="25" width="120" height="45" rx="8" class="box-warm"/>
-  <text x="410" y="45" text-anchor="middle" class="label">LLM</text>
-  <text x="410" y="60" text-anchor="middle" class="sub">Azure / OpenAI</text>
-  <rect x="350" y="90" width="120" height="45" rx="8" class="box"/>
-  <text x="410" y="110" text-anchor="middle" class="label">Tools</text>
-  <text x="410" y="125" text-anchor="middle" class="sub">files · shell · web</text>
-  <line x1="120" y1="90" x2="170" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="290" y1="75" x2="350" y2="50" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="290" y1="105" x2="350" y2="110" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <text x="260" y="160" text-anchor="middle" class="sub">streaming tool-use loop — Python CLI</text>
+  <rect width="660" height="230" class="bg" rx="8"/>
+
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="100" y="91" text-anchor="middle" class="label">User</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">CLI prompt</text>
+
+  <rect x="250" y="65" width="160" height="60" rx="8" class="box-green"/>
+  <text x="330" y="91" text-anchor="middle" class="label">Steward</text>
+  <text x="330" y="109" text-anchor="middle" class="sub">conversation loop</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="560" y="50" text-anchor="middle" class="label">LLM</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">Azure / OpenAI</text>
+
+  <rect x="480" y="106" width="160" height="60" rx="8" class="box"/>
+  <text x="560" y="132" text-anchor="middle" class="label">Tools</text>
+  <text x="560" y="150" text-anchor="middle" class="sub">files · shell · web</text>
+
+
+  <text x="330" y="218" text-anchor="middle" class="sub">streaming tool-use loop — Python CLI</text>
 </svg>

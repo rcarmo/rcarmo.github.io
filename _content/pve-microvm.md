@@ -29,7 +29,7 @@ dpkg -r restores original qemu-server files.
 - [Notes for April 13-19](https://taoofmac.com/space/notes/2026/04/19/1400#proxmox-microvms) — 2026-04-19
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 230">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -63,16 +63,26 @@ dpkg -r restores original qemu-server files.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="480" height="180" class="bg" rx="8"/>
-  
-  <rect x="20" y="65" width="90" height="50" rx="5" class="box-accent"/><text x="65" y="87" text-anchor="middle" class="label">OCI registry</text><text x="65" y="101" text-anchor="middle" class="sub">Docker Hub / ghcr</text>
-  <line x1="110" y1="90" x2="150" y2="90" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <text x="130" y="80" class="sub">pull</text>
-  <rect x="150" y="65" width="90" height="50" rx="5" class="box-green"/><text x="195" y="87" text-anchor="middle" class="label">extract rootfs</text><text x="195" y="101" text-anchor="middle" class="sub">pve-microvm</text>
-  <line x1="240" y1="90" x2="280" y2="90" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="280" y="45" width="120" height="40" rx="5" class="box-green"/><text x="340" y="62" text-anchor="middle" class="label">libkrun VMM</text><text x="340" y="76" text-anchor="middle" class="sub">sub-second start</text>
-  <rect x="280" y="95" width="120" height="40" rx="5" class="box"/><text x="340" y="112" text-anchor="middle" class="label">vsock / virtio</text><text x="340" y="126" text-anchor="middle" class="sub">agent comms</text>
-  <text x="340" y="155" text-anchor="middle" class="sub">hardware isolation — no shared kernel</text>
-  <text x="170" y="155" text-anchor="middle" class="sub">any OCI image → microVM</text>
+  <rect width="660" height="230" class="bg" rx="8"/>
 
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="100" y="91" text-anchor="middle" class="label">OCI registry</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">Docker Hub / ghcr</text>
+
+  <rect x="250" y="65" width="160" height="60" rx="8" class="box-green"/>
+  <text x="330" y="91" text-anchor="middle" class="label">extract rootfs</text>
+  <text x="330" y="109" text-anchor="middle" class="sub">pve-microvm</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="50" text-anchor="middle" class="label">libkrun VMM</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">sub-second start</text>
+
+  <rect x="480" y="106" width="160" height="60" rx="8" class="box"/>
+  <text x="560" y="132" text-anchor="middle" class="label">vsock / virtio</text>
+  <text x="560" y="150" text-anchor="middle" class="sub">agent comms</text>
+
+  <line x1="180" y1="95" x2="250" y2="95" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="410" y1="95" x2="480" y2="54" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="330" y="218" text-anchor="middle" class="sub">any OCI image → microVM</text>
 </svg>

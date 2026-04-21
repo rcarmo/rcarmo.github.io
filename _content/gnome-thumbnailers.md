@@ -30,7 +30,7 @@ make install, thumbnails appear immediately.
 - [Homelab Update](https://taoofmac.com/space/blog/2022/10/28/1900) — 2022-10-28
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 206">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -64,20 +64,22 @@ make install, thumbnails appear immediately.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="50" width="110" height="80" rx="8" class="box"/>
-  <text x="75" y="88" text-anchor="middle" class="label">GNOME Files</text>
-  <text x="75" y="103" text-anchor="middle" class="sub">thumbnailer call</text>
-  <rect x="200" y="20" width="130" height="60" rx="8" class="box-accent"/>
-  <text x="265" y="53" text-anchor="middle" class="label">RAW/HEIC</text>
-  <text x="265" y="68" text-anchor="middle" class="sub">dcraw · libheif</text>
-  <rect x="200" y="100" width="130" height="60" rx="8" class="box-warm"/>
-  <text x="265" y="133" text-anchor="middle" class="label">3D (STL/OBJ)</text>
-  <text x="265" y="148" text-anchor="middle" class="sub">blender headless</text>
-  <rect x="400" y="50" width="120" height="80" rx="8" class="box-green"/>
-  <text x="460" y="88" text-anchor="middle" class="label">PNG thumb</text>
-  <text x="460" y="103" text-anchor="middle" class="sub">~256px cache</text>
-  <line x1="130" y1="90" x2="200" y2="70" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="130" y1="105" x2="200" y2="130" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="70" x2="400" y2="80" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="130" x2="400" y2="100" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
+  <rect width="660" height="206" class="bg" rx="8"/>
+
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box"/>
+  <text x="100" y="91" text-anchor="middle" class="label">GNOME Files</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">thumbnailer call</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">RAW/HEIC</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">dcraw · libheif</text>
+
+  <rect x="250" y="106" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="330" y="132" text-anchor="middle" class="label">3D (STL/OBJ)</text>
+  <text x="330" y="150" text-anchor="middle" class="sub">blender headless</text>
+
+  <rect x="480" y="65" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="91" text-anchor="middle" class="label">PNG thumb</text>
+  <text x="560" y="109" text-anchor="middle" class="sub">~256px cache</text>
+
 </svg>

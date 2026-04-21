@@ -28,7 +28,7 @@ Installed and updated via npm alongside Node-RED — no separate server process 
 Low CPU and memory footprint — serves the dashboard from the same Pi that runs Node-RED.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -62,15 +62,18 @@ Low CPU and memory footprint — serves the dashboard from the same Pi that runs
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="50" width="120" height="80" rx="8" class="box-warm"/>
-  <text x="80" y="88" text-anchor="middle" class="label">Node-RED</text>
-  <text x="80" y="103" text-anchor="middle" class="sub">flow runtime</text>
-  <rect x="200" y="50" width="130" height="80" rx="8" class="box-accent"/>
-  <text x="265" y="88" text-anchor="middle" class="label">Dashboard</text>
-  <text x="265" y="103" text-anchor="middle" class="sub">custom widgets</text>
-  <rect x="390" y="50" width="120" height="80" rx="8" class="box-green"/>
-  <text x="450" y="88" text-anchor="middle" class="label">Browser UI</text>
-  <text x="450" y="103" text-anchor="middle" class="sub">sensor data</text>
-  <line x1="140" y1="90" x2="200" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="330" y1="90" x2="390" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
+  <rect width="660" height="180" class="bg" rx="8"/>
+
+  <rect x="20" y="24" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="100" y="50" text-anchor="middle" class="label">Node-RED</text>
+  <text x="100" y="68" text-anchor="middle" class="sub">flow runtime</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">Dashboard</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">custom widgets</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="50" text-anchor="middle" class="label">Browser UI</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">sensor data</text>
+
 </svg>

@@ -25,7 +25,7 @@ Runs as systemd service.
 - [Notes for December 9-24](https://taoofmac.com/space/notes/2025/12/24/1400) — 2025-12-24
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 206">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -59,20 +59,22 @@ Runs as systemd service.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="60" width="120" height="80" rx="8" class="box"/>
-  <text x="80" y="98" text-anchor="middle" class="label">HomeKit</text>
-  <text x="80" y="113" text-anchor="middle" class="sub">virtual switch</text>
-  <rect x="200" y="20" width="130" height="60" rx="8" class="box-accent"/>
-  <text x="265" y="53" text-anchor="middle" class="label">HAP server</text>
-  <text x="265" y="68" text-anchor="middle" class="sub">Python HAP-python</text>
-  <rect x="200" y="120" width="130" height="60" rx="8" class="box-warm"/>
-  <text x="265" y="153" text-anchor="middle" class="label">Steam config</text>
-  <text x="265" y="168" text-anchor="middle" class="sub">loginusers.vdf</text>
-  <rect x="410" y="60" width="130" height="80" rx="8" class="box-green"/>
-  <text x="475" y="98" text-anchor="middle" class="label">Active user</text>
-  <text x="475" y="113" text-anchor="middle" class="sub">registry write</text>
-  <line x1="140" y1="100" x2="200" y2="80" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="265" y1="80" x2="265" y2="120" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="150" x2="410" y2="100" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="70" x2="410" y2="80" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
+  <rect width="660" height="206" class="bg" rx="8"/>
+
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box"/>
+  <text x="100" y="91" text-anchor="middle" class="label">HomeKit</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">virtual switch</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">HAP server</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">Python HAP-python</text>
+
+  <rect x="250" y="106" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="330" y="132" text-anchor="middle" class="label">Steam config</text>
+  <text x="330" y="150" text-anchor="middle" class="sub">loginusers.vdf</text>
+
+  <rect x="480" y="65" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="91" text-anchor="middle" class="label">Active user</text>
+  <text x="560" y="109" text-anchor="middle" class="sub">registry write</text>
+
 </svg>

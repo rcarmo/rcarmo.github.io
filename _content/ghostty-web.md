@@ -24,7 +24,7 @@ Existing xterm.js tooling works unchanged.
 go-te used by webterm, go-rdp, and ghostty-web.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -58,15 +58,18 @@ go-te used by webterm, go-rdp, and ghostty-web.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="50" width="120" height="80" rx="8" class="box"/>
-  <text x="80" y="88" text-anchor="middle" class="label">Browser</text>
-  <text x="80" y="103" text-anchor="middle" class="sub">xterm.js</text>
-  <rect x="200" y="50" width="130" height="80" rx="8" class="box-accent"/>
-  <text x="265" y="88" text-anchor="middle" class="label">TypeScript</text>
-  <text x="265" y="103" text-anchor="middle" class="sub">WS bridge</text>
-  <rect x="400" y="50" width="130" height="80" rx="8" class="box-green"/>
-  <text x="465" y="88" text-anchor="middle" class="label">Ghostty PTY</text>
-  <text x="465" y="103" text-anchor="middle" class="sub">native process</text>
-  <line x1="140" y1="90" x2="200" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="330" y1="90" x2="400" y2="90" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
+  <rect width="660" height="180" class="bg" rx="8"/>
+
+  <rect x="20" y="24" width="160" height="60" rx="8" class="box"/>
+  <text x="100" y="50" text-anchor="middle" class="label">Browser</text>
+  <text x="100" y="68" text-anchor="middle" class="sub">xterm.js</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">TypeScript</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">WS bridge</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="50" text-anchor="middle" class="label">Ghostty PTY</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">native process</text>
+
 </svg>

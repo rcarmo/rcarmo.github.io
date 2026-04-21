@@ -28,7 +28,7 @@ Read and write .pptx — slides, shapes, text frames, layouts.
 No CGo, no external dependencies. Builds to a static binary on any Go-supported platform.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 230">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -62,20 +62,24 @@ No CGo, no external dependencies. Builds to a static binary on any Go-supported 
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="60" width="100" height="60" rx="8" class="box-accent"/>
-  <text x="70" y="87" text-anchor="middle" class="label">.docx/.xlsx</text>
-  <text x="70" y="103" text-anchor="middle" class="sub">ZIP archive</text>
-  <rect x="170" y="30" width="120" height="50" rx="8" class="box-green"/>
-  <text x="230" y="52" text-anchor="middle" class="label">Unzip</text>
-  <text x="230" y="68" text-anchor="middle" class="sub">XML parts</text>
-  <rect x="170" y="100" width="120" height="50" rx="8" class="box"/>
-  <text x="230" y="122" text-anchor="middle" class="label">Typed model</text>
-  <text x="230" y="138" text-anchor="middle" class="sub">paragraphs · cells</text>
-  <rect x="360" y="60" width="120" height="60" rx="8" class="box-warm"/>
-  <text x="420" y="87" text-anchor="middle" class="label">Re-zip</text>
-  <text x="420" y="103" text-anchor="middle" class="sub">valid OOXML</text>
-  <line x1="120" y1="80" x2="170" y2="55" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="230" y1="80" x2="230" y2="100" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="290" y1="125" x2="360" y2="100" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <text x="260" y="170" text-anchor="middle" class="sub">pure Go — no CGo, no external deps</text>
+  <rect width="660" height="230" class="bg" rx="8"/>
+
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="100" y="91" text-anchor="middle" class="label">.docx/.xlsx</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">ZIP archive</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-green"/>
+  <text x="330" y="50" text-anchor="middle" class="label">Unzip</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">XML parts</text>
+
+  <rect x="250" y="106" width="160" height="60" rx="8" class="box"/>
+  <text x="330" y="132" text-anchor="middle" class="label">Typed model</text>
+  <text x="330" y="150" text-anchor="middle" class="sub">paragraphs · cells</text>
+
+  <rect x="480" y="65" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="560" y="91" text-anchor="middle" class="label">Re-zip</text>
+  <text x="560" y="109" text-anchor="middle" class="sub">valid OOXML</text>
+
+
+  <text x="330" y="218" text-anchor="middle" class="sub">pure Go — no CGo, no external deps</text>
 </svg>

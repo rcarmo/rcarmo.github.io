@@ -31,7 +31,7 @@ Zero npm bloat — uses Bun's built-in HTTP server, SQLite driver, and file stre
 Published as a multi-arch container image; mounts the Calibre library folder as a read-only volume.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 206">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -65,24 +65,26 @@ Published as a multi-arch container image; mounts the Calibre library folder as 
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect x="20" y="60" width="120" height="100" rx="8" class="box-warm"/>
-  <text x="80" y="100" text-anchor="middle" class="label">Calibre</text>
-  <text x="80" y="118" text-anchor="middle" class="label">library</text>
-  <text x="80" y="133" text-anchor="middle" class="sub">metadata.db</text>
-  <rect x="200" y="20" width="130" height="60" rx="8" class="box-accent"/>
-  <text x="265" y="53" text-anchor="middle" class="label">OPDS server</text>
-  <text x="265" y="68" text-anchor="middle" class="sub">Atom/XML feeds</text>
-  <rect x="200" y="110" width="130" height="60" rx="8" class="box"/>
-  <text x="265" y="143" text-anchor="middle" class="label">kosync</text>
-  <text x="265" y="158" text-anchor="middle" class="sub">progress sync</text>
-  <rect x="410" y="20" width="130" height="60" rx="8" class="box-green"/>
-  <text x="475" y="53" text-anchor="middle" class="label">e-reader</text>
-  <text x="475" y="68" text-anchor="middle" class="sub">XteInk · CrossPoint</text>
-  <rect x="410" y="110" width="130" height="60" rx="8" class="box"/>
-  <text x="475" y="143" text-anchor="middle" class="label">KOReader</text>
-  <text x="475" y="158" text-anchor="middle" class="sub">reading position</text>
-  <line x1="140" y1="110" x2="200" y2="80" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="140" y1="130" x2="200" y2="140" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="330" y1="50" x2="410" y2="50" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="330" y1="140" x2="410" y2="140" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
+  <rect width="660" height="206" class="bg" rx="8"/>
+
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="100" y="91" text-anchor="middle" class="label">Calibre</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">metadata.db</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">OPDS server</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">Atom/XML feeds</text>
+
+  <rect x="250" y="106" width="160" height="60" rx="8" class="box"/>
+  <text x="330" y="132" text-anchor="middle" class="label">kosync</text>
+  <text x="330" y="150" text-anchor="middle" class="sub">progress sync</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="50" text-anchor="middle" class="label">e-reader</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">XteInk · CrossPoint</text>
+
+  <rect x="480" y="106" width="160" height="60" rx="8" class="box"/>
+  <text x="560" y="132" text-anchor="middle" class="label">KOReader</text>
+  <text x="560" y="150" text-anchor="middle" class="sub">reading position</text>
+
 </svg>
