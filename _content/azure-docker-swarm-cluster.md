@@ -28,25 +28,19 @@ Odd-numbered manager VMSS ensures Raft quorum survives a single node failure wit
 Documents the Docker Swarm era architecture; useful for comparing operational complexity against modern Kubernetes templates.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 250">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
       .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
       .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
       .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
       .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
+      .sub { fill: #7f95b5; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
       .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
       .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
       .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
       .label { fill: #1a2a40; }
       .sub { fill: #5070a0; }
     }
@@ -56,30 +50,48 @@ Documents the Docker Swarm era architecture; useful for comparing operational co
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0"/>
     </marker>
     <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6"/>
     </marker>
   </defs>
-  <rect x="20" y="80" width="110" height="60" rx="8" class="box-warm"/>
-  <text x="75" y="113" text-anchor="middle" class="label">Makefile</text>
-  <text x="75" y="128" text-anchor="middle" class="sub">az deployment</text>
-  <rect x="190" y="20" width="130" height="60" rx="8" class="box-accent"/>
-  <text x="255" y="53" text-anchor="middle" class="label">Manager VMSS</text>
-  <text x="255" y="68" text-anchor="middle" class="sub">Raft quorum ×3</text>
-  <rect x="190" y="130" width="130" height="60" rx="8" class="box"/>
-  <text x="255" y="163" text-anchor="middle" class="label">Worker VMSS</text>
-  <text x="255" y="178" text-anchor="middle" class="sub">auto-scale</text>
-  <rect x="400" y="20" width="120" height="60" rx="8" class="box-green"/>
-  <text x="460" y="53" text-anchor="middle" class="label">Key Vault</text>
-  <text x="460" y="68" text-anchor="middle" class="sub">join token</text>
-  <rect x="400" y="130" width="120" height="60" rx="8" class="box"/>
-  <text x="460" y="163" text-anchor="middle" class="label">Swarm API</text>
-  <text x="460" y="178" text-anchor="middle" class="sub">port 2377</text>
-  <line x1="130" y1="100" x2="190" y2="80" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="130" y1="125" x2="190" y2="160" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="320" y1="50" x2="400" y2="50" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="320" y1="160" x2="400" y2="160" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="255" y1="80" x2="255" y2="130" stroke-width="1.5" stroke="#5070a0" marker-end="url(#ah)"/>
+
+  <rect x="20" y="92" width="120" height="66" rx="10" class="box"/>
+  <image href="/assets/azure-icons/templates.svg" x="32" y="108" width="22" height="22"/>
+  <text x="82" y="117" text-anchor="middle" class="label">ARM template</text>
+  <text x="82" y="134" text-anchor="middle" class="sub">make deploy</text>
+
+  <rect x="200" y="28" width="150" height="72" rx="10" class="box-accent"/>
+  <image href="/assets/azure-icons/vm-scale-sets.svg" x="214" y="46" width="22" height="22"/>
+  <text x="286" y="55" text-anchor="middle" class="label">Manager VMSS</text>
+  <text x="286" y="72" text-anchor="middle" class="sub">odd-sized Raft quorum</text>
+
+  <rect x="200" y="148" width="150" height="72" rx="10" class="box"/>
+  <image href="/assets/azure-icons/vm-scale-sets.svg" x="214" y="166" width="22" height="22"/>
+  <text x="286" y="175" text-anchor="middle" class="label">Worker VMSS</text>
+  <text x="286" y="192" text-anchor="middle" class="sub">auto-scale rules</text>
+
+  <rect x="410" y="28" width="150" height="72" rx="10" class="box-green"/>
+  <image href="/assets/azure-icons/key-vaults.svg" x="424" y="46" width="22" height="22"/>
+  <text x="497" y="55" text-anchor="middle" class="label">Key Vault</text>
+  <text x="497" y="72" text-anchor="middle" class="sub">stores join token</text>
+
+  <rect x="410" y="148" width="150" height="72" rx="10" class="box"/>
+  <image href="/assets/azure-icons/load-balancers.svg" x="424" y="166" width="22" height="22"/>
+  <text x="497" y="175" text-anchor="middle" class="label">Load balancers</text>
+  <text x="497" y="192" text-anchor="middle" class="sub">internal + public</text>
+
+  <rect x="620" y="92" width="120" height="66" rx="10" class="box-green"/>
+  <text x="680" y="117" text-anchor="middle" class="label">Docker Swarm</text>
+  <text x="680" y="134" text-anchor="middle" class="sub">apps + API 2377</text>
+
+  <line x1="140" y1="112" x2="196" y2="64" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="140" y1="138" x2="196" y2="184" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="350" y1="64" x2="406" y2="64" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="350" y1="184" x2="406" y2="184" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="560" y1="64" x2="616" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="560" y1="184" x2="616" y2="138" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="380" y="238" text-anchor="middle" class="sub">workers fetch the join token at boot and scale independently of the manager quorum</text>
 </svg>

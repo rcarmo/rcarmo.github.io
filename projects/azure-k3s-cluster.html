@@ -18,7 +18,7 @@
 
   <header class="hero hero-project" id="hero" data-section="cloud">
     <div class="hero-inner">
-      <img class="hero-logo" src="/assets/logos-opt/default-05.png" alt="Azure ARM template to deploy a lightweight Kubernetes cluster using k3s — one make target, running in minutes. logo">
+      <img class="hero-logo" src="/assets/logos-opt/default-04.png" alt="Azure ARM template to deploy a lightweight Kubernetes cluster using k3s — one make target, running in minutes. logo">
       <div class="hero-text">
         <div class="hero-kicker">Project</div>
         <div class="hero-title-row">
@@ -108,25 +108,19 @@
 
       <section class="sec" id="s-diagram">
         <div class="sec-label">Architecture</div>
-        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 220">
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 240">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
       .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
       .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
       .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
       .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
+      .sub { fill: #7f95b5; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
       .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
       .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
       .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
       .label { fill: #1a2a40; }
       .sub { fill: #5070a0; }
     }
@@ -135,33 +129,42 @@
     .sub { font-size: 11px; }
   </style>
   <defs>
-    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
-    </marker>
-    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
-    </marker>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#5070a0"/></marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#3b82f6"/></marker>
   </defs>
-  <rect x="20" y="80" width="100" height="60" rx="8" class="box-warm"/>
-  <text x="70" y="113" text-anchor="middle" class="label">Makefile</text>
-  <text x="70" y="128" text-anchor="middle" class="sub">az CLI wrapper</text>
-  <rect x="180" y="20" width="130" height="60" rx="8" class="box-accent"/>
-  <text x="245" y="53" text-anchor="middle" class="label">ARM Template</text>
-  <text x="245" y="68" text-anchor="middle" class="sub">VNet · NSG · VMs</text>
-  <rect x="180" y="120" width="130" height="60" rx="8" class="box"/>
-  <text x="245" y="153" text-anchor="middle" class="label">Key Vault</text>
-  <text x="245" y="168" text-anchor="middle" class="sub">join token secret</text>
-  <rect x="400" y="20" width="110" height="60" rx="8" class="box-green"/>
-  <text x="455" y="53" text-anchor="middle" class="label">k3s server</text>
-  <text x="455" y="68" text-anchor="middle" class="sub">Raft leader</text>
-  <rect x="400" y="120" width="110" height="60" rx="8" class="box"/>
-  <text x="455" y="153" text-anchor="middle" class="label">k3s agents</text>
-  <text x="455" y="168" text-anchor="middle" class="sub">VMSS workers</text>
-  <line x1="120" y1="100" x2="180" y2="60" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="120" y1="115" x2="180" y2="150" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="310" y1="50" x2="400" y2="50" stroke-width="1.5" marker-end="url(#ahs)" stroke="#3b82f6"/>
-  <line x1="310" y1="150" x2="400" y2="150" stroke-width="1.5" marker-end="url(#ah)" stroke="#5070a0"/>
-  <line x1="455" y1="80" x2="455" y2="120" stroke-width="1.5" stroke="#5070a0" marker-end="url(#ah)"/>
+
+  <rect x="20" y="88" width="120" height="66" rx="10" class="box"/>
+  <image href="/assets/azure-icons/templates.svg" x="32" y="106" width="22" height="22"/>
+  <text x="82" y="116" text-anchor="middle" class="label">ARM template</text>
+  <text x="82" y="133" text-anchor="middle" class="sub">make deploy</text>
+
+  <rect x="190" y="88" width="150" height="66" rx="10" class="box-accent"/>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="204" y="106" width="22" height="22"/>
+  <text x="268" y="116" text-anchor="middle" class="label">k3s server VM</text>
+  <text x="268" y="133" text-anchor="middle" class="sub">cloud-init installs k3s</text>
+
+  <rect x="390" y="28" width="150" height="66" rx="10" class="box-green"/>
+  <image href="/assets/azure-icons/kubernetes-services.svg" x="404" y="46" width="22" height="22"/>
+  <text x="468" y="56" text-anchor="middle" class="label">k3s control plane</text>
+  <text x="468" y="73" text-anchor="middle" class="sub">API + kubeconfig</text>
+
+  <rect x="390" y="148" width="150" height="66" rx="10" class="box"/>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="404" y="166" width="22" height="22"/>
+  <text x="468" y="176" text-anchor="middle" class="label">agent VMs</text>
+  <text x="468" y="193" text-anchor="middle" class="sub">join server on boot</text>
+
+  <rect x="590" y="88" width="150" height="66" rx="10" class="box-green"/>
+  <image href="/assets/azure-icons/kubernetes-services.svg" x="604" y="106" width="22" height="22"/>
+  <text x="666" y="116" text-anchor="middle" class="label">Ready cluster</text>
+  <text x="666" y="133" text-anchor="middle" class="sub">kubectl works immediately</text>
+
+  <line x1="140" y1="121" x2="186" y2="121" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="340" y1="121" x2="386" y2="61" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="340" y1="121" x2="386" y2="181" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="540" y1="61" x2="586" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="540" y1="181" x2="586" y2="130" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="380" y="232" text-anchor="middle" class="sub">template parameters control VM size, node count, and k3s version — no AKS control plane required</text>
 </svg></div>
       </section>
 
@@ -176,9 +179,9 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/azure-k3s-cluster">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo8x14c1"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo8xwczg"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo8x14c1';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo8xwczg';
     mount({
       fullName: 'rcarmo/azure-k3s-cluster',
       heroMetaEl: document.getElementById('hero-meta-island-azure-k3s-cluster'),
