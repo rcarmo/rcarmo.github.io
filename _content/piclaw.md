@@ -54,8 +54,8 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
       .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
       .label { fill: #d0daf0; }
       .sub { fill: #5070a0; }
-      
-      
+      .conn { stroke: #3a5070; }
+      .conn-strong { stroke: #5090d0; }
     }
     @media (prefers-color-scheme: light) {
       .bg { fill: transparent; }
@@ -66,8 +66,8 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
       .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
       .label { fill: #1a2a40; }
       .sub { fill: #5070a0; }
-      
-      
+      .conn { stroke: #90a8c0; }
+      .conn-strong { stroke: #3b82f6; }
     }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
@@ -75,12 +75,8 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
     .tiny { font-size: 10px; }
   </style>
   <defs>
-    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
-    </marker>
-    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
-    </marker>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/></marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/></marker>
   </defs>
 
   <!-- User -->
@@ -129,25 +125,25 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
   <text x="605" y="232" text-anchor="middle" class="sub">GitHub · MCP · browser</text>
 
   <!-- Arrows: User → UI -->
-  <linex1="116" y1="135" x2="154" y2="90" stroke-width="1.5" marker-end="url(#ahs)"/ stroke="#3b82f6"/>
+  <line x1="116" y1="135" x2="154" y2="90" class="conn-strong" stroke-width="1.5" marker-end="url(#ahs)"/>
   <!-- User → Agent -->
-  <linex1="116" y1="155" x2="154" y2="185" stroke-width="1.5" marker-end="url(#ah)"/ stroke="#5070a0"/>
+  <line x1="116" y1="155" x2="154" y2="185" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
   <!-- UI ↔ Agent -->
-  <linex1="231" y1="120" x2="231" y2="158" stroke-width="1.5" marker-end="url(#ahs)"/ stroke="#3b82f6"/>
+  <line x1="231" y1="120" x2="231" y2="158" class="conn-strong" stroke-width="1.5" marker-end="url(#ahs)"/>
   <!-- Agent → Extensions -->
-  <linex1="306" y1="175" x2="344" y2="60" stroke-width="1.5" marker-end="url(#ah)"/ stroke="#5070a0"/>
+  <line x1="306" y1="175" x2="344" y2="60" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
   <!-- Agent → Skills -->
-  <linex1="306" y1="190" x2="344" y2="115" stroke-width="1.5" marker-end="url(#ah)"/ stroke="#5070a0"/>
+  <line x1="306" y1="190" x2="344" y2="115" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
   <!-- Agent → Workspace -->
-  <linex1="306" y1="200" x2="344" y2="200" stroke-width="1.5" marker-end="url(#ahs)"/ stroke="#3b82f6"/>
+  <line x1="306" y1="200" x2="344" y2="200" class="conn-strong" stroke-width="1.5" marker-end="url(#ahs)"/>
   <!-- Extensions → Tools -->
-  <linex1="486" y1="47" x2="528" y2="75" stroke-width="1.5" marker-end="url(#ah)"/ stroke="#5070a0"/>
+  <line x1="486" y1="47" x2="528" y2="75" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
   <!-- Skills → Tools -->
-  <linex1="486" y1="117" x2="528" y2="100" stroke-width="1.5" marker-end="url(#ah)"/ stroke="#5070a0"/>
+  <line x1="486" y1="117" x2="528" y2="100" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
   <!-- Workspace → External -->
-  <linex1="486" y1="210" x2="528" y2="210" stroke-width="1.5" marker-end="url(#ah)"/ stroke="#5070a0"/>
+  <line x1="486" y1="210" x2="528" y2="210" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
   <!-- Tools → External -->
-  <linex1="605" y1="130" x2="605" y2="168" stroke-width="1.5" marker-end="url(#ah)"/ stroke="#5070a0"/>
+  <line x1="605" y1="130" x2="605" y2="168" class="conn" stroke-width="1.5" marker-end="url(#ah)"/>
 
   <!-- Labels -->
   <text x="330" y="265" text-anchor="middle" class="tiny sub">reads / writes</text>

@@ -32,35 +32,34 @@ Tracks recently forwarded records and suppresses re-forwarding to avoid amplific
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
+      .box { fill: #161b26; stroke: #364155; }
+      .box-accent { fill: #0f213e; stroke: #3b82f6; }
+      .box-b { fill: #10231f; stroke: #10b981; }
+      .label { fill: #d8e1f0; }
+      .sub { fill: #93a4c0; }
+      .arrow-dns { stroke: #60a5fa; }
+      .arrow-mdns { stroke: #34d399; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+      .box { fill: #ffffff; stroke: #c8d0e0; }
+      .box-accent { fill: #dbeafe; stroke: #2563eb; }
+      .box-b { fill: #d1fae5; stroke: #059669; }
       .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
+      .sub { fill: #5b6b86; }
+      .arrow-dns { stroke: #2563eb; }
+      .arrow-mdns { stroke: #059669; }
     }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
-    .label { font-size: 13px; font-weight: 600; }
-    .sub { font-size: 11px; }
+    .label { font-size: 15px; font-weight: 700; }
+    .sub { font-size: 12px; }
+    .arrow-dns, .arrow-mdns { fill: none; stroke-width: 2; }
   </style>
   <defs>
-    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    <marker id="dns-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L8,4 z" fill="#5070a0" stroke="none"/>
     </marker>
-    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    <marker id="mdns-arr" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L0,8 L8,4 z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
 
@@ -74,22 +73,22 @@ Tracks recently forwarded records and suppresses re-forwarding to avoid amplific
   <text x="380" y="109" text-anchor="middle" class="sub">exit node</text>
   <text x="380" y="133" text-anchor="middle" class="sub">DNS ↔ mDNS relay</text>
 
-  <rect x="560" y="55" width="180" height="110" rx="10" class="box-green"/>
+  <rect x="560" y="55" width="180" height="110" rx="10" class="box-b"/>
   <text x="650" y="94" text-anchor="middle" class="label">LAN device</text>
   <text x="650" y="114" text-anchor="middle" class="sub">printer / NAS</text>
   <text x="650" y="138" text-anchor="middle" class="sub">answers via mDNS</text>
 
-  <linex1="200" y1="85" x2="290" y2="85" marker-end="url(#ah)"/ stroke-width="1.5" stroke="#5070a0"/>
+  <line x1="200" y1="85" x2="290" y2="85" class="arrow-dns" marker-end="url(#dns-arr)"/>
   <text x="245" y="72" text-anchor="middle" class="sub">DNS query</text>
   <text x="245" y="104" text-anchor="middle" class="sub">printer.local</text>
 
-  <linex1="290" y1="135" x2="200" y2="135" marker-end="url(#ah)"/ stroke-width="1.5" stroke="#5070a0"/>
+  <line x1="290" y1="135" x2="200" y2="135" class="arrow-dns" marker-end="url(#dns-arr)"/>
   <text x="245" y="159" text-anchor="middle" class="sub">192.168.1.50</text>
 
-  <linex1="470" y1="85" x2="560" y2="85" marker-end="url(#ah)"/ stroke-width="1.5" stroke="#5070a0"/>
+  <line x1="470" y1="85" x2="560" y2="85" class="arrow-mdns" marker-end="url(#mdns-arr)"/>
   <text x="515" y="72" text-anchor="middle" class="sub">mDNS query</text>
   <text x="515" y="104" text-anchor="middle" class="sub">printer.local</text>
 
-  <linex1="560" y1="135" x2="470" y2="135" marker-end="url(#ah)"/ stroke-width="1.5" stroke="#5070a0"/>
+  <line x1="560" y1="135" x2="470" y2="135" class="arrow-mdns" marker-end="url(#mdns-arr)"/>
   <text x="515" y="159" text-anchor="middle" class="sub">192.168.1.50</text>
 </svg>
