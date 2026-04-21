@@ -54,38 +54,38 @@ The Makefile fetches the kubeconfig after deploy and patches the server address 
   </defs>
 
   <rect x="20" y="110" width="126" height="70" rx="10" class="box"/>
-  <image href="/assets/azure-icons/templates.svg" x="34" y="130" width="22" height="22"/>
-  <text x="90" y="138" text-anchor="middle" class="label">ARM template</text>
-  <text x="90" y="155" text-anchor="middle" class="sub">cluster.json</text>
+  <image href="/assets/azure-icons/templates.svg" x="72" y="120" width="22" height="22"/>
+  <text x="83" y="157" text-anchor="middle" class="label">ARM template</text>
+  <text x="83" y="172" text-anchor="middle" class="sub">cluster.json</text>
 
   <rect x="196" y="28" width="176" height="72" rx="10" class="box-green"/>
-  <image href="/assets/azure-icons/storage-accounts.svg" x="210" y="48" width="22" height="22"/>
-  <text x="284" y="56" text-anchor="middle" class="label">Storage resource group</text>
-  <text x="284" y="73" text-anchor="middle" class="sub">Storage account + Azure Files</text>
+  <image href="/assets/azure-icons/storage-accounts.svg" x="273" y="38" width="22" height="22"/>
+  <text x="284" y="75" text-anchor="middle" class="label">Storage resource group</text>
+  <text x="284" y="90" text-anchor="middle" class="sub">Storage account + Azure Files</text>
 
   <rect x="196" y="110" width="176" height="72" rx="10" class="box-accent"/>
-  <image href="/assets/azure-icons/virtual-machine.svg" x="210" y="130" width="22" height="22"/>
-  <text x="284" y="138" text-anchor="middle" class="label">Master VM(s)</text>
-  <text x="284" y="155" text-anchor="middle" class="sub">availability set + NIC/PIP/NSG</text>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="273" y="120" width="22" height="22"/>
+  <text x="284" y="157" text-anchor="middle" class="label">Master VM(s)</text>
+  <text x="284" y="172" text-anchor="middle" class="sub">availability set + NIC/PIP/NSG</text>
 
   <rect x="196" y="192" width="176" height="72" rx="10" class="box"/>
-  <image href="/assets/azure-icons/vm-scale-sets.svg" x="210" y="212" width="22" height="22"/>
-  <text x="284" y="220" text-anchor="middle" class="label">Agent VMSS</text>
-  <text x="284" y="237" text-anchor="middle" class="sub">autoscale settings</text>
+  <image href="/assets/azure-icons/vm-scale-sets.svg" x="273" y="202" width="22" height="22"/>
+  <text x="284" y="239" text-anchor="middle" class="label">Agent VMSS</text>
+  <text x="284" y="254" text-anchor="middle" class="sub">autoscale settings</text>
 
   <rect x="432" y="70" width="176" height="72" rx="10" class="box-green"/>
   <text x="520" y="98" text-anchor="middle" class="label">Managed identity</text>
   <text x="520" y="115" text-anchor="middle" class="sub">role assignment for scale ops</text>
 
   <rect x="432" y="170" width="176" height="72" rx="10" class="box-accent"/>
-  <image href="/assets/azure-icons/virtual-machine.svg" x="446" y="190" width="22" height="22"/>
-  <text x="520" y="198" text-anchor="middle" class="label">Cloud-init bootstrap</text>
-  <text x="520" y="215" text-anchor="middle" class="sub">k3s install + join/leave helper</text>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="509" y="180" width="22" height="22"/>
+  <text x="520" y="217" text-anchor="middle" class="label">Cloud-init bootstrap</text>
+  <text x="520" y="232" text-anchor="middle" class="sub">k3s install + join/leave helper</text>
 
   <rect x="668" y="110" width="152" height="72" rx="10" class="box-green"/>
-  <image href="/assets/azure-icons/kubernetes-services.svg" x="682" y="130" width="22" height="22"/>
-  <text x="748" y="138" text-anchor="middle" class="label">k3s cluster</text>
-  <text x="748" y="155" text-anchor="middle" class="sub">server, agents, shared /srv</text>
+  <image href="/assets/azure-icons/kubernetes-services.svg" x="733" y="120" width="22" height="22"/>
+  <text x="744" y="157" text-anchor="middle" class="label">k3s cluster</text>
+  <text x="744" y="172" text-anchor="middle" class="sub">server, agents, shared /srv</text>
 
   <line x1="146" y1="122" x2="192" y2="64" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
   <line x1="146" y1="145" x2="192" y2="146" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>

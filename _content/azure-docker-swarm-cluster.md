@@ -54,34 +54,34 @@ Documents the Docker Swarm era architecture; useful for comparing operational co
   </defs>
 
   <rect x="20" y="104" width="126" height="70" rx="10" class="box"/>
-  <image href="/assets/azure-icons/templates.svg" x="34" y="124" width="22" height="22"/>
-  <text x="90" y="132" text-anchor="middle" class="label">ARM template</text>
-  <text x="90" y="149" text-anchor="middle" class="sub">cluster.json</text>
+  <image href="/assets/azure-icons/templates.svg" x="72" y="114" width="22" height="22"/>
+  <text x="83" y="151" text-anchor="middle" class="label">ARM template</text>
+  <text x="83" y="166" text-anchor="middle" class="sub">cluster.json</text>
 
   <rect x="196" y="24" width="168" height="72" rx="10" class="box-green"/>
-  <image href="/assets/azure-icons/storage-accounts.svg" x="210" y="44" width="22" height="22"/>
-  <text x="284" y="52" text-anchor="middle" class="label">Shared storage</text>
-  <text x="284" y="69" text-anchor="middle" class="sub">Storage account + Azure Files</text>
+  <image href="/assets/azure-icons/storage-accounts.svg" x="269" y="34" width="22" height="22"/>
+  <text x="280" y="71" text-anchor="middle" class="label">Shared storage</text>
+  <text x="280" y="86" text-anchor="middle" class="sub">Storage account + Azure Files</text>
 
   <rect x="196" y="104" width="168" height="72" rx="10" class="box-accent"/>
-  <image href="/assets/azure-icons/virtual-machine.svg" x="210" y="124" width="22" height="22"/>
-  <text x="284" y="132" text-anchor="middle" class="label">Masters</text>
-  <text x="284" y="149" text-anchor="middle" class="sub">availability set + NIC/PIP/NSG</text>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="269" y="114" width="22" height="22"/>
+  <text x="280" y="151" text-anchor="middle" class="label">Masters</text>
+  <text x="280" y="166" text-anchor="middle" class="sub">availability set + NIC/PIP/NSG</text>
 
   <rect x="196" y="184" width="168" height="72" rx="10" class="box"/>
-  <image href="/assets/azure-icons/vm-scale-sets.svg" x="210" y="204" width="22" height="22"/>
-  <text x="284" y="212" text-anchor="middle" class="label">Workers</text>
-  <text x="284" y="229" text-anchor="middle" class="sub">VM scale set + autoscale</text>
+  <image href="/assets/azure-icons/vm-scale-sets.svg" x="269" y="194" width="22" height="22"/>
+  <text x="280" y="231" text-anchor="middle" class="label">Workers</text>
+  <text x="280" y="246" text-anchor="middle" class="sub">VM scale set + autoscale</text>
 
   <rect x="430" y="64" width="168" height="72" rx="10" class="box-green"/>
-  <image href="/assets/azure-icons/load-balancers.svg" x="444" y="84" width="22" height="22"/>
-  <text x="518" y="92" text-anchor="middle" class="label">Network edge</text>
-  <text x="518" y="109" text-anchor="middle" class="sub">VNet + public LB + inbound NAT</text>
+  <image href="/assets/azure-icons/load-balancers.svg" x="503" y="74" width="22" height="22"/>
+  <text x="514" y="111" text-anchor="middle" class="label">Network edge</text>
+  <text x="514" y="126" text-anchor="middle" class="sub">VNet + public LB + inbound NAT</text>
 
   <rect x="430" y="164" width="168" height="72" rx="10" class="box-accent"/>
-  <image href="/assets/azure-icons/virtual-machine.svg" x="444" y="184" width="22" height="22"/>
-  <text x="518" y="192" text-anchor="middle" class="label">Cloud-init helpers</text>
-  <text x="518" y="209" text-anchor="middle" class="sub">swarm init / join / leave</text>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="503" y="174" width="22" height="22"/>
+  <text x="514" y="211" text-anchor="middle" class="label">Cloud-init helpers</text>
+  <text x="514" y="226" text-anchor="middle" class="sub">swarm init / join / leave</text>
 
   <rect x="664" y="104" width="136" height="72" rx="10" class="box-green"/>
   <text x="732" y="132" text-anchor="middle" class="label">Swarm cluster</text>

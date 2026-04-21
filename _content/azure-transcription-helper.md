@@ -62,9 +62,9 @@ Single Python script with minimal dependencies — `python transcribe.py input.m
   <text x="295" y="127" text-anchor="middle" class="sub">extract 16 kHz mono WAV</text>
 
   <rect x="430" y="82" width="150" height="66" rx="10" class="box-accent"/>
-  <image href="/assets/azure-icons/speech-services.svg" x="444" y="100" width="22" height="22"/>
-  <text x="508" y="110" text-anchor="middle" class="label">Azure Speech</text>
-  <text x="508" y="127" text-anchor="middle" class="sub">continuous recognition</text>
+  <image href="/assets/azure-icons/speech-services.svg" x="494" y="92" width="22" height="22"/>
+  <text x="505" y="127" text-anchor="middle" class="label">Azure Speech</text>
+  <text x="505" y="142" text-anchor="middle" class="sub">continuous recognition</text>
 
   <rect x="640" y="28" width="100" height="66" rx="10" class="box-green"/>
   <text x="690" y="56" text-anchor="middle" class="label">Transcript</text>

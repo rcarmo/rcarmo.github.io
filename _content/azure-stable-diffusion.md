@@ -52,19 +52,19 @@ CUDA, the web UI, and helper scripts are installed automatically on first boot.
   </defs>
 
   <rect x="20" y="90" width="126" height="70" rx="10" class="box"/>
-  <image href="/assets/azure-icons/templates.svg" x="34" y="110" width="22" height="22"/>
-  <text x="90" y="118" text-anchor="middle" class="label">ARM template</text>
-  <text x="90" y="135" text-anchor="middle" class="sub">compute.json</text>
+  <image href="/assets/azure-icons/templates.svg" x="72" y="100" width="22" height="22"/>
+  <text x="83" y="137" text-anchor="middle" class="label">ARM template</text>
+  <text x="83" y="152" text-anchor="middle" class="sub">compute.json</text>
 
   <rect x="196" y="24" width="170" height="72" rx="10" class="box-green"/>
-  <image href="/assets/azure-icons/storage-accounts.svg" x="210" y="44" width="22" height="22"/>
-  <text x="281" y="52" text-anchor="middle" class="label">Diagnostics storage</text>
-  <text x="281" y="69" text-anchor="middle" class="sub">boot diagnostics account</text>
+  <image href="/assets/azure-icons/storage-accounts.svg" x="270" y="34" width="22" height="22"/>
+  <text x="281" y="71" text-anchor="middle" class="label">Diagnostics storage</text>
+  <text x="281" y="86" text-anchor="middle" class="sub">boot diagnostics account</text>
 
   <rect x="196" y="104" width="170" height="72" rx="10" class="box-accent"/>
-  <image href="/assets/azure-icons/virtual-machine.svg" x="210" y="124" width="22" height="22"/>
-  <text x="281" y="132" text-anchor="middle" class="label">Spot VM</text>
-  <text x="281" y="149" text-anchor="middle" class="sub">Ubuntu + OS disk only</text>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="270" y="114" width="22" height="22"/>
+  <text x="281" y="151" text-anchor="middle" class="label">Spot VM</text>
+  <text x="281" y="166" text-anchor="middle" class="sub">Ubuntu + OS disk only</text>
 
   <rect x="196" y="184" width="170" height="72" rx="10" class="box"/>
   <text x="281" y="212" text-anchor="middle" class="label">Network resources</text>
