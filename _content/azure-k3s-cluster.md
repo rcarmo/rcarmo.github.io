@@ -28,7 +28,7 @@ The Makefile fetches the kubeconfig after deploy and patches the server address 
 `make destroy` deletes the resource group and everything in it — no orphaned resources.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 240">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 290">
   <style>
     @media (prefers-color-scheme: dark) {
       .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
@@ -53,36 +53,47 @@ The Makefile fetches the kubeconfig after deploy and patches the server address 
     <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#3b82f6"/></marker>
   </defs>
 
-  <rect x="20" y="88" width="120" height="66" rx="10" class="box"/>
-  <image href="/assets/azure-icons/templates.svg" x="32" y="106" width="22" height="22"/>
-  <text x="82" y="116" text-anchor="middle" class="label">ARM template</text>
-  <text x="82" y="133" text-anchor="middle" class="sub">make deploy</text>
+  <rect x="20" y="110" width="126" height="70" rx="10" class="box"/>
+  <image href="/assets/azure-icons/templates.svg" x="34" y="130" width="22" height="22"/>
+  <text x="90" y="138" text-anchor="middle" class="label">ARM template</text>
+  <text x="90" y="155" text-anchor="middle" class="sub">cluster.json</text>
 
-  <rect x="190" y="88" width="150" height="66" rx="10" class="box-accent"/>
-  <image href="/assets/azure-icons/virtual-machine.svg" x="204" y="106" width="22" height="22"/>
-  <text x="268" y="116" text-anchor="middle" class="label">k3s server VM</text>
-  <text x="268" y="133" text-anchor="middle" class="sub">cloud-init installs k3s</text>
+  <rect x="196" y="28" width="176" height="72" rx="10" class="box-green"/>
+  <image href="/assets/azure-icons/storage-accounts.svg" x="210" y="48" width="22" height="22"/>
+  <text x="284" y="56" text-anchor="middle" class="label">Storage resource group</text>
+  <text x="284" y="73" text-anchor="middle" class="sub">Storage account + Azure Files</text>
 
-  <rect x="390" y="28" width="150" height="66" rx="10" class="box-green"/>
-  <image href="/assets/azure-icons/kubernetes-services.svg" x="404" y="46" width="22" height="22"/>
-  <text x="468" y="56" text-anchor="middle" class="label">k3s control plane</text>
-  <text x="468" y="73" text-anchor="middle" class="sub">API + kubeconfig</text>
+  <rect x="196" y="110" width="176" height="72" rx="10" class="box-accent"/>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="210" y="130" width="22" height="22"/>
+  <text x="284" y="138" text-anchor="middle" class="label">Master VM(s)</text>
+  <text x="284" y="155" text-anchor="middle" class="sub">availability set + NIC/PIP/NSG</text>
 
-  <rect x="390" y="148" width="150" height="66" rx="10" class="box"/>
-  <image href="/assets/azure-icons/virtual-machine.svg" x="404" y="166" width="22" height="22"/>
-  <text x="468" y="176" text-anchor="middle" class="label">agent VMs</text>
-  <text x="468" y="193" text-anchor="middle" class="sub">join server on boot</text>
+  <rect x="196" y="192" width="176" height="72" rx="10" class="box"/>
+  <image href="/assets/azure-icons/vm-scale-sets.svg" x="210" y="212" width="22" height="22"/>
+  <text x="284" y="220" text-anchor="middle" class="label">Agent VMSS</text>
+  <text x="284" y="237" text-anchor="middle" class="sub">autoscale settings</text>
 
-  <rect x="590" y="88" width="150" height="66" rx="10" class="box-green"/>
-  <image href="/assets/azure-icons/kubernetes-services.svg" x="604" y="106" width="22" height="22"/>
-  <text x="666" y="116" text-anchor="middle" class="label">Ready cluster</text>
-  <text x="666" y="133" text-anchor="middle" class="sub">kubectl works immediately</text>
+  <rect x="432" y="70" width="176" height="72" rx="10" class="box-green"/>
+  <text x="520" y="98" text-anchor="middle" class="label">Managed identity</text>
+  <text x="520" y="115" text-anchor="middle" class="sub">role assignment for scale ops</text>
 
-  <line x1="140" y1="121" x2="186" y2="121" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="340" y1="121" x2="386" y2="61" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="340" y1="121" x2="386" y2="181" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="540" y1="61" x2="586" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="540" y1="181" x2="586" y2="130" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <rect x="432" y="170" width="176" height="72" rx="10" class="box-accent"/>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="446" y="190" width="22" height="22"/>
+  <text x="520" y="198" text-anchor="middle" class="label">Cloud-init bootstrap</text>
+  <text x="520" y="215" text-anchor="middle" class="sub">k3s install + join/leave helper</text>
 
-  <text x="380" y="232" text-anchor="middle" class="sub">template parameters control VM size, node count, and k3s version — no AKS control plane required</text>
+  <rect x="668" y="110" width="152" height="72" rx="10" class="box-green"/>
+  <image href="/assets/azure-icons/kubernetes-services.svg" x="682" y="130" width="22" height="22"/>
+  <text x="748" y="138" text-anchor="middle" class="label">k3s cluster</text>
+  <text x="748" y="155" text-anchor="middle" class="sub">server, agents, shared /srv</text>
+
+  <line x1="146" y1="122" x2="192" y2="64" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="146" y1="145" x2="192" y2="146" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="146" y1="168" x2="192" y2="228" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="372" y1="146" x2="428" y2="106" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="372" y1="228" x2="428" y2="206" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="608" y1="106" x2="664" y2="132" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="608" y1="206" x2="664" y2="160" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="420" y="282" text-anchor="middle" class="sub">actual template structure: separate storage/compute concerns, master identity, agent VM scale set, and cloud-init managed cluster membership</text>
 </svg>

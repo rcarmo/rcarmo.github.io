@@ -6,17 +6,17 @@ tagline: Auto-scaling Docker Swarm cluster for Azure — ARM template plus Makef
 ---
 
 ## About
-azure-docker-swarm-cluster provisions a production-grade Docker Swarm cluster on Azure using ARM templates, with separate VM Scale Sets for manager and worker nodes. Auto-scaling rules on the worker VMSS respond to CPU load, expanding and shrinking the cluster automatically. A Makefile wraps the Azure CLI for one-command deploy and teardown. ★47 with 11 forks — a reference template from the pre-Kubernetes container era that still gets cited.
+azure-docker-swarm-cluster provisions a Docker Swarm cluster on Azure using ARM templates, with 1–5 master VMs plus a worker VM Scale Set. Auto-scaling rules on the worker VMSS respond to CPU load, expanding and shrinking the cluster automatically. A Makefile wraps the Azure CLI for storage and compute deployment. ★47 with 11 forks — a reference template from the pre-Kubernetes container era that still gets cited.
 
 ## How it works
-The ARM template creates a manager VMSS (fixed size, odd number for Raft quorum) and a worker VMSS (auto-scaling). Cloud-init on managers initialises the Swarm and stores the join token in an Azure Key Vault secret; workers fetch the token on boot and join automatically. An internal load balancer distributes Swarm management traffic; a public load balancer fronts the worker nodes for application traffic.
+The ARM template creates master VMs in an availability set, a worker VM Scale Set, shared storage, and the required network resources. Cloud-init on the master nodes initialises the Swarm and runs a small helper service on `master0` that hands out join tokens to workers as they boot. A public load balancer fronts the worker nodes for application traffic, and autoscale settings resize the worker VMSS under load.
 
 ## Features
 ### 📈 Auto-scaling workers
 Azure VMSS auto-scale rules expand the worker pool under load and shrink it when idle — no manual intervention.
 
-### 🗝️ Secure join token
-The Swarm join token is stored in Azure Key Vault and retrieved by worker VMs via managed identity — never in userdata or scripts.
+### 🔑 Swarm helper bootstrap
+`master0` runs a small helper service that provides join tokens and cleans up departing workers — simple cloud-init driven cluster membership.
 
 ### 🔄 Manager HA
 Odd-numbered manager VMSS ensures Raft quorum survives a single node failure without manual recovery.
@@ -28,7 +28,7 @@ Odd-numbered manager VMSS ensures Raft quorum survives a single node failure wit
 Documents the Docker Swarm era architecture; useful for comparing operational complexity against modern Kubernetes templates.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 250">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 820 280">
   <style>
     @media (prefers-color-scheme: dark) {
       .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
@@ -49,49 +49,51 @@ Documents the Docker Swarm era architecture; useful for comparing operational co
     .sub { font-size: 11px; }
   </style>
   <defs>
-    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8z" fill="#5070a0"/>
-    </marker>
-    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6"/>
-    </marker>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#5070a0"/></marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#3b82f6"/></marker>
   </defs>
 
-  <rect x="20" y="92" width="120" height="66" rx="10" class="box"/>
-  <image href="/assets/azure-icons/templates.svg" x="32" y="108" width="22" height="22"/>
-  <text x="82" y="117" text-anchor="middle" class="label">ARM template</text>
-  <text x="82" y="134" text-anchor="middle" class="sub">make deploy</text>
+  <rect x="20" y="104" width="126" height="70" rx="10" class="box"/>
+  <image href="/assets/azure-icons/templates.svg" x="34" y="124" width="22" height="22"/>
+  <text x="90" y="132" text-anchor="middle" class="label">ARM template</text>
+  <text x="90" y="149" text-anchor="middle" class="sub">cluster.json</text>
 
-  <rect x="200" y="28" width="150" height="72" rx="10" class="box-accent"/>
-  <image href="/assets/azure-icons/vm-scale-sets.svg" x="214" y="46" width="22" height="22"/>
-  <text x="286" y="55" text-anchor="middle" class="label">Manager VMSS</text>
-  <text x="286" y="72" text-anchor="middle" class="sub">odd-sized Raft quorum</text>
+  <rect x="196" y="24" width="168" height="72" rx="10" class="box-green"/>
+  <image href="/assets/azure-icons/storage-accounts.svg" x="210" y="44" width="22" height="22"/>
+  <text x="284" y="52" text-anchor="middle" class="label">Shared storage</text>
+  <text x="284" y="69" text-anchor="middle" class="sub">Storage account + Azure Files</text>
 
-  <rect x="200" y="148" width="150" height="72" rx="10" class="box"/>
-  <image href="/assets/azure-icons/vm-scale-sets.svg" x="214" y="166" width="22" height="22"/>
-  <text x="286" y="175" text-anchor="middle" class="label">Worker VMSS</text>
-  <text x="286" y="192" text-anchor="middle" class="sub">auto-scale rules</text>
+  <rect x="196" y="104" width="168" height="72" rx="10" class="box-accent"/>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="210" y="124" width="22" height="22"/>
+  <text x="284" y="132" text-anchor="middle" class="label">Masters</text>
+  <text x="284" y="149" text-anchor="middle" class="sub">availability set + NIC/PIP/NSG</text>
 
-  <rect x="410" y="28" width="150" height="72" rx="10" class="box-green"/>
-  <image href="/assets/azure-icons/key-vaults.svg" x="424" y="46" width="22" height="22"/>
-  <text x="497" y="55" text-anchor="middle" class="label">Key Vault</text>
-  <text x="497" y="72" text-anchor="middle" class="sub">stores join token</text>
+  <rect x="196" y="184" width="168" height="72" rx="10" class="box"/>
+  <image href="/assets/azure-icons/vm-scale-sets.svg" x="210" y="204" width="22" height="22"/>
+  <text x="284" y="212" text-anchor="middle" class="label">Workers</text>
+  <text x="284" y="229" text-anchor="middle" class="sub">VM scale set + autoscale</text>
 
-  <rect x="410" y="148" width="150" height="72" rx="10" class="box"/>
-  <image href="/assets/azure-icons/load-balancers.svg" x="424" y="166" width="22" height="22"/>
-  <text x="497" y="175" text-anchor="middle" class="label">Load balancers</text>
-  <text x="497" y="192" text-anchor="middle" class="sub">internal + public</text>
+  <rect x="430" y="64" width="168" height="72" rx="10" class="box-green"/>
+  <image href="/assets/azure-icons/load-balancers.svg" x="444" y="84" width="22" height="22"/>
+  <text x="518" y="92" text-anchor="middle" class="label">Network edge</text>
+  <text x="518" y="109" text-anchor="middle" class="sub">VNet + public LB + inbound NAT</text>
 
-  <rect x="620" y="92" width="120" height="66" rx="10" class="box-green"/>
-  <text x="680" y="117" text-anchor="middle" class="label">Docker Swarm</text>
-  <text x="680" y="134" text-anchor="middle" class="sub">apps + API 2377</text>
+  <rect x="430" y="164" width="168" height="72" rx="10" class="box-accent"/>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="444" y="184" width="22" height="22"/>
+  <text x="518" y="192" text-anchor="middle" class="label">Cloud-init helpers</text>
+  <text x="518" y="209" text-anchor="middle" class="sub">swarm init / join / leave</text>
 
-  <line x1="140" y1="112" x2="196" y2="64" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="140" y1="138" x2="196" y2="184" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="350" y1="64" x2="406" y2="64" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="350" y1="184" x2="406" y2="184" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="560" y1="64" x2="616" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="560" y1="184" x2="616" y2="138" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <rect x="664" y="104" width="136" height="72" rx="10" class="box-green"/>
+  <text x="732" y="132" text-anchor="middle" class="label">Swarm cluster</text>
+  <text x="732" y="149" text-anchor="middle" class="sub">masters + agents</text>
 
-  <text x="380" y="238" text-anchor="middle" class="sub">workers fetch the join token at boot and scale independently of the manager quorum</text>
+  <line x1="146" y1="116" x2="192" y2="60" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="146" y1="139" x2="192" y2="139" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="146" y1="162" x2="192" y2="220" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="364" y1="140" x2="426" y2="100" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="364" y1="220" x2="426" y2="200" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="598" y1="100" x2="660" y2="126" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="598" y1="200" x2="660" y2="154" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="410" y="272" text-anchor="middle" class="sub">actual ARM layout: storage, masters, worker VMSS, load balancer, autoscale, and cloud-init bootstrap scripts</text>
 </svg>

@@ -53,12 +53,12 @@
 
       <section class="sec" id="s-about">
         <div class="sec-label">Overview</div>
-        <p>Makefile wrapping Azure Bicep. make deploy provisions an NC-series GPU spot VM and installs AUTOMATIC1111. make open opens an SSH tunnel. make destroy tears it down. Spot pricing keeps costs under $0.10/hour.</p>
+        <p>Makefile wrapping an Azure ARM template. <code>make deploy</code> provisions an NC-series GPU spot VM and installs AUTOMATIC1111. <code>make open</code> opens an SSH tunnel. <code>make destroy</code> tears it down. Spot pricing keeps costs under $0.10/hour.</p>
       </section>
 
       <section class="sec" id="s-how">
         <div class="sec-label">How it works</div>
-        <p>make deploy runs a Bicep template that provisions a resource group, data disk, and GPU spot VM, then runs cloud-init to install CUDA and AUTOMATIC1111. Models live on an attached data disk that survives spot preemptions and teardowns. make destroy cleans up everything except the data disk configuration.</p>
+        <p><code>make deploy</code> runs an ARM template that provisions a diagnostics storage account, network resources, and a GPU spot VM, then uses cloud-init to install CUDA and AUTOMATIC1111. A helper service watches Azure spot-instance events so the machine can react cleanly to preemption or scheduled maintenance. <code>make destroy</code> removes the deployed resources.</p>
       </section>
 
       <section class="sec" id="s-features">
@@ -82,10 +82,10 @@
     </div>
 
     <div class="feature">
-      <div class="feature-icon">💾</div>
+      <div class="feature-icon">🧰</div>
       <div>
-        <div class="feature-title">Persistent models</div>
-        <div class="feature-body"><p>Data disk survives spot preemptions and redeployments.</p></div>
+        <div class="feature-title">Cloud-init setup</div>
+        <div class="feature-body"><p>CUDA, the web UI, and helper scripts are installed automatically on first boot.</p></div>
       </div>
     </div>
         </div>
@@ -93,7 +93,7 @@
 
       <section class="sec" id="s-diagram">
         <div class="sec-label">Architecture</div>
-        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 230">
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 840 250">
   <style>
     @media (prefers-color-scheme: dark) {
       .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
@@ -118,35 +118,46 @@
     <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#3b82f6"/></marker>
   </defs>
 
-  <rect x="20" y="82" width="120" height="66" rx="10" class="box"/>
-  <image href="/assets/azure-icons/templates.svg" x="32" y="100" width="22" height="22"/>
-  <text x="82" y="110" text-anchor="middle" class="label">Bicep deploy</text>
-  <text x="82" y="127" text-anchor="middle" class="sub">make deploy</text>
+  <rect x="20" y="90" width="126" height="70" rx="10" class="box"/>
+  <image href="/assets/azure-icons/templates.svg" x="34" y="110" width="22" height="22"/>
+  <text x="90" y="118" text-anchor="middle" class="label">ARM template</text>
+  <text x="90" y="135" text-anchor="middle" class="sub">compute.json</text>
 
-  <rect x="200" y="82" width="150" height="66" rx="10" class="box-accent"/>
-  <image href="/assets/azure-icons/virtual-machine.svg" x="214" y="100" width="22" height="22"/>
-  <text x="274" y="110" text-anchor="middle" class="label">GPU spot VM</text>
-  <text x="274" y="127" text-anchor="middle" class="sub">NC-series + cloud-init</text>
+  <rect x="196" y="24" width="170" height="72" rx="10" class="box-green"/>
+  <image href="/assets/azure-icons/storage-accounts.svg" x="210" y="44" width="22" height="22"/>
+  <text x="281" y="52" text-anchor="middle" class="label">Diagnostics storage</text>
+  <text x="281" y="69" text-anchor="middle" class="sub">boot diagnostics account</text>
 
-  <rect x="410" y="28" width="150" height="66" rx="10" class="box-green"/>
-  <image href="/assets/azure-icons/disks.svg" x="424" y="46" width="22" height="22"/>
-  <text x="486" y="56" text-anchor="middle" class="label">Data disk</text>
-  <text x="486" y="73" text-anchor="middle" class="sub">models survive teardown</text>
+  <rect x="196" y="104" width="170" height="72" rx="10" class="box-accent"/>
+  <image href="/assets/azure-icons/virtual-machine.svg" x="210" y="124" width="22" height="22"/>
+  <text x="281" y="132" text-anchor="middle" class="label">Spot VM</text>
+  <text x="281" y="149" text-anchor="middle" class="sub">Ubuntu + OS disk only</text>
 
-  <rect x="410" y="136" width="150" height="66" rx="10" class="box-green"/>
-  <text x="485" y="164" text-anchor="middle" class="label">AUTOMATIC1111</text>
-  <text x="485" y="181" text-anchor="middle" class="sub">Stable Diffusion UI</text>
+  <rect x="196" y="184" width="170" height="72" rx="10" class="box"/>
+  <text x="281" y="212" text-anchor="middle" class="label">Network resources</text>
+  <text x="281" y="229" text-anchor="middle" class="sub">VNet + NIC + PIP + NSG</text>
 
-  <rect x="620" y="82" width="120" height="66" rx="10" class="box"/>
-  <text x="680" y="110" text-anchor="middle" class="label">SSH tunnel</text>
-  <text x="680" y="127" text-anchor="middle" class="sub">make open → 7860</text>
+  <rect x="430" y="64" width="170" height="72" rx="10" class="box-green"/>
+  <text x="515" y="92" text-anchor="middle" class="label">cloud-init</text>
+  <text x="515" y="109" text-anchor="middle" class="sub">CUDA + AUTOMATIC1111</text>
 
-  <line x1="140" y1="115" x2="196" y2="115" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="350" y1="115" x2="406" y2="61" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="350" y1="115" x2="406" y2="169" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="560" y1="169" x2="616" y2="115" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <rect x="430" y="164" width="170" height="72" rx="10" class="box-accent"/>
+  <text x="515" y="192" text-anchor="middle" class="label">Spot helper</text>
+  <text x="515" y="209" text-anchor="middle" class="sub">scheduled/preemption events</text>
 
-  <text x="380" y="222" text-anchor="middle" class="sub">cheap spot compute for inference, persistent disk for models, browser UI through a local tunnel</text>
+  <rect x="664" y="104" width="156" height="72" rx="10" class="box-green"/>
+  <text x="742" y="132" text-anchor="middle" class="label">Web UI VM</text>
+  <text x="742" y="149" text-anchor="middle" class="sub">SSH tunnel to port 7860</text>
+
+  <line x1="146" y1="104" x2="192" y2="60" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="146" y1="125" x2="192" y2="140" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="146" y1="146" x2="192" y2="220" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="366" y1="140" x2="426" y2="100" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="366" y1="140" x2="426" y2="200" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="600" y1="100" x2="660" y2="126" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="600" y1="200" x2="660" y2="154" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="420" y="244" text-anchor="middle" class="sub">actual template resources: one spot VM, one network stack, one diagnostics account — no separate persistent data disk in compute.json</text>
 </svg></div>
       </section>
 
@@ -173,16 +184,16 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/azure-stable-diffusion">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo8xwczg"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mo8y4q51"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo8xwczg';
+    import { mount } from '/assets/js/repo-island.mjs?v=mo8y4q51';
     mount({
       fullName: 'rcarmo/azure-stable-diffusion',
       heroMetaEl: document.getElementById('hero-meta-island-azure-stable-diffusion'),
       statsEl:    document.getElementById('stats-island-azure-stable-diffusion'),
       releasesEl: document.getElementById('rel-island-azure-stable-diffusion'),
       relatedEl:  document.getElementById('hero-related-azure-stable-diffusion'),
-      relatedCandidates: [{"id":"azure-docker-swarm-cluster","fullName":"rcarmo/azure-docker-swarm-cluster","logo":"/assets/logos-opt/default-04.png"},{"id":"azure-k3s-cluster","fullName":"rcarmo/azure-k3s-cluster","logo":"/assets/logos-opt/default-04.png"},{"id":"azure-transcription-helper","fullName":"rcarmo/azure-transcription-helper","logo":"/assets/logos-opt/default-01.png"},{"id":"kata","fullName":"rcarmo/kata","logo":"/assets/logos-opt/kata.png"},{"id":"piku","fullName":"piku/piku","logo":"/assets/logos-opt/piku.png"}],
+      relatedCandidates: [{"id":"azure-docker-swarm-cluster","fullName":"rcarmo/azure-docker-swarm-cluster","logo":"/assets/logos-opt/default-04.png"},{"id":"azure-k3s-cluster","fullName":"rcarmo/azure-k3s-cluster","logo":"/assets/logos-opt/default-05.png"},{"id":"azure-transcription-helper","fullName":"rcarmo/azure-transcription-helper","logo":"/assets/logos-opt/default-01.png"},{"id":"kata","fullName":"rcarmo/kata","logo":"/assets/logos-opt/kata.png"},{"id":"piku","fullName":"piku/piku","logo":"/assets/logos-opt/piku.png"}],
     });
   </script>
   <script>
