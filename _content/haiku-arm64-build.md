@@ -29,59 +29,75 @@ Build steps run cleanly inside a Docker container — no host pollution, easy CI
 Single `make` entry point covers fetch, configure, build, and image creation with sensible defaults.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 200">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
-      .box-b { fill: #0d2220; stroke: #207060; }
-      .box-warm { fill: #221a10; stroke: #a06020; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
+      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
+      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
       .label { fill: #d0daf0; }
       .sub { fill: #5070a0; }
-      .arrow { stroke: #3a5070; fill: none; }
-      .arr-accent { stroke: #2b5cb0; fill: none; }
-      .bg-fill { fill: #111520; }
     }
     @media (prefers-color-scheme: light) {
       .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; }
-      .box-b { fill: #d1fae5; stroke: #059669; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; }
+      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
       .label { fill: #1a2a40; }
       .sub { fill: #5070a0; }
-      .arrow { stroke: #90a8c0; fill: none; }
-      .arr-accent { stroke: #3b82f6; fill: none; }
-      .bg-fill { fill: #f0f4fa; }
     }
-    text { font-family: -apple-system,"Segoe UI",Helvetica,sans-serif; }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
   </style>
   <defs>
-    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#5070a0"/></marker>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
   </defs>
-  <rect x="20" y="60" width="110" height="80" rx="8" class="box-warm"/>
-  <text x="75" y="98" text-anchor="middle" class="label">Makefile</text>
-  <text x="75" y="113" text-anchor="middle" class="sub">single entry</text>
-  <rect x="190" y="20" width="130" height="60" rx="8" class="box-accent"/>
-  <text x="255" y="53" text-anchor="middle" class="label">GCC cross</text>
-  <text x="255" y="68" text-anchor="middle" class="sub">ARM64 toolchain</text>
-  <rect x="190" y="110" width="130" height="60" rx="8" class="box"/>
-  <text x="255" y="143" text-anchor="middle" class="label">Haiku Jam</text>
-  <text x="255" y="158" text-anchor="middle" class="sub">build system</text>
-  <rect x="400" y="20" width="120" height="60" rx="8" class="box-b"/>
-  <text x="460" y="53" text-anchor="middle" class="label">Haiku image</text>
-  <text x="460" y="68" text-anchor="middle" class="sub">arm64 .iso</text>
-  <rect x="400" y="110" width="120" height="60" rx="8" class="box"/>
-  <text x="460" y="143" text-anchor="middle" class="label">QEMU</text>
-  <text x="460" y="158" text-anchor="middle" class="sub">test & verify</text>
-  <line x1="130" y1="100" x2="190" y2="70" class="arr-accent" stroke-width="1.5" marker-end="url(#arr)"/>
-  <line x1="130" y1="115" x2="190" y2="140" class="arrow" stroke-width="1.5" marker-end="url(#arr)"/>
-  <line x1="320" y1="70" x2="400" y2="50" class="arrow" stroke-width="1.5" marker-end="url(#arr)"/>
-  <line x1="400" y1="80" x2="400" y2="110" class="arrow" stroke-width="1.5" marker-end="url(#arr)"/>
+
+  <!-- make deps / clone -->
+  <rect x="16" y="60" width="110" height="80" rx="8" class="box-warm"/>
+  <text x="71" y="90" text-anchor="middle" class="label">Makefile</text>
+  <text x="71" y="107" text-anchor="middle" class="sub">deps · clone</text>
+  <text x="71" y="122" text-anchor="middle" class="sub">toolchain · image</text>
+
+  <!-- Cross-compiler -->
+  <rect x="170" y="25" width="130" height="60" rx="8" class="box-accent"/>
+  <text x="235" y="50" text-anchor="middle" class="label">GCC 13 cross</text>
+  <text x="235" y="67" text-anchor="middle" class="sub">ARM64 → Haiku ABI</text>
+
+  <!-- Haiku Jam build -->
+  <rect x="170" y="110" width="130" height="60" rx="8" class="box"/>
+  <text x="235" y="137" text-anchor="middle" class="label">Haiku + Jam</text>
+  <text x="235" y="153" text-anchor="middle" class="sub">kernel · servers · BFS</text>
+
+  <!-- MMC image -->
+  <rect x="350" y="60" width="130" height="80" rx="8" class="box-green"/>
+  <text x="415" y="90" text-anchor="middle" class="label">MMC image</text>
+  <text x="415" y="107" text-anchor="middle" class="sub">EFI + Haiku ARM64</text>
+  <text x="415" y="122" text-anchor="middle" class="sub">haiku-mmc.image</text>
+
+  <!-- QEMU test -->
+  <rect x="530" y="60" width="130" height="80" rx="8" class="box-purple"/>
+  <text x="595" y="90" text-anchor="middle" class="label">QEMU virt</text>
+  <text x="595" y="107" text-anchor="middle" class="sub">virtio-scsi-pci</text>
+  <text x="595" y="122" text-anchor="middle" class="sub">make test</text>
+
+  <!-- Arrows -->
+  <line x1="126" y1="85" x2="168" y2="60" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="126" y1="115" x2="168" y2="135" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="300" y1="55" x2="348" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="300" y1="140" x2="348" y2="115" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="480" y1="100" x2="528" y2="100" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="350" y="185" text-anchor="middle" class="sub">Orange Pi 6 Plus (CIX P1) · Debian Trixie · native ARM64 build</text>
 </svg>
