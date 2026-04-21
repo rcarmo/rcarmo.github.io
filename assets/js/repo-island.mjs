@@ -59,25 +59,27 @@ function setCache(data) {
 }
 
 async function fetchAllRepos(fullNames) {
-  const cached = getCache();
-  if (cached) return cached;
+  const cached = getCache() || {};
+  const repoMap = { ...cached };
+  const missingFromCache = fullNames.filter((name) => !repoMap[name]);
 
-  const repoMap = {};
   const controller = new AbortController();
   const timeout = setTimeout(() => controller.abort(), 8000);
 
-  try {
-    const res = await fetch('https://api.github.com/users/rcarmo/repos?per_page=100&type=owner&sort=stars&direction=desc', {
-      signal: controller.signal,
-    });
-    if (res.ok) {
-      const repos = await res.json();
-      if (Array.isArray(repos)) {
-        for (const repo of repos) repoMap[repo.full_name] = repo;
+  if (!cached['rcarmo/rcarmo.github.io']) {
+    try {
+      const res = await fetch('https://api.github.com/users/rcarmo/repos?per_page=100&type=owner&sort=stars&direction=desc', {
+        signal: controller.signal,
+      });
+      if (res.ok) {
+        const repos = await res.json();
+        if (Array.isArray(repos)) {
+          for (const repo of repos) repoMap[repo.full_name] = repo;
+        }
       }
+    } catch {
+      // offline or timeout
     }
-  } catch {
-    // offline or timeout
   }
 
   const missing = fullNames.filter((name) => !repoMap[name]);
@@ -91,7 +93,9 @@ async function fetchAllRepos(fullNames) {
   }));
 
   clearTimeout(timeout);
-  if (Object.keys(repoMap).length) setCache(repoMap);
+  if (Object.keys(repoMap).length && (missingFromCache.length || !Object.keys(cached).length)) {
+    setCache(repoMap);
+  }
   return repoMap;
 }
 
