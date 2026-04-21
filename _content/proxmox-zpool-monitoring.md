@@ -24,7 +24,7 @@ One script, one endpoint. No daemon.
 Compatible with Carbon, InfluxDB, and others.
 
 ## Posts
-- [Proxmox VE on the FriendlyELEC CM3588 NAS](https://taoofmac.com/space/notes/2024/11/09/1940) — 2024-11-09
+- [Proxmox on the FriendlyELEC CM3588 NAS Kit](https://taoofmac.com/space/notes/2024/11/09/1940) — 2024-11-09
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 180">

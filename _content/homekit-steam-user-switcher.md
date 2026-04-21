@@ -22,7 +22,7 @@ Local --login flag only. No Valve network calls.
 Runs as systemd service.
 
 ## Posts
-- [Notes, 2025-12-24](https://taoofmac.com/space/notes/2025/12/24/1400) — 2025-12-24
+- [Notes for December 9-24](https://taoofmac.com/space/notes/2025/12/24/1400) — 2025-12-24
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 200">
