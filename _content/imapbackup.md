@@ -83,6 +83,6 @@ No dependencies beyond the Python standard library — copy one file, run it, do
 
   <text x="330" y="218" text-anchor="middle" class="sub">← SSL/TLS</text>
 
-  <polyline points="180,95 215,95 215,54 250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <polyline points="330,84 330,106" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="180,95 215,95 215,54 250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+  <polyline points="330,84 330,106" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
 </svg>

@@ -82,6 +82,6 @@ Docstring → description. Annotations → JSON Schema.
 
   <text x="330" y="218" text-anchor="middle" class="sub">plain Python functions</text>
 
-  <polyline points="180,95 250,95" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <polyline points="410,95 445,95 445,136 480,136" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="180,95 250,95" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <polyline points="410,95 445,95 445,136 480,136" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
 </svg>

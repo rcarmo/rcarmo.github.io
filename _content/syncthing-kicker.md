@@ -78,6 +78,6 @@ Trigger rescans on specific folder IDs rather than all folders — useful for la
   <text x="560" y="68" text-anchor="middle" class="sub">REST API rescan</text>
 
 
-  <polyline points="180,54 250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <polyline points="410,54 480,54" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <polyline points="180,54 250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+  <polyline points="410,54 480,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
 </svg>

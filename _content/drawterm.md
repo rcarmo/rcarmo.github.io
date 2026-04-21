@@ -83,7 +83,7 @@ Host, user, password persist between launches.
   <text x="560" y="150" text-anchor="middle" class="sub">keyboard/mouse</text>
 
 
-  <polyline points="180,95 250,95" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <polyline points="410,95 445,95 445,54 480,54" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <polyline points="410,95 445,95 445,136 480,136" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="180,95 250,95" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+  <polyline points="410,95 445,95 445,54 480,54" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <polyline points="410,95 445,95 445,136 480,136" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
 </svg>
