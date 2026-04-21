@@ -76,4 +76,7 @@ Written to demonstrate LLM spec methodology — the original spec is included al
   <text x="560" y="50" text-anchor="middle" class="label">Single HTML</text>
   <text x="560" y="68" text-anchor="middle" class="sub">browser homepage</text>
 
+
+  <polyline points="180,54 250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <polyline points="410,54 480,54" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
 </svg>

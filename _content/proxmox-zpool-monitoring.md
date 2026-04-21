@@ -79,5 +79,8 @@ Compatible with Carbon, InfluxDB, and others.
   <text x="560" y="132" text-anchor="middle" class="label">Grafana</text>
   <text x="560" y="150" text-anchor="middle" class="sub">dashboard</text>
 
-  <line x1="560" y1="84" x2="560" y2="106" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="180,95 250,95" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <polyline points="410,95 445,95 445,54 480,54" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="410,95 445,95 445,136 480,136" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="560,84 560,106" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 </svg>

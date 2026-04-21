@@ -80,4 +80,8 @@ The upstream build system covers 20+ boards across Allwinner H6/H616/T527, Rockc
 
 
   <text x="330" y="218" text-anchor="middle" class="sub">Ubuntu 22.04 host — produces flashable ARM images</text>
+
+  <polyline points="180,54 215,54 215,95 250,95" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <polyline points="180,136 215,136 215,95 250,95" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <polyline points="410,95 480,95" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 </svg>

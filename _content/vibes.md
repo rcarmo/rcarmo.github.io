@@ -82,9 +82,9 @@ One Python file. One HTML file. Clone and run.
   <text x="560" y="132" text-anchor="middle" class="label">Pi agent</text>
   <text x="560" y="150" text-anchor="middle" class="sub">RPC / pi-mono</text>
 
-  <line x1="180" y1="95" x2="250" y2="95" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="410" y1="95" x2="480" y2="54" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="410" y1="95" x2="480" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-
   <text x="330" y="218" text-anchor="middle" class="sub">Single Python file — zero build step</text>
+
+  <polyline points="180,95 250,95" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="410,95 445,95 445,54 480,54" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="410,95 445,95 445,136 480,136" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 </svg>

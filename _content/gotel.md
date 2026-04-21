@@ -78,4 +78,9 @@ gRPC 4317 + HTTP 4318. Drop-in collector.
   <text x="560" y="91" text-anchor="middle" class="label">Trace UI</text>
   <text x="560" y="109" text-anchor="middle" class="sub">built-in viewer</text>
 
+
+  <polyline points="180,95 215,95 215,54 250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <polyline points="330,84 330,106" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="410,54 445,54 445,95 480,95" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="410,136 445,136 445,95 480,95" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 </svg>

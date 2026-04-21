@@ -83,9 +83,9 @@ Nothing fails silently — export_errors.log for every failure.
   <rect x="480" y="188" width="160" height="60" rx="8" class="box"/>
   <text x="560" y="222" text-anchor="middle" class="label">YYYY/MM hierarchy + JSON</text>
 
-  <line x1="180" y1="136" x2="250" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="410" y1="136" x2="480" y2="54" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="410" y1="136" x2="480" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-
   <text x="330" y="300" text-anchor="middle" class="sub">macOS PhotoKit framework — no private APIs</text>
+
+  <polyline points="180,136 250,136" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="410,136 445,136 445,54 480,54" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="410,136 480,136" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 </svg>

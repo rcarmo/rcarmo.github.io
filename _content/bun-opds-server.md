@@ -87,4 +87,7 @@ Published as a multi-arch container image; mounts the Calibre library folder as 
   <text x="560" y="132" text-anchor="middle" class="label">KOReader</text>
   <text x="560" y="150" text-anchor="middle" class="sub">reading position</text>
 
+
+  <polyline points="410,54 480,54" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <polyline points="410,136 480,136" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 </svg>

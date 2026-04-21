@@ -81,4 +81,7 @@ Tracks recently forwarded records and suppresses re-forwarding to avoid amplific
 
 
   <text x="330" y="168" text-anchor="middle" class="sub">192.168.1.50</text>
+
+  <polyline points="410,54 480,54" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <polyline points="480,54 410,54" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 </svg>
