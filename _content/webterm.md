@@ -30,7 +30,7 @@ Powers the terminal in agentbox, piclaw, and ghostty-web.
 - [Notes for February 8-15](https://taoofmac.com/space/notes/2026/02/15/1530) — 2026-02-15
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 620 220">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 240">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -64,28 +64,34 @@ Powers the terminal in agentbox, piclaw, and ghostty-web.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="620" height="220" class="bg" rx="8"/>
+  <rect width="760" height="240" class="bg" rx="8"/>
 
-  <rect x="20" y="78" width="140" height="68" rx="8" class="box-accent"/>
-  <text x="90" y="106" text-anchor="middle" class="label">Browser UI</text>
-  <text x="90" y="123" text-anchor="middle" class="sub">dashboard + keybar</text>
+  <rect x="20" y="50" width="180" height="68" rx="8" class="box-accent"/>
+  <text x="110" y="77" text-anchor="middle" class="label">Browser UI</text>
+  <text x="110" y="95" text-anchor="middle" class="sub">dashboard + keybar</text>
 
-  <rect x="230" y="78" width="150" height="68" rx="8" class="box-green"/>
-  <text x="305" y="106" text-anchor="middle" class="label">Go server</text>
-  <text x="305" y="123" text-anchor="middle" class="sub">PTY + go-te state</text>
+  <rect x="20" y="136" width="180" height="68" rx="8" class="box-warm"/>
+  <text x="110" y="163" text-anchor="middle" class="label">WASM renderer</text>
+  <text x="110" y="181" text-anchor="middle" class="sub">VT100 / xterm parser</text>
 
-  <rect x="450" y="28" width="130" height="56" rx="8" class="box"/>
-  <text x="515" y="52" text-anchor="middle" class="label">PTY session</text>
-  <text x="515" y="69" text-anchor="middle" class="sub">shell process</text>
+  <rect x="290" y="50" width="180" height="68" rx="8" class="box-green"/>
+  <text x="380" y="77" text-anchor="middle" class="label">Go server</text>
+  <text x="380" y="95" text-anchor="middle" class="sub">HTTP + WebSocket</text>
 
-  <rect x="450" y="122" width="130" height="56" rx="8" class="box-warm"/>
-  <text x="515" y="146" text-anchor="middle" class="label">WASM renderer</text>
-  <text x="515" y="163" text-anchor="middle" class="sub">VT100 / xterm parser</text>
+  <rect x="290" y="136" width="180" height="68" rx="8" class="box-purple"/>
+  <text x="380" y="163" text-anchor="middle" class="label">go-te state</text>
+  <text x="380" y="181" text-anchor="middle" class="sub">tile previews / screen model</text>
 
-  <line x1="160" y1="112" x2="226" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <text x="193" y="100" text-anchor="middle" class="sub">WebSocket</text>
-  <line x1="380" y1="112" x2="446" y2="56" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="380" y1="112" x2="446" y2="150" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <rect x="560" y="92" width="180" height="68" rx="8" class="box"/>
+  <text x="650" y="119" text-anchor="middle" class="label">PTY session</text>
+  <text x="650" y="137" text-anchor="middle" class="sub">shell process</text>
 
-  <text x="310" y="206" text-anchor="middle" class="sub">Multi-session dashboard: tile N terminals side-by-side</text>
+  <path d="M200,84 L245,84 Q255,84 255,84 L290,84" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+  <text x="245" y="72" text-anchor="middle" class="sub">WebSocket</text>
+
+  <path d="M110,118 L110,136" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M380,118 L380,136" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M470,84 L515,84 Q525,84 525,94 L525,116 Q525,126 535,126 L560,126" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+
+  <text x="380" y="230" text-anchor="middle" class="sub">Multi-session dashboard: tile N agent terminals side-by-side</text>
 </svg>
