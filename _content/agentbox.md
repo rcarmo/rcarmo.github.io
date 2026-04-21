@@ -39,40 +39,35 @@ Run privileged and agents get their own Docker daemon.
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
-      .box { fill: #21262d; stroke: #30363d; }
-      .box-accent { fill: #0d2340; stroke: #2b6cb0; }
-      .box-green { fill: #0d2a1f; stroke: #2a7a3a; }
-      .box-warm { fill: #2a1e18; stroke: #c87020; }
-      .label { fill: #e8d8d0; }
-      .sublabel { fill: #705848; }
-      .arrow { stroke: #705848; }
-      .arrow-accent { stroke: #2b6cb0; }
-      .line { stroke: #30363d; }
+      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
+      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
+      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
     }
     @media (prefers-color-scheme: light) {
       .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #d0d7de; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; }
-      .box-green { fill: #d1fae5; stroke: #059669; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; }
+      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
       .label { fill: #1a2a40; }
-      .sublabel { fill: #4a6480; }
-      .arrow { stroke: #90a8c0; }
-      .arrow-accent { stroke: #3b82f6; }
-      .line { stroke: #d0d7de; }
+      .sub { fill: #5070a0; }
     }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
-    .sublabel { font-size: 11px; }
-    .arrow { stroke-width: 1.5; fill: none; marker-end: url(#arr); }
-    .arrow-accent { stroke-width: 1.5; fill: none; marker-end: url(#arr-accent); }
-    .line { stroke-width: 1; fill: none; }
+    .sub { font-size: 11px; }
   </style>
   <defs>
-    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#5070a0"/></marker>
-    <marker id="arr-accent" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/></marker>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
   </defs>
   <rect width="540" height="260" class="bg" rx="8"/>
   
@@ -91,8 +86,8 @@ Run privileged and agents get their own Docker daemon.
   <rect x="35" y="195" width="150" height="30" rx="6" class="box-warm" stroke-width="1.5"/>
     <text x="110" y="215" text-anchor="middle" class="label">agent user + sudo</text>
     
-  <line x1="200" y1="100" x2="250" y2="80" class="arrow"/>
-  <line x1="200" y1="165" x2="250" y2="165" class="arrow"/>
+  <linex1="200" y1="100" x2="250" y2="80"/ stroke-width="1.5" stroke="#5070a0"/>
+  <linex1="200" y1="165" x2="250" y2="165"/ stroke-width="1.5" stroke="#5070a0"/>
   <rect x="250" y="60" width="150" height="40" rx="6" class="box" stroke-width="1.5"/>
     <text x="325" y="76" text-anchor="middle" class="label">webterm</text>
     <text x="325" y="89" text-anchor="middle" class="sublabel">dashboard mode</text>
@@ -102,8 +97,8 @@ Run privileged and agents get their own Docker daemon.
   <rect x="250" y="200" width="150" height="40" rx="6" class="box-warm" stroke-width="1.5"/>
     <text x="325" y="216" text-anchor="middle" class="label">/workspace</text>
     <text x="325" y="229" text-anchor="middle" class="sublabel">bind mount</text>
-  <line x1="200" y1="210" x2="250" y2="210" class="line"/>
+  <linex1="200" y1="210" x2="250" y2="210"/ stroke-width="1.5" stroke="#5070a0"/>
   <text x="270" y="248" text-anchor="middle" class="sublabel">host filesystem isolation boundary</text>
-  <line x1="20" y1="240" x2="540" y2="240" class="line" style="stroke-dasharray:4,4"/>
+  <linex1="20" y1="240" x2="540" y2="240" style="stroke-dasharray:4,4"/ stroke-width="1.5" stroke="#5070a0"/>
 
 </svg>

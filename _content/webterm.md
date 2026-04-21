@@ -34,53 +34,48 @@ Powers the terminal in agentbox, piclaw, and ghostty-web.
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
-      .box { fill: #21262d; stroke: #30363d; }
-      .box-accent { fill: #0d2340; stroke: #2b6cb0; }
-      .box-green { fill: #0d2a1f; stroke: #2a7a3a; }
-      .box-warm { fill: #2a1e18; stroke: #c87020; }
-      .label { fill: #e8d8d0; }
-      .sublabel { fill: #705848; }
-      .arrow { stroke: #705848; }
-      .arrow-accent { stroke: #2b6cb0; }
-      .line { stroke: #30363d; }
+      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
+      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
+      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
     }
     @media (prefers-color-scheme: light) {
       .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #d0d7de; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; }
-      .box-green { fill: #d1fae5; stroke: #059669; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; }
+      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
       .label { fill: #1a2a40; }
-      .sublabel { fill: #4a6480; }
-      .arrow { stroke: #90a8c0; }
-      .arrow-accent { stroke: #3b82f6; }
-      .line { stroke: #d0d7de; }
+      .sub { fill: #5070a0; }
     }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
-    .sublabel { font-size: 11px; }
-    .arrow { stroke-width: 1.5; fill: none; marker-end: url(#arr); }
-    .arrow-accent { stroke-width: 1.5; fill: none; marker-end: url(#arr-accent); }
-    .line { stroke-width: 1; fill: none; }
+    .sub { font-size: 11px; }
   </style>
   <defs>
-    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#5070a0"/></marker>
-    <marker id="arr-accent" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/></marker>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
   </defs>
   <rect width="520" height="200" class="bg" rx="8"/>
   
   <rect x="20" y="60" width="110" height="80" rx="6" class="box-accent" stroke-width="1.5"/>
     <text x="75" y="96" text-anchor="middle" class="label">Browser</text>
     <text x="75" y="109" text-anchor="middle" class="sublabel">xterm canvas</text>
-  <line x1="130" y1="100" x2="170" y2="100" class="arrow-accent"/>
+  <linex1="130" y1="100" x2="170" y2="100"/ stroke-width="1.5" stroke="#3b82f6"/>
   <text x="150" y="90" text-anchor="middle" class="sublabel">WebSocket</text>
   <rect x="170" y="60" width="110" height="80" rx="6" class="box-green" stroke-width="1.5"/>
     <text x="225" y="96" text-anchor="middle" class="label">Go server</text>
     <text x="225" y="109" text-anchor="middle" class="sublabel">go-te state</text>
-  <line x1="280" y1="80" x2="320" y2="80" class="arrow"/>
-  <line x1="280" y1="120" x2="320" y2="120" class="arrow"/>
+  <linex1="280" y1="80" x2="320" y2="80"/ stroke-width="1.5" stroke="#5070a0"/>
+  <linex1="280" y1="120" x2="320" y2="120"/ stroke-width="1.5" stroke="#5070a0"/>
   <rect x="320" y="60" width="110" height="38" rx="6" class="box" stroke-width="1.5"/>
     <text x="375" y="75" text-anchor="middle" class="label">PTY</text>
     <text x="375" y="88" text-anchor="middle" class="sublabel">shell process</text>

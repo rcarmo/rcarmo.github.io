@@ -48,51 +48,46 @@ Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016.
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
-      .box { fill: #21262d; stroke: #30363d; }
-      .box-accent { fill: #0d2340; stroke: #2b6cb0; }
-      .box-green { fill: #0d2a1f; stroke: #2a7a3a; }
-      .box-warm { fill: #2a1e18; stroke: #c87020; }
-      .label { fill: #e8d8d0; }
-      .sublabel { fill: #705848; }
-      .arrow { stroke: #705848; }
-      .arrow-accent { stroke: #2b6cb0; }
-      .line { stroke: #30363d; }
+      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
+      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
+      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
     }
     @media (prefers-color-scheme: light) {
       .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #d0d7de; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; }
-      .box-green { fill: #d1fae5; stroke: #059669; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; }
+      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
       .label { fill: #1a2a40; }
-      .sublabel { fill: #4a6480; }
-      .arrow { stroke: #90a8c0; }
-      .arrow-accent { stroke: #3b82f6; }
-      .line { stroke: #d0d7de; }
+      .sub { fill: #5070a0; }
     }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
-    .sublabel { font-size: 11px; }
-    .arrow { stroke-width: 1.5; fill: none; marker-end: url(#arr); }
-    .arrow-accent { stroke-width: 1.5; fill: none; marker-end: url(#arr-accent); }
-    .line { stroke-width: 1; fill: none; }
+    .sub { font-size: 11px; }
   </style>
   <defs>
-    <marker id="arr" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#5070a0"/></marker>
-    <marker id="arr-accent" markerWidth="8" markerHeight="8" refX="6" refY="3" orient="auto">
-      <path d="M0,0 L0,6 L8,3 z" fill="#3b82f6"/></marker>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
   </defs>
   <rect width="640" height="240" class="bg" rx="8"/>
   
   <rect x="20" y="80" width="120" height="52" rx="6" class="box-accent" stroke-width="1.5"/>
     <text x="80" y="102" text-anchor="middle" class="label">Developer</text>
     <text x="80" y="115" text-anchor="middle" class="sublabel">git push</text>
-  <line x1="140" y1="106" x2="190" y2="106" class="arrow"/>
+  <linex1="140" y1="106" x2="190" y2="106"/ stroke-width="1.5" stroke="#5070a0"/>
   <rect x="190" y="80" width="120" height="52" rx="6" class="box-accent" stroke-width="1.5"/>
     <text x="250" y="102" text-anchor="middle" class="label">piku hook</text>
     <text x="250" y="115" text-anchor="middle" class="sublabel">post-receive</text>
-  <line x1="310" y1="106" x2="350" y2="106" class="arrow"/>
+  <linex1="310" y1="106" x2="350" y2="106"/ stroke-width="1.5" stroke="#5070a0"/>
   <rect x="350" y="30" width="110" height="44" rx="6" class="box-green" stroke-width="1.5"/>
     <text x="405" y="48" text-anchor="middle" class="label">uwsgi</text>
     <text x="405" y="61" text-anchor="middle" class="sublabel">process mgr</text>
@@ -102,9 +97,9 @@ Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016.
   <rect x="350" y="142" width="110" height="44" rx="6" class="box" stroke-width="1.5"/>
     <text x="405" y="160" text-anchor="middle" class="label">virtualenv</text>
     <text x="405" y="173" text-anchor="middle" class="sublabel">per-app deps</text>
-  <line x1="460" y1="52" x2="510" y2="52" class="arrow"/>
-  <line x1="460" y1="108" x2="510" y2="108" class="arrow"/>
-  <line x1="460" y1="164" x2="510" y2="164" class="arrow"/>
+  <linex1="460" y1="52" x2="510" y2="52"/ stroke-width="1.5" stroke="#5070a0"/>
+  <linex1="460" y1="108" x2="510" y2="108"/ stroke-width="1.5" stroke="#5070a0"/>
+  <linex1="460" y1="164" x2="510" y2="164"/ stroke-width="1.5" stroke="#5070a0"/>
   <rect x="510" y="30" width="110" height="44" rx="6" class="box" stroke-width="1.5"/>
     <text x="565" y="48" text-anchor="middle" class="label">App workers</text>
     <text x="565" y="61" text-anchor="middle" class="sublabel">Procfile</text>
