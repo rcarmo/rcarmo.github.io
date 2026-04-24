@@ -337,28 +337,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   const terrainNormals = [];
   BABYLON.VertexData.ComputeNormals(terrainPositions, terrainIndices, terrainNormals);
   terrain.setVerticesData(BABYLON.VertexBuffer.NormalKind, terrainNormals, true);
-  const terrainColors = [];
-  const lowCol = new BABYLON.Color3(0.70, 0.76, 0.50);
-  const midCol = new BABYLON.Color3(0.55, 0.67, 0.44);
-  const highCol = new BABYLON.Color3(0.46, 0.52, 0.39);
-  const rockCol = new BABYLON.Color3(0.57, 0.56, 0.51);
-  for(let i=0;i<terrainPositions.length;i+=3){
-    const y = terrainPositions[i+1];
-    const ny = terrainNormals[i+1] ?? 1;
-    const slope = 1 - clamp(ny, 0, 1);
-    const h = clamp((y + 14) / 28, 0, 1);
-    let col = mixColor(lowCol, midCol, clamp(h*1.15, 0, 1));
-    if(h > 0.52) col = mixColor(col, highCol, clamp((h-0.52)/0.48, 0, 1));
-    if(slope > 0.28) col = mixColor(col, rockCol, clamp((slope-0.28)/0.55, 0, 1));
-    const dry = valueNoise(terrainPositions[i]*0.03 + 41, terrainPositions[i+2]*0.03 - 17);
-    if(dry > 0.67) col = mixColor(col, new BABYLON.Color3(0.72,0.68,0.49), (dry-0.67)*0.65);
-    terrainColors.push(col.r, col.g, col.b, 1);
-  }
-  terrain.setVerticesData(BABYLON.VertexBuffer.ColorKind, terrainColors, true);
   const terrainMat = new BABYLON.StandardMaterial('terrainMat', scene);
-  terrainMat.diffuseColor = BABYLON.Color3.White();
+  terrainMat.diffuseColor = new BABYLON.Color3(0.58, 0.68, 0.46);
   terrainMat.specularColor = new BABYLON.Color3(0.04, 0.04, 0.04);
-  terrainMat.useVertexColors = true;
   terrainMat.ambientColor = new BABYLON.Color3(0.82, 0.86, 0.8);
   terrain.material = terrainMat;
   terrain.receiveShadows = true;
@@ -380,7 +361,30 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     band.material = mat;
   }
   makeMountainBand(-220, 42, new BABYLON.Color3(0.52,0.63,0.74), new BABYLON.Color3(0.8,0.86,0.92), 18);
+  makeMountainBand(-280, 30, new BABYLON.Color3(0.58,0.68,0.80), new BABYLON.Color3(0.85,0.90,0.96), 28);
   makeMountainBand(210, 34, new BABYLON.Color3(0.60,0.69,0.78), new BABYLON.Color3(0.82,0.88,0.94), 14);
+  makeMountainBand(270, 26, new BABYLON.Color3(0.65,0.73,0.82), new BABYLON.Color3(0.88,0.92,0.97), 22);
+
+  const rockMat = new BABYLON.StandardMaterial('rockMat', scene);
+  rockMat.diffuseColor = new BABYLON.Color3(0.52,0.50,0.46);
+  rockMat.specularColor = new BABYLON.Color3(0.08,0.08,0.08);
+  for(let x=-460;x<=460;x+=12){
+    for(let z=-160;z<=160;z+=12){
+      const slope = sampleSlope(x,z);
+      if(slope < 0.32) continue;
+      const rnd = hash2(x*0.13+7, z*0.13-3);
+      if(rnd < 0.55) continue;
+      const y = terrainHeight(x,z);
+      const scale = 0.5 + slope * 1.8 + rnd * 0.6;
+      const rock = BABYLON.MeshBuilder.CreateBox('rock', { width:scale*1.4, height:scale*0.7, depth:scale*1.1 }, scene);
+      rock.position.set(x, y + scale*0.2, z);
+      rock.rotation.y = rnd * Math.PI * 2;
+      rock.rotation.x = (hash2(x*0.09,z*0.09)-0.5)*0.3;
+      rock.material = rockMat;
+      rock.receiveShadows = true;
+      shadowGen.addShadowCaster(rock);
+    }
+  }
 
   const trunkMat = new BABYLON.StandardMaterial('trunkMat', scene);
   trunkMat.diffuseColor = new BABYLON.Color3(0.37,0.28,0.19);
@@ -445,7 +449,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     function place(dx, dz, kind, scale){
       const px = anchor.x + normal.x*dx + tangent.x*dz;
       const pz = anchor.z + normal.z*dx + tangent.z*dz;
-      if(nearestFootpathDist(px, pz) < 8) return;
+      if(footPathRoutes.length && nearestFootpathDist(px, pz) < 4) return;
+      if(nearestSpineDist(px, pz) < 6) return;
       if(kind === 'shrub') {
         const y = terrainHeight(px,pz);
         const shrub = BABYLON.MeshBuilder.CreateSphere('clusterShrub', { diameter:1.1*scale, segments:4 }, scene);
@@ -686,6 +691,24 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
       }
     }
 
+    for(let i=0;i<clusterAnchors.length;i++){
+      const ca = clusterAnchors[i];
+      const nearestIdx = spinePath.reduce((best, p, idx) => {
+        const d = BABYLON.Vector3.DistanceSquared(p, new BABYLON.Vector3(ca.anchor.x, 0, ca.anchor.z));
+        return !best || d < best.d ? { idx, d } : best;
+      }, null).idx;
+      const spinePoint = new BABYLON.Vector3(spinePath[nearestIdx].x, terrainHeight(spinePath[nearestIdx].x, spinePath[nearestIdx].z)+0.08, spinePath[nearestIdx].z);
+      const clusterPoint = new BABYLON.Vector3(ca.anchor.x, terrainHeight(ca.anchor.x, ca.anchor.z)+0.08, ca.anchor.z);
+      const mid = BABYLON.Vector3.Lerp(spinePoint, clusterPoint, 0.5);
+      mid.x += (fbm(ca.anchor.x*0.02, ca.anchor.z*0.02)-0.5)*8;
+      mid.z += (fbm(ca.anchor.z*0.02, ca.anchor.x*0.02)-0.5)*8;
+      mid.y = terrainHeight(mid.x, mid.z)+0.08;
+      const spurPoints = BABYLON.Curve3.CreateCatmullRomSpline([spinePoint, mid, clusterPoint], 24).getPoints().map(p => new BABYLON.Vector3(p.x, terrainHeight(p.x,p.z)+0.08, p.z));
+      footPathRoutes.push(spurPoints);
+      buildPathRibbon(spurPoints, 1.6, 'spurEdge_'+i, edgeMat);
+      buildPathRibbon(spurPoints, 1.0, 'spur_'+i, pathMat);
+    }
+
     for(let i=0;i<clusterAnchors.length-1;i++){
       const a = clusterAnchors[i], b = clusterAnchors[i+1];
       const start = a.anchor.clone(), end = b.anchor.clone();
@@ -803,25 +826,63 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
       uniform vec3 sunDir;
       uniform vec3 fogColor;
       uniform vec3 cameraPosition;
+
+      float hash(vec2 p){ return fract(sin(dot(p, vec2(127.1,311.7))) * 43758.5453); }
+      float noise(vec2 p){
+        vec2 i = floor(p), f = fract(p);
+        f = f*f*(3.0-2.0*f);
+        float a = hash(i), b = hash(i+vec2(1,0)), c = hash(i+vec2(0,1)), d = hash(i+vec2(1,1));
+        return mix(mix(a,b,f.x), mix(c,d,f.x), f.y);
+      }
+      float fbmShader(vec2 p){
+        float v = 0.0, a = 0.5;
+        for(int i=0; i<4; i++){ v += a*noise(p); p *= 2.01; a *= 0.5; }
+        return v;
+      }
+
       void main(void){
         vec3 base = texture2D(surfaceMap, vUV).rgb;
         vec3 masks = texture2D(maskMap, vUV).rgb;
         vec3 detail = texture2D(detailMap, vUV * vec2(9.0, 3.5)).rgb * 2.0 - 1.0;
-        vec3 n = normalize(vNormal + vec3(detail.r * 0.28 * (1.0-masks.g), 0.18 * (masks.b - masks.r), detail.g * 0.28 * (1.0-masks.g)));
+
+        // Grass detail tiling
+        float grassNoise = fbmShader(vPos.xz * 0.18) * 0.15;
+        float grassFine = noise(vPos.xz * 1.2) * 0.08;
+        vec3 grassTint = vec3(0.05, 0.08, -0.02) * grassNoise + vec3(-0.02, 0.03, -0.01) * grassFine;
+        base += grassTint * masks.b;
+
+        // Rock detail tiling
+        float rockNoise = fbmShader(vPos.xz * 0.35) * 0.12;
+        vec3 rockDetail = vec3(rockNoise * 0.8, rockNoise * 0.75, rockNoise * 0.7);
+        base = mix(base, base + rockDetail - 0.06, masks.g);
+
+        // Dirt detail on paths
+        float dirtNoise = noise(vPos.xz * 0.8) * 0.06;
+        base += vec3(dirtNoise, dirtNoise*0.8, dirtNoise*0.5) * masks.r;
+
+        vec3 n = normalize(vNormal + vec3(detail.r * 0.22 * (1.0-masks.g), 0.12 * (masks.b - masks.r), detail.g * 0.22 * (1.0-masks.g)));
         vec3 L = normalize(-sunDir);
         vec3 V = normalize(cameraPosition - vPos);
+        vec3 H = normalize(L + V);
         float sun = max(dot(n, L), 0.0);
-        float hemi = 0.45 + 0.55 * clamp(n.y * 0.5 + 0.5, 0.0, 1.0);
-        float rim = pow(1.0 - max(dot(n, V), 0.0), 2.5);
-        base *= 0.94 + detail.b * 0.06;
-        base = mix(base, base * 0.88, masks.g * 0.35);
-        base = mix(base, base * 1.06, masks.b * 0.18);
-        vec3 color = base * (0.22 + sun * 0.95 + hemi * 0.58);
-        color += vec3(0.05, 0.07, 0.09) * rim * 0.18;
-        color += vec3(0.08, 0.06, 0.04) * masks.r * 0.08;
+        float hemi = 0.42 + 0.58 * clamp(n.y * 0.5 + 0.5, 0.0, 1.0);
+        float rim = pow(1.0 - max(dot(n, V), 0.0), 3.0);
+        float spec = pow(max(dot(n, H), 0.0), 32.0) * 0.15 * (1.0 - masks.g);
+
+        // Ambient occlusion from height
+        float ao = clamp(0.7 + vPos.y * 0.025, 0.5, 1.0);
+
+        vec3 color = base * (0.18 + sun * 1.0 + hemi * 0.55) * ao;
+        color += vec3(0.95, 0.92, 0.85) * spec;
+        color += vec3(0.04, 0.06, 0.08) * rim * 0.22;
+
+        // Subsurface scatter hint for grass
+        float sss = max(dot(-V, L), 0.0) * masks.b * 0.08;
+        color += vec3(0.15, 0.22, 0.05) * sss;
+
         float dist = distance(cameraPosition, vPos);
-        float fog = 1.0 - exp(-dist * 0.0022);
-        color = mix(color, fogColor, clamp(fog, 0.0, 0.92));
+        float fog = 1.0 - exp(-dist * 0.0020);
+        color = mix(color, fogColor, clamp(fog, 0.0, 0.90));
         gl_FragColor = vec4(color, 1.0);
       }
     `;
@@ -863,37 +924,37 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     const lushGrass = buildGrassBase('lushGrass', grassTexA, new BABYLON.Color3(0.45,0.62,0.31));
     const dryGrass = buildGrassBase('dryGrass', grassTexB, new BABYLON.Color3(0.62,0.56,0.28));
     const flowers = buildGrassBase('flowerGrass', grassTexA, new BABYLON.Color3(0.56,0.48,0.74));
-    for(let x=-480;x<=480;x+=4.6){
-      for(let z=-170;z<=170;z+=4.6){
-        const jitterX = (hash2(x*0.21,z*0.21)-0.5)*2.4;
-        const jitterZ = (hash2(z*0.17,x*0.17)-0.5)*2.4;
+    for(let x=-480;x<=480;x+=3.2){
+      for(let z=-170;z<=170;z+=3.2){
+        const jitterX = (hash2(x*0.21,z*0.21)-0.5)*1.8;
+        const jitterZ = (hash2(z*0.17,x*0.17)-0.5)*1.8;
         const px = x + jitterX, pz = z + jitterZ;
         const pathD = footPathRoutes.length ? nearestFootpathDist(px,pz) : 999;
         const spineD = nearestSpineDist(px,pz);
-        if(pathD < 1.9 || spineD < 4.5) continue;
+        if(pathD < 1.6 || spineD < 3.8) continue;
         const slope = sampleSlope(px,pz);
-        if(slope > 0.48) continue;
+        if(slope > 0.52) continue;
         const biome = sampleBiomeField(px,pz);
         const profile = biomeProfiles[(clusterPalette[biome.dominant?.id]||{}).foliage || 'grove'] || biomeProfiles.grove;
         const density = profile.grassDensity * clamp(1 - slope*1.35, 0, 1) * clamp(pathD/7, 0.15, 1) * clamp(spineD/12, 0.3, 1);
         const rnd = hash2(px*0.19 + 9, pz*0.19 - 4);
         const y = terrainHeight(px,pz);
-        if(rnd < density * 0.18){
-          const scale = 0.55 + hash2(px*0.31,pz*0.31)*0.7;
+        if(rnd < density * 0.28){
+          const scale = 0.45 + hash2(px*0.31,pz*0.31)*0.65;
           const base = profile.grassDensity > 0.58 ? lushGrass : dryGrass;
           const inst = base.createInstance('grassInst');
           inst.position.set(px, y, pz);
           inst.scaling.set(scale, scale*(1.0 + hash2(px*0.27,pz*0.27)*0.4), scale);
           inst.rotation.y = hash2(px*0.11,pz*0.11) * Math.PI;
         }
-        if(rnd > 0.93 && profile.shrubDensity > 0.15 && pathD > 3.5){
+        if(rnd > 0.90 && profile.shrubDensity > 0.12 && pathD > 3.0){
           makeShrub(px,pz, 0.42 + hash2(px*0.41,pz*0.41)*0.34);
         }
         const foliageKind = (clusterPalette[biome.dominant?.id] || {}).foliage || 'grove';
-        if(rnd > 0.975 && foliageKind !== 'scrub' && foliageKind !== 'garden' && pathD > 5.5 && spineD > 8){
-          makeTree(px,pz, 0.7 + hash2(px*0.37,pz*0.37)*0.4, foliageKind === 'pine' ? 'pine' : (hash2(px*0.15,pz*0.15) > 0.65 ? 'pine' : 'round'));
+        if(rnd > 0.96 && foliageKind !== 'scrub' && foliageKind !== 'garden' && pathD > 4.5 && spineD > 6){
+          makeTree(px,pz, 0.65 + hash2(px*0.37,pz*0.37)*0.5, foliageKind === 'pine' ? 'pine' : (hash2(px*0.15,pz*0.15) > 0.6 ? 'pine' : 'round'));
         }
-        if(rnd > 0.965 && hash2(px*0.07,pz*0.07) > 0.72 && pathD > 3.2){
+        if(rnd > 0.95 && hash2(px*0.07,pz*0.07) > 0.65 && pathD > 2.8){
           const inst = flowers.createInstance('flowerInst');
           const scale = 0.45 + hash2(px*0.24,pz*0.24)*0.35;
           inst.position.set(px, y, pz);
@@ -917,16 +978,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     const side = sectionIndex % 2 === 0 ? 1 : -1;
     const anchor = new BABYLON.Vector3(center.x + normal.x*18*side, terrainHeight(center.x + normal.x*18*side, center.z + normal.z*18*side), center.z + normal.z*18*side);
     clusterAnchors.push({ id: section.id, label: section.label, center, anchor, color, projects: section.projects });
-
-    const mound = BABYLON.MeshBuilder.CreateCylinder('mound', { height:1.8, diameterTop:10, diameterBottom:16, tessellation:24 }, scene);
-    mound.position = anchor.add(new BABYLON.Vector3(0, 0.7, 0));
-    const moundMat = new BABYLON.StandardMaterial('moundMat', scene);
-    const c = BABYLON.Color3.FromHexString(color);
-    moundMat.diffuseColor = BABYLON.Color3.Lerp(new BABYLON.Color3(0.57,0.69,0.49), c, 0.12);
-    moundMat.specularColor = BABYLON.Color3.Black();
-    mound.material = moundMat;
-    mound.receiveShadows = true;
-    scatterClusterFoliage(anchor, tangent.scale(side), normal.scale(side), palette, sectionIndex);
 
     const titleSign = addProjectSign({
       name: section.label,
@@ -956,6 +1007,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   });
 
   createFootpaths();
+  clusterAnchors.forEach((ca, idx) => {
+    const palette = clusterPalette[ca.id] || { color:'#2563eb', tint:'#dce8ff', foliage:'grove' };
+    const spineIdx = Math.floor((idx + 1) * (spinePath.length - 20) / (clusterAnchors.length + 1));
+    const center = spinePath[spineIdx];
+    const prev = spinePath[Math.max(0, spineIdx-1)];
+    const next = spinePath[Math.min(spinePath.length-1, spineIdx+1)];
+    const tangent = next.subtract(prev).normalize();
+    const normal = new BABYLON.Vector3(-tangent.z, 0, tangent.x);
+    const side = idx % 2 === 0 ? 1 : -1;
+    scatterClusterFoliage(ca.anchor, tangent.scale(side), normal.scale(side), palette, idx);
+  });
   createTerrainLook();
   scatterEcology();
 
