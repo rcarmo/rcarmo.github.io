@@ -1,0 +1,311 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>piku — rcarmo</title>
+<meta name="description" content="git push deployments to your own server — no Docker, no ops.">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link id="dynamic-favicon" rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="canonical" href="https://rcarmo.github.io/projects/piku/">
+</head>
+<body>
+  <nav class="topnav">
+    <a href="/" class="nav-home">rcarmo</a>
+    <a href="https://github.com/piku/piku" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
+  </nav>
+
+  <header class="hero hero-project" id="hero" data-section="cloud">
+    <div class="hero-inner">
+      <img class="hero-logo" src="/assets/logos-opt/piku.png" alt="git push deployments to your own server — no Docker, no ops. logo">
+      <div class="hero-text">
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>piku</h1>
+          <span class="badge badge-stable">stable</span>
+        </div>
+        <p class="hero-tagline">git push deployments to your own server — no Docker, no ops.</p>
+        <div id="hero-meta-island-piku" class="hero-meta">
+          <!-- live: stars, forks, language -->
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://github.com/piku/piku" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </div>
+      <div id="hero-related-piku" class="hero-related" hidden></div>
+    </div>
+  </header>
+
+
+  <div class="page-layout">
+    <aside class="toc-sidebar">
+      <a href="#s-about" class="toc-link" data-section="s-about">Overview</a>
+      <a href="#s-how" class="toc-link" data-section="s-how">How it works</a>
+      <a href="#s-features" class="toc-link" data-section="s-features">Features</a>
+      <a href="#s-diagram" class="toc-link" data-section="s-diagram">Diagram</a>
+      <a href="#s-posts" class="toc-link" data-section="s-posts">Posts</a>
+    </aside>
+
+    <main class="content">
+      <div id="stats-island-piku" class="stats-bar">
+        <!-- live: stars, forks, issues, created -->
+      </div>
+
+      <section class="sec" id="s-about">
+        <div class="sec-label">Overview</div>
+        <p>piku is a single Python script installed as a git post-receive hook. Push your code, piku reads the Procfile, installs dependencies, starts your workers under uwsgi, and wires them up behind nginx with optional Let's Encrypt TLS. The whole runtime fits in ~1,500 lines of readable Python 3 and runs on a first-generation Raspberry Pi.</p>
+      </section>
+
+      <section class="sec" id="s-how">
+        <div class="sec-label">How it works</div>
+        <p>piku runs as a git post-receive hook. When you push a commit, it detects your application type from lock files and a Procfile, installs dependencies into an isolated per-app environment, and starts your declared processes under uwsgi acting as a process supervisor.</p>
+<p>Nginx is reconfigured automatically on each deploy. Virtual hosts, TLS via Let's Encrypt, static file serving, and cache rules are driven by an ENV file you commit alongside your code. Zero-downtime deploys replace workers before stopping the old ones. ps:scale web=3 and config:set KEY=val take effect without touching code.</p>
+<p>The implementation stays around 1,500 lines of Python with no external dependencies. That deliberate simplicity is a design goal — piku covers 80% of deployment use cases without becoming a platform.</p>
+      </section>
+
+      <section class="sec" id="s-features">
+        <div class="sec-label">Features</div>
+        <div class="features-grid">
+          
+    <div class="feature">
+      <div class="feature-icon">→</div>
+      <div>
+        <div class="feature-title">⌥ Heroku-style workflow</div>
+        <div class="feature-body"><p>git remote add piku piku@server:app. git push piku main. The full deploy flow.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🌐</div>
+      <div>
+        <div class="feature-title">Any language</div>
+        <div class="feature-body"><p>Python, Node, Go, Clojure, Ruby, Java, PHP, static. Detected from lock files and Procfiles.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🔒</div>
+      <div>
+        <div class="feature-title">Automatic TLS</div>
+        <div class="feature-body"><p>Let's Encrypt ACME, virtual host routing, zero-downtime worker replacement.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">⬆</div>
+      <div>
+        <div class="feature-title">Live scaling</div>
+        <div class="feature-body"><p>ps:scale web=3 and config:set KEY=val — no redeploy needed.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🐧</div>
+      <div>
+        <div class="feature-title">Any POSIX host</div>
+        <div class="feature-body"><p>Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016.</p></div>
+      </div>
+    </div>
+        </div>
+      </section>
+
+      <section class="sec" id="s-diagram">
+        <div class="sec-label">Architecture</div>
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 240">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
+      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
+      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
+    @media (prefers-color-scheme: light) {
+      .bg { fill: transparent; }
+      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+      .label { fill: #1a2a40; }
+      .sub { fill: #5070a0; }
+    }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
+  </defs>
+  <rect width="680" height="240" class="bg" rx="8"/>
+
+  <rect x="20" y="84" width="130" height="56" rx="8" class="box-accent"/>
+  <text x="85" y="106" text-anchor="middle" class="label">Developer</text>
+  <text x="85" y="123" text-anchor="middle" class="sub">git push</text>
+
+  <rect x="200" y="84" width="140" height="56" rx="8" class="box-accent"/>
+  <text x="270" y="106" text-anchor="middle" class="label">piku hook</text>
+  <text x="270" y="123" text-anchor="middle" class="sub">post-receive</text>
+
+  <rect x="390" y="24" width="120" height="48" rx="8" class="box-green"/>
+  <text x="450" y="43" text-anchor="middle" class="label">uwsgi</text>
+  <text x="450" y="58" text-anchor="middle" class="sub">process manager</text>
+
+  <rect x="390" y="96" width="120" height="48" rx="8" class="box-green"/>
+  <text x="450" y="115" text-anchor="middle" class="label">nginx</text>
+  <text x="450" y="130" text-anchor="middle" class="sub">reverse proxy</text>
+
+  <rect x="390" y="168" width="120" height="48" rx="8" class="box"/>
+  <text x="450" y="187" text-anchor="middle" class="label">env + deps</text>
+  <text x="450" y="202" text-anchor="middle" class="sub">virtualenv / buildpacks</text>
+
+  <rect x="560" y="24" width="100" height="48" rx="8" class="box"/>
+  <text x="610" y="43" text-anchor="middle" class="label">Workers</text>
+  <text x="610" y="58" text-anchor="middle" class="sub">Procfile</text>
+
+  <rect x="560" y="96" width="100" height="48" rx="8" class="box"/>
+  <text x="610" y="115" text-anchor="middle" class="label">TLS + vhosts</text>
+  <text x="610" y="130" text-anchor="middle" class="sub">Let's Encrypt</text>
+
+  <rect x="560" y="168" width="100" height="48" rx="8" class="box"/>
+  <text x="610" y="187" text-anchor="middle" class="label">Any language</text>
+  <text x="610" y="202" text-anchor="middle" class="sub">Python / Node / Go</text>
+
+  <line x1="150" y1="112" x2="196" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="340" y1="112" x2="386" y2="48" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="340" y1="112" x2="386" y2="120" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="340" y1="112" x2="386" y2="192" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="510" y1="48" x2="556" y2="48" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="510" y1="120" x2="556" y2="120" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="510" y1="192" x2="556" y2="192" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <text x="340" y="232" text-anchor="middle" class="sub">Any POSIX host — Raspberry Pi to cloud VM</text>
+</svg></div>
+      </section>
+
+
+
+      <section class="sec" id="s-posts">
+        <div class="sec-label">Posts</div>
+        <div class="posts">
+    <div class="post">
+      <span class="post-date">2016-04-25</span>
+      <a href="https://taoofmac.com/space/blog/2016/04/25/1400" target="_blank" rel="noopener">Some Breakage May Ensue</a>
+    </div>
+
+    <div class="post">
+      <span class="post-date">2016-12-04</span>
+      <a href="https://taoofmac.com/space/blog/2016/12/04/1351" target="_blank" rel="noopener">Third Python's The Charm</a>
+    </div>
+
+    <div class="post">
+      <span class="post-date">2018-07-08</span>
+      <a href="https://taoofmac.com/space/blog/2018/07/08/1330" target="_blank" rel="noopener">The Third Python</a>
+    </div>
+
+    <div class="post">
+      <span class="post-date">2019-10-13</span>
+      <a href="https://taoofmac.com/space/blog/2019/10/13/1630" target="_blank" rel="noopener">Deployment Pains</a>
+    </div>
+
+    <div class="post">
+      <span class="post-date">2022-12-21</span>
+      <a href="https://taoofmac.com/space/blog/2022/12/21/0900" target="_blank" rel="noopener">Getting Takahē to run on Piku</a>
+    </div></div>
+      </section>
+    </main>
+  </div>
+
+  <footer>
+    <span class="foot-l">rcarmo.github.io</span>
+    <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/piku/piku">Source</a></span>
+  </footer>
+
+  <script type="module" src="/assets/js/repo-island.mjs?v=mocn4aqn"></script>
+  <script type="module">
+    import { mount } from '/assets/js/repo-island.mjs?v=mocn4aqn';
+    mount({
+      fullName: 'piku/piku',
+      heroMetaEl: document.getElementById('hero-meta-island-piku'),
+      statsEl:    document.getElementById('stats-island-piku'),
+      releasesEl: document.getElementById('rel-island-piku'),
+      relatedEl:  document.getElementById('hero-related-piku'),
+      relatedCandidates: [{"id":"azure-docker-swarm-cluster","fullName":"rcarmo/azure-docker-swarm-cluster","logo":"/assets/logos-opt/default-05.png"},{"id":"azure-k3s-cluster","fullName":"rcarmo/azure-k3s-cluster","logo":"/assets/logos-opt/default-04.png"},{"id":"azure-stable-diffusion","fullName":"rcarmo/azure-stable-diffusion","logo":"/assets/logos-opt/default-04.png"},{"id":"azure-transcription-helper","fullName":"rcarmo/azure-transcription-helper","logo":"/assets/logos-opt/default-01.png"},{"id":"kata","fullName":"rcarmo/kata","logo":"/assets/logos-opt/kata.png"}],
+    });
+  </script>
+  <script>
+    // Scroll-spy for TOC
+    const tocLinks = document.querySelectorAll('.toc-link');
+    if (tocLinks.length) {
+      const sections = [...tocLinks].map(l => ({
+        link: l,
+        el: document.getElementById(l.dataset.section)
+      })).filter(s => s.el);
+      const obs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            tocLinks.forEach(l => l.classList.remove('active'));
+            const match = sections.find(s => s.el === e.target);
+            if (match) match.link.classList.add('active');
+          }
+        }
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      sections.forEach(s => obs.observe(s.el));
+    }
+
+    document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+      const slides = [...gallery.querySelectorAll('[data-gallery-slide]')];
+      const captions = [...gallery.querySelectorAll('[data-gallery-caption]')];
+      const prev = gallery.querySelector('[data-gallery-prev]');
+      const next = gallery.querySelector('[data-gallery-next]');
+      const goto = gallery.querySelector('[data-gallery-goto]');
+      const status = gallery.querySelector('[data-gallery-status]');
+      const thumbs = [...gallery.querySelectorAll('[data-gallery-thumb]')];
+      let index = 0;
+
+      function renderGallery(nextIndex) {
+        index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('is-active', i === index);
+        });
+        captions.forEach((caption, i) => caption.classList.toggle('is-active', i === index));
+        thumbs.forEach((thumb, i) => {
+          thumb.classList.toggle('is-active', i === index);
+          thumb.setAttribute('aria-pressed', i === index ? 'true' : 'false');
+        });
+        if (goto) {
+          goto.value = String(index + 1);
+          goto.max = String(slides.length);
+        }
+        if (status) status.textContent = '/ ' + slides.length;
+        if (prev) prev.disabled = index <= 0;
+        if (next) next.disabled = index >= slides.length - 1;
+      }
+
+      prev?.addEventListener('click', () => renderGallery(index - 1));
+      next?.addEventListener('click', () => renderGallery(index + 1));
+      goto?.addEventListener('change', () => renderGallery(Number(goto.value || 1) - 1));
+      goto?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') renderGallery(Number(goto.value || 1) - 1);
+      });
+      thumbs.forEach((thumb, i) => thumb.addEventListener('click', () => renderGallery(i)));
+      gallery.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); renderGallery(index - 1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); renderGallery(index + 1); }
+        if (e.key === 'Home') { e.preventDefault(); renderGallery(0); }
+        if (e.key === 'End') { e.preventDefault(); renderGallery(slides.length - 1); }
+      });
+      renderGallery(0);
+    });
+  </script>
+</body>
+</html>

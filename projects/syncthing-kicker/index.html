@@ -1,0 +1,255 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>syncthing-kicker — rcarmo</title>
+<meta name="description" content="Force Syncthing to rescan folders on demand — cron-triggered or event-driven rescans via the REST API.">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link id="dynamic-favicon" rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="canonical" href="https://rcarmo.github.io/projects/syncthing-kicker/">
+</head>
+<body>
+  <nav class="topnav">
+    <a href="/" class="nav-home">rcarmo</a>
+    <a href="https://github.com/rcarmo/syncthing-kicker" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
+  </nav>
+
+  <header class="hero hero-project" id="hero" data-section="infrastructure">
+    <div class="hero-inner">
+      <img class="hero-logo" src="/assets/logos-opt/syncthing-kicker.png" alt="Force Syncthing to rescan folders on demand — cron-triggered or event-driven rescans via the REST API. logo">
+      <div class="hero-text">
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>syncthing-kicker</h1>
+          <span class="badge badge-maintained">maintained</span>
+        </div>
+        <p class="hero-tagline">Force Syncthing to rescan folders on demand — cron-triggered or event-driven rescans via the REST API.</p>
+        <div id="hero-meta-island-syncthing-kicker" class="hero-meta">
+          <!-- live: stars, forks, language -->
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://github.com/rcarmo/syncthing-kicker" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </div>
+      <div id="hero-related-syncthing-kicker" class="hero-related" hidden></div>
+    </div>
+  </header>
+
+
+  <div class="page-layout">
+    <aside class="toc-sidebar">
+      <a href="#s-about" class="toc-link" data-section="s-about">Overview</a>
+      <a href="#s-how" class="toc-link" data-section="s-how">How it works</a>
+      <a href="#s-features" class="toc-link" data-section="s-features">Features</a>
+      <a href="#s-diagram" class="toc-link" data-section="s-diagram">Diagram</a>
+    </aside>
+
+    <main class="content">
+      <div id="stats-island-syncthing-kicker" class="stats-bar">
+        <!-- live: stars, forks, issues, created -->
+      </div>
+
+      <section class="sec" id="s-about">
+        <div class="sec-label">Overview</div>
+        <p>syncthing-kicker is a small Go daemon that calls the Syncthing REST API to trigger folder rescans on a schedule or in response to external events. Useful when Syncthing's filesystem watcher isn't available (e.g. on network shares, NFS mounts, or inside containers) and you need reliable sync without waiting for the slow periodic full scan.</p>
+      </section>
+
+      <section class="sec" id="s-how">
+        <div class="sec-label">How it works</div>
+        <p>Connects to the local Syncthing REST API using the configured API key, then either fires rescan requests on a cron schedule or watches a trigger file/socket for external signals. Runs as a sidecar container alongside Syncthing or as a systemd service on the same host.</p>
+      </section>
+
+      <section class="sec" id="s-features">
+        <div class="sec-label">Features</div>
+        <div class="features-grid">
+          
+    <div class="feature">
+      <div class="feature-icon">⏰</div>
+      <div>
+        <div class="feature-title">Cron-scheduled rescans</div>
+        <div class="feature-body"><p>Define per-folder rescan schedules in standard cron syntax — different folders can sync at different intervals.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🔔</div>
+      <div>
+        <div class="feature-title">Event-driven triggers</div>
+        <div class="feature-body"><p>Watch a named pipe or Unix socket for trigger signals — external scripts can kick a rescan without polling.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🐳</div>
+      <div>
+        <div class="feature-title">Docker sidecar</div>
+        <div class="feature-body"><p>Ships as a minimal container image; mounts the Syncthing config dir to read the API key automatically.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🔑</div>
+      <div>
+        <div class="feature-title">Auto API key discovery</div>
+        <div class="feature-body"><p>Reads the Syncthing config XML to find the API key — no manual configuration needed beyond the config path.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">📋</div>
+      <div>
+        <div class="feature-title">Per-folder targeting</div>
+        <div class="feature-body"><p>Trigger rescans on specific folder IDs rather than all folders — useful for large libraries where full rescans are expensive.</p></div>
+      </div>
+    </div>
+        </div>
+      </section>
+
+      <section class="sec" id="s-diagram">
+        <div class="sec-label">Architecture</div>
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
+      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
+      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
+    @media (prefers-color-scheme: light) {
+      .bg { fill: transparent; }
+      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+      .label { fill: #1a2a40; }
+      .sub { fill: #5070a0; }
+    }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
+  </defs>
+  <rect width="660" height="180" class="bg" rx="8"/>
+
+  <rect x="20" y="24" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="100" y="50" text-anchor="middle" class="label">Cron / event</text>
+  <text x="100" y="68" text-anchor="middle" class="sub">trigger</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">kicker</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">Go daemon</text>
+
+  <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="50" text-anchor="middle" class="label">Syncthing</text>
+  <text x="560" y="68" text-anchor="middle" class="sub">REST API rescan</text>
+
+
+  <path d="M180,54 L250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+  <path d="M410,54 L480,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+</svg></div>
+      </section>
+
+
+
+
+    </main>
+  </div>
+
+  <footer>
+    <span class="foot-l">rcarmo.github.io</span>
+    <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/syncthing-kicker">Source</a></span>
+  </footer>
+
+  <script type="module" src="/assets/js/repo-island.mjs?v=mocn4aqn"></script>
+  <script type="module">
+    import { mount } from '/assets/js/repo-island.mjs?v=mocn4aqn';
+    mount({
+      fullName: 'rcarmo/syncthing-kicker',
+      heroMetaEl: document.getElementById('hero-meta-island-syncthing-kicker'),
+      statsEl:    document.getElementById('stats-island-syncthing-kicker'),
+      releasesEl: document.getElementById('rel-island-syncthing-kicker'),
+      relatedEl:  document.getElementById('hero-related-syncthing-kicker'),
+      relatedCandidates: [{"id":"bun-opds-server","fullName":"rcarmo/bun-opds-server","logo":"/assets/logos-opt/default-00.png"},{"id":"codebits-tv","fullName":"rcarmo/codebits-tv","logo":"/assets/logos-opt/codebits-tv.png"},{"id":"gotel","fullName":"rcarmo/gotel","logo":"/assets/logos-opt/gotel.png"},{"id":"ground-init","fullName":"rcarmo/ground-init","logo":"/assets/logos-opt/ground-init.png"},{"id":"mdnsbridge","fullName":"rcarmo/mdnsbridge","logo":"/assets/logos-opt/mdnsbridge.png"},{"id":"node-red-dashboard","fullName":"rcarmo/node-red-dashboard","logo":"/assets/logos-opt/default-01.png"},{"id":"onepage-by-spec","fullName":"rcarmo/onepage-by-spec","logo":"/assets/logos-opt/default-01.png"},{"id":"proxmox-zpool-monitoring","fullName":"rcarmo/proxmox-zpool-monitoring","logo":"/assets/logos-opt/default-01.png"},{"id":"pve-microvm","fullName":"rcarmo/pve-microvm","logo":"/assets/logos-opt/pve-microvm.png"}],
+    });
+  </script>
+  <script>
+    // Scroll-spy for TOC
+    const tocLinks = document.querySelectorAll('.toc-link');
+    if (tocLinks.length) {
+      const sections = [...tocLinks].map(l => ({
+        link: l,
+        el: document.getElementById(l.dataset.section)
+      })).filter(s => s.el);
+      const obs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            tocLinks.forEach(l => l.classList.remove('active'));
+            const match = sections.find(s => s.el === e.target);
+            if (match) match.link.classList.add('active');
+          }
+        }
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      sections.forEach(s => obs.observe(s.el));
+    }
+
+    document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+      const slides = [...gallery.querySelectorAll('[data-gallery-slide]')];
+      const captions = [...gallery.querySelectorAll('[data-gallery-caption]')];
+      const prev = gallery.querySelector('[data-gallery-prev]');
+      const next = gallery.querySelector('[data-gallery-next]');
+      const goto = gallery.querySelector('[data-gallery-goto]');
+      const status = gallery.querySelector('[data-gallery-status]');
+      const thumbs = [...gallery.querySelectorAll('[data-gallery-thumb]')];
+      let index = 0;
+
+      function renderGallery(nextIndex) {
+        index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('is-active', i === index);
+        });
+        captions.forEach((caption, i) => caption.classList.toggle('is-active', i === index));
+        thumbs.forEach((thumb, i) => {
+          thumb.classList.toggle('is-active', i === index);
+          thumb.setAttribute('aria-pressed', i === index ? 'true' : 'false');
+        });
+        if (goto) {
+          goto.value = String(index + 1);
+          goto.max = String(slides.length);
+        }
+        if (status) status.textContent = '/ ' + slides.length;
+        if (prev) prev.disabled = index <= 0;
+        if (next) next.disabled = index >= slides.length - 1;
+      }
+
+      prev?.addEventListener('click', () => renderGallery(index - 1));
+      next?.addEventListener('click', () => renderGallery(index + 1));
+      goto?.addEventListener('change', () => renderGallery(Number(goto.value || 1) - 1));
+      goto?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') renderGallery(Number(goto.value || 1) - 1);
+      });
+      thumbs.forEach((thumb, i) => thumb.addEventListener('click', () => renderGallery(i)));
+      gallery.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); renderGallery(index - 1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); renderGallery(index + 1); }
+        if (e.key === 'Home') { e.preventDefault(); renderGallery(0); }
+        if (e.key === 'End') { e.preventDefault(); renderGallery(slides.length - 1); }
+      });
+      renderGallery(0);
+    });
+  </script>
+</body>
+</html>

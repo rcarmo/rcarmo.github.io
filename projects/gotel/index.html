@@ -1,0 +1,253 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>gotel — rcarmo</title>
+<meta name="description" content="Self-contained OTel collector — SQLite storage, built-in trace viewer.">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link id="dynamic-favicon" rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="canonical" href="https://rcarmo.github.io/projects/gotel/">
+</head>
+<body>
+  <nav class="topnav">
+    <a href="/" class="nav-home">rcarmo</a>
+    <a href="https://github.com/rcarmo/gotel" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
+  </nav>
+
+  <header class="hero hero-project" id="hero" data-section="infrastructure">
+    <div class="hero-inner">
+      <img class="hero-logo" src="/assets/logos-opt/gotel.png" alt="Self-contained OTel collector — SQLite storage, built-in trace viewer. logo">
+      <div class="hero-text">
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>gotel</h1>
+          <span class="badge badge-active">active</span>
+        </div>
+        <p class="hero-tagline">Self-contained OTel collector — SQLite storage, built-in trace viewer.</p>
+        <div id="hero-meta-island-gotel" class="hero-meta">
+          <!-- live: stars, forks, language -->
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://github.com/rcarmo/gotel" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </div>
+      <div id="hero-related-gotel" class="hero-related" hidden></div>
+    </div>
+  </header>
+
+
+  <div class="page-layout">
+    <aside class="toc-sidebar">
+      <a href="#s-about" class="toc-link" data-section="s-about">Overview</a>
+      <a href="#s-how" class="toc-link" data-section="s-how">How it works</a>
+      <a href="#s-features" class="toc-link" data-section="s-features">Features</a>
+      <a href="#s-diagram" class="toc-link" data-section="s-diagram">Diagram</a>
+    </aside>
+
+    <main class="content">
+      <div id="stats-island-gotel" class="stats-bar">
+        <!-- live: stars, forks, issues, created -->
+      </div>
+
+      <section class="sec" id="s-about">
+        <div class="sec-label">Overview</div>
+        <p>Single-binary OpenTelemetry Collector storing traces and metrics in SQLite with a built-in web trace viewer. OTLP gRPC 4317, HTTP 4318, query API 3200, viewer 3000. No Jaeger, no Tempo, no Grafana needed.</p>
+      </section>
+
+      <section class="sec" id="s-how">
+        <div class="sec-label">How it works</div>
+        <p>A complete OTel Collector pipeline in one binary: OTLP endpoints → memory_limiter → batch processor → SQLite. The built-in query server exposes trace data as REST; the web viewer provides a Jaeger-like UI. One binary, one file, zero external storage.</p>
+      </section>
+
+      <section class="sec" id="s-features">
+        <div class="sec-label">Features</div>
+        <div class="features-grid">
+          
+    <div class="feature">
+      <div class="feature-icon">📦</div>
+      <div>
+        <div class="feature-title">Single binary</div>
+        <div class="feature-body"><p>go build -o gotel . and run. Embedded config.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🗄</div>
+      <div>
+        <div class="feature-title">SQLite storage</div>
+        <div class="feature-body"><p>Traces in a local file. No external dependency.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🌐</div>
+      <div>
+        <div class="feature-title">Built-in viewer</div>
+        <div class="feature-body"><p>Jaeger-like UI at :3000.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">📊</div>
+      <div>
+        <div class="feature-title">Standard OTLP</div>
+        <div class="feature-body"><p>gRPC 4317 + HTTP 4318. Drop-in collector.</p></div>
+      </div>
+    </div>
+        </div>
+      </section>
+
+      <section class="sec" id="s-diagram">
+        <div class="sec-label">Architecture</div>
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 206">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
+      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
+      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
+    @media (prefers-color-scheme: light) {
+      .bg { fill: transparent; }
+      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+      .label { fill: #1a2a40; }
+      .sub { fill: #5070a0; }
+    }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
+  </defs>
+  <rect width="660" height="206" class="bg" rx="8"/>
+
+  <rect x="20" y="65" width="160" height="60" rx="8" class="box"/>
+  <text x="100" y="91" text-anchor="middle" class="label">Services</text>
+  <text x="100" y="109" text-anchor="middle" class="sub">OTLP traces</text>
+
+  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
+  <text x="330" y="50" text-anchor="middle" class="label">OTLP receiver</text>
+  <text x="330" y="68" text-anchor="middle" class="sub">gRPC / HTTP</text>
+
+  <rect x="250" y="106" width="160" height="60" rx="8" class="box-warm"/>
+  <text x="330" y="132" text-anchor="middle" class="label">SQLite store</text>
+  <text x="330" y="150" text-anchor="middle" class="sub">spans + events</text>
+
+  <rect x="480" y="65" width="160" height="60" rx="8" class="box-green"/>
+  <text x="560" y="91" text-anchor="middle" class="label">Trace UI</text>
+  <text x="560" y="109" text-anchor="middle" class="sub">built-in viewer</text>
+
+
+  <path d="M180,95 L205,95 Q215,95 215,85 L215,64 Q215,54 225,54 L250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+  <path d="M330,84 L330,106" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M410,54 L435,54 Q445,54 445,64 L445,85 Q445,95 455,95 L480,95" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+  <path d="M410,136 L435,136 Q445,136 445,126 L445,105 Q445,95 455,95 L480,95" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
+</svg></div>
+      </section>
+
+
+
+
+    </main>
+  </div>
+
+  <footer>
+    <span class="foot-l">rcarmo.github.io</span>
+    <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/gotel">Source</a></span>
+  </footer>
+
+  <script type="module" src="/assets/js/repo-island.mjs?v=mocn4aqn"></script>
+  <script type="module">
+    import { mount } from '/assets/js/repo-island.mjs?v=mocn4aqn';
+    mount({
+      fullName: 'rcarmo/gotel',
+      heroMetaEl: document.getElementById('hero-meta-island-gotel'),
+      statsEl:    document.getElementById('stats-island-gotel'),
+      releasesEl: document.getElementById('rel-island-gotel'),
+      relatedEl:  document.getElementById('hero-related-gotel'),
+      relatedCandidates: [{"id":"bun-opds-server","fullName":"rcarmo/bun-opds-server","logo":"/assets/logos-opt/default-00.png"},{"id":"codebits-tv","fullName":"rcarmo/codebits-tv","logo":"/assets/logos-opt/codebits-tv.png"},{"id":"ground-init","fullName":"rcarmo/ground-init","logo":"/assets/logos-opt/ground-init.png"},{"id":"mdnsbridge","fullName":"rcarmo/mdnsbridge","logo":"/assets/logos-opt/mdnsbridge.png"},{"id":"node-red-dashboard","fullName":"rcarmo/node-red-dashboard","logo":"/assets/logos-opt/default-01.png"},{"id":"onepage-by-spec","fullName":"rcarmo/onepage-by-spec","logo":"/assets/logos-opt/default-01.png"},{"id":"proxmox-zpool-monitoring","fullName":"rcarmo/proxmox-zpool-monitoring","logo":"/assets/logos-opt/default-01.png"},{"id":"pve-microvm","fullName":"rcarmo/pve-microvm","logo":"/assets/logos-opt/pve-microvm.png"},{"id":"syncthing-kicker","fullName":"rcarmo/syncthing-kicker","logo":"/assets/logos-opt/syncthing-kicker.png"}],
+    });
+  </script>
+  <script>
+    // Scroll-spy for TOC
+    const tocLinks = document.querySelectorAll('.toc-link');
+    if (tocLinks.length) {
+      const sections = [...tocLinks].map(l => ({
+        link: l,
+        el: document.getElementById(l.dataset.section)
+      })).filter(s => s.el);
+      const obs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            tocLinks.forEach(l => l.classList.remove('active'));
+            const match = sections.find(s => s.el === e.target);
+            if (match) match.link.classList.add('active');
+          }
+        }
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      sections.forEach(s => obs.observe(s.el));
+    }
+
+    document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+      const slides = [...gallery.querySelectorAll('[data-gallery-slide]')];
+      const captions = [...gallery.querySelectorAll('[data-gallery-caption]')];
+      const prev = gallery.querySelector('[data-gallery-prev]');
+      const next = gallery.querySelector('[data-gallery-next]');
+      const goto = gallery.querySelector('[data-gallery-goto]');
+      const status = gallery.querySelector('[data-gallery-status]');
+      const thumbs = [...gallery.querySelectorAll('[data-gallery-thumb]')];
+      let index = 0;
+
+      function renderGallery(nextIndex) {
+        index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('is-active', i === index);
+        });
+        captions.forEach((caption, i) => caption.classList.toggle('is-active', i === index));
+        thumbs.forEach((thumb, i) => {
+          thumb.classList.toggle('is-active', i === index);
+          thumb.setAttribute('aria-pressed', i === index ? 'true' : 'false');
+        });
+        if (goto) {
+          goto.value = String(index + 1);
+          goto.max = String(slides.length);
+        }
+        if (status) status.textContent = '/ ' + slides.length;
+        if (prev) prev.disabled = index <= 0;
+        if (next) next.disabled = index >= slides.length - 1;
+      }
+
+      prev?.addEventListener('click', () => renderGallery(index - 1));
+      next?.addEventListener('click', () => renderGallery(index + 1));
+      goto?.addEventListener('change', () => renderGallery(Number(goto.value || 1) - 1));
+      goto?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') renderGallery(Number(goto.value || 1) - 1);
+      });
+      thumbs.forEach((thumb, i) => thumb.addEventListener('click', () => renderGallery(i)));
+      gallery.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); renderGallery(index - 1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); renderGallery(index + 1); }
+        if (e.key === 'Home') { e.preventDefault(); renderGallery(0); }
+        if (e.key === 'End') { e.preventDefault(); renderGallery(slides.length - 1); }
+      });
+      renderGallery(0);
+    });
+  </script>
+</body>
+</html>

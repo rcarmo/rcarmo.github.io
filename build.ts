@@ -8,8 +8,8 @@
  *
  * Usage: bun run build.ts
  */
-import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, copyFileSync } from "node:fs";
-import { join, basename } from "node:path";
+import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, rmSync } from "node:fs";
+import { join } from "node:path";
 
 // ── Paths ────────────────────────────────────────────────────────────────────
 const ROOT    = import.meta.dir;
@@ -305,11 +305,14 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
           </figure>`).join("")}
         </div>
         <div class="hero-gallery-meta">
-          <div class="hero-gallery-nav">
-            <button type="button" class="hero-gallery-btn" data-gallery-prev aria-label="Previous image">◀</button>
-            <input class="hero-gallery-goto" data-gallery-goto type="number" min="1" value="1" title="Jump to image">
-            <span class="hero-gallery-status" data-gallery-status>/ ${gallery.length}</span>
-            <button type="button" class="hero-gallery-btn" data-gallery-next aria-label="Next image">▶</button>
+          <div class="hero-gallery-nav-row">
+            <div class="hero-gallery-nav">
+              <button type="button" class="hero-gallery-btn" data-gallery-prev aria-label="Previous image">◀</button>
+              <input class="hero-gallery-goto" data-gallery-goto type="number" min="1" value="1" title="Jump to image">
+              <span class="hero-gallery-status" data-gallery-status>/ ${gallery.length}</span>
+              <button type="button" class="hero-gallery-btn" data-gallery-next aria-label="Next image">▶</button>
+            </div>
+            <div class="hero-gallery-hint">←/→ keyboard navigation</div>
           </div>
           <div class="hero-gallery-caption">
             ${gallery.map((item, index) => `
@@ -317,6 +320,12 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
               <div class="hero-gallery-caption-title">${esc(item.title)}</div>
               ${item.caption ? `<div class="hero-gallery-caption-body">${esc(item.caption)}</div>` : ""}
             </div>`).join("")}
+          </div>
+          <div class="hero-gallery-thumbs" role="tablist" aria-label="Gallery thumbnails">
+            ${gallery.map((item, index) => `
+            <button type="button" class="hero-gallery-thumb${index === 0 ? ' is-active' : ''}" data-gallery-thumb aria-label="Show image ${index + 1}: ${esc(item.title)}">
+              <img src="/${esc(item.src)}" alt="" loading="lazy">
+            </button>`).join("")}
           </div>
         </div>
       </div>
@@ -349,7 +358,7 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
 <link rel="stylesheet" href="/assets/css/style.css">
 <link id="dynamic-favicon" rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/favicon.png">
-<link rel="canonical" href="https://rcarmo.github.io/projects/${id}.html">
+<link rel="canonical" href="https://rcarmo.github.io/projects/${id}/">
 </head>
 <body>
   <nav class="topnav">
@@ -470,6 +479,7 @@ ${posts.length ? `      <section class="sec" id="s-posts">
       const next = gallery.querySelector('[data-gallery-next]');
       const goto = gallery.querySelector('[data-gallery-goto]');
       const status = gallery.querySelector('[data-gallery-status]');
+      const thumbs = [...gallery.querySelectorAll('[data-gallery-thumb]')];
       let index = 0;
 
       function renderGallery(nextIndex) {
@@ -478,6 +488,10 @@ ${posts.length ? `      <section class="sec" id="s-posts">
           slide.classList.toggle('is-active', i === index);
         });
         captions.forEach((caption, i) => caption.classList.toggle('is-active', i === index));
+        thumbs.forEach((thumb, i) => {
+          thumb.classList.toggle('is-active', i === index);
+          thumb.setAttribute('aria-pressed', i === index ? 'true' : 'false');
+        });
         if (goto) {
           goto.value = String(index + 1);
           goto.max = String(slides.length);
@@ -493,9 +507,12 @@ ${posts.length ? `      <section class="sec" id="s-posts">
       goto?.addEventListener('keydown', (e) => {
         if (e.key === 'Enter') renderGallery(Number(goto.value || 1) - 1);
       });
+      thumbs.forEach((thumb, i) => thumb.addEventListener('click', () => renderGallery(i)));
       gallery.addEventListener('keydown', (e) => {
         if (e.key === 'ArrowLeft') { e.preventDefault(); renderGallery(index - 1); }
         if (e.key === 'ArrowRight') { e.preventDefault(); renderGallery(index + 1); }
+        if (e.key === 'Home') { e.preventDefault(); renderGallery(0); }
+        if (e.key === 'End') { e.preventDefault(); renderGallery(slides.length - 1); }
       });
       renderGallery(0);
     });
@@ -547,7 +564,7 @@ function buildIndex(projects: Project[]): string {
       const fullName = p.fm.repo || `rcarmo/${p.id}`;
       const logoHtml = `<div class="card-logo card-logo-lg"><img src="${logo}" alt="" loading="lazy"></div>`;
       return `
-        <a href="/projects/${p.id}.html" class="card card-featured" data-repo="${esc(fullName)}">
+        <a href="/projects/${p.id}/" class="card card-featured" data-repo="${esc(fullName)}">
           ${logoHtml}
           <div class="card-body card-body-featured">
             <div class="card-kicker">Featured project</div>
@@ -571,7 +588,7 @@ function buildIndex(projects: Project[]): string {
       const fullName = p.fm.repo || `rcarmo/${p.id}`;
       const logoHtml = `<div class="card-logo"><img src="${logo}" alt="" loading="lazy"></div>`;
       return `
-        <a href="/projects/${p.id}.html" class="card" data-repo="${esc(fullName)}">
+        <a href="/projects/${p.id}/" class="card" data-repo="${esc(fullName)}">
           ${logoHtml}
           <div class="card-body">
             <div class="card-name">${esc(p.id)}</div>
@@ -652,10 +669,14 @@ console.log(`Read ${projects.length} projects from _content/`);
 if (RANDOM_FALLBACK_PROJECT_ID) console.log(`Random fallback icon: ${RANDOM_FALLBACK_PROJECT_ID}`);
 
 // Build project pages
+rmSync(OUT, { recursive: true, force: true });
+mkdirSync(OUT, { recursive: true });
 let built = 0;
 for (const p of projects) {
   const html = buildProjectPage(p, projects);
-  writeFileSync(join(OUT, `${p.id}.html`), html);
+  const projectDir = join(OUT, p.id);
+  mkdirSync(projectDir, { recursive: true });
+  writeFileSync(join(projectDir, "index.html"), html);
   console.log(`  ✓ ${p.id}`);
   built++;
 }
