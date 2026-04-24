@@ -604,6 +604,347 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     return board;
   }
 
+  const biomeProfiles = {
+    grove:    { ground:'#789a5f', meadow:'#88ad67', dirt:'#8c7c58', scrub:'#8d9063', rock:'#77736b', grassColor:'#7fb35c', accent:'#5f8f46', grassDensity:0.72, shrubDensity:0.18 },
+    orchard:  { ground:'#8aa46c', meadow:'#93b26f', dirt:'#8d7b5a', scrub:'#9a955a', rock:'#7b766f', grassColor:'#8cbb69', accent:'#6f944d', grassDensity:0.66, shrubDensity:0.12 },
+    windbreak:{ ground:'#75967b', meadow:'#83a98b', dirt:'#7a725d', scrub:'#798f79', rock:'#6e7474', grassColor:'#76ad86', accent:'#53785d', grassDensity:0.58, shrubDensity:0.16 },
+    scrub:    { ground:'#9f9668', meadow:'#aa9f70', dirt:'#9b805f', scrub:'#9a8759', rock:'#81776c', grassColor:'#b5ad75', accent:'#887d47', grassDensity:0.42, shrubDensity:0.20 },
+    hedge:    { ground:'#6f9a73', meadow:'#84ab7f', dirt:'#87765e', scrub:'#80936f', rock:'#76766d', grassColor:'#7db47d', accent:'#5d8658', grassDensity:0.64, shrubDensity:0.22 },
+    avenue:   { ground:'#8a9b6b', meadow:'#95ad72', dirt:'#8b7b5d', scrub:'#8d9264', rock:'#7a746c', grassColor:'#90b970', accent:'#748f57', grassDensity:0.55, shrubDensity:0.10 },
+    garden:   { ground:'#83a173', meadow:'#92b080', dirt:'#917761', scrub:'#8d9773', rock:'#7f7774', grassColor:'#93c081', accent:'#7c9f65', grassDensity:0.70, shrubDensity:0.26 },
+    pine:     { ground:'#6b8759', meadow:'#7e9763', dirt:'#716853', scrub:'#6f7b59', rock:'#6b6b68', grassColor:'#78a05f', accent:'#4a7044', grassDensity:0.46, shrubDensity:0.12 },
+  };
+  const footPathRoutes = [];
+
+  function hexColor(hex){ return BABYLON.Color3.FromHexString(hex); }
+  function segDist2(x,z,ax,az,bx,bz){
+    const abx = bx-ax, abz = bz-az;
+    const apx = x-ax, apz = z-az;
+    const denom = abx*abx + abz*abz || 1;
+    const t = clamp((apx*abx + apz*abz)/denom, 0, 1);
+    const dx = ax + abx*t - x, dz = az + abz*t - z;
+    return dx*dx + dz*dz;
+  }
+  function nearestPolylineDist(x,z, poly){
+    let best = Infinity;
+    for(let i=0;i<poly.length-1;i++){
+      const a = poly[i], b = poly[i+1];
+      best = Math.min(best, segDist2(x,z,a.x,a.z,b.x,b.z));
+    }
+    return Math.sqrt(best);
+  }
+  function nearestFootpathDist(x,z){
+    let best = Infinity;
+    for(const route of footPathRoutes) best = Math.min(best, nearestPolylineDist(x,z, route));
+    return best;
+  }
+  function sampleSlope(x,z){
+    const hL = terrainHeight(x-1.2,z), hR = terrainHeight(x+1.2,z), hD = terrainHeight(x,z-1.2), hU = terrainHeight(x,z+1.2);
+    const nx = hL - hR, nz = hD - hU;
+    return clamp(Math.sqrt(nx*nx + nz*nz) / 3.2, 0, 1);
+  }
+  function sampleBiomeField(x,z){
+    let total = 0;
+    const weighted = clusterAnchors.map(cluster => {
+      const dx = x - cluster.anchor.x, dz = z - cluster.anchor.z;
+      const d2 = dx*dx + dz*dz;
+      const w = 1 / Math.pow(Math.max(18, Math.sqrt(d2)), 1.35);
+      total += w;
+      return { cluster, w };
+    });
+    weighted.sort((a,b)=>b.w-a.w);
+    const top = weighted[0]?.cluster || clusterAnchors[0];
+    return {
+      dominant: top,
+      weights: weighted,
+      influence: weighted.slice(0,3).map(entry => ({ cluster: entry.cluster, weight: total ? entry.w/total : 0 }))
+    };
+  }
+  function createPathTexture(name, base, fleck, stripe){
+    const dt = new BABYLON.DynamicTexture(name, { width:1024, height:1024 }, scene, false);
+    const ctx = dt.getContext();
+    ctx.fillStyle = base; ctx.fillRect(0,0,1024,1024);
+    for(let i=0;i<2400;i++){
+      const x = (i*73)%1024, y = (i*151)%1024, r = 1 + (i%3);
+      ctx.fillStyle = i%7===0 ? stripe : fleck;
+      ctx.beginPath(); ctx.arc(x,y,r,0,Math.PI*2); ctx.fill();
+    }
+    for(let y=0;y<1024;y+=64){
+      ctx.fillStyle = 'rgba(255,255,255,0.02)';
+      ctx.fillRect(0,y,1024,10);
+    }
+    dt.update(false);
+    return dt;
+  }
+  function createGrassTexture(name, blade, shadow){
+    const dt = new BABYLON.DynamicTexture(name, { width:256, height:256 }, scene, false);
+    const ctx = dt.getContext();
+    ctx.clearRect(0,0,256,256);
+    for(let i=0;i<56;i++){
+      const x = 16 + ((i*37)%220);
+      const h = 70 + (i%6)*18;
+      const lean = ((i%7)-3)*4;
+      ctx.strokeStyle = shadow;
+      ctx.lineWidth = 5 - (i%3);
+      ctx.beginPath();
+      ctx.moveTo(x, 244);
+      ctx.quadraticCurveTo(x+lean*0.4, 196, x+lean, 244-h);
+      ctx.stroke();
+      ctx.strokeStyle = blade;
+      ctx.lineWidth = 3 - (i%2)*0.4;
+      ctx.beginPath();
+      ctx.moveTo(x, 244);
+      ctx.quadraticCurveTo(x+lean*0.5, 200, x+lean*1.1, 244-h);
+      ctx.stroke();
+    }
+    dt.hasAlpha = true;
+    dt.update(false);
+    return dt;
+  }
+  function buildPathRibbon(points, width, name, material){
+    const left = [], right = [];
+    for(let i=0;i<points.length;i++){
+      const prev = points[Math.max(0,i-1)], next = points[Math.min(points.length-1,i+1)];
+      const tangent = next.subtract(prev).normalize();
+      const normal = new BABYLON.Vector3(-tangent.z, 0, tangent.x);
+      left.push(new BABYLON.Vector3(points[i].x + normal.x*width, points[i].y, points[i].z + normal.z*width));
+      right.push(new BABYLON.Vector3(points[i].x - normal.x*width, points[i].y, points[i].z - normal.z*width));
+    }
+    const ribbon = BABYLON.MeshBuilder.CreateRibbon(name, { pathArray:[left,right], sideOrientation:BABYLON.Mesh.DOUBLESIDE }, scene);
+    ribbon.material = material;
+    ribbon.receiveShadows = true;
+    return ribbon;
+  }
+  function createFootpaths(){
+    const pathTex = createPathTexture('footPathTex', '#7d6a52', 'rgba(74,58,41,0.12)', 'rgba(233,220,189,0.05)');
+    const edgeTex = createPathTexture('footPathEdgeTex', '#9e8d6b', 'rgba(84,72,55,0.08)', 'rgba(255,255,255,0.03)');
+    const pathMat = new BABYLON.StandardMaterial('footPathMat', scene);
+    pathMat.diffuseTexture = pathTex;
+    pathMat.specularColor = new BABYLON.Color3(0.05,0.04,0.03);
+    pathMat.bumpTexture = edgeTex;
+    pathMat.bumpTexture.level = 0.18;
+    const edgeMat = new BABYLON.StandardMaterial('footPathEdgeMat', scene);
+    edgeMat.diffuseTexture = edgeTex;
+    edgeMat.specularColor = BABYLON.Color3.Black();
+
+    for(let i=0;i<clusterAnchors.length-1;i++){
+      const a = clusterAnchors[i], b = clusterAnchors[i+1];
+      const start = a.anchor.clone(), end = b.anchor.clone();
+      const dir = end.subtract(start);
+      const len = Math.sqrt(dir.x*dir.x + dir.z*dir.z) || 1;
+      const side = new BABYLON.Vector3(-dir.z/len, 0, dir.x/len);
+      const m1 = BABYLON.Vector3.Lerp(start, end, 0.28).add(side.scale((fbm(start.x*0.01, end.z*0.01)-0.5)*18));
+      const m2 = BABYLON.Vector3.Lerp(start, end, 0.72).add(side.scale((fbm(end.x*0.01, start.z*0.01)-0.5)*-18));
+      [m1,m2].forEach(p => p.y = terrainHeight(p.x,p.z) + 0.08);
+      const sampled = BABYLON.Curve3.CreateCatmullRomSpline([start,m1,m2,end], 40).getPoints().map(p => new BABYLON.Vector3(p.x, terrainHeight(p.x,p.z)+0.08, p.z));
+      footPathRoutes.push(sampled);
+      buildPathRibbon(sampled, 2.0, 'footPathEdge', edgeMat);
+      buildPathRibbon(sampled, 1.25, 'footPath', pathMat);
+      for(let j=4;j<sampled.length-4;j+=9){
+        const p = sampled[j];
+        const pebble = BABYLON.MeshBuilder.CreateSphere('pebble', { diameter:0.14 + (j%3)*0.05, segments:4 }, scene);
+        pebble.position.set(p.x + Math.sin(j)*0.9, terrainHeight(p.x,p.z)+0.03, p.z + Math.cos(j*1.7)*0.9);
+        const pebbleMat = new BABYLON.StandardMaterial('pebbleMat', scene);
+        pebbleMat.diffuseColor = new BABYLON.Color3(0.58,0.55,0.50);
+        pebbleMat.specularColor = BABYLON.Color3.Black();
+        pebble.material = pebbleMat;
+      }
+    }
+  }
+  function createTerrainLook(){
+    const surface = new BABYLON.DynamicTexture('terrainSurface', { width:1024, height:512 }, scene, false);
+    const mask = new BABYLON.DynamicTexture('terrainMask', { width:1024, height:512 }, scene, false);
+    const detail = new BABYLON.DynamicTexture('terrainDetail', { width:512, height:512 }, scene, false);
+    const sctx = surface.getContext();
+    const mctx = mask.getContext();
+    const dctx = detail.getContext();
+    const width = 1024, height = 512;
+    const img = sctx.createImageData(width, height);
+    const maskImg = mctx.createImageData(width, height);
+    for(let py=0;py<height;py++){
+      for(let px=0;px<width;px++){
+        const wx = (px/(width-1))*980 - 490;
+        const wz = (py/(height-1))*360 - 180;
+        const h = terrainHeight(wx,wz);
+        const slope = sampleSlope(wx,wz);
+        const pathD = footPathRoutes.length ? nearestFootpathDist(wx,wz) : 999;
+        const roadD = nearestRoadDist(wx,wz);
+        const biome = sampleBiomeField(wx,wz);
+        let base = new BABYLON.Color3(0.62,0.71,0.49);
+        let meadowBoost = 0, shrubBoost = 0;
+        biome.influence.forEach(({cluster, weight}) => {
+          const profile = biomeProfiles[(clusterPalette[cluster.id]||{}).foliage || 'grove'] || biomeProfiles.grove;
+          base = mixColor(base, hexColor(profile.ground), weight*1.15);
+          meadowBoost += profile.grassDensity * weight;
+          shrubBoost += profile.shrubDensity * weight;
+        });
+        const dry = valueNoise(wx*0.022 + 31, wz*0.022 - 17);
+        const lush = clamp((1-slope)*1.15,0,1) * clamp(1 - Math.max(0,h-8)/20, 0.4, 1);
+        const rock = clamp((slope-0.22)/0.48,0,1) * (0.65 + clamp((h-4)/18,0,1)*0.5);
+        const pathMask = clamp(1 - pathD/3.8, 0, 1);
+        const roadMask = clamp(1 - roadD/5.2, 0, 1) * 0.75;
+        const dirtMask = clamp(pathMask + roadMask + clamp((dry-0.78)/0.22,0,1)*0.3, 0, 1);
+        let col = mixColor(base, hexColor('#8dae69'), lush*0.28 + meadowBoost*0.08);
+        col = mixColor(col, hexColor('#7d735c'), rock);
+        col = mixColor(col, hexColor('#8d7659'), dirtMask*0.85);
+        col = mixColor(col, hexColor('#b3aa79'), clamp((dry-0.62)/0.38,0,1)*0.35);
+        const idx = (py*width + px) * 4;
+        img.data[idx] = Math.round(clamp(col.r,0,1)*255);
+        img.data[idx+1] = Math.round(clamp(col.g,0,1)*255);
+        img.data[idx+2] = Math.round(clamp(col.b,0,1)*255);
+        img.data[idx+3] = 255;
+        maskImg.data[idx] = Math.round(pathMask*255);
+        maskImg.data[idx+1] = Math.round(rock*255);
+        maskImg.data[idx+2] = Math.round(clamp(lush*0.75 + meadowBoost*0.25 - dirtMask*0.3,0,1)*255);
+        maskImg.data[idx+3] = 255;
+      }
+    }
+    sctx.putImageData(img, 0, 0);
+    mctx.putImageData(maskImg, 0, 0);
+    for(let y=0;y<512;y++){
+      for(let x=0;x<512;x++){
+        const n1 = valueNoise(x*0.045,y*0.045);
+        const n2 = fbm(x*0.012,y*0.012);
+        const g = Math.floor((0.36 + n1*0.34 + n2*0.22) * 255);
+        dctx.fillStyle = `rgb(${g},${g-8},${g-12})`;
+        dctx.fillRect(x,y,1,1);
+      }
+    }
+    surface.update(false); mask.update(false); detail.update(false);
+    surface.wrapU = surface.wrapV = BABYLON.Texture.CLAMP_ADDRESSMODE;
+    mask.wrapU = mask.wrapV = BABYLON.Texture.CLAMP_ADDRESSMODE;
+    detail.wrapU = detail.wrapV = BABYLON.Texture.WRAP_ADDRESSMODE;
+
+    BABYLON.Effect.ShadersStore.terrainVertexShader = `
+      precision highp float;
+      attribute vec3 position;
+      attribute vec3 normal;
+      attribute vec2 uv;
+      uniform mat4 worldViewProjection;
+      uniform mat4 world;
+      varying vec3 vPos;
+      varying vec3 vNormal;
+      varying vec2 vUV;
+      void main(void){
+        vec4 wp = world * vec4(position, 1.0);
+        vPos = wp.xyz;
+        vNormal = normalize((world * vec4(normal, 0.0)).xyz);
+        vUV = uv;
+        gl_Position = worldViewProjection * vec4(position, 1.0);
+      }
+    `;
+    BABYLON.Effect.ShadersStore.terrainFragmentShader = `
+      precision highp float;
+      varying vec3 vPos;
+      varying vec3 vNormal;
+      varying vec2 vUV;
+      uniform sampler2D surfaceMap;
+      uniform sampler2D maskMap;
+      uniform sampler2D detailMap;
+      uniform vec3 sunDir;
+      uniform vec3 fogColor;
+      uniform vec3 cameraPosition;
+      void main(void){
+        vec3 base = texture2D(surfaceMap, vUV).rgb;
+        vec3 masks = texture2D(maskMap, vUV).rgb;
+        vec3 detail = texture2D(detailMap, vUV * vec2(9.0, 3.5)).rgb * 2.0 - 1.0;
+        vec3 n = normalize(vNormal + vec3(detail.r * 0.28 * (1.0-masks.g), 0.18 * (masks.b - masks.r), detail.g * 0.28 * (1.0-masks.g)));
+        vec3 L = normalize(-sunDir);
+        vec3 V = normalize(cameraPosition - vPos);
+        float sun = max(dot(n, L), 0.0);
+        float hemi = 0.45 + 0.55 * clamp(n.y * 0.5 + 0.5, 0.0, 1.0);
+        float rim = pow(1.0 - max(dot(n, V), 0.0), 2.5);
+        base *= 0.94 + detail.b * 0.06;
+        base = mix(base, base * 0.88, masks.g * 0.35);
+        base = mix(base, base * 1.06, masks.b * 0.18);
+        vec3 color = base * (0.22 + sun * 0.95 + hemi * 0.58);
+        color += vec3(0.05, 0.07, 0.09) * rim * 0.18;
+        color += vec3(0.08, 0.06, 0.04) * masks.r * 0.08;
+        float dist = distance(cameraPosition, vPos);
+        float fog = 1.0 - exp(-dist * 0.0022);
+        color = mix(color, fogColor, clamp(fog, 0.0, 0.92));
+        gl_FragColor = vec4(color, 1.0);
+      }
+    `;
+    const shader = new BABYLON.ShaderMaterial('terrainShader', scene, { vertex:'terrain', fragment:'terrain' }, {
+      attributes:['position','normal','uv'],
+      uniforms:['worldViewProjection','world','sunDir','fogColor','cameraPosition'],
+      samplers:['surfaceMap','maskMap','detailMap']
+    });
+    shader.setTexture('surfaceMap', surface);
+    shader.setTexture('maskMap', mask);
+    shader.setTexture('detailMap', detail);
+    shader.setVector3('sunDir', sun.direction);
+    shader.setColor3('fogColor', scene.fogColor);
+    shader.setVector3('cameraPosition', camera.position);
+    terrain.material = shader;
+  }
+  function scatterEcology(){
+    const grassTexA = createGrassTexture('grassTexA', 'rgba(126,176,85,0.96)', 'rgba(54,88,38,0.28)');
+    const grassTexB = createGrassTexture('grassTexB', 'rgba(166,152,86,0.95)', 'rgba(92,76,41,0.25)');
+    function buildGrassBase(name, tex, tint){
+      const p1 = BABYLON.MeshBuilder.CreatePlane(name+'_a', { width:0.8, height:1.7 }, scene);
+      const p2 = p1.clone(name+'_b');
+      const p3 = p1.clone(name+'_c');
+      p1.position.y = p2.position.y = p3.position.y = 0.85;
+      p2.rotation.y = Math.PI/3;
+      p3.rotation.y = -Math.PI/3;
+      const merged = BABYLON.Mesh.MergeMeshes([p1,p2,p3], true, true, undefined, false, true);
+      const mat = new BABYLON.StandardMaterial(name+'Mat', scene);
+      mat.diffuseTexture = tex;
+      mat.opacityTexture = tex;
+      mat.useAlphaFromDiffuseTexture = true;
+      mat.backFaceCulling = false;
+      mat.specularColor = BABYLON.Color3.Black();
+      mat.emissiveColor = tint.scale(0.06);
+      merged.material = mat;
+      merged.isVisible = false;
+      return merged;
+    }
+    const lushGrass = buildGrassBase('lushGrass', grassTexA, new BABYLON.Color3(0.45,0.62,0.31));
+    const dryGrass = buildGrassBase('dryGrass', grassTexB, new BABYLON.Color3(0.62,0.56,0.28));
+    const flowers = buildGrassBase('flowerGrass', grassTexA, new BABYLON.Color3(0.56,0.48,0.74));
+    for(let x=-480;x<=480;x+=4.6){
+      for(let z=-170;z<=170;z+=4.6){
+        const jitterX = (hash2(x*0.21,z*0.21)-0.5)*2.4;
+        const jitterZ = (hash2(z*0.17,x*0.17)-0.5)*2.4;
+        const px = x + jitterX, pz = z + jitterZ;
+        const pathD = footPathRoutes.length ? nearestFootpathDist(px,pz) : 999;
+        const roadD = nearestRoadDist(px,pz);
+        if(pathD < 1.9 || roadD < 8.5) continue;
+        const slope = sampleSlope(px,pz);
+        if(slope > 0.48) continue;
+        const biome = sampleBiomeField(px,pz);
+        const profile = biomeProfiles[(clusterPalette[biome.dominant?.id]||{}).foliage || 'grove'] || biomeProfiles.grove;
+        const density = profile.grassDensity * clamp(1 - slope*1.35, 0, 1) * clamp(pathD/7, 0.15, 1);
+        const rnd = hash2(px*0.19 + 9, pz*0.19 - 4);
+        const y = terrainHeight(px,pz);
+        if(rnd < density * 0.18){
+          const scale = 0.55 + hash2(px*0.31,pz*0.31)*0.7;
+          const base = profile.grassDensity > 0.58 ? lushGrass : dryGrass;
+          const inst = base.createInstance('grassInst');
+          inst.position.set(px, y, pz);
+          inst.scaling.set(scale, scale*(1.0 + hash2(px*0.27,pz*0.27)*0.4), scale);
+          inst.rotation.y = hash2(px*0.11,pz*0.11) * Math.PI;
+        }
+        if(rnd > 0.93 && profile.shrubDensity > 0.15 && pathD > 3.5){
+          makeShrub(px,pz, 0.42 + hash2(px*0.41,pz*0.41)*0.34);
+        }
+        const foliageKind = (clusterPalette[biome.dominant?.id] || {}).foliage || 'grove';
+        if(rnd > 0.975 && foliageKind !== 'scrub' && foliageKind !== 'garden' && pathD > 5.5 && roadD > 14){
+          makeTree(px,pz, 0.7 + hash2(px*0.37,pz*0.37)*0.4, foliageKind === 'pine' ? 'pine' : (hash2(px*0.15,pz*0.15) > 0.65 ? 'pine' : 'round'));
+        }
+        if(rnd > 0.965 && hash2(px*0.07,pz*0.07) > 0.72 && pathD > 3.2){
+          const inst = flowers.createInstance('flowerInst');
+          const scale = 0.45 + hash2(px*0.24,pz*0.24)*0.35;
+          inst.position.set(px, y, pz);
+          inst.scaling.set(scale, scale*1.1, scale);
+          inst.rotation.y = hash2(px*0.09,pz*0.09) * Math.PI;
+        }
+      }
+    }
+  }
+
   sections.forEach((section, sectionIndex) => {
     const palette = clusterPalette[section.id] || { color:'#2563eb', tint:'#dce8ff', terrain:'#7aa0cf' };
     const color = palette.color;
@@ -654,6 +995,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     navBtn.addEventListener('click', () => focusCluster(section.id));
     navEl.appendChild(navBtn);
   });
+
+  createFootpaths();
+  createTerrainLook();
+  scatterEcology();
 
   let activeCluster = clusterAnchors[0]?.id || null;
   function setActiveNav(id){
@@ -733,6 +1078,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     camera.beta = BABYLON.Scalar.Lerp(camera.beta, targetBeta, 0.06);
     camera.radius = BABYLON.Scalar.Lerp(camera.radius, targetRadius, 0.055);
     camera.target = BABYLON.Vector3.Lerp(camera.target, targetVec, 0.07);
+    if(terrain.material && terrain.material.setVector3){
+      terrain.material.setVector3('cameraPosition', camera.position);
+      terrain.material.setVector3('sunDir', sun.direction);
+    }
   });
 
   focusCluster(clusterAnchors[0]?.id);
