@@ -337,25 +337,22 @@ code {
 }
 .hero-gallery-stage {
   position: relative;
-  min-height: 320px;
   overflow: hidden;
 }
 .hero-gallery-slide {
   display: none;
-  align-items: center;
-  justify-content: center;
-  min-height: 320px;
+  width: 100%;
   padding: 0;
 }
 .hero-gallery-slide.is-active {
-  display: flex;
+  display: block;
 }
 .hero-gallery-slide img {
+  display: block;
+  width: 100%;
   max-width: 100%;
-  max-height: min(68vh, 780px);
-  width: auto;
   height: auto;
-  object-fit: contain;
+  max-height: none;
   margin: 0 auto;
 }
 .hero-gallery-meta {
@@ -527,8 +524,6 @@ code {
   .hero-logo { width: 88px; height: 88px; }
   .hero h1 { font-size: 2.4rem; }
   .hero-media-band { padding-left: 1.25rem; padding-right: 1.25rem; }
-  .hero-gallery-stage, .hero-gallery-slide { min-height: 220px; }
-  .hero-gallery-slide img { max-height: 52vh; }
   .hero-gallery-nav-row { justify-content: center; }
   .hero-gallery-hint { width: 100%; text-align: center; }
   .hero-gallery-thumb { width: 72px; height: 52px; }
