@@ -3,1355 +3,544 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>rcarmo — signal nexus</title>
+<title>rcarmo — scenic mode</title>
 <style>
-*{margin:0;padding:0;box-sizing:border-box;}
-html,body{width:100%;height:100%;overflow:hidden;background:#010306;
-  font-family:'Inter',system-ui,sans-serif;-webkit-font-smoothing:antialiased;}
-#cv{width:100%;height:100%;display:block;cursor:grab;}
-#cv:active{cursor:grabbing;}
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#d8ebff;
+  --ink:#10233a;
+  --ink-dim:rgba(16,35,58,.68);
+  --panel:rgba(255,255,255,.78);
+  --panel-strong:rgba(255,255,255,.92);
+  --border:rgba(27,78,130,.14);
+  --blue:#2563eb;
+  --blue-soft:rgba(37,99,235,.12);
+  --shadow:0 18px 48px rgba(17,37,56,.12);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe6ff,#eef7ff);font-family:Inter,system-ui,-apple-system,sans-serif;color:var(--ink)}
+#cv{width:100%;height:100%;display:block}
 
-/* ── Topbar ── */
-#topbar{position:fixed;top:0;left:0;right:0;z-index:300;display:flex;
-  align-items:center;justify-content:space-between;padding:.7rem 1.5rem;
-  background:linear-gradient(to bottom,rgba(1,3,6,.9) 0%,transparent 100%);
-  pointer-events:none;}
-#topbar a{pointer-events:auto;color:rgba(180,210,255,.5);font-size:.7rem;
-  font-family:ui-monospace,monospace;letter-spacing:.1em;text-transform:uppercase;
-  text-decoration:none;transition:color .15s;}
-#topbar a:hover{color:rgba(180,210,255,.9);}
-#topbar .right{display:flex;gap:1.6rem;}
-#topbar .title{font-weight:600;color:rgba(180,210,255,.7);letter-spacing:.06em;}
+#hud-top{
+  position:fixed;inset:0 0 auto 0;z-index:30;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.25rem;pointer-events:none;
+}
+#brand,
+#top-actions a,
+#cluster-nav,
+#focus-panel,
+#loading,
+#hint{pointer-events:auto}
+#brand{
+  display:flex;align-items:center;gap:.8rem;
+  padding:.7rem .95rem;border:1px solid var(--border);border-radius:18px;
+  background:var(--panel);backdrop-filter:blur(14px);box-shadow:var(--shadow)
+}
+#brand .dot{width:.7rem;height:.7rem;border-radius:50%;background:linear-gradient(135deg,#5fb2ff,#2563eb);box-shadow:0 0 0 6px rgba(37,99,235,.08)}
+#brand .title{font-weight:800;letter-spacing:-.03em;font-size:.96rem}
+#brand .sub{font-size:.72rem;color:var(--ink-dim)}
+#top-actions{display:flex;gap:.55rem}
+#top-actions a{
+  display:inline-flex;align-items:center;gap:.35rem;padding:.65rem .9rem;border-radius:16px;
+  text-decoration:none;font-size:.78rem;font-weight:700;color:var(--ink);
+  border:1px solid var(--border);background:var(--panel);backdrop-filter:blur(14px);box-shadow:var(--shadow)
+}
+#top-actions a:hover{background:var(--panel-strong)}
 
-/* ── Nav ── */
-#clusternav{position:fixed;bottom:1.5rem;left:50%;transform:translateX(-50%);
-  z-index:300;display:flex;gap:.3rem;flex-wrap:wrap;justify-content:center;
-  padding:.45rem .7rem;
-  background:rgba(1,3,6,.75);backdrop-filter:blur(24px);-webkit-backdrop-filter:blur(24px);
-  border:1px solid rgba(80,120,220,.14);border-radius:2em;}
-.nav-btn{background:transparent;border:none;
-  color:rgba(120,160,255,.5);font-size:.65rem;letter-spacing:.1em;
-  font-family:ui-monospace,monospace;padding:.28rem .75rem;border-radius:1.5em;
-  cursor:pointer;transition:all .18s;text-transform:uppercase;}
-.nav-btn:hover{color:rgba(160,200,255,.8);background:rgba(60,90,200,.12);}
-.nav-btn.active{color:#a8c8ff;background:rgba(60,90,200,.22);
-  box-shadow:0 0 12px rgba(80,120,255,.2);}
+#cluster-nav{
+  position:fixed;left:50%;bottom:1.15rem;transform:translateX(-50%);z-index:30;
+  display:flex;gap:.45rem;flex-wrap:wrap;justify-content:center;
+  max-width:min(96vw,1200px);padding:.55rem .7rem;
+  border:1px solid var(--border);border-radius:22px;
+  background:rgba(255,255,255,.8);backdrop-filter:blur(14px);box-shadow:var(--shadow)
+}
+.nav-btn{
+  appearance:none;border:none;background:transparent;color:var(--ink-dim);
+  font:700 .72rem/1 Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;
+  padding:.55rem .82rem;border-radius:14px;cursor:pointer;transition:.18s ease all
+}
+.nav-btn:hover{background:var(--blue-soft);color:var(--ink)}
+.nav-btn.active{background:var(--blue);color:#fff;box-shadow:0 10px 24px rgba(37,99,235,.25)}
 
-/* ── Hint ── */
-#hint{position:fixed;bottom:4.2rem;left:50%;transform:translateX(-50%);
-  color:rgba(80,110,180,.35);font-size:.6rem;letter-spacing:.1em;
-  font-family:ui-monospace,monospace;pointer-events:none;text-transform:uppercase;}
+#hint{
+  position:fixed;right:1.2rem;bottom:5.4rem;z-index:30;
+  padding:.5rem .75rem;border-radius:14px;border:1px solid var(--border);
+  background:rgba(255,255,255,.72);backdrop-filter:blur(12px);
+  font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-dim)
+}
 
-/* ── Focus panel ── */
-#focus-panel{position:fixed;bottom:0;left:50%;transform:translate(-50%,110%);
-  width:min(460px,90vw);z-index:400;
-  background:rgba(2,5,14,.95);backdrop-filter:blur(28px);
-  border:1px solid rgba(80,120,255,.2);border-top:2px solid rgba(80,120,255,.4);
-  border-radius:.85rem .85rem 0 0;padding:1.4rem 1.6rem 2rem;
-  transition:transform .4s cubic-bezier(.16,1,.3,1);pointer-events:none;}
-#focus-panel.open{transform:translate(-50%,0);pointer-events:auto;}
-#focus-close{position:absolute;top:.85rem;right:1rem;background:none;
-  border:1px solid rgba(80,120,255,.2);color:rgba(100,140,255,.45);
-  font-size:.75rem;border-radius:.4rem;padding:.18rem .5rem;cursor:pointer;transition:all .15s;}
-#focus-close:hover{color:#a8c4ff;border-color:rgba(120,160,255,.4);}
-#focus-accent{height:2px;width:32px;border-radius:1px;margin-bottom:.9rem;
-  background:currentColor;}
-#focus-header{display:flex;align-items:flex-start;gap:.85rem;margin-bottom:.6rem;}
-#focus-logo{width:40px;height:40px;border-radius:8px;object-fit:contain;display:none;flex-shrink:0;}
-#focus-name{font-size:1rem;font-weight:700;color:#dce8ff;letter-spacing:-.01em;}
-#focus-stars{font-size:.68rem;color:#6888b0;margin-top:.18rem;font-family:ui-monospace,monospace;}
-#focus-desc{font-size:.82rem;color:#4a6888;line-height:1.68;margin-bottom:.95rem;}
-#focus-link{display:inline-flex;align-items:center;gap:.3rem;padding:.38rem .9rem;
-  background:rgba(40,80,200,.7);color:#c0d4ff;font-size:.78rem;font-weight:500;
-  border-radius:.5rem;text-decoration:none;border:1px solid rgba(80,120,255,.3);
-  transition:all .15s;}
-#focus-link:hover{background:rgba(60,100,220,.85);color:#e0ecff;}
+#loading{
+  position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);z-index:50;
+  padding:.85rem 1.1rem;border-radius:16px;border:1px solid var(--border);
+  background:var(--panel-strong);box-shadow:var(--shadow);font-size:.9rem;font-weight:700
+}
+#loading.hidden{display:none}
+
+#focus-panel{
+  position:fixed;right:1.25rem;top:5.2rem;z-index:40;
+  width:min(420px,calc(100vw - 2rem));
+  padding:1.1rem 1.15rem 1rem;
+  border:1px solid var(--border);border-radius:24px;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(18px);box-shadow:var(--shadow);
+  transform:translateY(12px);opacity:0;pointer-events:none;transition:.22s ease all
+}
+#focus-panel.open{transform:translateY(0);opacity:1;pointer-events:auto}
+#focus-close{
+  position:absolute;top:.8rem;right:.85rem;border:none;background:transparent;cursor:pointer;
+  color:var(--ink-dim);font-size:1rem;padding:.25rem .4rem;border-radius:10px
+}
+#focus-close:hover{background:rgba(0,0,0,.04);color:var(--ink)}
+#focus-kicker{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#2f6bc0;margin-bottom:.55rem}
+#focus-header{display:flex;gap:.8rem;align-items:flex-start;margin-bottom:.7rem;padding-right:2.2rem}
+#focus-logo{width:48px;height:48px;object-fit:contain;display:none;flex-shrink:0;border-radius:12px}
+#focus-name{font-size:1.18rem;line-height:1.05;font-weight:800;letter-spacing:-.03em}
+#focus-meta{font-size:.76rem;color:var(--ink-dim);margin-top:.25rem}
+#focus-desc{font-size:.92rem;line-height:1.6;color:#28425e;margin-bottom:.95rem}
+#focus-actions{display:flex;gap:.6rem;flex-wrap:wrap}
+#focus-link,#focus-jump{
+  display:inline-flex;align-items:center;justify-content:center;gap:.35rem;
+  min-height:2.5rem;padding:0 .95rem;border-radius:14px;border:1px solid var(--border);
+  text-decoration:none;font-size:.82rem;font-weight:800
+}
+#focus-link{background:var(--blue);color:#fff;border-color:transparent}
+#focus-jump{background:#fff;color:var(--ink)}
+#focus-link:hover{filter:brightness(1.05)}
+#focus-jump:hover{background:#f5f9ff}
+
+@media (max-width: 900px){
+  #hud-top{padding:.85rem .9rem;gap:.8rem;flex-direction:column;align-items:stretch}
+  #top-actions{justify-content:space-between}
+  #focus-panel{left:1rem;right:1rem;top:auto;bottom:6.4rem;width:auto}
+  #hint{display:none}
+}
 </style>
-<script src="https://cdn.babylonjs.com/babylon.js"></script>
+<script src="/assets/js/babylon.js"></script>
 </head>
 <body>
 <canvas id="cv"></canvas>
 
-<header id="topbar">
-  <span class="title">rcarmo.github.io</span>
-  <div class="right">
-    <a href="index.html">← list view</a>
-    <a href="https://taoofmac.com" target="_blank">taoofmac.com</a>
+<div id="loading">Loading scenic mode…</div>
+
+<div id="hud-top">
+  <div id="brand">
+    <div class="dot"></div>
+    <div>
+      <div class="title">rcarmo.github.io</div>
+      <div class="sub">scenic mode</div>
+    </div>
   </div>
-</header>
-
-<nav id="clusternav">
-  <button class="nav-btn active" data-cluster="overview">Overview</button>
-  <button class="nav-btn" data-cluster="highlight">Piclaw</button>
-  <button class="nav-btn" data-cluster="ai">Agents</button>
-  <button class="nav-btn" data-cluster="ml">ML</button>
-  <button class="nav-btn" data-cluster="hardware">Hardware</button>
-  <button class="nav-btn" data-cluster="terminal">Terminal</button>
-  <button class="nav-btn" data-cluster="macos">macOS</button>
-  <button class="nav-btn" data-cluster="infra">Infra</button>
-  <button class="nav-btn" data-cluster="libraries">Libraries</button>
-</nav>
-
-<div id="hint">drag · scroll · WASD · click a sign</div>
-
-<div id="focus-panel">
-  <button id="focus-close">✕</button>
-  <div id="focus-accent"></div>
-  <div id="focus-header">
-    <img id="focus-logo" src="" alt="">
-    <div><div id="focus-name"></div><div id="focus-stars"></div></div>
+  <div id="top-actions">
+    <a href="/">← list view</a>
+    <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com ↗</a>
   </div>
-  <div id="focus-desc"></div>
-  <a id="focus-link" href="#">Open project →</a>
 </div>
 
+<nav id="cluster-nav" aria-label="Project sections"></nav>
+<div id="hint">drag • wheel • click roadside signs</div>
+
+<aside id="focus-panel" aria-live="polite">
+  <button id="focus-close" type="button" aria-label="Close">✕</button>
+  <div id="focus-kicker">Project</div>
+  <div id="focus-header">
+    <img id="focus-logo" alt="">
+    <div>
+      <div id="focus-name"></div>
+      <div id="focus-meta"></div>
+    </div>
+  </div>
+  <div id="focus-desc"></div>
+  <div id="focus-actions">
+    <a id="focus-link" href="#">Open project →</a>
+    <button id="focus-jump" type="button">Jump cluster</button>
+  </div>
+</aside>
+
 <script>
-// ── Cluster data — loaded from alt-clusters.json ────────────────────────────
-let CLUSTERS, PATH_GRAPH, PATH_EDGES;
+(async function(){
+  const loading = document.getElementById('loading');
+  const navEl = document.getElementById('cluster-nav');
+  const panel = document.getElementById('focus-panel');
+  const focusLogo = document.getElementById('focus-logo');
+  const focusName = document.getElementById('focus-name');
+  const focusMeta = document.getElementById('focus-meta');
+  const focusDesc = document.getElementById('focus-desc');
+  const focusLink = document.getElementById('focus-link');
+  const focusJump = document.getElementById('focus-jump');
+  const focusClose = document.getElementById('focus-close');
 
-// ── Replace logo lookup: now uses URL path from JSON ────────────────────────
-function logoSrc(projId) {
-  for (const cl of Object.values(CLUSTERS||{})) {
-    if (cl.projects.some(p => p.id === projId)) return cl.logo || null;
+  const clusterPalette = {
+    'ai-agents':  { color:'#2d6dff', tint:'#dce8ff', terrain:'#6b8ec9' },
+    'ai-ml':      { color:'#7a4cff', tint:'#ece3ff', terrain:'#7f86b8' },
+    'cloud':      { color:'#1ba1e3', tint:'#dff5ff', terrain:'#6ea6bf' },
+    'hardware':   { color:'#d97706', tint:'#fff0d7', terrain:'#b8966f' },
+    'infrastructure': { color:'#0f9f7a', tint:'#ddfff6', terrain:'#75a18f' },
+    'libraries':  { color:'#a16207', tint:'#fff1d8', terrain:'#a79069' },
+    'macos':      { color:'#db2777', tint:'#ffe1f0', terrain:'#b38496' },
+    'terminal':   { color:'#1f7a50', tint:'#e0ffef', terrain:'#78a784' },
+    'featured':   { color:'#2563eb', tint:'#dce8ff', terrain:'#6b8ec9' }
+  };
+
+  function escHtml(s){return String(s||'').replace(/[&<>\"]/g, c=>({ '&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;' }[c]));}
+
+  async function loadProjects(){
+    const res = await fetch('/index.html', { cache: 'no-cache' });
+    const html = await res.text();
+    const doc = new DOMParser().parseFromString(html, 'text/html');
+    const sections = [...doc.querySelectorAll('.idx-section')].map((section, idx) => {
+      const id = section.id ? section.id.replace(/^section-/, '') : (idx === 0 ? 'featured' : `section-${idx}`);
+      const label = section.querySelector('.idx-section-title')?.textContent?.trim() || 'Projects';
+      const cards = [...section.querySelectorAll('.card')].map(card => ({
+        name: card.querySelector('.card-name')?.textContent?.trim() || 'project',
+        desc: card.querySelector('.card-tagline')?.textContent?.trim() || '',
+        url: card.getAttribute('href') || '#',
+        logo: card.querySelector('img')?.getAttribute('src') || '',
+        repo: card.getAttribute('data-repo') || ''
+      }));
+      return { id, label, projects: cards };
+    }).filter(section => section.projects.length);
+    return sections;
   }
-  return null;
-}
 
-// ── Camera views ─────────────────────────────────────────────────────────────
-const CAM_VIEWS = { overview: {target:[0,3,0], alpha:-Math.PI/2, beta:Math.PI*0.335, radius:95} };
+  const sections = await loadProjects();
+  loading.classList.add('hidden');
 
+  const canvas = document.getElementById('cv');
+  const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer:false, stencil:false, antialias:true });
+  const scene = new BABYLON.Scene(engine);
+  scene.clearColor = new BABYLON.Color4(0.84, 0.92, 1.0, 1);
+  scene.fogMode = BABYLON.Scene.FOGMODE_EXP2;
+  scene.fogDensity = 0.0019;
+  scene.fogColor = new BABYLON.Color3(0.83, 0.92, 1.0);
 
-// ── Babylon engine & scene ───────────────────────────────────────────────────
-const canvas = document.getElementById('cv');
-const engine = new BABYLON.Engine(canvas, true, {stencil:true, preserveDrawingBuffer:false});
-const scene  = new BABYLON.Scene(engine);
-scene.clearColor   = new BABYLON.Color4(0.006, 0.010, 0.018, 1.0);
-scene.ambientColor = new BABYLON.Color3(0.12, 0.15, 0.20);
+  const camera = new BABYLON.ArcRotateCamera('cam', -1.5, 1.18, 34, new BABYLON.Vector3(0, 5, 0), scene);
+  camera.attachControl(canvas, true);
+  camera.lowerRadiusLimit = 16;
+  camera.upperRadiusLimit = 62;
+  camera.lowerBetaLimit = 0.58;
+  camera.upperBetaLimit = 1.35;
+  camera.wheelPrecision = 26;
+  camera.panningSensibility = 0;
+  camera.inertia = 0.88;
 
-// Camera
-const camera = new BABYLON.ArcRotateCamera('cam', -Math.PI/2, Math.PI/3.4, 68, new BABYLON.Vector3(0,0,8), scene);
-camera.lowerRadiusLimit=4; camera.upperRadiusLimit=140;
-camera.lowerBetaLimit=0.08; camera.upperBetaLimit=Math.PI*0.46;
-camera.wheelPrecision=10; camera.attachControl(canvas, true);
-camera.fov = 1.1; // wider FOV to see all 9 clusters
+  const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.28, -1, -0.15), scene);
+  sun.position = new BABYLON.Vector3(80, 140, 20);
+  sun.intensity = 1.9;
+  const hemi = new BABYLON.HemisphericLight('hemi', new BABYLON.Vector3(0, 1, 0), scene);
+  hemi.intensity = 0.72;
+  hemi.groundColor = new BABYLON.Color3(0.38, 0.44, 0.36);
 
-// Lighting
-const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.4,-0.8,-0.3), scene);
-sun.intensity = 6.5;
-sun.diffuse   = new BABYLON.Color3(0.85, 0.90, 1.0);
+  const shadowGen = new BABYLON.ShadowGenerator(2048, sun);
+  shadowGen.usePercentageCloserFiltering = true;
+  shadowGen.filteringQuality = BABYLON.ShadowGenerator.QUALITY_MEDIUM;
 
-const fill = new BABYLON.HemisphericLight('fill', new BABYLON.Vector3(0,1,0), scene);
-fill.intensity   = 0.35;
-fill.diffuse     = new BABYLON.Color3(0.75, 0.80, 1.0);
-fill.groundColor = new BABYLON.Color3(0.01, 0.01, 0.02);
+  const sky = BABYLON.MeshBuilder.CreateSphere('sky', { diameter: 1200, sideOrientation: BABYLON.Mesh.BACKSIDE }, scene);
+  const skyMat = new BABYLON.StandardMaterial('skyMat', scene);
+  skyMat.disableLighting = true;
+  skyMat.emissiveColor = new BABYLON.Color3(0.84, 0.92, 1.0);
+  sky.material = skyMat;
 
-// Rim light from above-behind (blue-white sky fill)
-const rim = new BABYLON.DirectionalLight('rim', new BABYLON.Vector3(0.3, -0.4, 0.8), scene);
-rim.intensity = 1.2;
-rim.diffuse   = new BABYLON.Color3(0.6, 0.75, 0.95);
-const shadowGen = new BABYLON.ShadowGenerator(1024, sun);
-shadowGen.usePoissonSampling = true;
-shadowGen.bias = 0.002;
+  function fract(x){ return x - Math.floor(x); }
+  function hash2(x,z){ return fract(Math.sin(x*127.1 + z*311.7) * 43758.5453123); }
+  function lerp(a,b,t){ return a + (b-a)*t; }
+  function smoothstep(t){ return t*t*(3-2*t); }
+  function valueNoise(x,z){
+    const xi = Math.floor(x), zi = Math.floor(z);
+    const xf = x - xi, zf = z - zi;
+    const h00 = hash2(xi, zi), h10 = hash2(xi+1, zi), h01 = hash2(xi, zi+1), h11 = hash2(xi+1, zi+1);
+    const u = smoothstep(xf), v = smoothstep(zf);
+    return lerp(lerp(h00,h10,u), lerp(h01,h11,u), v);
+  }
+  function fbm(x,z){
+    let t=0, a=1, f=1, sum=0;
+    for(let i=0;i<5;i++){ t += valueNoise(x*f, z*f) * a; sum += a; a *= 0.5; f *= 2; }
+    return t/sum;
+  }
 
-// ── Material factory ─────────────────────────────────────────────────────────
-function hex3(h){const n=parseInt(h.replace('#',''),16);return new BABYLON.Color3((n>>16&255)/255,(n>>8&255)/255,(n&255)/255);}
-function mat(name,hexCol,opts={}){
-  const m=new BABYLON.StandardMaterial(name,scene);
-  const c=hex3(hexCol);
-  m.diffuseColor  = c.scale(opts.diff ?? 0.75);
-  m.specularColor = c.scale(opts.spec ?? 0.8);
-  m.emissiveColor = c.scale(opts.emis ?? 0.05);
-  m.specularPower = opts.power ?? 48;
-  return m;
-}
-function darkMat(name,hexCol){return mat(name,hexCol,{diff:0.25,spec:0.08,emis:0.02,power:8});}
-function glowMat(name,hexCol,str){return mat(name,hexCol,{diff:0.3,spec:0.1,emis:str??0.28,power:4});}
-// ── Procedural DynamicTexture factory ─────────────────────────────────────────
-// Returns a 128×128 tileable DynamicTexture for each cluster type.
-// Pattern is dark bg + accent colour traces — adds surface detail without noise.
-function clusterTex(kind, hexCol, size=128){
-  const dt=new BABYLON.DynamicTexture('dtex_'+kind,{width:size,height:size},scene,false);
-  const ctx=dt.getContext();
-  const n=parseInt(hexCol.replace('#',''),16);
-  const r=(n>>16)&255,g=(n>>8)&255,b=n&255;
-  const acc=`rgba(${r},${g},${b},`;
+  const roadCurve = [];
+  const roadLength = 780;
+  const roadStep = 8;
+  for(let i=0;i<=roadLength;i+=roadStep){
+    const x = i - roadLength*0.5;
+    const z = Math.sin(i*0.018)*18 + Math.sin(i*0.052)*4;
+    roadCurve.push(new BABYLON.Vector3(x, 0, z));
+  }
 
-  // Base fill — very dark, hinted with accent
-  ctx.fillStyle='rgba(2,3,5,1)'; // neutral dark — accent colour via material diffuse
-  ctx.fillRect(0,0,size,size);
-
-  if(kind==='circuit'||kind==='rack'){
-    // Circuit traces: horizontal + vertical lines with pads
-    ctx.strokeStyle=acc+'0.35)'; ctx.lineWidth=1.5;
-    for(let i=8;i<size;i+=16){
-      ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,size);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(size,i);ctx.stroke();
+  function nearestRoadDist(x,z){
+    let best = Infinity;
+    for(let i=0;i<roadCurve.length;i++){
+      const dx = x-roadCurve[i].x, dz = z-roadCurve[i].z;
+      const d = dx*dx + dz*dz;
+      if(d < best) best = d;
     }
-    ctx.fillStyle=acc+'0.5)';
-    for(let x=8;x<size;x+=16) for(let y=8;y<size;y+=16){
-      ctx.beginPath();ctx.arc(x,y,2.5,0,Math.PI*2);ctx.fill();
+    return Math.sqrt(best);
+  }
+  function terrainHeight(x,z){
+    const macro = (fbm(x*0.008, z*0.008)-0.5) * 26;
+    const micro = (fbm(x*0.028+12, z*0.028-7)-0.5) * 7;
+    const ridge = Math.sin(x*0.012) * 2.8 + Math.cos(z*0.014) * 2.2;
+    const d = nearestRoadDist(x,z);
+    const roadFlatten = Math.exp(-(d*d)/(16*16));
+    return (macro + micro + ridge) * (1 - roadFlatten*0.92) + 0.15;
+  }
+
+  const terrain = BABYLON.MeshBuilder.CreateGround('terrain', { width: 980, height: 360, subdivisions: 220 }, scene);
+  const terrainPositions = terrain.getVerticesData(BABYLON.VertexBuffer.PositionKind);
+  for(let i=0;i<terrainPositions.length;i+=3){
+    const x = terrainPositions[i], z = terrainPositions[i+2];
+    terrainPositions[i+1] = terrainHeight(x,z);
+  }
+  terrain.setVerticesData(BABYLON.VertexBuffer.PositionKind, terrainPositions, true);
+  terrain.convertToFlatShadedMesh();
+  const terrainMat = new BABYLON.StandardMaterial('terrainMat', scene);
+  terrainMat.diffuseColor = new BABYLON.Color3(0.56, 0.67, 0.47);
+  terrainMat.specularColor = new BABYLON.Color3(0.05, 0.05, 0.05);
+  terrain.material = terrainMat;
+  terrain.receiveShadows = true;
+
+  const roadLeft = [], roadRight = [];
+  const shoulderLeft = [], shoulderRight = [];
+  for(let i=0;i<roadCurve.length;i++){
+    const p = roadCurve[i];
+    const prev = roadCurve[Math.max(0, i-1)];
+    const next = roadCurve[Math.min(roadCurve.length-1, i+1)];
+    const tangent = next.subtract(prev).normalize();
+    const normal = new BABYLON.Vector3(-tangent.z, 0, tangent.x);
+    const roadY = terrainHeight(p.x, p.z) + 0.14;
+    roadLeft.push(new BABYLON.Vector3(p.x + normal.x*5.3, roadY, p.z + normal.z*5.3));
+    roadRight.push(new BABYLON.Vector3(p.x - normal.x*5.3, roadY, p.z - normal.z*5.3));
+    shoulderLeft.push(new BABYLON.Vector3(p.x + normal.x*6.6, roadY-0.02, p.z + normal.z*6.6));
+    shoulderRight.push(new BABYLON.Vector3(p.x - normal.x*6.6, roadY-0.02, p.z - normal.z*6.6));
+  }
+  const road = BABYLON.MeshBuilder.CreateRibbon('road', { pathArray:[roadLeft, roadRight], sideOrientation:BABYLON.Mesh.DOUBLESIDE, closeArray:false }, scene);
+  const roadMat = new BABYLON.StandardMaterial('roadMat', scene);
+  roadMat.diffuseColor = new BABYLON.Color3(0.20, 0.23, 0.27);
+  roadMat.specularColor = new BABYLON.Color3(0.14, 0.14, 0.14);
+  road.material = roadMat;
+  road.receiveShadows = true;
+
+  const shoulder = BABYLON.MeshBuilder.CreateRibbon('shoulder', { pathArray:[shoulderLeft, shoulderRight], sideOrientation:BABYLON.Mesh.DOUBLESIDE, closeArray:false }, scene);
+  const shoulderMat = new BABYLON.StandardMaterial('shoulderMat', scene);
+  shoulderMat.diffuseColor = new BABYLON.Color3(0.76, 0.72, 0.62);
+  shoulderMat.specularColor = new BABYLON.Color3(0.03, 0.03, 0.03);
+  shoulder.material = shoulderMat;
+
+  function addRoadStripe(stepOffset, length, width, color){
+    const ptsL=[], ptsR=[];
+    for(let i=stepOffset;i<roadCurve.length;i+=length){
+      const p = roadCurve[i];
+      const prev = roadCurve[Math.max(0, i-1)];
+      const next = roadCurve[Math.min(roadCurve.length-1, i+1)];
+      const tangent = next.subtract(prev).normalize();
+      const normal = new BABYLON.Vector3(-tangent.z, 0, tangent.x);
+      const roadY = terrainHeight(p.x,p.z) + 0.15;
+      ptsL.push(new BABYLON.Vector3(p.x + normal.x*width, roadY, p.z + normal.z*width));
+      ptsR.push(new BABYLON.Vector3(p.x - normal.x*width, roadY, p.z - normal.z*width));
     }
-  } else if(kind==='hex'||kind==='needle'){
-    // Hex grid
-    const hw=12,hh=14;
-    ctx.strokeStyle=acc+'0.3)'; ctx.lineWidth=1.0;
-    for(let row=0;row<10;row++) for(let col=0;col<10;col++){
-      const ox=col*hw*1.5+(row%2)*hw*0.75, oy=row*hh;
-      ctx.beginPath();
-      for(let a=0;a<6;a++){const ang=Math.PI/3*a-Math.PI/6;ctx.lineTo(ox+hw*0.5*Math.cos(ang),oy+hh*0.5*Math.sin(ang));}
-      ctx.closePath(); ctx.stroke();
+    if(ptsL.length > 3){
+      const m = BABYLON.MeshBuilder.CreateRibbon('stripe', { pathArray:[ptsL, ptsR], sideOrientation:BABYLON.Mesh.DOUBLESIDE }, scene);
+      const mm = new BABYLON.StandardMaterial('stripeMat', scene);
+      mm.diffuseColor = color; mm.emissiveColor = color.scale(0.12); mm.specularColor = BABYLON.Color3.Black();
+      m.material = mm;
     }
-  } else if(kind==='dots'||kind==='neural'){
-    // Dot matrix
-    ctx.fillStyle=acc+'0.45)';
-    for(let x=6;x<size;x+=12) for(let y=6;y<size;y+=12){
-      ctx.beginPath();ctx.arc(x,y,1.8,0,Math.PI*2);ctx.fill();
-    }
-  } else if(kind==='skyline'||kind==='terminal'){
-    // Scanlines + small square pads
-    ctx.strokeStyle=acc+'0.22)'; ctx.lineWidth=1;
-    for(let y=4;y<size;y+=8){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(size,y);ctx.stroke();}
-    ctx.fillStyle=acc+'0.4)';
-    for(let x=6;x<size;x+=14) for(let y=6;y<size;y+=14){
-      ctx.fillRect(x-2,y-2,4,4);
-    }
-  } else if(kind==='pavilion'||kind==='macos'){
-    // Brushed metal: fine diagonal lines
-    ctx.strokeStyle=acc+'0.18)'; ctx.lineWidth=0.8;
-    for(let i=-size;i<size*2;i+=4){
-      ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i+size,size);ctx.stroke();
-    }
-  } else if(kind==='lattice'||kind==='ml'){
-    // Lattice grid with diagonal cross
-    ctx.strokeStyle=acc+'0.28)'; ctx.lineWidth=1;
-    for(let i=0;i<size;i+=16){
-      ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,size);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(size,i);ctx.stroke();
-    }
-    ctx.strokeStyle=acc+'0.15)';
-    for(let i=0;i<size;i+=16){
-      ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(size,size-i);ctx.stroke();
-      ctx.beginPath();ctx.moveTo(0,i);ctx.lineTo(size-i,size);ctx.stroke();
-    }
-  } else if(kind==='pcb'||kind==='hardware'){
-    // PCB: traces + square pads
-    ctx.strokeStyle=acc+'0.38)'; ctx.lineWidth=2;
-    [[0,32,size,32],[0,80,size,80],[32,0,32,size],[96,0,96,size]].forEach(([x1,y1,x2,y2])=>{
-      ctx.beginPath();ctx.moveTo(x1,y1);ctx.lineTo(x2,y2);ctx.stroke();
+  }
+  addRoadStripe(4, 10, 0.12, new BABYLON.Color3(0.97,0.94,0.72));
+
+  function makeTree(x,z,scale=1){
+    const y = terrainHeight(x,z);
+    const trunk = BABYLON.MeshBuilder.CreateCylinder('trunk', { height:1.4*scale, diameterTop:0.14*scale, diameterBottom:0.22*scale, tessellation:6 }, scene);
+    trunk.position.set(x, y + 0.7*scale, z);
+    const trunkMat = new BABYLON.StandardMaterial('trunkMat', scene);
+    trunkMat.diffuseColor = new BABYLON.Color3(0.37,0.28,0.19);
+    trunk.material = trunkMat;
+    const crown = BABYLON.MeshBuilder.CreateSphere('crown', { diameter:1.9*scale, segments:5 }, scene);
+    crown.position.set(x, y + 1.8*scale, z);
+    const crownMat = new BABYLON.StandardMaterial('crownMat', scene);
+    crownMat.diffuseColor = new BABYLON.Color3(0.34,0.57,0.31);
+    crownMat.specularColor = BABYLON.Color3.Black();
+    crown.material = crownMat;
+    shadowGen.addShadowCaster(trunk); shadowGen.addShadowCaster(crown);
+  }
+  for(let i=0;i<220;i++){
+    const x = -470 + i*4.4;
+    const zA = Math.sin(i*0.28)*30 + 42 + (i%7)*2.5;
+    const zB = Math.cos(i*0.19)*24 - 42 - (i%5)*2.2;
+    if(nearestRoadDist(x, zA) > 18) makeTree(x, zA, 0.8 + (i%4)*0.14);
+    if(nearestRoadDist(x, zB) > 18) makeTree(x, zB, 0.75 + (i%3)*0.2);
+  }
+
+  const signMeshes = [];
+  const clusterAnchors = [];
+  const signMaterials = [];
+  function makeSignTexture(title, subtitle, color, tint){
+    const dt = new BABYLON.DynamicTexture('dt_'+title, { width: 1024, height: 512 }, scene, false);
+    const ctx = dt.getContext();
+    ctx.fillStyle = tint; ctx.fillRect(0,0,1024,512);
+    ctx.fillStyle = 'rgba(255,255,255,.96)'; ctx.fillRect(18,18,988,476);
+    ctx.fillStyle = color; ctx.fillRect(18,18,988,90);
+    ctx.fillStyle = '#ffffff'; ctx.font = '700 48px Inter, sans-serif'; ctx.fillText(title, 44, 76);
+    ctx.fillStyle = '#23384e'; ctx.font = '700 38px Inter, sans-serif';
+    const lines = subtitle.match(/.{1,42}(\s|$)/g) || [subtitle];
+    lines.slice(0,3).forEach((line, idx)=>ctx.fillText(line.trim(), 44, 176 + idx*60));
+    dt.update(false);
+    return dt;
+  }
+
+  function addProjectSign(project, pos, color, tint){
+    const post = BABYLON.MeshBuilder.CreateBox('post', { width:0.18, height:2.7, depth:0.18 }, scene);
+    post.position = pos.add(new BABYLON.Vector3(0,1.35,0));
+    const postMat = new BABYLON.StandardMaterial('postMat', scene);
+    postMat.diffuseColor = new BABYLON.Color3(0.47,0.39,0.28); post.material = postMat;
+
+    const board = BABYLON.MeshBuilder.CreatePlane('board', { width:4.4, height:2.2 }, scene);
+    board.position = pos.add(new BABYLON.Vector3(0,3.1,0));
+    board.billboardMode = BABYLON.Mesh.BILLBOARDMODE_Y;
+    const dt = makeSignTexture(project.name, project.desc, color, tint);
+    const mat = new BABYLON.StandardMaterial('boardMat', scene);
+    mat.diffuseTexture = dt;
+    mat.emissiveColor = new BABYLON.Color3(0.12,0.12,0.12);
+    mat.specularColor = BABYLON.Color3.Black();
+    board.material = mat;
+    signMaterials.push(mat);
+    shadowGen.addShadowCaster(post); shadowGen.addShadowCaster(board);
+    board.metadata = project;
+    signMeshes.push(board);
+    return board;
+  }
+
+  sections.forEach((section, sectionIndex) => {
+    const palette = clusterPalette[section.id] || { color:'#2563eb', tint:'#dce8ff', terrain:'#7aa0cf' };
+    const color = palette.color;
+    const tint = palette.tint;
+    const roadIdx = Math.floor((sectionIndex + 1) * (roadCurve.length - 20) / (sections.length + 1));
+    const center = roadCurve[roadIdx];
+    const prev = roadCurve[Math.max(0, roadIdx-1)];
+    const next = roadCurve[Math.min(roadCurve.length-1, roadIdx+1)];
+    const tangent = next.subtract(prev).normalize();
+    const normal = new BABYLON.Vector3(-tangent.z, 0, tangent.x);
+    const side = sectionIndex % 2 === 0 ? 1 : -1;
+    const anchor = new BABYLON.Vector3(center.x + normal.x*18*side, terrainHeight(center.x + normal.x*18*side, center.z + normal.z*18*side), center.z + normal.z*18*side);
+    clusterAnchors.push({ id: section.id, label: section.label, center, anchor, color, projects: section.projects });
+
+    const mound = BABYLON.MeshBuilder.CreateCylinder('mound', { height:1.8, diameterTop:10, diameterBottom:16, tessellation:24 }, scene);
+    mound.position = anchor.add(new BABYLON.Vector3(0, 0.7, 0));
+    const moundMat = new BABYLON.StandardMaterial('moundMat', scene);
+    const c = BABYLON.Color3.FromHexString(color);
+    moundMat.diffuseColor = BABYLON.Color3.Lerp(new BABYLON.Color3(0.57,0.69,0.49), c, 0.12);
+    moundMat.specularColor = BABYLON.Color3.Black();
+    mound.material = moundMat;
+    mound.receiveShadows = true;
+
+    const titleSign = addProjectSign({
+      name: section.label,
+      desc: `${section.projects.length} projects in this area`,
+      url: section.projects[0]?.url || '/',
+      logo: section.projects[0]?.logo || ''
+    }, anchor.add(new BABYLON.Vector3(0,0,0)), color, tint);
+    titleSign.scaling.scaleInPlace(1.14);
+    titleSign.metadata = { clusterId: section.id, clusterOnly: true, label: section.label };
+
+    section.projects.slice(0,6).forEach((project, i) => {
+      const row = Math.floor(i/3), col = i%3;
+      const dx = (col-1) * 6.2 + (row%2)*1.6;
+      const dz = 7.5 + row*6.5;
+      const px = anchor.x + normal.x*dx + tangent.x*dz*side;
+      const pz = anchor.z + normal.z*dx + tangent.z*dz*side;
+      const py = terrainHeight(px,pz);
+      addProjectSign(project, new BABYLON.Vector3(px, py, pz), color, tint);
     });
-    ctx.fillStyle=acc+'0.55)';
-    [[32,32],[96,32],[32,80],[96,80],[64,64],[64,16],[64,112]].forEach(([x,y])=>{
-      ctx.fillRect(x-4,y-4,8,8);
-    });
-  } else {
-    // shelves / libraries: horizontal planks
-    ctx.strokeStyle=acc+'0.3)'; ctx.lineWidth=1.5;
-    for(let y=16;y<size;y+=24){ctx.beginPath();ctx.moveTo(0,y);ctx.lineTo(size,y);ctx.stroke();}
-    ctx.fillStyle=acc+'0.12)';
-    ctx.fillRect(0,0,size,size);
+
+    const navBtn = document.createElement('button');
+    navBtn.className = 'nav-btn' + (sectionIndex === 0 ? ' active' : '');
+    navBtn.textContent = section.label;
+    navBtn.dataset.cluster = section.id;
+    navBtn.addEventListener('click', () => focusCluster(section.id));
+    navEl.appendChild(navBtn);
+  });
+
+  let activeCluster = clusterAnchors[0]?.id || null;
+  function setActiveNav(id){
+    [...navEl.querySelectorAll('.nav-btn')].forEach(btn => btn.classList.toggle('active', btn.dataset.cluster === id));
   }
 
-  dt.update(false);
-  dt.wrapU = BABYLON.Texture.WRAP_ADDRESSMODE;
-  dt.wrapV = BABYLON.Texture.WRAP_ADDRESSMODE;
-  return dt;
-}
+  let focusMesh = null;
+  function openFocus(meta){
+    panel.classList.add('open');
+    focusName.textContent = meta.name || meta.label || 'Project';
+    focusMeta.textContent = meta.repo || meta.label || '';
+    focusDesc.textContent = meta.desc || '';
+    focusLink.href = meta.url || '/';
+    focusJump.textContent = meta.clusterOnly ? 'Jump here' : 'Jump cluster';
+    focusJump.onclick = () => focusCluster(meta.clusterId || activeCluster || clusterAnchors[0]?.id);
+    if(meta.logo){ focusLogo.src = meta.logo; focusLogo.style.display = 'block'; }
+    else { focusLogo.style.display = 'none'; }
+  }
+  function closeFocus(){ panel.classList.remove('open'); focusMesh = null; }
+  focusClose.addEventListener('click', closeFocus);
 
+  let targetAlpha = camera.alpha, targetBeta = camera.beta, targetRadius = camera.radius, targetVec = camera.target.clone();
+  function focusCluster(id){
+    const cluster = clusterAnchors.find(c => c.id === id);
+    if(!cluster) return;
+    activeCluster = id;
+    setActiveNav(id);
+    const ahead = roadCurve[Math.min(roadCurve.length-1, roadCurve.findIndex(p => p === cluster.center) + 8)] || cluster.center;
+    const dx = ahead.x - cluster.center.x;
+    const dz = ahead.z - cluster.center.z;
+    targetAlpha = Math.atan2(dz, dx) - Math.PI * 0.55;
+    targetBeta = 1.06;
+    targetRadius = 26;
+    targetVec = new BABYLON.Vector3(cluster.anchor.x, cluster.anchor.y + 4.6, cluster.anchor.z);
+    openFocus({ name: cluster.label, desc: `${cluster.projects.length} project${cluster.projects.length!==1?'s':''} nearby`, url: cluster.projects[0]?.url || '/', logo: cluster.projects[0]?.logo || '', repo: cluster.id, clusterOnly: true, clusterId: cluster.id });
+  }
 
-
-// ── Ground ───────────────────────────────────────────────────────────────────
-const ground = BABYLON.MeshBuilder.CreateGround('ground',{width:240,height:240,subdivisions:1},scene);
-const gm = new BABYLON.StandardMaterial('gmat',scene);
-gm.diffuseColor  = new BABYLON.Color3(0.004,0.006,0.010);
-gm.specularColor = BABYLON.Color3.Black();
-gm.specularPower = 1;
-ground.material  = gm;
-ground.receiveShadows = false;
-
-// ── Shape builders ───────────────────────────────────────────────────────────
-
-// NEEDLE — piclaw/highlight: diamond spire with orbit rings
-function buildNeedle(pos,col){
-  const cx=pos[0],cz=pos[2];
-  const m1=glowMat('nm1',col,0.18), m2=glowMat('nm2',col,0.08);
-
-  // Central spire
-  const spire=BABYLON.MeshBuilder.CreateCylinder('ns',{height:9,diameterTop:0.05,diameterBottom:0.8,tessellation:8},scene);
-  spire.position.set(cx,4.5,cz); spire.material=m1;
-  shadowGen.addShadowCaster(spire);
-
-  // Diamond cap
-  const cap=BABYLON.MeshBuilder.CreatePolyhedron('nc',{type:1,size:1.1},scene);
-  cap.position.set(cx,10,cz); cap.material=glowMat('ncap',col,0.35);
-  cap.renderOutline=true; cap.outlineColor=hex3(col).scale(0.5); cap.outlineWidth=0.05;
-  shadowGen.addShadowCaster(cap);
-
-  // Three orbit rings at intervals
-  [3.0,5.5,8.0].forEach((y,i)=>{
-    const r=BABYLON.MeshBuilder.CreateTorus('nr'+i,{diameter:2.8+i*0.8,thickness:0.08,tessellation:36},scene);
-    r.position.set(cx,y,cz);
-    r.rotation.x=Math.PI/2+0.3*Math.sin(i); r.rotation.z=0.2*i;
-    r.material=glowMat('nrm'+i,col,0.18);
-    shadowGen.addShadowCaster(r);
+  const pointer = scene.onPointerObservable.add((info) => {
+    if(info.type !== BABYLON.PointerEventTypes.POINTERPICK) return;
+    const pick = info.pickInfo;
+    if(!pick || !pick.hit || !pick.pickedMesh) return;
+    const meta = pick.pickedMesh.metadata;
+    if(!meta) return;
+    if(meta.clusterOnly){ focusCluster(meta.clusterId); return; }
+    focusMesh = pick.pickedMesh;
+    activeCluster = (clusterAnchors.find(c => c.projects.some(p => p.url === meta.url)) || {}).id || activeCluster;
+    setActiveNav(activeCluster);
+    targetVec = pick.pickedMesh.position.add(new BABYLON.Vector3(0, 1.8, 0));
+    targetRadius = 18;
+    targetBeta = 0.98;
+    openFocus(meta);
   });
 
-  // Base hex platform
-  const base=BABYLON.MeshBuilder.CreateCylinder('nb',{height:0.5,diameter:7,tessellation:6},scene);
-  base.position.set(cx,0.25,cz); base.material=darkMat('nbm',col); base.rotation.y=Math.PI/6;
-  base.receiveShadows=true; shadowGen.addShadowCaster(base);
-  return cap; // for animation
-}
+  let autoDrive = true;
+  let autoT = 0.08;
+  scene.onPointerDown = () => { autoDrive = false; };
+  canvas.addEventListener('wheel', () => { autoDrive = false; }, { passive:true });
 
-// COLUMN — piku: classical tapered column with capital
-function buildColumn(pos,col){
-  const cx=pos[0],cz=pos[2];
-  const shafts=[
-    {h:6.0,dTop:0.85,dBot:1.0,y:3.0},
-    {h:0.6,dTop:1.4, dBot:0.9,y:6.3},  // capital
-    {h:0.35,dTop:1.6,dBot:1.4,y:6.78}, // abacus
-    {h:0.4,dTop:0.8,dBot:1.0,y:0.2},   // base
-  ];
-  shafts.forEach((s,i)=>{
-    const c=BABYLON.MeshBuilder.CreateCylinder('sft'+i,{height:s.h,diameterTop:s.dTop,diameterBottom:s.dBot,tessellation:12},scene);
-    c.position.set(cx,s.y,cz);
-    c.material=(i===1||i===2)?glowMat('colm'+i,col,0.12):darkMat('colm'+i,col);
-    shadowGen.addShadowCaster(c); c.receiveShadows=true;
-  });
-  // Stepped base
-  [0.3,0.5,0.7].forEach((scale,i)=>{
-    const st=BABYLON.MeshBuilder.CreateCylinder('stb'+i,{height:0.25,diameter:3.5-i*0.5,tessellation:6},scene);
-    st.position.set(cx,-0.25+i*0.25,cz); st.material=darkMat('stbm',col);
-    st.receiveShadows=true;
-  });
-}
-
-// NEURAL — ai-agents: sphere cluster with connecting rods
-function buildNeural(pos,col){
-  const cx=pos[0],cz=pos[2];
-  const spherePositions=[];
-  // Central brain sphere
-  const brain=BABYLON.MeshBuilder.CreateSphere('brain',{diameter:2.2,segments:8},scene);
-  brain.position.set(cx,2,cz); brain.material=glowMat('brm',col,0.15);
-  brain.renderOutline=true; brain.outlineColor=hex3(col).scale(0.4); brain.outlineWidth=0.04;
-  shadowGen.addShadowCaster(brain);
-  spherePositions.push(brain.position.clone());
-
-  // Satellite nodes
-  const nodeData=[
-    [2.8, 0.3, 2.2],[-2.6, 0.4,-2.0],[2.4, 0.6,-2.5],[-2.2, 0.3, 2.8],
-    [1.5, 2.0, 1.6],[-1.8, 2.2,-1.7],[0, 2.8, 2.6],[-0.5,1.8,-2.8],
-  ];
-  const sm=glowMat('sm',col,0.10);
-  nodeData.forEach(([dx,dy,dz],i)=>{
-    const r=0.45+Math.random()*0.35;
-    const node=BABYLON.MeshBuilder.CreateSphere('node'+i,{diameter:r*2,segments:6},scene);
-    node.position.set(cx+dx,1.2+dy,cz+dz); node.material=sm;
-    shadowGen.addShadowCaster(node);
-    spherePositions.push(node.position.clone());
-    // Connecting rod
-    const start=new BABYLON.Vector3(cx,2,cz), end=node.position;
-    const dir=end.subtract(start), len=dir.length();
-    const rod=BABYLON.MeshBuilder.CreateCylinder('rod'+i,{height:len,diameter:0.06,tessellation:4},scene);
-    rod.position.set((start.x+end.x)/2,(start.y+end.y)/2,(start.z+end.z)/2);
-    const axis=BABYLON.Vector3.Up().cross(dir.normalize());
-    if(axis.length()>0.001){const ang=Math.acos(BABYLON.Vector3.Up().dot(dir.normalize()));rod.rotationQuaternion=BABYLON.Quaternion.RotationAxis(axis.normalize(),ang);}
-    rod.material=mat('rodm',col,{diff:0.1,spec:0.05,emis:0.06,power:4});
-  });
-
-  // Flat circular base
-  const base=BABYLON.MeshBuilder.CreateCylinder('nb',{height:0.35,diameter:9,tessellation:32},scene);
-  base.position.set(cx,0.17,cz); base.material=darkMat('nbm',col);
-  base.receiveShadows=true;
-  return brain; // for animation
-}
-
-// SKYLINE — terminal: array of columns at varying heights (CRT/console aesthetic)
-function buildSkyline(pos,col){
-  const cx=pos[0],cz=pos[2];
-  const heights=[5.5,3.2,7.0,4.5,6.2,2.8,5.0,3.8,6.5,4.0,7.2,3.5,5.8,4.2,6.0];
-  const rows=3,cols=5, spacing=2.1;
-  const startX=cx-(cols-1)*spacing/2, startZ=cz-(rows-1)*spacing/2;
-  heights.forEach((h,i)=>{
-    const row=Math.floor(i/cols), col2=i%cols;
-    const x=startX+col2*spacing, z=startZ+row*spacing;
-    const bk=BABYLON.MeshBuilder.CreateBox('sk'+i,{width:1.4,height:h,depth:1.4},scene);
-    bk.position.set(x,h/2,z);
-    const bright=h/7.5;
-    bk.material=mat('skm'+i,col,{diff:0.2+bright*0.15,spec:0.3,emis:bright*0.14,power:12});
-    bk.renderOutline=true; bk.outlineColor=hex3(col).scale(0.25); bk.outlineWidth=0.03;
-    shadowGen.addShadowCaster(bk); bk.receiveShadows=true;
-    // Antenna on tall ones
-    if(h>6){
-      const ant=BABYLON.MeshBuilder.CreateCylinder('ant'+i,{height:1.4,diameterTop:0.02,diameterBottom:0.08,tessellation:4},scene);
-      ant.position.set(x,h+0.7,z); ant.material=glowMat('antm',col,0.3);
+  scene.registerBeforeRender(() => {
+    if(autoDrive && !panel.classList.contains('open')){
+      autoT += engine.getDeltaTime() * 0.000012;
+      if(autoT > 0.96) autoT = 0.08;
+      const idx = Math.floor(autoT * (roadCurve.length-1));
+      const p = roadCurve[idx];
+      const next = roadCurve[Math.min(roadCurve.length-1, idx+4)];
+      targetVec = new BABYLON.Vector3(p.x, terrainHeight(p.x,p.z)+4.5, p.z);
+      targetAlpha = Math.atan2(next.z-p.z, next.x-p.x) - Math.PI*0.52;
+      targetBeta = 1.02;
+      targetRadius = 28;
+      const nearest = clusterAnchors.reduce((best, c) => {
+        const d = BABYLON.Vector3.DistanceSquared(c.center, p);
+        return !best || d < best.d ? { id:c.id, d } : best;
+      }, null);
+      if(nearest && nearest.id !== activeCluster){ activeCluster = nearest.id; setActiveNav(activeCluster); }
     }
-  });
-  // Raised platform
-  const base=BABYLON.MeshBuilder.CreateBox('skbase',{width:11.5,height:0.4,depth:7.5},scene);
-  base.position.set(cx,0.2,cz); base.material=darkMat('sbbm',col);
-  base.receiveShadows=true;
-}
-
-// PAVILION — macOS: stacked smooth discs, ascending scale
-function buildPavilion(pos,col){
-  const cx=pos[0],cz=pos[2];
-  const tiers=[
-    {y:0.3, d:8.5, h:0.55},
-    {y:0.9, d:7.0, h:0.55},
-    {y:1.5, d:5.5, h:0.6},
-    {y:2.15,d:4.0, h:0.7},
-    {y:2.95,d:2.8, h:0.9},
-    {y:3.95,d:1.5, h:1.2},
-    {y:5.3, d:0.7, h:1.8},  // spire
-  ];
-  tiers.forEach((t,i)=>{
-    const d=BABYLON.MeshBuilder.CreateCylinder('pav'+i,{height:t.h,diameter:t.d,tessellation:32},scene);
-    d.position.set(cx,t.y,cz);
-    const frac=i/tiers.length;
-    d.material=mat('pavm'+i,col,{diff:0.45+frac*0.2,spec:0.9-frac*0.3,emis:frac*0.18,power:80-frac*40});
-    shadowGen.addShadowCaster(d); d.receiveShadows=true;
-  });
-}
-
-// RACK — infrastructure: neat grid of server-rack boxes
-function buildRack(pos,col){
-  const cx=pos[0],cz=pos[2];
-  const rackLayout=[
-    {w:4.5,h:1.4,d:1.8,x:0,   z:-2.5,y:0.7},
-    {w:4.5,h:1.4,d:1.8,x:0,   z: 0,  y:0.7},
-    {w:4.5,h:1.4,d:1.8,x:0,   z: 2.5,y:0.7},
-    {w:2.0,h:3.5,d:2.0,x:-3.0,z:-1.8,y:1.75},
-    {w:2.0,h:3.5,d:2.0,x: 3.0,z: 1.8,y:1.75},
-    {w:4.5,h:0.3,d:1.8,x:0,   z:-2.5,y:1.55},
-    {w:4.5,h:0.3,d:1.8,x:0,   z: 0,  y:1.55},
-    {w:4.5,h:0.3,d:1.8,x:0,   z: 2.5,y:1.55},
-  ];
-  rackLayout.forEach((r,i)=>{
-    const bk=BABYLON.MeshBuilder.CreateBox('rack'+i,{width:r.w,height:r.h,depth:r.d},scene);
-    bk.position.set(cx+r.x,r.y,cz+r.z);
-    bk.material=mat('rkm'+i,col,{diff:0.25,spec:0.5,emis:i<3?0.05:0.12,power:30});
-    bk.renderOutline=true; bk.outlineColor=hex3(col).scale(0.2); bk.outlineWidth=0.025;
-    shadowGen.addShadowCaster(bk); bk.receiveShadows=true;
-    // LED strip on rack fronts
-    if(i<3){
-      const led=BABYLON.MeshBuilder.CreateBox('led'+i,{width:r.w*0.9,height:0.06,depth:0.05},scene);
-      led.position.set(cx+r.x,r.y+r.h*0.45,cz+r.z-r.d/2-0.03);
-      led.material=glowMat('ledm',col,0.5);
-    }
-  });
-  // Raised floor
-  const floor2=BABYLON.MeshBuilder.CreateBox('rackfloor',{width:10,height:0.35,depth:8},scene);
-  floor2.position.set(cx,0.17,cz); floor2.material=darkMat('rfm',col);
-  floor2.receiveShadows=true;
-}
-
-// ── Billboard factory ─────────────────────────────────────────────────────────
-const billboards=[];
-function makeBillboard(x,z,proj,accentHex,logoImg){
-  const W=600,H=280; const cv2=document.createElement('canvas');
-  cv2.width=W; cv2.height=H;
-  const ctx=cv2.getContext('2d');
-  const n=parseInt(accentHex.replace('#',''),16);
-  const r=n>>16&255,g=n>>8&255,b=n&255;
-
-  // Dark base
-  ctx.fillStyle='#020810'; ctx.fillRect(0,0,W,H);
-
-  // Subtle grid
-  ctx.strokeStyle='rgba(40,70,140,0.15)'; ctx.lineWidth=0.5;
-  for(let i=0;i<=W;i+=20){ctx.beginPath();ctx.moveTo(i,0);ctx.lineTo(i,H);ctx.stroke();}
-  for(let j=0;j<=H;j+=20){ctx.beginPath();ctx.moveTo(0,j);ctx.lineTo(W,j);ctx.stroke();}
-
-  // Accent left bar
-  ctx.fillStyle=`rgb(${r},${g},${b})`; ctx.fillRect(0,0,4,H);
-
-  // Accent top-right corner bracket
-  ctx.strokeStyle=`rgba(${r},${g},${b},0.7)`; ctx.lineWidth=1.5;
-  ctx.beginPath(); ctx.moveTo(W-28,2); ctx.lineTo(W-2,2); ctx.lineTo(W-2,28); ctx.stroke();
-  ctx.beginPath(); ctx.moveTo(2,H-28); ctx.lineTo(2,H-2); ctx.lineTo(28,H-2); ctx.stroke();
-
-  // Logo
-  const hasLogo=logoImg&&logoImg.complete&&logoImg.naturalWidth>0;
-  let tx=18;
-  if(hasLogo){
-    const ls=64;
-    try{ctx.drawImage(logoImg,14,(H-ls)/2,ls,ls);}catch(e){}
-    tx=14+ls+12;
-  }
-
-  // Name
-  ctx.fillStyle='#d8e8ff'; ctx.font='bold 40px ui-monospace,"SF Mono",monospace';
-  ctx.fillText(proj.name.length>13?proj.name.slice(0,12)+'…':proj.name, tx, 52);
-
-  // Stars + lang
-  ctx.fillStyle=`rgba(${Math.min(255,r+80)},${Math.min(255,g+80)},${Math.min(255,b+60)},1)`;
-  ctx.font='bold 22px ui-monospace,monospace';
-  ctx.fillText(`★ ${proj.stars.toLocaleString()}   ${proj.lang}`, tx, 84);
-
-  // Separator
-  ctx.strokeStyle=`rgba(${r},${g},${b},0.25)`; ctx.lineWidth=1;
-  ctx.beginPath(); ctx.moveTo(tx,100); ctx.lineTo(W-18,100); ctx.stroke();
-
-  // Description
-  ctx.fillStyle='rgba(120,160,220,0.88)'; ctx.font='19px system-ui,sans-serif';
-  const words=proj.desc.split(' '), maxW=W-tx-18;
-  let line='',y=126;
-  for(const w of words){const t=line?line+' '+w:w;if(ctx.measureText(t).width>maxW&&line){ctx.fillText(line,tx,y);y+=26;line=w;if(y>H-32)break;}else line=t;}
-  if(line&&y<=H-32)ctx.fillText(line,tx,y);
-
-  // Click hint
-  ctx.fillStyle=`rgba(${r},${g},${b},0.65)`; ctx.font='bold 15px ui-monospace,monospace';
-  ctx.textAlign='right'; ctx.fillText('→ open',W-12,H-12); ctx.textAlign='left';
-
-  const tex=new BABYLON.DynamicTexture('bbtex',{width:W,height:H},scene,false);
-  tex.getContext().drawImage(cv2,0,0); tex.update();
-  const bm=new BABYLON.StandardMaterial('bbmat',scene);
-  bm.emissiveTexture=tex; bm.diffuseTexture=tex;
-  bm.specularColor=BABYLON.Color3.Black(); bm.backFaceCulling=false;
-
-  // Thin post
-  const post=BABYLON.MeshBuilder.CreateBox('post',{width:0.1,height:3.2,depth:0.1},scene);
-  post.material=darkMat('pm',accentHex); post.position.set(x,1.6,z);
-  shadowGen.addShadowCaster(post);
-
-  // Panel
-  const panel=BABYLON.MeshBuilder.CreatePlane('panel',{width:5.0,height:2.28},scene);
-  panel.material=bm;
-  panel.position.set(x,2.9,z);
-  panel.billboardMode=BABYLON.Mesh.BILLBOARDMODE_Y;
-  panel.metadata={proj,x,z};
-  billboards.push(panel);
-}
-
-// ── Path connections (thin glowing lines) ────────────────────────────────────
-const PATH_CURVES={};
-function makePath(edgeKey,ax,az,bx,bz,trimA,trimB){
-  const dx=bx-ax,dz=bz-az,len=Math.hypot(dx,dz);
-  if(len<trimA+trimB+1)return;
-  const u=dx/len,v=dz/len;
-  const sx=ax+u*trimA,sz=az+v*trimA,ex=bx-u*trimB,ez=bz-v*trimB;
-  const perpX=-v,perpZ=u,sway=(Math.random()-0.5)*len*0.05;
-  const mx=(sx+ex)*0.5+perpX*sway,mz=(sz+ez)*0.5+perpZ*sway;
-  const N=20,pts=[];
-  for(let i=0;i<=N;i++){const t=i/N,mt=1-t;pts.push([mt*mt*sx+2*mt*t*mx+t*t*ex,mt*mt*sz+2*mt*t*mz+t*t*ez]);}
-  const hw=0.18,left=[],right=[];
-  for(let i=0;i<pts.length;i++){
-    const p=pts[i],ip=Math.max(0,i-1),inp=Math.min(pts.length-1,i+1);
-    const tx2=pts[inp][0]-pts[ip][0],tz2=pts[inp][1]-pts[ip][1];
-    const tl=Math.hypot(tx2,tz2)||1,nx=-tz2/tl,nz2=tx2/tl;
-    left.push(new BABYLON.Vector3(p[0]+nx*hw,0.04,p[1]+nz2*hw));
-    right.push(new BABYLON.Vector3(p[0]-nx*hw,0.04,p[1]-nz2*hw));
-  }
-  const ribbon=BABYLON.MeshBuilder.CreateRibbon('path',{pathArray:[left,right],sideOrientation:BABYLON.Mesh.DOUBLESIDE},scene);
-  const pm=new BABYLON.StandardMaterial('pmat',scene);
-  pm.emissiveColor=new BABYLON.Color3(0.025,0.04,0.10);
-  pm.diffuseColor=new BABYLON.Color3(0.008,0.015,0.04);
-  pm.alpha=0.55;
-  pm.specularColor=BABYLON.Color3.Black();
-  ribbon.material=pm; ribbon.receiveShadows=true;
-  if(edgeKey)PATH_CURVES[edgeKey]=pts;
-}
-
-
-// LATTICE — ML & Models: 3D grid of data nodes
-function buildLattice(pos,col){
-  const cx=pos[0],cz=pos[2];
-  const gm=mat('lm',col,{diff:0.4,spec:0.7,emis:0.12,power:32});
-  const em=mat('lem',col,{diff:0.15,spec:0.1,emis:0.06,power:8});
-  const grid=3,sp=2.0,nodes=[];
-  for(let x=0;x<grid;x++) for(let y=0;y<grid;y++) for(let z=0;z<grid;z++){
-    const nx=cx+(x-(grid-1)/2)*sp,ny=0.8+y*sp,nz=cz+(z-(grid-1)/2)*sp;
-    const n=BABYLON.MeshBuilder.CreatePolyhedron('ln',{type:3,size:0.28},scene);
-    n.position.set(nx,ny,nz); n.material=gm;
-    n.renderOutline=true; n.outlineColor=hex3(col).scale(0.4); n.outlineWidth=0.03;
-    shadowGen.addShadowCaster(n); nodes.push({x:nx,y:ny,z:nz});
-  }
-  for(let i=0;i<nodes.length;i++) for(let j=i+1;j<nodes.length;j++){
-    const a=nodes[i],b=nodes[j];
-    const d=Math.sqrt((a.x-b.x)**2+(a.y-b.y)**2+(a.z-b.z)**2);
-    if(d>sp*1.05) continue;
-    const rod=BABYLON.MeshBuilder.CreateCylinder('lr',{height:d,diameter:0.06,tessellation:4},scene);
-    rod.position.set((a.x+b.x)/2,(a.y+b.y)/2,(a.z+b.z)/2);
-    const dir=new BABYLON.Vector3(b.x-a.x,b.y-a.y,b.z-a.z).normalize();
-    const ax2=BABYLON.Vector3.Up().cross(dir);
-    if(ax2.length()>0.001){const ang=Math.acos(Math.min(1,BABYLON.Vector3.Up().dot(dir)));rod.rotationQuaternion=BABYLON.Quaternion.RotationAxis(ax2.normalize(),ang);}
-    rod.material=em;
-  }
-  const base=BABYLON.MeshBuilder.CreateCylinder('lb',{height:0.4,diameter:9,tessellation:6},scene);
-  base.position.set(cx,0.2,cz); base.material=darkMat('lbm',col); base.rotation.y=Math.PI/6; base.receiveShadows=true;
-}
-
-// PCB — Hardware: circuit board with components
-function buildPcb(pos,col){
-  const cx=pos[0],cz=pos[2];
-  const board=BABYLON.MeshBuilder.CreateBox('pcb',{width:9,height:0.25,depth:7},scene);
-  board.position.set(cx,0.125,cz); board.material=mat('pcbm','#1a3a1a',{diff:0.4,spec:0.3,emis:0.02,power:30});
-  board.receiveShadows=true; shadowGen.addShadowCaster(board);
-  const tm=mat('tm',col,{diff:0.3,spec:0.5,emis:0.08,power:40});
-  [[-2,0.26,-1,3,0.06],[1,0.26,2,0.1,2],[2,0.26,-2,2.5,0.08]].forEach(([tx,ty,tz,tw,td],i)=>{
-    const tr=BABYLON.MeshBuilder.CreateBox('tr'+i,{width:tw,height:0.04,depth:td},scene);
-    tr.position.set(cx+tx,ty,cz+tz); tr.material=tm;
-  });
-  const cm=mat('chipm','#111111',{diff:0.2,spec:0.1,emis:0.03,power:8});
-  [[-2.5,0.35,1.5,1.2,0.9],[1.5,0.35,-1,1.4,1.0],[0,0.35,0.5,1.1,1.1],[-1,0.35,-2,1.6,0.8]].forEach(([cx2,cy,cz2,cw,cd],i)=>{
-    const chip=BABYLON.MeshBuilder.CreateBox('ch'+i,{width:cw,height:0.22,depth:cd},scene);
-    chip.position.set(cx+cx2,cy,cz+cz2); chip.material=cm;
-    chip.renderOutline=true; chip.outlineColor=hex3(col).scale(0.3); chip.outlineWidth=0.02;
-    shadowGen.addShadowCaster(chip);
-  });
-  const capm=glowMat('capm',col,0.15);
-  [[-3.5,0.5,-2.5],[3,0.5,2],[2.5,0.5,-2.5],[-3,0.5,2.5]].forEach(([cx3,cy,cz3])=>{
-    const cap=BABYLON.MeshBuilder.CreateCylinder('cap',{height:0.75,diameter:0.4,tessellation:8},scene);
-    cap.position.set(cx+cx3,cy,cz+cz3); cap.material=capm; shadowGen.addShadowCaster(cap);
-  });
-  const ant=BABYLON.MeshBuilder.CreateCylinder('pa',{height:2.5,diameterTop:0.05,diameterBottom:0.2,tessellation:6},scene);
-  ant.position.set(cx+3.5,1.5,cz-2.5); ant.material=glowMat('am2',col,0.25); shadowGen.addShadowCaster(ant);
-}
-
-// SHELVES — Libraries: bookshelf unit
-function buildShelves(pos,col){
-  const cx=pos[0],cz=pos[2];
-  const fW=7,fD=1.8,sH=1.4,nShelves=4;
-  const fm=darkMat('frm',col);
-  [cx-fW/2+0.15,cx,cx+fW/2-0.15].forEach(px=>{
-    const u=BABYLON.MeshBuilder.CreateBox('upr',{width:0.25,height:sH*nShelves+0.5,depth:fD},scene);
-    u.position.set(px,sH*nShelves/2+0.25,cz); u.material=fm;
-    shadowGen.addShadowCaster(u); u.receiveShadows=true;
-  });
-  for(let i=0;i<=nShelves;i++){
-    const sh=BABYLON.MeshBuilder.CreateBox('sh'+i,{width:fW,height:0.12,depth:fD+0.1},scene);
-    sh.position.set(cx,i*sH+0.06,cz); sh.material=fm;
-    shadowGen.addShadowCaster(sh); sh.receiveShadows=true;
-    if(i>0&&i<nShelves){
-      let bx=cx-fW/2+0.35;
-      while(bx<cx+fW/2-0.4){
-        const bw=0.18+Math.random()*0.22,bh=0.8+Math.random()*0.5;
-        const book=BABYLON.MeshBuilder.CreateBox('bk',{width:bw,height:bh,depth:fD*0.8},scene);
-        book.position.set(bx+bw/2,i*sH+0.06+bh/2,cz);
-        const hue=(bx*20)%360;
-        const bkm=new BABYLON.StandardMaterial('bkm',scene);
-        bkm.diffuseColor=new BABYLON.Color3((150+100*Math.sin(hue*Math.PI/180))/255,(80+80*Math.sin((hue+120)*Math.PI/180))/255,(100+80*Math.sin((hue+240)*Math.PI/180))/255);
-        bkm.specularColor=new BABYLON.Color3(0.1,0.1,0.1);
-        book.material=bkm; shadowGen.addShadowCaster(book);
-        bx+=bw+0.04;
-      }
-    }
-  }
-  const base2=BABYLON.MeshBuilder.CreateBox('shb',{width:fW+0.5,height:0.4,depth:fD+0.5},scene);
-  base2.position.set(cx,0.2,cz); base2.material=fm; base2.receiveShadows=false;
-}
-
-// ── Cluster data (inline) ──────────────────────────────────────────────────────
-const data = {
-  "clusters": {
-    "highlight": {
-      "col": "#2255ff",
-      "shape": "needle",
-      "label": "Piclaw",
-      "logo": "assets/logos-opt/piclaw.png",
-      "projects": [
-        {
-          "id": "piclaw",
-          "name": "piclaw",
-          "stars": 526,
-          "lang": "TypeScript",
-          "desc": "Self-hosted AI agent workspace \u2014 streaming UI, persistent state, no CDN.",
-          "url": "/projects/piclaw.html"
-        }
-      ]
-    },
-    "piku": {
-      "col": "#c09020",
-      "shape": "column",
-      "label": "Piku",
-      "logo": "assets/logos-opt/piku.png",
-      "projects": [
-        {
-          "id": "piku",
-          "name": "piku/piku",
-          "stars": 6569,
-          "lang": "Python",
-          "desc": "The tiniest PaaS \u2014 git push deployments to your own server, Heroku-style.",
-          "url": "/projects/piku.html"
-        }
-      ]
-    },
-    "ai": {
-      "col": "#22cc70",
-      "shape": "neural",
-      "label": "AI Agents",
-      "logo": "assets/logos-opt/agentbox.png",
-      "projects": [
-        {
-          "id": "vibes",
-          "name": "vibes",
-          "stars": 142,
-          "lang": "Python",
-          "desc": "Mobile-first web UI for AI agents \u2014 ACP and Pi over RPC, zero build step.",
-          "url": "/projects/vibes.html"
-        },
-        {
-          "id": "agentbox",
-          "name": "agentbox",
-          "stars": 97,
-          "lang": "Python",
-          "desc": "Docker sandbox for coding agents \u2014 Copilot CLI, Codex, Pi preinstalled.",
-          "url": "/projects/agentbox.html"
-        },
-        {
-          "id": "feed-summarizer",
-          "name": "feed-summarizer",
-          "stars": 27,
-          "lang": "Python",
-          "desc": "LLM-powered RSS digest \u2014 full-text extraction, runs on a Raspberry Pi.",
-          "url": "/projects/feed-summarizer.html"
-        },
-        {
-          "id": "go-busybox",
-          "name": "go-busybox",
-          "stars": 10,
-          "lang": "Go",
-          "desc": "57 BusyBox utilities in Go \u2014 2 MB WASM binary for agent sandboxing.",
-          "url": "/projects/go-busybox.html"
-        }
-      ]
-    },
-    "terminal": {
-      "col": "#f0a020",
-      "shape": "skyline",
-      "label": "Terminal",
-      "logo": "assets/logos-opt/webterm.png",
-      "projects": [
-        {
-          "id": "webterm",
-          "name": "webterm",
-          "stars": 106,
-          "lang": "Go",
-          "desc": "Go web terminal \u2014 multi-session dashboard mode, watches AI agents.",
-          "url": "/projects/webterm.html"
-        },
-        {
-          "id": "go-rdp",
-          "name": "go-rdp",
-          "stars": 9,
-          "lang": "Go",
-          "desc": "Browser-based RDP client \u2014 full MS-RDPBCGR spec, Go backend, WASM frontend.",
-          "url": "/projects/go-rdp.html"
-        },
-        {
-          "id": "go-te",
-          "name": "go-te",
-          "stars": 7,
-          "lang": "Go",
-          "desc": "VT100/VT520 terminal library for Go \u2014 pyte-faithful, SVG export.",
-          "url": "/projects/go-te.html"
-        },
-        {
-          "id": "gotel",
-          "name": "gotel",
-          "stars": 5,
-          "lang": "Go",
-          "desc": "Self-contained OTel collector \u2014 SQLite storage, built-in trace viewer.",
-          "url": "/projects/gotel.html"
-        }
-      ]
-    },
-    "macos": {
-      "col": "#ee4466",
-      "shape": "pavilion",
-      "label": "macOS",
-      "logo": "assets/logos-opt/PhotosExport.png",
-      "projects": [
-        {
-          "id": "PhotosExport",
-          "name": "PhotosExport",
-          "stars": 280,
-          "lang": "Swift",
-          "desc": "Export your complete Apple Photos library \u2014 originals, edits, Live Photos.",
-          "url": "/projects/PhotosExport.html"
-        },
-        {
-          "id": "drawterm",
-          "name": "drawterm",
-          "stars": 26,
-          "lang": "C",
-          "desc": "Plan 9 drawterm for modern macOS \u2014 HiDPI, Metal rendering.",
-          "url": "/projects/drawterm.html"
-        },
-        {
-          "id": "homekit-steam-user-switcher",
-          "name": "homekit-steam",
-          "stars": 41,
-          "lang": "Python",
-          "desc": "Switch Steam accounts via HomeKit.",
-          "url": "/projects/homekit-steam-user-switcher.html"
-        }
-      ]
-    },
-    "infra": {
-      "col": "#20aacc",
-      "shape": "rack",
-      "label": "Infrastructure",
-      "logo": "assets/logos-opt/imapbackup.png",
-      "projects": [
-        {
-          "id": "imapbackup",
-          "name": "imapbackup",
-          "stars": 343,
-          "lang": "Python",
-          "desc": "Incremental IMAP mailbox backup \u2014 Gmail, Exchange, any IMAP server.",
-          "url": "/projects/imapbackup.html"
-        },
-        {
-          "id": "ground-init",
-          "name": "ground-init",
-          "stars": 64,
-          "lang": "Python",
-          "desc": "Idempotent Linux bootstrap \u2014 YAML desired-state, like cloud-init.",
-          "url": "/projects/ground-init.html"
-        },
-        {
-          "id": "piku",
-          "name": "piku/piku",
-          "stars": 6569,
-          "lang": "Python",
-          "desc": "The tiniest PaaS \u2014 git push deployments to your own server.",
-          "url": "/projects/piku.html"
-        }
-      ]
-    },
-    "ml": {
-      "col": "#9940ee",
-      "shape": "lattice",
-      "label": "ML & Models",
-      "logo": "assets/logos-opt/ml-sharp.png",
-      "projects": [
-        {
-          "id": "ml-sharp",
-          "name": "ml-sharp",
-          "stars": 26,
-          "lang": "Python",
-          "desc": "Sharp monocular view synthesis for Apple Silicon \u2014 depth-aware novel views.",
-          "url": "/projects/ml-sharp.html"
-        },
-        {
-          "id": "asterisk-embedding-model",
-          "name": "asterisk",
-          "stars": 9,
-          "lang": "Python",
-          "desc": "Small embedding model for low-resource hardware \u2014 semantic search on a Pi.",
-          "url": "/projects/asterisk-embedding-model.html"
-        },
-        {
-          "id": "gte-go",
-          "name": "gte-go",
-          "stars": 0,
-          "lang": "Go",
-          "desc": "Go inference for GTE Small text embeddings \u2014 local semantic search, no Python.",
-          "url": "/projects/gte-go.html"
-        },
-        {
-          "id": "azure-stable-diffusion",
-          "name": "azure-stable-diff",
-          "stars": 44,
-          "lang": "Python",
-          "desc": "One-command Stable Diffusion on Azure GPU spot instances.",
-          "url": "/projects/azure-stable-diffusion.html"
-        }
-      ]
-    },
-    "hardware": {
-      "col": "#d06820",
-      "shape": "pcb",
-      "label": "Hardware",
-      "logo": "assets/logos-opt/zmk-config-totem.png",
-      "projects": [
-        {
-          "id": "zmk-config-totem",
-          "name": "zmk-config-totem",
-          "stars": 2,
-          "lang": "ZMK",
-          "desc": "ZMK keymap for the Totem 34-key split keyboard \u2014 home row mods, combos.",
-          "url": "/projects/zmk-config-totem.html"
-        },
-        {
-          "id": "byos_fastapi",
-          "name": "byos_fastapi",
-          "stars": 19,
-          "lang": "Python",
-          "desc": "TRMNL BYOS \u2014 self-hosted FastAPI server for the TRMNL e-ink display.",
-          "url": "/projects/byos_fastapi.html"
-        },
-        {
-          "id": "haiku-arm64-build",
-          "name": "haiku-arm64-build",
-          "stars": 0,
-          "lang": "C++",
-          "desc": "Haiku OS arm64 build for Raspberry Pi 4 and Apple Silicon.",
-          "url": "/projects/haiku-arm64-build.html"
-        }
-      ]
-    },
-    "libraries": {
-      "col": "#c89030",
-      "shape": "shelves",
-      "label": "Libraries",
-      "logo": "assets/logos-opt/pngcanvas.png",
-      "projects": [
-        {
-          "id": "pngcanvas",
-          "name": "pngcanvas",
-          "stars": 44,
-          "lang": "Python",
-          "desc": "Pure-Python PNG rendering, zero dependencies.",
-          "url": "/projects/pngcanvas.html"
-        },
-        {
-          "id": "soup-strainer",
-          "name": "soup-strainer",
-          "stars": 34,
-          "lang": "Python",
-          "desc": "Readability/Decruft article extraction using BeautifulSoup.",
-          "url": "/projects/soup-strainer.html"
-        },
-        {
-          "id": "umcp",
-          "name": "umcp",
-          "stars": 11,
-          "lang": "Python",
-          "desc": "Micro MCP server \u2014 zero deps, decorator-based tool registration.",
-          "url": "/projects/umcp.html"
-        },
-        {
-          "id": "imapbackup",
-          "name": "imapbackup",
-          "stars": 343,
-          "lang": "Python",
-          "desc": "Incremental IMAP backup \u2014 the most-starred pure-utility.",
-          "url": "/projects/imapbackup.html"
-        }
-      ]
-    }
-  },
-  "pathGraph": {
-    "highlight": [
-      "ml",
-      "ai",
-      "terminal"
-    ],
-    "piku": [
-      "infra",
-      "macos"
-    ],
-    "ai": [
-      "highlight",
-      "terminal",
-      "hardware"
-    ],
-    "terminal": [
-      "ai",
-      "macos",
-      "infra"
-    ],
-    "macos": [
-      "terminal",
-      "piku",
-      "infra",
-      "libraries"
-    ],
-    "infra": [
-      "macos",
-      "piku",
-      "terminal"
-    ],
-    "ml": [
-      "highlight",
-      "hardware"
-    ],
-    "hardware": [
-      "ai",
-      "ml"
-    ],
-    "libraries": [
-      "macos",
-      "infra"
-    ]
-  },
-  "layout": {
-    "highlight": [
-      0,
-      0
-    ],
-    "piku": [
-      38.8,
-      16.1
-    ],
-    "ai": [
-      16.1,
-      38.8
-    ],
-    "terminal": [
-      -16.1,
-      38.8
-    ],
-    "macos": [
-      -38.8,
-      16.1
-    ],
-    "infra": [
-      -38.8,
-      -16.1
-    ],
-    "ml": [
-      -16.1,
-      -38.8
-    ],
-    "hardware": [
-      16.1,
-      -38.8
-    ],
-    "libraries": [
-      38.8,
-      -16.1
-    ]
-  }
-};
-{
-  CLUSTERS   = data.clusters;
-  PATH_GRAPH = data.pathGraph;
-  PATH_EDGES = [...new Set(
-    Object.entries(PATH_GRAPH).flatMap(([a,bs])=>bs.map(b=>[a,b].sort().join('--')))
-  )];
-  // Apply fixed circular layout from JSON, bowl shape: near clusters raised
-  for (const [key, [x, z]] of Object.entries(data.layout)) {
-    if (CLUSTERS[key]) {
-      // z<0 = near camera; raise by up to 10 units so all appear at similar screen height
-      const yOff = key === 'highlight' ? 0 : Math.max(0, -z * 0.22);
-      CLUSTERS[key].pos = [x, yOff, z];
-    }
-  }
-
-  // Per-cluster accent point lights (placed at computed positions)
-  Object.entries(CLUSTERS).forEach(([key,cl])=>{
-    const [px,,pz]=cl.pos;
-    const pl=new BABYLON.PointLight('pl_'+key, new BABYLON.Vector3(px,4,pz),scene);
-    pl.diffuse   = hex3(cl.col).scale(1.2);
-    pl.intensity = 4.0;
-    pl.range     = 28;
-    pl.specular  = hex3(cl.col).scale(0.8);
+    camera.alpha = BABYLON.Scalar.Lerp(camera.alpha, targetAlpha, 0.045);
+    camera.beta = BABYLON.Scalar.Lerp(camera.beta, targetBeta, 0.06);
+    camera.radius = BABYLON.Scalar.Lerp(camera.radius, targetRadius, 0.055);
+    camera.target = BABYLON.Vector3.Lerp(camera.target, targetVec, 0.07);
   });
 
-  // Derive per-cluster camera views from positions
-  for (const [key, cl] of Object.entries(CLUSTERS)) {
-    const x = cl.pos?.[0]??0, z = cl.pos?.[2]??0;
-    CAM_VIEWS[key] = {target:[x,3,z], alpha:Math.atan2(x,z)+Math.PI*0.5, beta:Math.PI/3.8, radius:22};
-  }
-
-
-// ── Build scene ───────────────────────────────────────────────────────────────
-PATH_EDGES.forEach(e=>{
-  const[k,j]=e.split('--');
-  const a=CLUSTERS[k].pos,b=CLUSTERS[j].pos;
-  const rK=CLUSTERS[k].projects.length<=2?5:9,rJ=CLUSTERS[j].projects.length<=2?5:9;
-  const dKJ=Math.hypot(a[0]-b[0],a[2]-b[2]);
-  makePath(e,a[0],a[2],b[0],b[2],Math.min(rK+2.5,dKJ*0.35),Math.min(rJ+2.5,dKJ*0.35));
-});
-
-const animatables={}; // key → mesh for per-cluster animation
-
-Object.entries(CLUSTERS).forEach(([key,cluster])=>{
-  const{pos,col,shape,projects}=cluster;
-  let landmark;
-  const nBefore = scene.meshes.length;
-  switch(shape){
-    case'needle':  landmark=buildNeedle(pos,col); break;
-    case'column':  buildColumn(pos,col); break;
-    case'neural':  landmark=buildNeural(pos,col); break;
-    case'skyline': buildSkyline(pos,col); break;
-    case'pavilion':buildPavilion(pos,col); break;
-    case'rack':    buildRack(pos,col); break;
-    case'lattice': buildLattice(pos,col); break;
-    case'pcb':     buildPcb(pos,col); break;
-    case'shelves': buildShelves(pos,col); break;
-  }
-  // Bowl lift + scale + texture: raise, enlarge, and texture all newly-created meshes
-  const yOff = pos[1] ?? 0;
-  const _ctex = clusterTex(shape, col);
-  for(let _i=nBefore;_i<scene.meshes.length;_i++){
-    if(yOff > 0.1) scene.meshes[_i].position.y += yOff;
-    scene.meshes[_i].scaling.scaleInPlace(1.5);
-    const _mn = scene.meshes[_i].name;
-    const _nameSkip = /base|ground|post|panel|path|floor|disc|ring/.test(_mn);
-    if(!_nameSkip && scene.meshes[_i].material && !scene.meshes[_i].material.emissiveTexture){
-      // Also skip flat geometry (thin disc-like meshes)
-      const _bb = scene.meshes[_i].getBoundingInfo();
-      const _h  = _bb.boundingBox.maximumWorld.y - _bb.boundingBox.minimumWorld.y;
-      if(_h > 0.8) { // only texture meshes with real height
-        scene.meshes[_i].material.diffuseTexture = _ctex;
-        scene.meshes[_i].material.diffuseTexture.uScale = 5;
-        scene.meshes[_i].material.diffuseTexture.vScale = 5;
-        scene.meshes[_i].material.diffuseColor.scaleToRef(0.55, scene.meshes[_i].material.diffuseColor);
-      }
-    }
-  }
-  if(yOff > 0.1 && landmark) landmark.position.y += yOff;
-  if(landmark) animatables[key]=landmark;
-
-  // Billboards
-  if(key==='highlight')return;
-  const N=projects.length;
-  projects.forEach((proj,i)=>{
-    const angle=N===1?Math.atan2(pos[2],pos[0])+Math.PI:(i/N)*Math.PI*2;
-    const r2=N===1?4.5:Math.min(5*Math.sqrt(N/2),8.5);
-    const bx=pos[0]+Math.cos(angle)*r2,bz=pos[2]+Math.sin(angle)*r2;
-    const logoUrl=logoSrc(proj.id);
-    if(logoUrl){
-      const img=new Image();let done=false;
-      const cb=(li)=>{if(done)return;done=true;makeBillboard(bx,bz,proj,col,li);};
-      img.onload=()=>cb(img);img.onerror=()=>cb(null);img.src=logoUrl;
-      if(img.complete)cb(img.naturalWidth>0?img:null);
-    }else makeBillboard(bx,bz,proj,col,null);
-  });
-});
-
-// ── Post-processing: single-pass painterly Kuwahara + quantise ───────────────
-// 4-quadrant Kuwahara (radius 3) — each pixel picks the lowest-variance quadrant
-// mean colour → paint-like smooth regions with preserved edges.
-// Colour quantisation posterises to N levels for a painted-palette feel.
-// Based on Maxime Heckel's "On Crafting Painterly Shaders" (Oct 2024).
-
-BABYLON.Effect.ShadersStore["painterlyFragmentShader"]=`
-  precision mediump float;
-  varying vec2 vUV;
-  uniform sampler2D textureSampler;
-  uniform vec2 texelSize;
-  uniform float levels;
-
-  float lum(vec3 c){ return dot(c, vec3(0.299, 0.587, 0.114)); }
-
-  void main(){
-    vec2 ts = texelSize;
-
-    // 4-quadrant Kuwahara, radius=3 (4x4 samples per quadrant, constant bounds)
-    vec3 m0=vec3(0.0),m1=vec3(0.0),m2=vec3(0.0),m3=vec3(0.0);
-    vec3 q0=vec3(0.0),q1=vec3(0.0),q2=vec3(0.0),q3=vec3(0.0);
-    float n = 16.0;
-
-    for(int j=0; j<=3; j++){
-      for(int i=0; i<=3; i++){
-        float fi=float(i), fj=float(j);
-        vec3 c;
-        c=texture2D(textureSampler,vUV+vec2( fi, fj)*ts).rgb; m0+=c; q0+=c*c;
-        c=texture2D(textureSampler,vUV+vec2(-fi, fj)*ts).rgb; m1+=c; q1+=c*c;
-        c=texture2D(textureSampler,vUV+vec2(-fi,-fj)*ts).rgb; m2+=c; q2+=c*c;
-        c=texture2D(textureSampler,vUV+vec2( fi,-fj)*ts).rgb; m3+=c; q3+=c*c;
-      }
-    }
-    m0/=n; m1/=n; m2/=n; m3/=n;
-    q0/=n; q1/=n; q2/=n; q3/=n;
-
-    float v0=dot(max(vec3(0.0),q0-m0*m0),vec3(1.0));
-    float v1=dot(max(vec3(0.0),q1-m1*m1),vec3(1.0));
-    float v2=dot(max(vec3(0.0),q2-m2*m2),vec3(1.0));
-    float v3=dot(max(vec3(0.0),q3-m3*m3),vec3(1.0));
-
-    float w0=1.0/(v0*80.0+0.004);
-    float w1=1.0/(v1*80.0+0.004);
-    float w2=1.0/(v2*80.0+0.004);
-    float w3=1.0/(v3*80.0+0.004);
-    float tw=w0+w1+w2+w3;
-
-    vec3 paint = (m0*w0+m1*w1+m2*w2+m3*w3)/tw;
-
-    // Colour quantisation
-    paint = floor(paint * levels + 0.5) / levels;
-
-    // Subtle outline from luminance gradient
-    float el=lum(texture2D(textureSampler,vUV+vec2(-ts.x,0.0)).rgb);
-    float er=lum(texture2D(textureSampler,vUV+vec2( ts.x,0.0)).rgb);
-    float et=lum(texture2D(textureSampler,vUV+vec2(0.0,-ts.y)).rgb);
-    float eb=lum(texture2D(textureSampler,vUV+vec2(0.0, ts.y)).rgb);
-    float edge=abs(er-el)+abs(eb-et);
-    float outline=smoothstep(0.02,0.06,edge);
-    paint=mix(paint,vec3(0.01,0.015,0.03),outline*0.65);
-
-    // Skip filter for very dark pixels (sky/void) — avoids teal bleeding into clearColor
-    // No early return (Safari incompatible): use mix() instead
-    vec4 original = texture2D(textureSampler, vUV);
-    float origLum = lum(original.rgb);
-    float isSky   = 1.0 - step(0.04, origLum);  // 1 if dark sky, 0 otherwise
-    vec3 result   = mix(paint, original.rgb, isSky);
-
-    // Vignette
-    vec2 cv = vUV - 0.5;
-    result *= 1.0 - dot(cv, cv) * 0.5;
-
-    gl_FragColor = vec4(clamp(result, 0.0, 1.0), 1.0);
-  }
-`;
-
-const painterlyPass = new BABYLON.PostProcess('painterly','painterly',
-  ['texelSize','levels'], [], 1.0, camera);
-painterlyPass.onApply = effect => {
-  effect.setFloat2('texelSize', 1/engine.getRenderWidth(), 1/engine.getRenderHeight());
-  effect.setFloat('levels', 20.0);
-};
-
-// ── Animations ───────────────────────────────────────────────────────────────
-const t0=performance.now();
-scene.registerBeforeRender(()=>{
-  const t=(performance.now()-t0)*0.001;
-  Object.entries(animatables).forEach(([key,m],i)=>{
-    if(!m._baseY) m._baseY=m.position.y;
-    m.rotation.y+=0.005+i*0.001;
-    m.position.y=m._baseY+Math.sin(t*0.65+i*1.3)*0.28;
-  });
-});
-
-// ── Camera navigation ─────────────────────────────────────────────────────────
-let autoRotate=true,autoAngle=camera.alpha,pathState=null;
-const DROP_T=0.14,ARRIVE_T=0.86,PATH_Y=1.8,TRAVEL_R=4.2,TRAVEL_B=Math.PI/2.05;
-function lerp(a,b,t){return a+(b-a)*t;}
-function lerpA(a,b,t){let d=b-a;while(d>Math.PI)d-=Math.PI*2;while(d<-Math.PI)d+=Math.PI*2;return a+d*t;}
-function ss(t){return t*t*(3-2*t);}
-function cr(t,p0,p1,p2,p3){return 0.5*((2*p1)+(-p0+p2)*t+(2*p0-5*p1+4*p2-p3)*t*t+(-p0+3*p1-3*p2+p3)*t*t*t);}
-function crT(t,p0,p1,p2,p3){return 0.5*((-p0+p2)+(2*(2*p0-5*p1+4*p2-p3))*t+3*(-p0+3*p1-3*p2+p3)*t*t);}
-
-scene.registerBeforeRender(()=>{
-  if(autoRotate&&!pathState){autoAngle-=0.0022;camera.alpha=autoAngle;return;}
-  if(!pathState)return;
-  pathState.t=Math.min(1,pathState.t+pathState.speed);
-  const done=pathState.t>=1;
-  if(pathState.t<=DROP_T){
-    const dt=ss(pathState.t/DROP_T);
-    camera.target.set(lerp(pathState.stx,pathState.pts[0].x,dt*0.3),lerp(pathState.sty,PATH_Y,dt),lerp(pathState.stz,pathState.pts[0].z,dt*0.3));
-    camera.beta=lerp(pathState.sb,TRAVEL_B,dt*0.6);camera.radius=lerp(pathState.sr,TRAVEL_R,dt*0.5);
-  }else if(pathState.t<=ARRIVE_T){
-    const tt=(pathState.t-DROP_T)/(ARRIVE_T-DROP_T);
-    const pts=pathState.pts,N=pts.length-1,fi=tt*N,i=Math.min(Math.floor(fi),N-1),lt=fi-i;
-    const p0=pts[Math.max(0,i-1)],p1=pts[i],p2=pts[Math.min(N,i+1)],p3=pts[Math.min(N,i+2)];
-    camera.target.set(cr(lt,p0.x,p1.x,p2.x,p3.x),PATH_Y,cr(lt,p0.z,p1.z,p2.z,p3.z));
-    const tx=crT(lt,p0.x,p1.x,p2.x,p3.x),tz=crT(lt,p0.z,p1.z,p2.z,p3.z);
-    if(Math.abs(tx)+Math.abs(tz)>0.001)camera.alpha=lerpA(camera.alpha,Math.atan2(tz,tx)+Math.PI,0.09);
-    camera.beta=lerp(camera.beta,TRAVEL_B,0.06);camera.radius=lerp(camera.radius,TRAVEL_R,0.06);
-  }else{
-    const at=ss((pathState.t-ARRIVE_T)/(1-ARRIVE_T)),f=at*0.14,et=pathState.et;
-    camera.target.x=lerp(camera.target.x,et.x,f);camera.target.y=lerp(camera.target.y,et.y,f);camera.target.z=lerp(camera.target.z,et.z,f);
-    camera.alpha=lerpA(camera.alpha,pathState.ea,at*0.13);camera.beta=lerp(camera.beta,pathState.eb,at*0.11);camera.radius=lerp(camera.radius,pathState.er,at*0.11);
-  }
-  if(done){const cb=pathState.onDone;pathState=null;if(cb)cb();}
-});
-
-function stopAuto(){autoRotate=false;}
-function flyTo(k){
-  stopAuto();pathState=null;scene.stopAnimation(camera);camera.animations.length=0;
-  const v=CAM_VIEWS[k];if(!v)return;
-  closeFocus();
-  document.querySelectorAll('.nav-btn').forEach(b=>b.classList.toggle('active',b.dataset.cluster===k));
-  const ease=new BABYLON.SineEase();ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
-  ['alpha','beta','radius'].forEach(prop=>{
-    const a=new BABYLON.Animation('f_'+prop,prop,60,BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-    a.setEasingFunction(ease);a.setKeys([{frame:0,value:camera[prop]},{frame:80,value:v[prop]}]);camera.animations.push(a);
-  });
-  const ta=new BABYLON.Animation('f_t','target',60,BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-  ta.setEasingFunction(ease);ta.setKeys([{frame:0,value:camera.target.clone()},{frame:80,value:new BABYLON.Vector3(...v.target)}]);
-  camera.animations.push(ta);scene.beginAnimation(camera,0,80,false,1,()=>camera.animations.length=0);
-}
-function rotateToBill(bill){
-  scene.stopAnimation(camera);camera.animations.length=0;
-  const{x,z}=bill.metadata;
-  const clKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===bill.metadata.proj.url))?.[0]||'highlight';
-  const cp=CLUSTERS[clKey].pos,dx=cp[0]-x,dz2=cp[2]-z,dist=Math.hypot(dx,dz2)||1;
-  const endA=Math.atan2(dz2/dist,dx/dist);
-  const ease=new BABYLON.SineEase();ease.setEasingMode(BABYLON.EasingFunction.EASINGMODE_EASEINOUT);
-  ['alpha','beta','radius'].forEach((prop,pi)=>{
-    const vals=[endA,Math.PI/2.4,6.0];
-    const a=new BABYLON.Animation('r_'+prop,prop,60,BABYLON.Animation.ANIMATIONTYPE_FLOAT,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-    a.setEasingFunction(ease);a.setKeys([{frame:0,value:camera[prop]},{frame:55,value:vals[pi]}]);camera.animations.push(a);
-  });
-  const ta=new BABYLON.Animation('r_t','target',60,BABYLON.Animation.ANIMATIONTYPE_VECTOR3,BABYLON.Animation.ANIMATIONLOOPMODE_CONSTANT);
-  ta.setEasingFunction(ease);ta.setKeys([{frame:0,value:camera.target.clone()},{frame:55,value:new BABYLON.Vector3(x,bill.position.y*0.5,z)}]);
-  camera.animations.push(ta);scene.beginAnimation(camera,0,55,false,1,()=>{camera.animations.length=0;openFocus(bill);});
-}
-function flyToBill(bill){
-  stopAuto();pathState=null;scene.stopAnimation(camera);camera.animations.length=0;
-  const{proj,x,z}=bill.metadata;
-  const clKey=Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===proj.url))?.[0]||'highlight';
-  const startKey=nearestCluster(camera.target.x,camera.target.z);
-  if(startKey===clKey){rotateToBill(bill);return;}
-  const route=bfsPath(startKey,clKey);
-  const wpts=[new BABYLON.Vector3(camera.target.x,PATH_Y,camera.target.z)];
-  for(let i=0;i<route.length-1;i++){
-    const ek=[route[i],route[i+1]].sort().join('--'),curve=PATH_CURVES[ek];
-    if(curve&&curve.length){const fwd=route[i]===ek.split('--')[0];(fwd?curve:[...curve].reverse()).forEach(p=>wpts.push(new BABYLON.Vector3(p[0],PATH_Y,p[1])));}
-    else{const cp2=CLUSTERS[route[i+1]].pos;wpts.push(new BABYLON.Vector3(cp2[0],PATH_Y,cp2[2]));}
-  }
-  wpts.push(new BABYLON.Vector3(x,bill.position.y*0.5,z));
-  let arcLen=0;for(let i=0;i<wpts.length-1;i++)arcLen+=BABYLON.Vector3.Distance(wpts[i],wpts[i+1]);
-  const speed=1/((arcLen/18+0.5)*60);
-  const cp3=CLUSTERS[clKey].pos,dx2=cp3[0]-x,dz3=cp3[2]-z,dist2=Math.hypot(dx2,dz3)||1;
-  pathState={pts:wpts,t:0,speed,stx:camera.target.x,sty:camera.target.y,stz:camera.target.z,sb:camera.beta,sr:camera.radius,et:new BABYLON.Vector3(x,bill.position.y*0.5,z),ea:Math.atan2(dz3/dist2,dx2/dist2),eb:Math.PI/2.4,er:6.0,onDone:()=>openFocus(bill)};
-}
-
-function openFocus(bill){
-  const{proj}=bill.metadata;
-  document.getElementById('focus-name').textContent=proj.name;
-  document.getElementById('focus-stars').textContent='★ '+proj.stars.toLocaleString()+'  ·  '+proj.lang;
-  document.getElementById('focus-desc').textContent=proj.desc;
-  document.getElementById('focus-link').href=proj.url;
-  const acc=CLUSTERS[Object.entries(CLUSTERS).find(([,c])=>c.projects.some(p=>p.url===proj.url))?.[0]]?.col||'#4488ff';
-  document.getElementById('focus-accent').style.color=acc;
-  const logEl=document.getElementById('focus-logo');
-  const lu=logoSrc(proj.id);
-  if(lu){logEl.src=lu;logEl.style.display='block';}else logEl.style.display='none';
-  document.getElementById('focus-panel').classList.add('open');
-}
-function closeFocus(){document.getElementById('focus-panel').classList.remove('open');}
-document.getElementById('focus-close').addEventListener('click',closeFocus);
-
-// Hover + click
-let hovered=null;
-scene.onPointerObservable.add(e=>{
-  if(e.type===BABYLON.PointerEventTypes.POINTERMOVE){
-    const hit=scene.pick(scene.pointerX,scene.pointerY);
-    const bill=billboards.find(b=>b===hit.pickedMesh);
-    if(bill!==hovered){
-      if(hovered)hovered.scaling.setAll(1);
-      hovered=bill||null;canvas.style.cursor=hovered?'pointer':'grab';
-      if(hovered)hovered.scaling.setAll(1.06);
-    }
-  }
-  if(e.type===BABYLON.PointerEventTypes.POINTERDOWN&&e.event.button===0){
-    if(hovered){flyToBill(hovered);stopAuto();}else closeFocus();
-  }
-});
-
-document.querySelectorAll('.nav-btn').forEach(btn=>{
-  btn.addEventListener('click',()=>{if(btn.dataset.cluster==='overview')autoRotate=true;flyTo(btn.dataset.cluster);});
-});
-
-const keys=new Set();
-window.addEventListener('keydown',e=>{
-  if(e.key==='Escape'){closeFocus();return;}
-  if(e.code==='Space'){e.preventDefault();autoRotate=!autoRotate;return;}
-  const cm={'Digit1':'overview','Digit2':'highlight','Digit3':'piku','Digit4':'ai','Digit5':'terminal','Digit6':'macos','Digit7':'infra'};
-  if(cm[e.code]){flyTo(cm[e.code]);return;}
-  keys.add(e.code);stopAuto();e.preventDefault();
-});
-window.addEventListener('keyup',e=>keys.delete(e.code));
-scene.registerBeforeRender(()=>{
-  const sp=0.022,zp=0.97;
-  if(keys.has('KeyA')||keys.has('ArrowLeft'))camera.alpha+=sp;
-  if(keys.has('KeyD')||keys.has('ArrowRight'))camera.alpha-=sp;
-  if(keys.has('KeyW')||keys.has('ArrowUp'))camera.beta=Math.max(0.08,camera.beta-sp);
-  if(keys.has('KeyS')||keys.has('ArrowDown'))camera.beta=Math.min(Math.PI*0.46,camera.beta+sp);
-  if(keys.has('Equal')||keys.has('KeyQ'))camera.radius=Math.max(4,camera.radius*zp);
-  if(keys.has('Minus')||keys.has('KeyE'))camera.radius=Math.min(140,camera.radius/zp);
-});
-
-window.addEventListener('resize',()=>engine.resize());
-engine.runRenderLoop(()=>scene.render());
-
-} // end data scope
-
+  focusCluster(clusterAnchors[0]?.id);
+  engine.runRenderLoop(() => scene.render());
+  window.addEventListener('resize', () => engine.resize());
+})();
 </script>
+</body>
+</html>
