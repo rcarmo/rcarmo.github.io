@@ -37,6 +37,41 @@
     </div>
   </header>
 
+  <section class="hero-media-band">
+    <div class="hero-media-inner">
+      <div class="hero-gallery" data-gallery tabindex="0" aria-label="Project gallery">
+        <div class="hero-gallery-stage">
+          
+          <figure class="hero-gallery-slide is-active" data-gallery-slide>
+            <img src="/assets/screenshots/haiku-arm64-build/desktop-qemu.png" alt="Haiku desktop in QEMU" loading="lazy">
+          </figure>
+          <figure class="hero-gallery-slide" data-gallery-slide>
+            <img src="/assets/screenshots/haiku-arm64-build/tracker-qemu.png" alt="Tracker running in QEMU" loading="lazy">
+          </figure>
+        </div>
+        <div class="hero-gallery-meta">
+          <div class="hero-gallery-nav">
+            <button type="button" class="hero-gallery-btn" data-gallery-prev aria-label="Previous image">◀</button>
+            <input class="hero-gallery-goto" data-gallery-goto type="number" min="1" value="1" title="Jump to image">
+            <span class="hero-gallery-status" data-gallery-status>/ 2</span>
+            <button type="button" class="hero-gallery-btn" data-gallery-next aria-label="Next image">▶</button>
+          </div>
+          <div class="hero-gallery-caption">
+            
+            <div class="hero-gallery-caption-item is-active" data-gallery-caption>
+              <div class="hero-gallery-caption-title">Haiku desktop in QEMU</div>
+              <div class="hero-gallery-caption-body">Full desktop session from the ARM64 QEMU image.</div>
+            </div>
+            <div class="hero-gallery-caption-item" data-gallery-caption>
+              <div class="hero-gallery-caption-title">Tracker running in QEMU</div>
+              <div class="hero-gallery-caption-body">File manager and desktop shell running on the generated image.</div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
   <div class="page-layout">
     <aside class="toc-sidebar">
       <a href="#s-about" class="toc-link" data-section="s-about">Overview</a>
@@ -193,9 +228,9 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/haiku-arm64-build">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mo91mb43"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mocmmnom"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mo91mb43';
+    import { mount } from '/assets/js/repo-island.mjs?v=mocmmnom';
     mount({
       fullName: 'rcarmo/haiku-arm64-build',
       heroMetaEl: document.getElementById('hero-meta-island-haiku-arm64-build'),
@@ -224,6 +259,43 @@
       }, { rootMargin: '-20% 0px -70% 0px' });
       sections.forEach(s => obs.observe(s.el));
     }
+
+    document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+      const slides = [...gallery.querySelectorAll('[data-gallery-slide]')];
+      const captions = [...gallery.querySelectorAll('[data-gallery-caption]')];
+      const prev = gallery.querySelector('[data-gallery-prev]');
+      const next = gallery.querySelector('[data-gallery-next]');
+      const goto = gallery.querySelector('[data-gallery-goto]');
+      const status = gallery.querySelector('[data-gallery-status]');
+      let index = 0;
+
+      function renderGallery(nextIndex) {
+        index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('is-active', i === index);
+        });
+        captions.forEach((caption, i) => caption.classList.toggle('is-active', i === index));
+        if (goto) {
+          goto.value = String(index + 1);
+          goto.max = String(slides.length);
+        }
+        if (status) status.textContent = '/ ' + slides.length;
+        if (prev) prev.disabled = index <= 0;
+        if (next) next.disabled = index >= slides.length - 1;
+      }
+
+      prev?.addEventListener('click', () => renderGallery(index - 1));
+      next?.addEventListener('click', () => renderGallery(index + 1));
+      goto?.addEventListener('change', () => renderGallery(Number(goto.value || 1) - 1));
+      goto?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') renderGallery(Number(goto.value || 1) - 1);
+      });
+      gallery.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); renderGallery(index - 1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); renderGallery(index + 1); }
+      });
+      renderGallery(0);
+    });
   </script>
 </body>
 </html>

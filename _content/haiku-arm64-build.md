@@ -6,6 +6,10 @@ tagline: Build environment and automation for compiling Haiku OS on ARM64.
 logo: assets/logos-opt/haiku-arm64-build.png
 ---
 
+## Gallery
+- [Haiku desktop in QEMU](assets/screenshots/haiku-arm64-build/desktop-qemu.png) — Full desktop session from the ARM64 QEMU image.
+- [Tracker running in QEMU](assets/screenshots/haiku-arm64-build/tracker-qemu.png) — File manager and desktop shell running on the generated image.
+
 ## About
 A Makefile-driven build system for cross-compiling and natively building Haiku OS on ARM64 hardware. Aimed at running Haiku on single-board computers and Apple Silicon via QEMU, with reproducible builds and minimal host dependencies.
 

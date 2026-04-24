@@ -110,6 +110,16 @@ function parsePosts(body: string): { title: string; url: string; date: string }[
   return posts;
 }
 
+function parseGallery(body: string): { title: string; src: string; caption: string }[] {
+  const items: { title: string; src: string; caption: string }[] = [];
+  const lines = body.split("\n").filter(l => l.trim().startsWith("- ") || l.trim().startsWith("* "));
+  for (const line of lines) {
+    const m = line.match(/\[([^\]]+)\]\(([^)]+)\)(?:\s*[—–-]\s*(.+))?/);
+    if (m) items.push({ title: m[1].trim(), src: m[2].trim(), caption: (m[3] || "").trim() });
+  }
+  return items;
+}
+
 // ── Read all projects ────────────────────────────────────────────────────────
 
 function readProjects(): Project[] {
@@ -247,6 +257,8 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
   // Gather content sections
   const aboutHtml    = getSectionHtml(project, "About");
   const howHtml      = getSectionHtml(project, "How it works");
+  const gallerySection = getSection(project, "Gallery");
+  const gallery      = gallerySection ? parseGallery(gallerySection.body) : [];
   const featuresSection = getSection(project, "Features");
   const features     = featuresSection ? parseFeatures(featuresSection.body) : [];
   const diagramSection = getSection(project, "Diagram");
@@ -281,6 +293,35 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
       <span class="post-date">${esc(p.date)}</span>
       <a href="${esc(p.url)}" target="_blank" rel="noopener">${esc(p.title)}</a>
     </div>`).join("\n");
+
+  const heroGalleryHtml = gallery.length ? `
+  <section class="hero-media-band">
+    <div class="hero-media-inner">
+      <div class="hero-gallery" data-gallery tabindex="0" aria-label="Project gallery">
+        <div class="hero-gallery-stage">
+          ${gallery.map((item, index) => `
+          <figure class="hero-gallery-slide${index === 0 ? ' is-active' : ''}" data-gallery-slide>
+            <img src="/${esc(item.src)}" alt="${esc(item.title)}" loading="lazy">
+          </figure>`).join("")}
+        </div>
+        <div class="hero-gallery-meta">
+          <div class="hero-gallery-nav">
+            <button type="button" class="hero-gallery-btn" data-gallery-prev aria-label="Previous image">◀</button>
+            <input class="hero-gallery-goto" data-gallery-goto type="number" min="1" value="1" title="Jump to image">
+            <span class="hero-gallery-status" data-gallery-status>/ ${gallery.length}</span>
+            <button type="button" class="hero-gallery-btn" data-gallery-next aria-label="Next image">▶</button>
+          </div>
+          <div class="hero-gallery-caption">
+            ${gallery.map((item, index) => `
+            <div class="hero-gallery-caption-item${index === 0 ? ' is-active' : ''}" data-gallery-caption>
+              <div class="hero-gallery-caption-title">${esc(item.title)}</div>
+              ${item.caption ? `<div class="hero-gallery-caption-body">${esc(item.caption)}</div>` : ""}
+            </div>`).join("")}
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>` : "";
 
   const relatedCandidates = allProjects
     .filter(p => p.fm.section === fm.section && p.id !== id)
@@ -336,6 +377,7 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
       <div id="hero-related-${id}" class="hero-related" hidden></div>
     </div>
   </header>
+${heroGalleryHtml}
 
   <div class="page-layout">
     <aside class="toc-sidebar">
@@ -420,6 +462,43 @@ ${posts.length ? `      <section class="sec" id="s-posts">
       }, { rootMargin: '-20% 0px -70% 0px' });
       sections.forEach(s => obs.observe(s.el));
     }
+
+    document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+      const slides = [...gallery.querySelectorAll('[data-gallery-slide]')];
+      const captions = [...gallery.querySelectorAll('[data-gallery-caption]')];
+      const prev = gallery.querySelector('[data-gallery-prev]');
+      const next = gallery.querySelector('[data-gallery-next]');
+      const goto = gallery.querySelector('[data-gallery-goto]');
+      const status = gallery.querySelector('[data-gallery-status]');
+      let index = 0;
+
+      function renderGallery(nextIndex) {
+        index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('is-active', i === index);
+        });
+        captions.forEach((caption, i) => caption.classList.toggle('is-active', i === index));
+        if (goto) {
+          goto.value = String(index + 1);
+          goto.max = String(slides.length);
+        }
+        if (status) status.textContent = '/ ' + slides.length;
+        if (prev) prev.disabled = index <= 0;
+        if (next) next.disabled = index >= slides.length - 1;
+      }
+
+      prev?.addEventListener('click', () => renderGallery(index - 1));
+      next?.addEventListener('click', () => renderGallery(index + 1));
+      goto?.addEventListener('change', () => renderGallery(Number(goto.value || 1) - 1));
+      goto?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') renderGallery(Number(goto.value || 1) - 1);
+      });
+      gallery.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); renderGallery(index - 1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); renderGallery(index + 1); }
+      });
+      renderGallery(0);
+    });
   </script>
 </body>
 </html>`;
