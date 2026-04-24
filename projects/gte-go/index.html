@@ -4,11 +4,11 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>gte-go — rcarmo</title>
-<meta name="description" content="Go inference for the GTE Small text embedding model — local semantic search with no Python required.">
+<meta name="description" content="Pure Go GTE-Small text embeddings — hand-written SIMD, 1 allocation per embed, predictable flat latency.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="rcarmo.github.io">
 <meta property="og:title" content="gte-go — rcarmo">
-<meta property="og:description" content="Go inference for the GTE Small text embedding model — local semantic search with no Python required.">
+<meta property="og:description" content="Pure Go GTE-Small text embeddings — hand-written SIMD, 1 allocation per embed, predictable flat latency.">
 <meta property="og:url" content="https://rcarmo.github.io/projects/gte-go/">
 <meta property="og:image" content="https://rcarmo.github.io/assets/og/gte-go.svg">
 <meta property="og:image:type" content="image/svg+xml">
@@ -17,7 +17,7 @@
 <meta property="og:image:alt" content="gte-go project card">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="gte-go — rcarmo">
-<meta name="twitter:description" content="Go inference for the GTE Small text embedding model — local semantic search with no Python required.">
+<meta name="twitter:description" content="Pure Go GTE-Small text embeddings — hand-written SIMD, 1 allocation per embed, predictable flat latency.">
 <meta name="twitter:image" content="https://rcarmo.github.io/assets/og/gte-go.svg">
 <meta name="twitter:image:alt" content="gte-go project card">
 <link rel="stylesheet" href="/assets/css/style.css">
@@ -33,14 +33,14 @@
 
   <header class="hero hero-project" id="hero" data-section="ai-ml">
     <div class="hero-inner">
-      <img class="hero-logo" src="/assets/logos-opt/default-00.png" alt="Go inference for the GTE Small text embedding model — local semantic search with no Python required. logo">
+      <img class="hero-logo" src="/assets/logos-opt/default-00.png" alt="Pure Go GTE-Small text embeddings — hand-written SIMD, 1 allocation per embed, predictable flat latency. logo">
       <div class="hero-text">
         <div class="hero-kicker">Project</div>
         <div class="hero-title-row">
           <h1>gte-go</h1>
           <span class="badge badge-active">active</span>
         </div>
-        <p class="hero-tagline">Go inference for the GTE Small text embedding model — local semantic search with no Python required.</p>
+        <p class="hero-tagline">Pure Go GTE-Small text embeddings — hand-written SIMD, 1 allocation per embed, predictable flat latency.</p>
         <div id="hero-meta-island-gte-go" class="hero-meta">
           <!-- live: stars, forks, language -->
         </div>
@@ -52,6 +52,72 @@
     </div>
   </header>
 
+  <section class="hero-media-band">
+    <div class="hero-media-inner">
+      <div class="hero-gallery" data-gallery tabindex="0" aria-label="Project gallery">
+        <div class="hero-gallery-stage">
+          
+          <figure class="hero-gallery-slide is-active" data-gallery-slide>
+            <img src="/assets/screenshots/gte-go/optimization-results.svg" alt="Optimization results" loading="lazy">
+          </figure>
+          <figure class="hero-gallery-slide" data-gallery-slide>
+            <img src="/assets/screenshots/gte-go/jitter-plot.svg" alt="Jitter plot" loading="lazy">
+          </figure>
+          <figure class="hero-gallery-slide" data-gallery-slide>
+            <img src="/assets/screenshots/gte-go/batch-latency.svg" alt="Batch latency" loading="lazy">
+          </figure>
+          <figure class="hero-gallery-slide" data-gallery-slide>
+            <img src="/assets/screenshots/gte-go/gogc-comparison.svg" alt="GOGC comparison" loading="lazy">
+          </figure>
+        </div>
+        <div class="hero-gallery-meta">
+          <div class="hero-gallery-nav-row">
+            <div class="hero-gallery-nav">
+              <button type="button" class="hero-gallery-btn" data-gallery-prev aria-label="Previous image">◀</button>
+              <input class="hero-gallery-goto" data-gallery-goto type="number" min="1" value="1" title="Jump to image">
+              <span class="hero-gallery-status" data-gallery-status>/ 4</span>
+              <button type="button" class="hero-gallery-btn" data-gallery-next aria-label="Next image">▶</button>
+            </div>
+            <div class="hero-gallery-hint">←/→ keyboard navigation</div>
+          </div>
+          <div class="hero-gallery-caption">
+            
+            <div class="hero-gallery-caption-item is-active" data-gallery-caption>
+              <div class="hero-gallery-caption-title">Optimization results</div>
+              <div class="hero-gallery-caption-body">4-phase optimization from baseline to SIMD</div>
+            </div>
+            <div class="hero-gallery-caption-item" data-gallery-caption>
+              <div class="hero-gallery-caption-title">Jitter plot</div>
+              <div class="hero-gallery-caption-body">5000-embed jitter across discrete and batched modes</div>
+            </div>
+            <div class="hero-gallery-caption-item" data-gallery-caption>
+              <div class="hero-gallery-caption-title">Batch latency</div>
+              <div class="hero-gallery-caption-body">batch size vs latency scaling</div>
+            </div>
+            <div class="hero-gallery-caption-item" data-gallery-caption>
+              <div class="hero-gallery-caption-title">GOGC comparison</div>
+              <div class="hero-gallery-caption-body">GC pressure under different GOGC settings</div>
+            </div>
+          </div>
+          <div class="hero-gallery-thumbs" role="tablist" aria-label="Gallery thumbnails">
+            
+            <button type="button" class="hero-gallery-thumb is-active" data-gallery-thumb aria-label="Show image 1: Optimization results">
+              <img src="/assets/screenshots/gte-go/optimization-results.svg" alt="" loading="lazy">
+            </button>
+            <button type="button" class="hero-gallery-thumb" data-gallery-thumb aria-label="Show image 2: Jitter plot">
+              <img src="/assets/screenshots/gte-go/jitter-plot.svg" alt="" loading="lazy">
+            </button>
+            <button type="button" class="hero-gallery-thumb" data-gallery-thumb aria-label="Show image 3: Batch latency">
+              <img src="/assets/screenshots/gte-go/batch-latency.svg" alt="" loading="lazy">
+            </button>
+            <button type="button" class="hero-gallery-thumb" data-gallery-thumb aria-label="Show image 4: GOGC comparison">
+              <img src="/assets/screenshots/gte-go/gogc-comparison.svg" alt="" loading="lazy">
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
 
   <div class="page-layout">
     <aside class="toc-sidebar">
@@ -59,6 +125,7 @@
       <a href="#s-how" class="toc-link" data-section="s-how">How it works</a>
       <a href="#s-features" class="toc-link" data-section="s-features">Features</a>
       <a href="#s-diagram" class="toc-link" data-section="s-diagram">Diagram</a>
+      <a href="#s-posts" class="toc-link" data-section="s-posts">Posts</a>
     </aside>
 
     <main class="content">
@@ -68,13 +135,13 @@
 
       <section class="sec" id="s-about">
         <div class="sec-label">Overview</div>
-        <p>Forked from <a href="https://github.com/antirez/gte-pure-C" target="_blank" rel="noopener">antirez/gte-pure-C</a>. Complete rewrite in Go with ONNX Runtime backend for embeddable library use.</p>
-<p>gte-go runs the GTE Small sentence embedding model entirely in Go using ONNX Runtime. Feed it a string, get back a 384-dimensional float32 vector — ready for cosine similarity, nearest-neighbour search, or any other semantic retrieval task. No Python, no PyTorch, no GPU required; compiles to a single binary that works on any platform ONNX Runtime supports.</p>
+        <p>Forked from <a href="https://github.com/antirez/gte-pure-C" target="_blank" rel="noopener">antirez/gte-pure-C</a>. A pure Go implementation of the <a href="https://huggingface.co/thenlper/gte-small" target="_blank" rel="noopener">GTE-Small</a> text embedding model. Produces 384-dimensional, L2-normalized embeddings suitable for similarity search and clustering.</p>
+<p>Single static binary. 1 allocation per embed. Predictable flat latency. All matrix operations use hand-written SIMD assembly (AVX2+FMA on amd64, NEON on arm64) — no gonum, no goroutine churn, no CGo in the default build.</p>
       </section>
 
       <section class="sec" id="s-how">
         <div class="sec-label">How it works</div>
-        <p>Loads the GTE Small ONNX model at startup, tokenises input text with a bundled WordPiece tokeniser, runs a forward pass through the transformer, and returns the mean-pooled embedding as a Go slice. The heavy lifting is delegated to the ONNX Runtime C library via cgo bindings, keeping the Go code minimal and the inference path fast.</p>
+        <p>Loads a converted GTE-Small model at startup, tokenises input with a bundled WordPiece tokeniser, runs matrix multiplications through hand-tuned SIMD kernels, and returns mean-pooled L2-normalized embeddings as a Go slice. The hot path has zero goroutine overhead and generates ~700 bytes/s of GC pressure at 100 qps — 10,000× less than a gonum BLAS equivalent.</p>
       </section>
 
       <section class="sec" id="s-features">
@@ -85,39 +152,39 @@
       <div class="feature-icon">🔢</div>
       <div>
         <div class="feature-title">384-dim embeddings</div>
-        <div class="feature-body"><p>Returns normalised 384-dimensional vectors compatible with GTE Small's training distribution — plug directly into cosine similarity or FAISS.</p></div>
+        <div class="feature-body"><p>Returns L2-normalized 384-dimensional vectors compatible with GTE-Small's training distribution — plug directly into cosine similarity, FAISS, or any vector store.</p></div>
       </div>
     </div>
 
     <div class="feature">
       <div class="feature-icon">⚡</div>
       <div>
-        <div class="feature-title">Pure Go API</div>
-        <div class="feature-body"><p>Single function call: <code>Embed(text string) ([]float32, error)</code> — no Python subprocess, no HTTP round-trip, no GPU.</p></div>
+        <div class="feature-title">Hand-written SIMD</div>
+        <div class="feature-body"><p>AVX2+FMA on amd64, NEON on arm64 — non-temporal matmul, fused dot products, and packed transpose kernels written in Go assembly. No CGo required.</p></div>
       </div>
     </div>
 
     <div class="feature">
-      <div class="feature-icon">🧩</div>
+      <div class="feature-icon">🧊</div>
       <div>
-        <div class="feature-title">ONNX Runtime backend</div>
-        <div class="feature-body"><p>Uses the ONNX Runtime C API via cgo for optimised CPU inference — takes advantage of AVX/NEON when available.</p></div>
+        <div class="feature-title">1 allocation per embed</div>
+        <div class="feature-body"><p>The entire inference path allocates once (uppercase→lowercase token lowering). For all-lowercase input: <strong>0 allocations</strong>. GC pressure is ~700 B/s vs 13 MB/s with gonum BLAS.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">📉</div>
+      <div>
+        <div class="feature-title">Flat latency</div>
+        <div class="feature-body"><p>No goroutine churn means predictable p50/p99. Batching reduces jitter 3–5× further. Remaining spikes are Go runtime background work, not inference code.</p></div>
       </div>
     </div>
 
     <div class="feature">
       <div class="feature-icon">📦</div>
       <div>
-        <div class="feature-title">Embeddable library</div>
-        <div class="feature-body"><p>Import as a Go module into any service that needs local semantic search — agents, code search tools, document retrievers.</p></div>
-      </div>
-    </div>
-
-    <div class="feature">
-      <div class="feature-icon">🔒</div>
-      <div>
-        <div class="feature-title">Fully offline</div>
-        <div class="feature-body"><p>Model weights are bundled or loaded from disk at startup — no network calls, no external API keys.</p></div>
+        <div class="feature-title">Static binary</div>
+        <div class="feature-body"><p>Default <code>make</code> produces a fully self-contained static binary with no C dependencies — portable to any amd64 or arm64 target.</p></div>
       </div>
     </div>
         </div>
@@ -125,7 +192,7 @@
 
       <section class="sec" id="s-diagram">
         <div class="sec-label">Architecture</div>
-        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220">
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 280">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -160,36 +227,58 @@
     </marker>
   </defs>
 
-  <rect x="20" y="74" width="140" height="72" rx="8" class="box"/>
-  <text x="90" y="102" text-anchor="middle" class="label">Go string</text>
-  <text x="90" y="119" text-anchor="middle" class="sub">text input</text>
+  <!-- Input -->
+  <rect x="20" y="100" width="120" height="64" rx="8" class="box"/>
+  <text x="80" y="126" text-anchor="middle" class="label">Go string</text>
+  <text x="80" y="142" text-anchor="middle" class="sub">text input</text>
 
-  <rect x="220" y="74" width="150" height="72" rx="8" class="box-accent"/>
-  <text x="295" y="102" text-anchor="middle" class="label">Tokenizer</text>
-  <text x="295" y="119" text-anchor="middle" class="sub">WordPiece in Go</text>
+  <!-- Tokenizer -->
+  <rect x="190" y="100" width="130" height="64" rx="8" class="box-accent"/>
+  <text x="255" y="126" text-anchor="middle" class="label">WordPiece</text>
+  <text x="255" y="142" text-anchor="middle" class="sub">tokenizer in Go</text>
 
-  <rect x="430" y="74" width="150" height="72" rx="8" class="box-purple"/>
-  <text x="505" y="102" text-anchor="middle" class="label">GTE Small ONNX</text>
-  <text x="505" y="119" text-anchor="middle" class="sub">inference via cgo</text>
+  <!-- SIMD Kernels -->
+  <rect x="370" y="80" width="160" height="104" rx="8" class="box-purple"/>
+  <text x="450" y="108" text-anchor="middle" class="label">SIMD Kernels</text>
+  <text x="450" y="126" text-anchor="middle" class="sub">AVX2+FMA / NEON</text>
+  <text x="450" y="144" text-anchor="middle" class="sub">NT matmul, dot, pack</text>
+  <text x="450" y="162" text-anchor="middle" class="sub">1 alloc, 0 goroutines</text>
 
-  <rect x="640" y="74" width="100" height="72" rx="8" class="box-green"/>
-  <text x="690" y="102" text-anchor="middle" class="label">[]float32</text>
-  <text x="690" y="119" text-anchor="middle" class="sub">384-dim</text>
+  <!-- Output -->
+  <rect x="580" y="100" width="100" height="64" rx="8" class="box-green"/>
+  <text x="630" y="126" text-anchor="middle" class="label">[]float32</text>
+  <text x="630" y="142" text-anchor="middle" class="sub">384-dim L2-norm</text>
 
-  <rect x="450" y="24" width="110" height="28" rx="8" class="box"/>
-  <text x="505" y="42" text-anchor="middle" class="sub">ONNX Runtime</text>
+  <!-- Model file -->
+  <rect x="390" y="20" width="120" height="36" rx="8" class="box-warm"/>
+  <text x="450" y="43" text-anchor="middle" class="sub">.gtemodel weights</text>
 
-  <line x1="160" y1="110" x2="216" y2="110" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="370" y1="110" x2="426" y2="110" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="580" y1="110" x2="636" y2="110" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <!-- Perf box -->
+  <rect x="370" y="210" width="160" height="48" rx="8" class="box"/>
+  <text x="450" y="232" text-anchor="middle" class="sub">~10ms/embed amd64</text>
+  <text x="450" y="248" text-anchor="middle" class="sub">~700 B/s GC pressure</text>
 
-  <text x="380" y="188" text-anchor="middle" class="sub">fully offline semantic embeddings in a single Go binary</text>
+  <!-- Arrows -->
+  <line x1="140" y1="132" x2="186" y2="132" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="320" y1="132" x2="366" y2="132" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="530" y1="132" x2="576" y2="132" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="450" y1="56" x2="450" y2="76" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="450" y1="184" x2="450" y2="206" stroke="#5070a0" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#ah)"/>
+
+  <text x="390" y="270" text-anchor="middle" class="sub">pure Go + SIMD assembly — no CGo, no gonum, no goroutine churn</text>
 </svg></div>
       </section>
 
 
 
-
+      <section class="sec" id="s-posts">
+        <div class="sec-label">Posts</div>
+        <div class="posts">
+    <div class="post">
+      <span class="post-date">2025-03-22</span>
+      <a href="https://taoofmac.com/space/blog/2025/03/22/1900" target="_blank" rel="noopener">GTE-Small in Go</a>
+    </div></div>
+      </section>
     </main>
   </div>
 
@@ -198,9 +287,9 @@
     <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/gte-go">Source</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=mod343h0"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=mod78ccv"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=mod343h0';
+    import { mount } from '/assets/js/repo-island.mjs?v=mod78ccv';
     mount({
       fullName: 'rcarmo/gte-go',
       heroMetaEl: document.getElementById('hero-meta-island-gte-go'),

@@ -2,35 +2,41 @@
 section: ai-ml
 status: active
 created: 2026-01-15
-tagline: Go inference for the GTE Small text embedding model — local semantic search with no Python required.
+tagline: Pure Go GTE-Small text embeddings — hand-written SIMD, 1 allocation per embed, predictable flat latency.
 ---
 
 ## About
-Forked from [antirez/gte-pure-C](https://github.com/antirez/gte-pure-C). Complete rewrite in Go with ONNX Runtime backend for embeddable library use.
+Forked from [antirez/gte-pure-C](https://github.com/antirez/gte-pure-C). A pure Go implementation of the [GTE-Small](https://huggingface.co/thenlper/gte-small) text embedding model. Produces 384-dimensional, L2-normalized embeddings suitable for similarity search and clustering.
 
-gte-go runs the GTE Small sentence embedding model entirely in Go using ONNX Runtime. Feed it a string, get back a 384-dimensional float32 vector — ready for cosine similarity, nearest-neighbour search, or any other semantic retrieval task. No Python, no PyTorch, no GPU required; compiles to a single binary that works on any platform ONNX Runtime supports.
+Single static binary. 1 allocation per embed. Predictable flat latency. All matrix operations use hand-written SIMD assembly (AVX2+FMA on amd64, NEON on arm64) — no gonum, no goroutine churn, no CGo in the default build.
 
 ## How it works
-Loads the GTE Small ONNX model at startup, tokenises input text with a bundled WordPiece tokeniser, runs a forward pass through the transformer, and returns the mean-pooled embedding as a Go slice. The heavy lifting is delegated to the ONNX Runtime C library via cgo bindings, keeping the Go code minimal and the inference path fast.
+Loads a converted GTE-Small model at startup, tokenises input with a bundled WordPiece tokeniser, runs matrix multiplications through hand-tuned SIMD kernels, and returns mean-pooled L2-normalized embeddings as a Go slice. The hot path has zero goroutine overhead and generates ~700 bytes/s of GC pressure at 100 qps — 10,000× less than a gonum BLAS equivalent.
 
 ## Features
 ### 🔢 384-dim embeddings
-Returns normalised 384-dimensional vectors compatible with GTE Small's training distribution — plug directly into cosine similarity or FAISS.
+Returns L2-normalized 384-dimensional vectors compatible with GTE-Small's training distribution — plug directly into cosine similarity, FAISS, or any vector store.
 
-### ⚡ Pure Go API
-Single function call: `Embed(text string) ([]float32, error)` — no Python subprocess, no HTTP round-trip, no GPU.
+### ⚡ Hand-written SIMD
+AVX2+FMA on amd64, NEON on arm64 — non-temporal matmul, fused dot products, and packed transpose kernels written in Go assembly. No CGo required.
 
-### 🧩 ONNX Runtime backend
-Uses the ONNX Runtime C API via cgo for optimised CPU inference — takes advantage of AVX/NEON when available.
+### 🧊 1 allocation per embed
+The entire inference path allocates once (uppercase→lowercase token lowering). For all-lowercase input: **0 allocations**. GC pressure is ~700 B/s vs 13 MB/s with gonum BLAS.
 
-### 📦 Embeddable library
-Import as a Go module into any service that needs local semantic search — agents, code search tools, document retrievers.
+### 📉 Flat latency
+No goroutine churn means predictable p50/p99. Batching reduces jitter 3–5× further. Remaining spikes are Go runtime background work, not inference code.
 
-### 🔒 Fully offline
-Model weights are bundled or loaded from disk at startup — no network calls, no external API keys.
+### 📦 Static binary
+Default `make` produces a fully self-contained static binary with no C dependencies — portable to any amd64 or arm64 target.
+
+## Gallery
+- [Optimization results](assets/screenshots/gte-go/optimization-results.svg) — 4-phase optimization from baseline to SIMD
+- [Jitter plot](assets/screenshots/gte-go/jitter-plot.svg) — 5000-embed jitter across discrete and batched modes
+- [Batch latency](assets/screenshots/gte-go/batch-latency.svg) — batch size vs latency scaling
+- [GOGC comparison](assets/screenshots/gte-go/gogc-comparison.svg) — GC pressure under different GOGC settings
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 280">
   <style>
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
@@ -65,28 +71,46 @@ Model weights are bundled or loaded from disk at startup — no network calls, n
     </marker>
   </defs>
 
-  <rect x="20" y="74" width="140" height="72" rx="8" class="box"/>
-  <text x="90" y="102" text-anchor="middle" class="label">Go string</text>
-  <text x="90" y="119" text-anchor="middle" class="sub">text input</text>
+  <!-- Input -->
+  <rect x="20" y="100" width="120" height="64" rx="8" class="box"/>
+  <text x="80" y="126" text-anchor="middle" class="label">Go string</text>
+  <text x="80" y="142" text-anchor="middle" class="sub">text input</text>
 
-  <rect x="220" y="74" width="150" height="72" rx="8" class="box-accent"/>
-  <text x="295" y="102" text-anchor="middle" class="label">Tokenizer</text>
-  <text x="295" y="119" text-anchor="middle" class="sub">WordPiece in Go</text>
+  <!-- Tokenizer -->
+  <rect x="190" y="100" width="130" height="64" rx="8" class="box-accent"/>
+  <text x="255" y="126" text-anchor="middle" class="label">WordPiece</text>
+  <text x="255" y="142" text-anchor="middle" class="sub">tokenizer in Go</text>
 
-  <rect x="430" y="74" width="150" height="72" rx="8" class="box-purple"/>
-  <text x="505" y="102" text-anchor="middle" class="label">GTE Small ONNX</text>
-  <text x="505" y="119" text-anchor="middle" class="sub">inference via cgo</text>
+  <!-- SIMD Kernels -->
+  <rect x="370" y="80" width="160" height="104" rx="8" class="box-purple"/>
+  <text x="450" y="108" text-anchor="middle" class="label">SIMD Kernels</text>
+  <text x="450" y="126" text-anchor="middle" class="sub">AVX2+FMA / NEON</text>
+  <text x="450" y="144" text-anchor="middle" class="sub">NT matmul, dot, pack</text>
+  <text x="450" y="162" text-anchor="middle" class="sub">1 alloc, 0 goroutines</text>
 
-  <rect x="640" y="74" width="100" height="72" rx="8" class="box-green"/>
-  <text x="690" y="102" text-anchor="middle" class="label">[]float32</text>
-  <text x="690" y="119" text-anchor="middle" class="sub">384-dim</text>
+  <!-- Output -->
+  <rect x="580" y="100" width="100" height="64" rx="8" class="box-green"/>
+  <text x="630" y="126" text-anchor="middle" class="label">[]float32</text>
+  <text x="630" y="142" text-anchor="middle" class="sub">384-dim L2-norm</text>
 
-  <rect x="450" y="24" width="110" height="28" rx="8" class="box"/>
-  <text x="505" y="42" text-anchor="middle" class="sub">ONNX Runtime</text>
+  <!-- Model file -->
+  <rect x="390" y="20" width="120" height="36" rx="8" class="box-warm"/>
+  <text x="450" y="43" text-anchor="middle" class="sub">.gtemodel weights</text>
 
-  <line x1="160" y1="110" x2="216" y2="110" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="370" y1="110" x2="426" y2="110" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="580" y1="110" x2="636" y2="110" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <!-- Perf box -->
+  <rect x="370" y="210" width="160" height="48" rx="8" class="box"/>
+  <text x="450" y="232" text-anchor="middle" class="sub">~10ms/embed amd64</text>
+  <text x="450" y="248" text-anchor="middle" class="sub">~700 B/s GC pressure</text>
 
-  <text x="380" y="188" text-anchor="middle" class="sub">fully offline semantic embeddings in a single Go binary</text>
+  <!-- Arrows -->
+  <line x1="140" y1="132" x2="186" y2="132" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="320" y1="132" x2="366" y2="132" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <line x1="530" y1="132" x2="576" y2="132" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="450" y1="56" x2="450" y2="76" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="450" y1="184" x2="450" y2="206" stroke="#5070a0" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#ah)"/>
+
+  <text x="390" y="270" text-anchor="middle" class="sub">pure Go + SIMD assembly — no CGo, no gonum, no goroutine churn</text>
 </svg>
+
+## Posts
+- [GTE-Small in Go](https://taoofmac.com/space/blog/2025/03/22/1900) — 2025-03-22
