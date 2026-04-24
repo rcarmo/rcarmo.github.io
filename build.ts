@@ -9,15 +9,18 @@
  * Usage: bun run build.ts
  */
 import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, rmSync } from "node:fs";
-import { join } from "node:path";
+import { extname, join } from "node:path";
 
 // ── Paths ────────────────────────────────────────────────────────────────────
 const ROOT    = import.meta.dir;
 const CONTENT = join(ROOT, "_content");
 const OUT     = join(ROOT, "projects");
 const ASSETS  = join(ROOT, "assets");
+const OG_OUT  = join(ASSETS, "og");
+const SITE_URL = "https://rcarmo.github.io";
 const ASSET_VERSION = Date.now().toString(36);
 mkdirSync(OUT, { recursive: true });
+mkdirSync(OG_OUT, { recursive: true });
 
 // ── Types ────────────────────────────────────────────────────────────────────
 interface Frontmatter {
@@ -165,6 +168,138 @@ function esc(s: string): string {
   return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
+function mimeTypeFor(path: string): string {
+  const ext = extname(path).toLowerCase();
+  if (ext === ".svg") return "image/svg+xml";
+  if (ext === ".png") return "image/png";
+  if (ext === ".jpg" || ext === ".jpeg") return "image/jpeg";
+  if (ext === ".webp") return "image/webp";
+  if (ext === ".gif") return "image/gif";
+  return "application/octet-stream";
+}
+
+function assetDataUri(pathOrNull: string | null): string | null {
+  if (!pathOrNull) return null;
+  const rel = pathOrNull.replace(/^\//, "");
+  const full = join(ROOT, rel);
+  if (!existsSync(full)) return null;
+  const buf = readFileSync(full);
+  return `data:${mimeTypeFor(full)};base64,${buf.toString("base64")}`;
+}
+
+function ogImageUrl(name: string): string {
+  return `${SITE_URL}/assets/og/${name}.svg`;
+}
+
+function wrapOgText(text: string, maxChars: number, maxLines: number): string[] {
+  const words = text.trim().split(/\s+/).filter(Boolean);
+  const lines: string[] = [];
+  let current = "";
+  for (const word of words) {
+    const candidate = current ? `${current} ${word}` : word;
+    if (candidate.length <= maxChars) {
+      current = candidate;
+      continue;
+    }
+    if (current) lines.push(current);
+    current = word;
+    if (lines.length === maxLines - 1) break;
+  }
+  if (lines.length < maxLines && current) lines.push(current);
+  if (lines.length > maxLines) lines.length = maxLines;
+  const consumed = lines.join(" ");
+  if (consumed.length < text.trim().length && lines.length) {
+    lines[lines.length - 1] = lines[lines.length - 1].replace(/[\s.]+$/, "") + "…";
+  }
+  return lines;
+}
+
+function buildOgCardSvg(opts: {
+  title: string;
+  description: string;
+  kicker: string;
+  imageDataUri?: string | null;
+  accent?: string;
+  meta?: string;
+}): string {
+  const accent = opts.accent || "#2563eb";
+  const title = esc(opts.title);
+  const kicker = esc(opts.kicker);
+  const meta = esc(opts.meta || "rcarmo.github.io");
+  const imageDataUri = opts.imageDataUri || "";
+  const descLines = wrapOgText(opts.description, 42, 3)
+    .map((line, index) => `<text x="344" y="${330 + index * 38}" font-family="Inter,system-ui,sans-serif" font-size="28" fill="#334155">${esc(line)}</text>`)
+    .join("\n    ");
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="${title}">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f5f9ff"/>
+      <stop offset="100%" stop-color="#eaf1fb"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="${accent}"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#8aa3c4" flood-opacity="0.20"/>
+    </filter>
+    <clipPath id="logoClip">
+      <rect x="120" y="153" width="170" height="170" rx="36"/>
+    </clipPath>
+  </defs>
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <circle cx="1110" cy="92" r="220" fill="#dbeafe" opacity="0.7"/>
+  <circle cx="102" cy="578" r="190" fill="#eff6ff" opacity="0.85"/>
+  <g filter="url(#shadow)">
+    <rect x="66" y="66" width="1068" height="498" rx="34" fill="#ffffff"/>
+    <rect x="66" y="66" width="1068" height="498" rx="34" fill="none" stroke="#d7e3f4"/>
+    <rect x="66" y="66" width="1068" height="14" rx="14" fill="url(#accent)"/>
+    <rect x="120" y="153" width="170" height="170" rx="36" fill="#eff6ff" stroke="#dbe5f1"/>
+    ${imageDataUri ? `<image href="${imageDataUri}" x="136" y="169" width="138" height="138" preserveAspectRatio="xMidYMid meet" clip-path="url(#logoClip)"/>` : `<text x="205" y="256" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="72" font-weight="700" fill="#2563eb">◉</text>`}
+    <text x="344" y="178" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="700" letter-spacing="1.5" fill="${accent}">${kicker}</text>
+    <text x="344" y="258" font-family="IBM Plex Sans,Inter,system-ui,sans-serif" font-size="58" font-weight="700" fill="#0f172a">${title}</text>
+    ${descLines}
+    <rect x="344" y="468" width="212" height="48" rx="24" fill="#eff6ff" stroke="#dbeafe"/>
+    <text x="450" y="500" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="20" fill="#1e3a8a">${meta}</text>
+    <text x="1046" y="508" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="600" fill="#64748b">rcarmo.github.io</text>
+  </g>
+</svg>`;
+}
+
+function writeOgCard(name: string, svg: string): void {
+  writeFileSync(join(OG_OUT, `${name}.svg`), svg);
+}
+
+function buildMetaTags(opts: {
+  title: string;
+  description: string;
+  canonicalUrl: string;
+  imageUrl: string;
+  imageAlt: string;
+  type?: string;
+}): string {
+  const type = opts.type || "website";
+  return [
+    `<meta name="description" content="${esc(opts.description)}">`,
+    `<meta property="og:type" content="${esc(type)}">`,
+    `<meta property="og:site_name" content="rcarmo.github.io">`,
+    `<meta property="og:title" content="${esc(opts.title)}">`,
+    `<meta property="og:description" content="${esc(opts.description)}">`,
+    `<meta property="og:url" content="${esc(opts.canonicalUrl)}">`,
+    `<meta property="og:image" content="${esc(opts.imageUrl)}">`,
+    `<meta property="og:image:type" content="image/svg+xml">`,
+    `<meta property="og:image:width" content="1200">`,
+    `<meta property="og:image:height" content="630">`,
+    `<meta property="og:image:alt" content="${esc(opts.imageAlt)}">`,
+    `<meta name="twitter:card" content="summary_large_image">`,
+    `<meta name="twitter:title" content="${esc(opts.title)}">`,
+    `<meta name="twitter:description" content="${esc(opts.description)}">`,
+    `<meta name="twitter:image" content="${esc(opts.imageUrl)}">`,
+    `<meta name="twitter:image:alt" content="${esc(opts.imageAlt)}">`,
+  ].join("\n");
+}
+
 function mdToHtml(md: string): string {
   // Minimal markdown→html: paragraphs, inline code, bold, italic, links
   // Preserves raw HTML (SVGs, etc.) passed through
@@ -204,12 +339,15 @@ function hasRealLogo(project: Project): boolean {
 }
 
 function selectRandomFallbackProject(projects: Project[]): void {
-  const eligible = projects.filter(project => !hasRealLogo(project) && projectAgeYears(project) >= 2);
+  const eligible = projects.filter(project => !hasRealLogo(project) && projectAgeYears(project) >= 2).sort((a, b) => a.id.localeCompare(b.id));
   if (!eligible.length) {
     RANDOM_FALLBACK_PROJECT_ID = null;
     return;
   }
-  const pick = eligible[Math.floor(Math.random() * eligible.length)];
+  const seed = eligible.map(project => project.id).join('|');
+  let hash = 0;
+  for (let i = 0; i < seed.length; i++) hash = (hash * 31 + seed.charCodeAt(i)) >>> 0;
+  const pick = eligible[hash % eligible.length];
   RANDOM_FALLBACK_PROJECT_ID = pick.id;
 }
 
@@ -252,7 +390,35 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
   const { id, fm } = project;
   const fullName = fm.repo || `rcarmo/${id}`;
   const ghUrl = `https://github.com/${fullName}`;
+  const canonicalUrl = `${SITE_URL}/projects/${id}/`;
   const logo = logoSrc(project);
+  const palette = {
+    'ai-agents': '#2d6dff',
+    'ai-ml': '#7a4cff',
+    'cloud': '#1ba1e3',
+    'hardware': '#d97706',
+    'infrastructure': '#0f9f7a',
+    'libraries': '#a16207',
+    'macos': '#db2777',
+    'terminal': '#1f7a50',
+    'featured': '#2563eb',
+  } as Record<string, string>;
+  writeOgCard(id, buildOgCardSvg({
+    title: id,
+    description: fm.tagline || '',
+    kicker: (fm.section || 'project').replace(/-/g, ' ').toUpperCase(),
+    imageDataUri: assetDataUri(logo),
+    accent: palette[fm.section || ''] || '#2563eb',
+    meta: fullName,
+  }));
+  const metaTags = buildMetaTags({
+    title: `${id} — rcarmo`,
+    description: fm.tagline || '',
+    canonicalUrl,
+    imageUrl: ogImageUrl(id),
+    imageAlt: `${id} project card`,
+    type: 'website',
+  });
 
   // Gather content sections
   const aboutHtml    = getSectionHtml(project, "About");
@@ -354,11 +520,11 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(id)} — rcarmo</title>
-<meta name="description" content="${esc(fm.tagline || "")}">
+${metaTags}
 <link rel="stylesheet" href="/assets/css/style.css">
 <link id="dynamic-favicon" rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/favicon.png">
-<link rel="canonical" href="https://rcarmo.github.io/projects/${id}/">
+<link rel="canonical" href="${canonicalUrl}">
 </head>
 <body>
   <nav class="topnav">
@@ -524,6 +690,23 @@ ${posts.length ? `      <section class="sec" id="s-posts">
 // ── Build index page ─────────────────────────────────────────────────────────
 
 function buildIndex(projects: Project[]): string {
+  const indexLogo = assetDataUri('/assets/avatar.png');
+  writeOgCard('index', buildOgCardSvg({
+    title: 'rcarmo',
+    description: 'Open source projects by Rui Carmo',
+    kicker: 'OPEN SOURCE',
+    imageDataUri: indexLogo,
+    accent: '#2563eb',
+    meta: `${projects.length} projects`,
+  }));
+  const metaTags = buildMetaTags({
+    title: 'rcarmo — open source',
+    description: 'Open source projects by Rui Carmo',
+    canonicalUrl: `${SITE_URL}/`,
+    imageUrl: ogImageUrl('index'),
+    imageAlt: 'rcarmo open source site card',
+    type: 'website',
+  });
   // Group by section, sort by stars (will be re-sorted client-side with live data)
   const groups = new Map<string, Project[]>();
   for (const p of projects) {
@@ -615,11 +798,11 @@ function buildIndex(projects: Project[]): string {
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>rcarmo — open source</title>
-<meta name="description" content="Open source projects by Rui Carmo">
+${metaTags}
 <link rel="stylesheet" href="/assets/css/style.css">
 <link id="dynamic-favicon" rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/favicon.png">
-<link rel="canonical" href="https://rcarmo.github.io/">
+<link rel="canonical" href="${SITE_URL}/">
 </head>
 <body>
   <nav class="topnav">
@@ -671,6 +854,16 @@ if (RANDOM_FALLBACK_PROJECT_ID) console.log(`Random fallback icon: ${RANDOM_FALL
 // Build project pages
 rmSync(OUT, { recursive: true, force: true });
 mkdirSync(OUT, { recursive: true });
+rmSync(OG_OUT, { recursive: true, force: true });
+mkdirSync(OG_OUT, { recursive: true });
+writeOgCard('scenic-mode', buildOgCardSvg({
+  title: 'rcarmo scenic mode',
+  description: 'A scenic 3D explorer for browsing Rui Carmo’s open source project portfolio.',
+  kicker: 'SCENIC MODE',
+  imageDataUri: assetDataUri('/assets/avatar.png'),
+  accent: '#2563eb',
+  meta: 'interactive explorer',
+}));
 let built = 0;
 for (const p of projects) {
   const html = buildProjectPage(p, projects);
