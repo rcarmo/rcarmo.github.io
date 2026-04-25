@@ -88,8 +88,18 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
 
 #loading{
   position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);z-index:50;
-  padding:.85rem 1.1rem;border-radius:16px;border:1px solid var(--border);
-  background:var(--panel-strong);box-shadow:var(--shadow);font-size:.9rem;font-weight:700
+  padding:1.2rem 1.6rem 1.0rem;border-radius:18px;border:1px solid var(--border);
+  background:var(--panel-strong);box-shadow:var(--shadow);
+  font-size:.9rem;font-weight:700;text-align:center;min-width:220px;
+}
+#loading-label{margin-bottom:.6rem;color:var(--ink)}
+#loading-bar-track{
+  width:100%;height:6px;border-radius:3px;background:var(--border);
+  overflow:hidden;
+}
+#loading-bar-fill{
+  height:100%;width:0%;border-radius:3px;
+  background:var(--blue);transition:width .18s ease;
 }
 #loading.hidden{display:none}
 
@@ -136,7 +146,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
 <body>
 <canvas id="cv"></canvas>
 
-<div id="loading">Loading scenic mode…</div>
+<div id="loading"><div id="loading-label">Loading scenic mode…</div><div id="loading-bar-track"><div id="loading-bar-fill"></div></div></div>
 
 <div id="hud-top">
   <div id="brand">
@@ -175,6 +185,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
 <script>
 (async function(){
   const loading = document.getElementById('loading');
+  const loadingLabel = document.getElementById('loading-label');
+  const loadingBar = document.getElementById('loading-bar-fill');
+  function progress(pct, label){
+    loadingBar.style.width = pct + '%';
+    if(label) loadingLabel.textContent = label;
+    return new Promise(r => setTimeout(r, 0));
+  }
   const navEl = document.getElementById('cluster-nav');
   const panel = document.getElementById('focus-panel');
   const focusLogo = document.getElementById('focus-logo');
@@ -219,7 +236,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   }
 
   const sections = await loadProjects();
-  loading.classList.add('hidden');
+  await progress(5, 'Setting up scene…');
 
   const canvas = document.getElementById('cv');
   const engine = new BABYLON.Engine(canvas, true, { preserveDrawingBuffer:false, stencil:false, antialias:true });
@@ -367,6 +384,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   makeMountainBand(210, 34, new BABYLON.Color3(0.60,0.69,0.78), new BABYLON.Color3(0.82,0.88,0.94), 14);
   makeMountainBand(270, 26, new BABYLON.Color3(0.65,0.73,0.82), new BABYLON.Color3(0.88,0.92,0.97), 22);
 
+  await progress(20, 'Building terrain…');
+
   const rockMat = new BABYLON.StandardMaterial('rockMat', scene);
   rockMat.diffuseColor = new BABYLON.Color3(0.52,0.50,0.46);
   rockMat.specularColor = new BABYLON.Color3(0.08,0.08,0.08);
@@ -470,6 +489,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     inst.scaling.set(s, s*(0.9+hash2(x*0.27,z*0.27)*0.3), s);
     inst.rotation.y = pick * Math.PI;
   }
+  await progress(35, 'Placing foliage…');
   for(let i=0;i<220;i++){
     const x = -470 + i*4.4;
     const zA = Math.sin(i*0.28)*30 + 42 + (i%7)*2.5;
@@ -905,6 +925,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     }
   }
 
+  await progress(50, 'Building clusters…');
   sections.forEach((section, sectionIndex) => {
     const palette = clusterPalette[section.id] || { color:'#2563eb', tint:'#dce8ff', terrain:'#7aa0cf' };
     const color = palette.color;
@@ -948,6 +969,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   });
 
   createFootpaths();
+  await progress(65, 'Connecting paths…');
   clusterAnchors.forEach((ca, idx) => {
     const palette = clusterPalette[ca.id] || { color:'#2563eb', tint:'#dce8ff', foliage:'grove' };
     const spineIdx = Math.floor((idx + 1) * (spinePath.length - 20) / (clusterAnchors.length + 1));
@@ -960,7 +982,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     scatterClusterFoliage(ca.anchor, tangent.scale(side), normal.scale(side), palette, idx);
   });
   createTerrainLook();
+  await progress(82, 'Painting terrain…');
   scatterEcology();
+  await progress(97, 'Almost there…');
 
   let activeCluster = clusterAnchors[0]?.id || null;
   function setActiveNav(id){
@@ -1148,6 +1172,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   });
 
   if(clusterAnchors[0]) setActiveNav(clusterAnchors[0].id);
+  await progress(100, 'Ready!');
+  loading.classList.add('hidden');
   engine.runRenderLoop(() => scene.render());
   window.addEventListener('resize', () => engine.resize());
 })();
