@@ -1,0 +1,292 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>9front — rcarmo</title>
+<meta name="description" content="Porting 9front to ARM64 — Orange Pi 4 Pro (Allwinner A733)">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="rcarmo.github.io">
+<meta property="og:title" content="9front — rcarmo">
+<meta property="og:description" content="Porting 9front to ARM64 — Orange Pi 4 Pro (Allwinner A733)">
+<meta property="og:url" content="https://rcarmo.github.io/projects/9front/">
+<meta property="og:image" content="https://rcarmo.github.io/assets/og/9front.svg">
+<meta property="og:image:type" content="image/svg+xml">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="9front project card">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="9front — rcarmo">
+<meta name="twitter:description" content="Porting 9front to ARM64 — Orange Pi 4 Pro (Allwinner A733)">
+<meta name="twitter:image" content="https://rcarmo.github.io/assets/og/9front.svg">
+<meta name="twitter:image:alt" content="9front project card">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link id="dynamic-favicon" rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="canonical" href="https://rcarmo.github.io/projects/9front/">
+</head>
+<body>
+  <nav class="topnav">
+    <a href="/" class="nav-home">rcarmo</a>
+    <a href="https://github.com/rcarmo/9front" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
+  </nav>
+
+  <header class="hero hero-project" id="hero" data-section="hardware">
+    <div class="hero-inner">
+      <img class="hero-logo" src="/assets/logos-opt/9front.png" alt="Porting 9front to ARM64 — Orange Pi 4 Pro (Allwinner A733) logo">
+      <div class="hero-text">
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>9front</h1>
+          <span class="badge badge-experimental">experimental</span>
+        </div>
+        <p class="hero-tagline">Porting 9front to ARM64 — Orange Pi 4 Pro (Allwinner A733)</p>
+        <div id="hero-meta-island-9front" class="hero-meta">
+          <!-- live: stars, forks, language -->
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://github.com/rcarmo/9front" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </div>
+      <div id="hero-related-9front" class="hero-related" hidden></div>
+    </div>
+  </header>
+
+
+  <div class="page-layout">
+    <aside class="toc-sidebar">
+      <a href="#s-about" class="toc-link" data-section="s-about">Overview</a>
+      <a href="#s-how" class="toc-link" data-section="s-how">How it works</a>
+      <a href="#s-features" class="toc-link" data-section="s-features">Features</a>
+      <a href="#s-diagram" class="toc-link" data-section="s-diagram">Diagram</a>
+    </aside>
+
+    <main class="content">
+      <div id="stats-island-9front" class="stats-bar">
+        <!-- live: stars, forks, issues, created -->
+      </div>
+
+      <section class="sec" id="s-about">
+        <div class="sec-label">Overview</div>
+        <p>A port of <a href="http://9front.org" target="_blank" rel="noopener">9front</a> — the community fork of Plan 9 from Bell Labs — to the <a href="http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/service-and-support/Orange-Pi-4-Pro.html" target="_blank" rel="noopener">Orange Pi 4 Pro</a> (Allwinner A733, 8-core ARM64). Provides a QEMU-based development workflow and SD card image builder for bringing up 9front on new hardware.</p>
+      </section>
+
+      <section class="sec" id="s-how">
+        <div class="sec-label">How it works</div>
+        <p>A cross-compilation harness builds the kernel inside a running 9front QEMU instance via automated <code>expect</code> scripts. Port files in <code>port/a733/</code> are packed into a FAT image, mounted inside the VM, compiled against the 9front kernel tree, and the resulting kernel is extracted and placed into a bootable SD card image with Allwinner SPL and U-Boot.</p>
+      </section>
+
+      <section class="sec" id="s-features">
+        <div class="sec-label">Features</div>
+        <div class="features-grid">
+          
+    <div class="feature">
+      <div class="feature-icon">🔧</div>
+      <div>
+        <div class="feature-title">QEMU-first development</div>
+        <div class="feature-body"><p>Port files are edited on the host and injected into a live 9front QEMU session via a FAT portdisk image. <code>make kernel</code> automates the full compile-extract cycle.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🗂️</div>
+      <div>
+        <div class="feature-title">Arm64 code reuse</div>
+        <div class="feature-body"><p>Reuses the 9front <code>sys/src/9/arm64/</code> shared kernel code — GICv3, ARM timer, MMU, trap, FPU — and adds only A733-specific drivers.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">📟</div>
+      <div>
+        <div class="feature-title">UART driver</div>
+        <div class="feature-body"><p>Custom <code>uartaw.c</code> — Allwinner UART (8250-compatible MMIO) at <code>0x02500000</code> for early console output.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">📦</div>
+      <div>
+        <div class="feature-title">SD card image builder</div>
+        <div class="feature-body"><p>Produces a 64 MB bootable image with Allwinner SPL at 8 KiB, U-Boot at 16.8 MiB, and a FAT32 partition containing the kernel and boot script.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🧩</div>
+      <div>
+        <div class="feature-title">Pinned bootstrap blobs</div>
+        <div class="feature-body"><p>Board bootstrap binaries (SPL, U-Boot, DTB) are checked in under <code>bootstrap/orangepi4pro/</code> so the build is fully reproducible without a BSP toolchain.</p></div>
+      </div>
+    </div>
+        </div>
+      </section>
+
+      <section class="sec" id="s-diagram">
+        <div class="sec-label">Architecture</div>
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 240">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
+      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
+      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
+    @media (prefers-color-scheme: light) {
+      .bg { fill: transparent; }
+      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+      .label { fill: #1a2a40; }
+      .sub { fill: #5070a0; }
+    }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
+  </defs>
+
+  <!-- Host -->
+  <rect x="20" y="60" width="140" height="120" rx="8" class="box"/>
+  <text x="90" y="85" text-anchor="middle" class="label">Host</text>
+  <text x="90" y="103" text-anchor="middle" class="sub">port/a733/</text>
+  <text x="90" y="119" text-anchor="middle" class="sub">make portdisk</text>
+  <text x="90" y="135" text-anchor="middle" class="sub">make kernel</text>
+  <text x="90" y="151" text-anchor="middle" class="sub">make sdcard</text>
+
+  <!-- QEMU 9front -->
+  <rect x="220" y="60" width="150" height="120" rx="8" class="box-accent"/>
+  <text x="295" y="85" text-anchor="middle" class="label">QEMU 9front</text>
+  <text x="295" y="103" text-anchor="middle" class="sub">aarch64 VM</text>
+  <text x="295" y="119" text-anchor="middle" class="sub">FAT portdisk</text>
+  <text x="295" y="135" text-anchor="middle" class="sub">dircp + mk</text>
+  <text x="295" y="151" text-anchor="middle" class="sub">→ 9a733.u</text>
+
+  <!-- SD Image -->
+  <rect x="440" y="60" width="150" height="120" rx="8" class="box-warm"/>
+  <text x="515" y="85" text-anchor="middle" class="label">SD Card Image</text>
+  <text x="515" y="103" text-anchor="middle" class="sub">SPL @ 8 KiB</text>
+  <text x="515" y="119" text-anchor="middle" class="sub">U-Boot @ 16.8 MiB</text>
+  <text x="515" y="135" text-anchor="middle" class="sub">FAT32: kernel</text>
+  <text x="515" y="151" text-anchor="middle" class="sub">+ boot.scr</text>
+
+  <!-- Hardware -->
+  <rect x="660" y="74" width="100" height="92" rx="8" class="box-green"/>
+  <text x="710" y="102" text-anchor="middle" class="label">Orange Pi</text>
+  <text x="710" y="118" text-anchor="middle" class="label">4 Pro</text>
+  <text x="710" y="138" text-anchor="middle" class="sub">A733 ARM64</text>
+  <text x="710" y="154" text-anchor="middle" class="sub">9front kernel</text>
+
+  <!-- Arrows -->
+  <path d="M160,100 Q190,100 216,100" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <text x="188" y="95" text-anchor="middle" class="sub">FAT img</text>
+  <path d="M370,120 Q405,120 436,120" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <text x="403" y="115" text-anchor="middle" class="sub">extract</text>
+  <path d="M590,120 Q625,120 656,120" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <text x="623" y="115" text-anchor="middle" class="sub">dd →</text>
+</svg></div>
+      </section>
+
+
+
+
+    </main>
+  </div>
+
+  <footer>
+    <span class="foot-l">rcarmo.github.io</span>
+    <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/9front">Source</a></span>
+  </footer>
+
+  <script type="module" src="/assets/js/repo-island.mjs?v=moek1nwh"></script>
+  <script type="module">
+    import { mount } from '/assets/js/repo-island.mjs?v=moek1nwh';
+    mount({
+      fullName: 'rcarmo/9front',
+      heroMetaEl: document.getElementById('hero-meta-island-9front'),
+      statsEl:    document.getElementById('stats-island-9front'),
+      releasesEl: document.getElementById('rel-island-9front'),
+      relatedEl:  document.getElementById('hero-related-9front'),
+      relatedCandidates: [{"id":"byos_fastapi","fullName":"usetrmnl/byos_fastapi","logo":"/assets/logos-opt/byos_fastapi.png"},{"id":"haiku-arm64-build","fullName":"rcarmo/haiku-arm64-build","logo":"/assets/logos-opt/haiku-arm64-build.png"},{"id":"orangepi-build","fullName":"rcarmo/orangepi-build","logo":"/assets/logos-opt/orangepi-build.png"},{"id":"zmk-config-totem","fullName":"rcarmo/zmk-config-totem","logo":"/assets/logos-opt/default-01.png"}],
+    });
+  </script>
+  <script>
+    // Scroll-spy for TOC
+    const tocLinks = document.querySelectorAll('.toc-link');
+    if (tocLinks.length) {
+      const sections = [...tocLinks].map(l => ({
+        link: l,
+        el: document.getElementById(l.dataset.section)
+      })).filter(s => s.el);
+      const obs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            tocLinks.forEach(l => l.classList.remove('active'));
+            const match = sections.find(s => s.el === e.target);
+            if (match) match.link.classList.add('active');
+          }
+        }
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      sections.forEach(s => obs.observe(s.el));
+    }
+
+    document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+      const slides = [...gallery.querySelectorAll('[data-gallery-slide]')];
+      const captions = [...gallery.querySelectorAll('[data-gallery-caption]')];
+      const prev = gallery.querySelector('[data-gallery-prev]');
+      const next = gallery.querySelector('[data-gallery-next]');
+      const goto = gallery.querySelector('[data-gallery-goto]');
+      const status = gallery.querySelector('[data-gallery-status]');
+      const thumbs = [...gallery.querySelectorAll('[data-gallery-thumb]')];
+      let index = 0;
+
+      function renderGallery(nextIndex) {
+        index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('is-active', i === index);
+        });
+        captions.forEach((caption, i) => caption.classList.toggle('is-active', i === index));
+        thumbs.forEach((thumb, i) => {
+          thumb.classList.toggle('is-active', i === index);
+          thumb.setAttribute('aria-pressed', i === index ? 'true' : 'false');
+        });
+        if (goto) {
+          goto.value = String(index + 1);
+          goto.max = String(slides.length);
+        }
+        if (status) status.textContent = '/ ' + slides.length;
+        if (prev) prev.disabled = index <= 0;
+        if (next) next.disabled = index >= slides.length - 1;
+      }
+
+      prev?.addEventListener('click', () => renderGallery(index - 1));
+      next?.addEventListener('click', () => renderGallery(index + 1));
+      goto?.addEventListener('change', () => renderGallery(Number(goto.value || 1) - 1));
+      goto?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') renderGallery(Number(goto.value || 1) - 1);
+      });
+      thumbs.forEach((thumb, i) => thumb.addEventListener('click', () => renderGallery(i)));
+      gallery.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); renderGallery(index - 1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); renderGallery(index + 1); }
+        if (e.key === 'Home') { e.preventDefault(); renderGallery(0); }
+        if (e.key === 'End') { e.preventDefault(); renderGallery(slides.length - 1); }
+      });
+      renderGallery(0);
+    });
+  </script>
+</body>
+</html>
