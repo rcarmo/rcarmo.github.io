@@ -388,64 +388,47 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     }
   }
 
-  function loadAtlasTexture(url){
+  function loadFoliageTexture(url){
     const tex = new BABYLON.Texture(url, scene, false, true, BABYLON.Texture.BILINEAR_SAMPLINGMODE);
     tex.hasAlpha = true;
     tex.wrapU = BABYLON.Texture.CLAMP_ADDRESSMODE;
     tex.wrapV = BABYLON.Texture.CLAMP_ADDRESSMODE;
     return tex;
   }
-  const treesNearTex = loadAtlasTexture('/assets/sprites/trees-near.png');
-  const bushTex = loadAtlasTexture('/assets/sprites/bush.png');
-  const grassTex = loadAtlasTexture('/assets/sprites/grass.png');
+  const treeTex = loadFoliageTexture('/assets/sprites/trees-near.png');
+  const bushTex = loadFoliageTexture('/assets/sprites/bush.png');
+  const grassTex = loadFoliageTexture('/assets/sprites/grass.png');
 
-  function buildAtlasMat(name, tex){
+  function buildFoliageMat(name, tex){
     const mat = new BABYLON.StandardMaterial(name, scene);
     mat.diffuseTexture = tex;
-    mat.opacityTexture = tex;
+    mat.diffuseTexture.hasAlpha = true;
     mat.useAlphaFromDiffuseTexture = true;
-    mat.needDepthPrePass = true;
     mat.backFaceCulling = false;
     mat.specularColor = new BABYLON.Color3(0.02,0.03,0.02);
     mat.emissiveColor = new BABYLON.Color3(0.08,0.10,0.06);
     return mat;
   }
-  function buildAtlasCellBase(name, tex, cellIdx, gridX, gridY, width, height){
-    const cellX = cellIdx % gridX;
-    const cellY = Math.floor(cellIdx / gridX);
-    const u0 = cellX / gridX, u1 = (cellX+1) / gridX;
-    const v0 = cellY / gridY, v1 = (cellY+1) / gridY;
+  function buildFoliageBase(name, tex, width, height){
     const p1 = BABYLON.MeshBuilder.CreatePlane(name+'A', {width,height,sideOrientation:BABYLON.Mesh.DOUBLESIDE}, scene);
     const p2 = BABYLON.MeshBuilder.CreatePlane(name+'B', {width,height,sideOrientation:BABYLON.Mesh.DOUBLESIDE}, scene);
     p1.position.y = height*0.5;
     p2.position.y = height*0.5;
     p2.rotation.y = Math.PI*0.5;
-    [p1,p2].forEach(p => {
-      const uvs = p.getVerticesData(BABYLON.VertexBuffer.UVKind);
-      for(let i=0;i<uvs.length;i+=2){
-        uvs[i] = u0 + uvs[i]*(u1-u0);
-        uvs[i+1] = v0 + uvs[i+1]*(v1-v0);
-      }
-      p.setVerticesData(BABYLON.VertexBuffer.UVKind, uvs);
-    });
     const merged = BABYLON.Mesh.MergeMeshes([p1,p2], true, true, undefined, false, true);
-    merged.material = buildAtlasMat(name+'Mat', tex);
+    merged.material = buildFoliageMat(name+'Mat', tex);
     merged.isVisible = false;
     return merged;
   }
 
-  const treeBases = [];
-  for(let i=0;i<8;i++) treeBases.push(buildAtlasCellBase('tree'+i, treesNearTex, i, 4, 2, 5.0, 6.0));
-  const bushBases = [];
-  for(let i=0;i<8;i++) bushBases.push(buildAtlasCellBase('bush'+i, bushTex, i, 4, 2, 2.8, 2.0));
-  const grassBases = [];
-  for(let i=0;i<4;i++) grassBases.push(buildAtlasCellBase('grass'+i, grassTex, i, 2, 2, 2.0, 2.6));
+  const treeBase = buildFoliageBase('tree', treeTex, 5.0, 6.0);
+  const bushBase = buildFoliageBase('bush', bushTex, 2.8, 2.0);
+  const grassBase = buildFoliageBase('grass', grassTex, 2.0, 2.6);
 
   function makeTree(x,z,scale=1, kind='round'){
     const y = terrainHeight(x,z);
     const pick = hash2(x*0.17,z*0.13);
-    const base = treeBases[Math.floor(pick*8)];
-    const inst = base.createInstance('tree');
+    const inst = treeBase.createInstance('tree');
     const s = scale * (0.8 + pick*0.55);
     inst.position.set(x, y - 0.6*s, z);
     inst.scaling.set(s, s*(0.88+hash2(x*0.29,z*0.23)*0.28), s);
@@ -454,8 +437,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   function makeShrub(x,z,scale=1){
     const y = terrainHeight(x,z);
     const pick = hash2(x*0.23,z*0.19);
-    const base = bushBases[Math.floor(pick*8)];
-    const inst = base.createInstance('bush');
+    const inst = bushBase.createInstance('bush');
     const s = scale * (0.75 + pick*0.5);
     inst.position.set(x, y - 0.15*s, z);
     inst.scaling.set(s, s*(0.82+hash2(x*0.31,z*0.27)*0.36), s);
@@ -464,8 +446,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   function makeGrassClump(x,z,scale=1){
     const y = terrainHeight(x,z);
     const pick = hash2(x*0.19,z*0.17);
-    const base = grassBases[Math.floor(pick*4)];
-    const inst = base.createInstance('grass');
+    const inst = grassBase.createInstance('grass');
     const s = scale * (0.55 + pick*0.6);
     inst.position.set(x, y - 0.08, z);
     inst.scaling.set(s, s*(0.85+hash2(x*0.27,z*0.27)*0.35), s);
