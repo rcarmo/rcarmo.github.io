@@ -386,110 +386,139 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     }
   }
 
-  const trunkMat = new BABYLON.StandardMaterial('trunkMat', scene);
-  trunkMat.diffuseColor = new BABYLON.Color3(0.42,0.32,0.20);
-  trunkMat.specularColor = new BABYLON.Color3(0.06,0.05,0.04);
-  const trunkDarkMat = new BABYLON.StandardMaterial('trunkDarkMat', scene);
-  trunkDarkMat.diffuseColor = new BABYLON.Color3(0.32,0.24,0.16);
-  trunkDarkMat.specularColor = new BABYLON.Color3(0.04,0.04,0.03);
-  const crownMat = new BABYLON.StandardMaterial('crownMat', scene);
-  crownMat.diffuseColor = new BABYLON.Color3(0.34,0.57,0.31);
-  crownMat.specularColor = new BABYLON.Color3(0.04,0.06,0.03);
-  const crownLightMat = new BABYLON.StandardMaterial('crownLightMat', scene);
-  crownLightMat.diffuseColor = new BABYLON.Color3(0.42,0.64,0.36);
-  crownLightMat.specularColor = new BABYLON.Color3(0.05,0.07,0.04);
-  const pineMat = new BABYLON.StandardMaterial('pineMat', scene);
-  pineMat.diffuseColor = new BABYLON.Color3(0.22,0.40,0.22);
-  pineMat.specularColor = new BABYLON.Color3(0.03,0.04,0.03);
-  const pineLightMat = new BABYLON.StandardMaterial('pineLightMat', scene);
-  pineLightMat.diffuseColor = new BABYLON.Color3(0.28,0.48,0.26);
-  pineLightMat.specularColor = new BABYLON.Color3(0.04,0.05,0.03);
-  const shrubMat = new BABYLON.StandardMaterial('shrubMat', scene);
-  shrubMat.diffuseColor = new BABYLON.Color3(0.42,0.56,0.32);
-  shrubMat.specularColor = new BABYLON.Color3(0.03,0.04,0.02);
-  const shrubDarkMat = new BABYLON.StandardMaterial('shrubDarkMat', scene);
-  shrubDarkMat.diffuseColor = new BABYLON.Color3(0.34,0.46,0.28);
-  shrubDarkMat.specularColor = BABYLON.Color3.Black();
+  function drawTreeSilhouette(ctx, cx, w, h, kind, palette){
+    const trunkW = w*0.08, trunkH = h*0.38;
+    ctx.fillStyle = palette.trunk;
+    ctx.beginPath();
+    ctx.moveTo(cx-trunkW, h);
+    ctx.lineTo(cx-trunkW*0.7, h-trunkH);
+    ctx.lineTo(cx+trunkW*0.7, h-trunkH);
+    ctx.lineTo(cx+trunkW, h);
+    ctx.fill();
+    if(kind === 'pine'){
+      const layers = 4 + Math.floor(Math.random()*2);
+      for(let i=0;i<layers;i++){
+        const frac = i/layers;
+        const ly = h - trunkH*0.5 - (h*0.55)*frac;
+        const lw = (w*0.48)*(1-frac*0.7);
+        const lh = h*0.18*(1-frac*0.2);
+        ctx.fillStyle = i%2===0 ? palette.leaf : palette.leafLight;
+        ctx.beginPath();
+        ctx.moveTo(cx, ly-lh);
+        ctx.quadraticCurveTo(cx-lw*1.1, ly-lh*0.2, cx-lw, ly);
+        ctx.lineTo(cx+lw, ly);
+        ctx.quadraticCurveTo(cx+lw*1.1, ly-lh*0.2, cx, ly-lh);
+        ctx.fill();
+      }
+    } else if(kind === 'birch'){
+      const crowns = [{x:cx-w*0.12, y:h*0.28, r:w*0.22},{x:cx+w*0.10, y:h*0.20, r:w*0.19},{x:cx, y:h*0.14, r:w*0.16}];
+      crowns.forEach((c,i) => {
+        ctx.fillStyle = i%2===0 ? palette.leaf : palette.leafLight;
+        ctx.beginPath(); ctx.ellipse(c.x, c.y, c.r, c.r*0.85, 0, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = palette.leafLight+'88';
+        ctx.beginPath(); ctx.ellipse(c.x-c.r*0.2, c.y-c.r*0.15, c.r*0.5, c.r*0.4, 0, 0, Math.PI*2); ctx.fill();
+      });
+    } else {
+      const crownY = h*0.30, crownRx = w*0.40, crownRy = h*0.32;
+      ctx.fillStyle = palette.leaf;
+      ctx.beginPath(); ctx.ellipse(cx, crownY, crownRx, crownRy, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = palette.leafLight;
+      ctx.beginPath(); ctx.ellipse(cx-crownRx*0.25, crownY-crownRy*0.18, crownRx*0.55, crownRy*0.50, -0.2, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = palette.leaf+'cc';
+      ctx.beginPath(); ctx.ellipse(cx+crownRx*0.3, crownY+crownRy*0.12, crownRx*0.40, crownRy*0.38, 0.15, 0, Math.PI*2); ctx.fill();
+    }
+  }
+  function drawBushSilhouette(ctx, cx, w, h, palette){
+    const count = 3 + Math.floor(Math.random()*2);
+    for(let i=0;i<count;i++){
+      const bx = cx + (i-count/2)*w*0.22;
+      const by = h*0.55;
+      const br = w*0.18 + Math.random()*w*0.08;
+      ctx.fillStyle = i%2===0 ? palette.leaf : palette.leafLight;
+      ctx.beginPath(); ctx.ellipse(bx, by, br, br*0.75, 0, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.fillStyle = palette.leafLight+'66';
+    ctx.beginPath(); ctx.ellipse(cx, h*0.45, w*0.15, h*0.12, 0, 0, Math.PI*2); ctx.fill();
+  }
+  function createSpriteAtlas(name, kind, size, palettes){
+    const cols = 2, rows = palettes.length;
+    const dt = new BABYLON.DynamicTexture(name, { width:size*cols, height:size*rows }, scene, true);
+    const ctx = dt.getContext();
+    ctx.clearRect(0,0,size*cols,size*rows);
+    for(let r=0;r<rows;r++){
+      for(let c=0;c<cols;c++){
+        const ox = c*size, oy = r*size;
+        ctx.save(); ctx.translate(ox, oy);
+        if(kind === 'bush') drawBushSilhouette(ctx, size/2, size, size, palettes[r]);
+        else drawTreeSilhouette(ctx, size/2, size, size, kind === 'pine' ? 'pine' : kind === 'birch' ? 'birch' : 'round', palettes[r]);
+        ctx.restore();
+      }
+    }
+    dt.hasAlpha = true;
+    dt.update(false);
+    return { texture: dt, cols, rows };
+  }
+
+  const treePalettes = [
+    { trunk:'#5a4530', leaf:'#3d7a35', leafLight:'#5a9648' },
+    { trunk:'#4a3822', leaf:'#2d6828', leafLight:'#4a8a3c' },
+    { trunk:'#6b5540', leaf:'#4a8840', leafLight:'#68a858' },
+    { trunk:'#c8bfaf', leaf:'#52a04a', leafLight:'#72b86a' },
+  ];
+  const bushPalettes = [
+    { leaf:'#4a7a38', leafLight:'#68964a' },
+    { leaf:'#3a6830', leafLight:'#589642' },
+    { leaf:'#5a8a48', leafLight:'#78a860' },
+  ];
+  const roundAtlas = createSpriteAtlas('roundAtlas', 'round', 256, treePalettes);
+  const pineAtlas = createSpriteAtlas('pineAtlas', 'pine', 256, treePalettes);
+  const birchAtlas = createSpriteAtlas('birchAtlas', 'birch', 256, treePalettes);
+  const bushAtlas = createSpriteAtlas('bushAtlas', 'bush', 256, bushPalettes);
+
+  function buildSpriteMat(name, atlas){
+    const mat = new BABYLON.StandardMaterial(name, scene);
+    mat.diffuseTexture = atlas.texture;
+    mat.opacityTexture = atlas.texture;
+    mat.useAlphaFromDiffuseTexture = true;
+    mat.backFaceCulling = false;
+    mat.specularColor = BABYLON.Color3.Black();
+    mat.emissiveColor = new BABYLON.Color3(0.04,0.05,0.03);
+    return mat;
+  }
+  function buildSpriteBase(name, atlas, height){
+    const w = height * 0.85;
+    const p1 = BABYLON.MeshBuilder.CreatePlane(name+'_a', { width:w, height:height }, scene);
+    const p2 = p1.clone(name+'_b');
+    p1.position.y = height*0.5;
+    p2.position.y = height*0.5;
+    p2.rotation.y = Math.PI*0.5;
+    const merged = BABYLON.Mesh.MergeMeshes([p1,p2], true, true, undefined, false, true);
+    merged.material = buildSpriteMat(name+'Mat', atlas);
+    merged.isVisible = false;
+    return merged;
+  }
+
+  const treeBaseRound = buildSpriteBase('treeRound', roundAtlas, 4.0);
+  const treeBasePine = buildSpriteBase('treePine', pineAtlas, 4.5);
+  const treeBaseBirch = buildSpriteBase('treeBirch', birchAtlas, 4.2);
+  const bushBase = buildSpriteBase('bushBase', bushAtlas, 1.8);
 
   function makeTree(x,z,scale=1, kind='round'){
     const y = terrainHeight(x,z);
-    const rnd = hash2(x*0.17+3, z*0.13-7);
-    const lean = (rnd-0.5)*0.12;
-    if(kind === 'pine'){
-      const trunkH = 2.2*scale;
-      const trunk = BABYLON.MeshBuilder.CreateCylinder('trunk', { height:trunkH, diameterTop:0.12*scale, diameterBottom:0.28*scale, tessellation:6 }, scene);
-      trunk.position.set(x, y + trunkH*0.5, z);
-      trunk.rotation.z = lean;
-      trunk.material = rnd > 0.5 ? trunkMat : trunkDarkMat;
-      shadowGen.addShadowCaster(trunk);
-      const tiers = 3 + Math.floor(rnd*2);
-      for(let t=0;t<tiers;t++){
-        const frac = t/tiers;
-        const tierY = y + trunkH*0.45 + (trunkH*0.65)*frac;
-        const tierD = (1.8 - frac*1.3)*scale;
-        const tierH = (0.7 - frac*0.15)*scale;
-        const tier = BABYLON.MeshBuilder.CreateCylinder('pineTier', { height:tierH, diameterTop:0.1*scale, diameterBottom:tierD, tessellation:8 }, scene);
-        tier.position.set(x, tierY, z);
-        tier.material = t%2===0 ? pineMat : pineLightMat;
-        shadowGen.addShadowCaster(tier);
-      }
-    } else if(kind === 'birch'){
-      const trunkH = 2.8*scale;
-      const trunk = BABYLON.MeshBuilder.CreateCylinder('trunk', { height:trunkH, diameterTop:0.10*scale, diameterBottom:0.18*scale, tessellation:6 }, scene);
-      trunk.position.set(x, y + trunkH*0.5, z);
-      trunk.rotation.z = lean*1.5;
-      const birchTrunkMat = new BABYLON.StandardMaterial('birchTrunk', scene);
-      birchTrunkMat.diffuseColor = new BABYLON.Color3(0.82,0.78,0.70);
-      birchTrunkMat.specularColor = new BABYLON.Color3(0.08,0.08,0.06);
-      trunk.material = birchTrunkMat;
-      shadowGen.addShadowCaster(trunk);
-      const c1 = BABYLON.MeshBuilder.CreateSphere('birchC1', { diameter:1.3*scale, segments:5 }, scene);
-      c1.position.set(x-0.2*scale, y + trunkH*0.75, z+0.1*scale);
-      c1.material = crownLightMat;
-      const c2 = BABYLON.MeshBuilder.CreateSphere('birchC2', { diameter:1.1*scale, segments:5 }, scene);
-      c2.position.set(x+0.3*scale, y + trunkH*0.85, z-0.2*scale);
-      c2.material = crownMat;
-      const c3 = BABYLON.MeshBuilder.CreateSphere('birchC3', { diameter:0.9*scale, segments:4 }, scene);
-      c3.position.set(x, y + trunkH*0.95, z+0.15*scale);
-      c3.material = crownLightMat;
-      [c1,c2,c3].forEach(c => shadowGen.addShadowCaster(c));
-    } else {
-      const trunkH = 1.6*scale;
-      const trunk = BABYLON.MeshBuilder.CreateCylinder('trunk', { height:trunkH, diameterTop:0.14*scale, diameterBottom:0.26*scale, tessellation:6 }, scene);
-      trunk.position.set(x, y + trunkH*0.5, z);
-      trunk.rotation.z = lean;
-      trunk.material = rnd > 0.4 ? trunkMat : trunkDarkMat;
-      shadowGen.addShadowCaster(trunk);
-      const mainD = 1.9*scale;
-      const main = BABYLON.MeshBuilder.CreateSphere('crown', { diameter:mainD, segments:5 }, scene);
-      main.position.set(x, y + trunkH + mainD*0.32, z);
-      main.material = rnd > 0.5 ? crownMat : crownLightMat;
-      shadowGen.addShadowCaster(main);
-      if(scale > 0.8){
-        const side1 = BABYLON.MeshBuilder.CreateSphere('crownSide', { diameter:mainD*0.7, segments:4 }, scene);
-        side1.position.set(x + mainD*0.32, y + trunkH + mainD*0.18, z + mainD*0.15);
-        side1.material = crownLightMat;
-        shadowGen.addShadowCaster(side1);
-        const side2 = BABYLON.MeshBuilder.CreateSphere('crownSide2', { diameter:mainD*0.55, segments:4 }, scene);
-        side2.position.set(x - mainD*0.28, y + trunkH + mainD*0.22, z - mainD*0.2);
-        side2.material = crownMat;
-        shadowGen.addShadowCaster(side2);
-      }
-    }
+    const base = kind === 'pine' ? treeBasePine : kind === 'birch' ? treeBaseBirch : treeBaseRound;
+    const inst = base.createInstance('tree');
+    inst.position.set(x, y, z);
+    const s = scale * (0.85 + hash2(x*0.17,z*0.13)*0.35);
+    inst.scaling.set(s, s*(0.9+hash2(x*0.29,z*0.23)*0.25), s);
+    inst.rotation.y = hash2(x*0.11,z*0.11)*Math.PI;
   }
   function makeShrub(x,z,scale=1){
     const y = terrainHeight(x,z);
-    const rnd = hash2(x*0.23+5, z*0.19-2);
-    const count = 2 + Math.floor(rnd*3);
-    for(let i=0;i<count;i++){
-      const angle = (i/count)*Math.PI*2 + rnd*2;
-      const r = 0.3*scale + (i%2)*0.15*scale;
-      const d = (0.55 + (i%3)*0.12)*scale;
-      const s = BABYLON.MeshBuilder.CreateSphere('shrub', { diameter:d, segments:4 }, scene);
-      s.position.set(x + Math.cos(angle)*r, y + d*0.35, z + Math.sin(angle)*r);
-      s.material = i%2===0 ? shrubMat : shrubDarkMat;
-      shadowGen.addShadowCaster(s);
-    }
+    const inst = bushBase.createInstance('bush');
+    inst.position.set(x, y, z);
+    const s = scale * (0.8 + hash2(x*0.23,z*0.19)*0.4);
+    inst.scaling.set(s, s*(0.85+hash2(x*0.31,z*0.27)*0.3), s);
+    inst.rotation.y = hash2(x*0.09,z*0.09)*Math.PI;
   }
   for(let i=0;i<220;i++){
     const x = -470 + i*4.4;
@@ -504,27 +533,14 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
 
   function scatterClusterFoliage(anchor, tangent, normal, palette, sectionIndex){
     const variant = palette.foliage || 'grove';
-    const c = BABYLON.Color3.FromHexString(palette.color);
-    const clusterLeaf = mixColor(new BABYLON.Color3(0.30,0.52,0.28), c, 0.10);
-    const clusterPine = mixColor(new BABYLON.Color3(0.22,0.42,0.24), c, 0.08);
-    const clusterShrub = mixColor(new BABYLON.Color3(0.48,0.61,0.36), c, 0.14);
-    const localRoundMat = crownMat.clone('clusterRoundMat_'+palette.color+'_'+sectionIndex);
-    const localPineMat = pineMat.clone('clusterPineMat_'+palette.color+'_'+sectionIndex);
-    const localShrubMat = shrubMat.clone('clusterShrubMat_'+palette.color+'_'+sectionIndex);
-    localRoundMat.diffuseColor = clusterLeaf;
-    localPineMat.diffuseColor = clusterPine;
-    localShrubMat.diffuseColor = clusterShrub;
 
     function place(dx, dz, kind, scale){
       const px = anchor.x + normal.x*dx + tangent.x*dz;
       const pz = anchor.z + normal.z*dx + tangent.z*dz;
       if(footPathRoutes.length && nearestFootpathDist(px, pz) < 4) return;
       if(nearestSpineDist(px, pz) < 6) return;
-      if(kind === 'shrub') {
-        makeShrub(px, pz, scale);
-      } else {
-        makeTree(px, pz, scale, kind);
-      }
+      if(kind === 'shrub') makeShrub(px, pz, scale);
+      else makeTree(px, pz, scale, kind);
     }
 
     if(variant === 'pine') {
