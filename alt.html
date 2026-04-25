@@ -402,9 +402,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   function buildAtlasMat(name, tex){
     const mat = new BABYLON.StandardMaterial(name, scene);
     mat.diffuseTexture = tex;
-    mat.diffuseTexture.hasAlpha = true;
-    mat.transparencyMode = BABYLON.Material.MATERIAL_ALPHATEST;
-    mat.alphaCutOff = 0.35;
+    mat.opacityTexture = tex;
+    mat.useAlphaFromDiffuseTexture = true;
+    mat.needDepthPrePass = true;
     mat.backFaceCulling = false;
     mat.specularColor = new BABYLON.Color3(0.02,0.03,0.02);
     mat.emissiveColor = new BABYLON.Color3(0.08,0.10,0.06);
