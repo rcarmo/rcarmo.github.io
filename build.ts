@@ -833,7 +833,7 @@ ${metaTags}
 
   <footer>
     <span class="foot-l">rcarmo.github.io</span>
-    <span class="foot-r"><a href="https://taoofmac.com">Blog</a> · <a href="https://github.com/rcarmo">GitHub</a></span>
+    <span class="foot-r"><a href="https://carmo.io">Career</a> · <a href="https://taoofmac.com">Blog</a> · <a href="https://github.com/rcarmo">GitHub</a></span>
   </footer>
 
   <script type="module" src="/assets/js/repo-island.mjs?v=${ASSET_VERSION}"></script>
