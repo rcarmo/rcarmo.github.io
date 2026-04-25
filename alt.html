@@ -388,69 +388,146 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     }
   }
 
-  function loadFoliageTexture(url){
-    const tex = new BABYLON.Texture(url, scene, false, true, BABYLON.Texture.BILINEAR_SAMPLINGMODE);
-    tex.hasAlpha = true;
-    tex.wrapU = BABYLON.Texture.CLAMP_ADDRESSMODE;
-    tex.wrapV = BABYLON.Texture.CLAMP_ADDRESSMODE;
-    return tex;
+  function drawTreeSilhouette(ctx, cx, w, h, kind, palette){
+    ctx.clearRect(0, 0, w*2, h*2);
+    const trunkW = w*0.08, trunkH = h*0.38;
+    ctx.fillStyle = palette.trunk;
+    ctx.beginPath();
+    ctx.moveTo(cx-trunkW, h);
+    ctx.lineTo(cx-trunkW*0.7, h-trunkH);
+    ctx.lineTo(cx+trunkW*0.7, h-trunkH);
+    ctx.lineTo(cx+trunkW, h);
+    ctx.fill();
+    if(kind === 'pine'){
+      const layers = 4 + Math.floor(Math.random()*2);
+      for(let i=0;i<layers;i++){
+        const frac = i/layers;
+        const ly = h - trunkH*0.5 - (h*0.55)*frac;
+        const lw = (w*0.48)*(1-frac*0.7);
+        const lh = h*0.18*(1-frac*0.2);
+        ctx.fillStyle = i%2===0 ? palette.leaf : palette.leafLight;
+        ctx.beginPath();
+        ctx.moveTo(cx, ly-lh);
+        ctx.quadraticCurveTo(cx-lw*1.1, ly-lh*0.2, cx-lw, ly);
+        ctx.lineTo(cx+lw, ly);
+        ctx.quadraticCurveTo(cx+lw*1.1, ly-lh*0.2, cx, ly-lh);
+        ctx.fill();
+      }
+    } else if(kind === 'birch'){
+      const crowns = [{x:cx-w*0.12, y:h*0.28, r:w*0.22},{x:cx+w*0.10, y:h*0.20, r:w*0.19},{x:cx, y:h*0.14, r:w*0.16}];
+      crowns.forEach((c,i) => {
+        ctx.fillStyle = i%2===0 ? palette.leaf : palette.leafLight;
+        ctx.beginPath(); ctx.ellipse(c.x, c.y, c.r, c.r*0.85, 0, 0, Math.PI*2); ctx.fill();
+        ctx.fillStyle = palette.leafLight+'88';
+        ctx.beginPath(); ctx.ellipse(c.x-c.r*0.2, c.y-c.r*0.15, c.r*0.5, c.r*0.4, 0, 0, Math.PI*2); ctx.fill();
+      });
+    } else {
+      const crownY = h*0.30, crownRx = w*0.40, crownRy = h*0.32;
+      ctx.fillStyle = palette.leaf;
+      ctx.beginPath(); ctx.ellipse(cx, crownY, crownRx, crownRy, 0, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = palette.leafLight;
+      ctx.beginPath(); ctx.ellipse(cx-crownRx*0.25, crownY-crownRy*0.18, crownRx*0.55, crownRy*0.50, -0.2, 0, Math.PI*2); ctx.fill();
+      ctx.fillStyle = palette.leaf+'cc';
+      ctx.beginPath(); ctx.ellipse(cx+crownRx*0.3, crownY+crownRy*0.12, crownRx*0.40, crownRy*0.38, 0.15, 0, Math.PI*2); ctx.fill();
+    }
   }
-  const treeTex = loadFoliageTexture('/assets/sprites/trees-near.png');
-  const bushTex = loadFoliageTexture('/assets/sprites/bush.png');
-  const grassTex = loadFoliageTexture('/assets/sprites/grass.png');
+  function drawBushSilhouette(ctx, cx, w, h, palette){
+    ctx.clearRect(0, 0, w*2, h*2);
+    const count = 3 + Math.floor(Math.random()*2);
+    for(let i=0;i<count;i++){
+      const bx = cx + (i-count/2)*w*0.22;
+      const by = h*0.55;
+      const br = w*0.18 + Math.random()*w*0.08;
+      ctx.fillStyle = i%2===0 ? palette.leaf : palette.leafLight;
+      ctx.beginPath(); ctx.ellipse(bx, by, br, br*0.75, 0, 0, Math.PI*2); ctx.fill();
+    }
+    ctx.fillStyle = palette.leafLight+'66';
+    ctx.beginPath(); ctx.ellipse(cx, h*0.45, w*0.15, h*0.12, 0, 0, Math.PI*2); ctx.fill();
+  }
+  function createTreeTexture(name, kind, size, palette){
+    const dt = new BABYLON.DynamicTexture(name, { width:size, height:size }, scene, true);
+    const ctx = dt.getContext();
+    ctx.clearRect(0,0,size,size);
+    if(kind === 'bush') drawBushSilhouette(ctx, size/2, size, size, palette);
+    else drawTreeSilhouette(ctx, size/2, size, size, kind, palette);
+    dt.hasAlpha = true;
+    dt.update(false);
+    return dt;
+  }
 
-  function buildFoliageMat(name, tex){
+  const treePalettes = [
+    { trunk:'#5a4530', leaf:'#3d7a35', leafLight:'#5a9648' },
+    { trunk:'#4a3822', leaf:'#2d6828', leafLight:'#4a8a3c' },
+    { trunk:'#6b5540', leaf:'#4a8840', leafLight:'#68a858' },
+    { trunk:'#c8bfaf', leaf:'#52a04a', leafLight:'#72b86a' },
+  ];
+  const bushPalettes = [
+    { leaf:'#4a7a38', leafLight:'#68964a' },
+    { leaf:'#3a6830', leafLight:'#589642' },
+    { leaf:'#5a8a48', leafLight:'#78a860' },
+  ];
+
+  function buildSpriteMat(name, tex){
     const mat = new BABYLON.StandardMaterial(name, scene);
     mat.diffuseTexture = tex;
-    mat.diffuseTexture.hasAlpha = true;
+    mat.opacityTexture = tex;
     mat.useAlphaFromDiffuseTexture = true;
     mat.backFaceCulling = false;
-    mat.specularColor = new BABYLON.Color3(0.02,0.03,0.02);
-    mat.emissiveColor = new BABYLON.Color3(0.08,0.10,0.06);
+    mat.specularColor = BABYLON.Color3.Black();
+    mat.emissiveColor = new BABYLON.Color3(0.04,0.05,0.03);
     return mat;
   }
-  function buildFoliageBase(name, tex, width, height){
-    const p1 = BABYLON.MeshBuilder.CreatePlane(name+'A', {width,height,sideOrientation:BABYLON.Mesh.DOUBLESIDE}, scene);
-    const p2 = BABYLON.MeshBuilder.CreatePlane(name+'B', {width,height,sideOrientation:BABYLON.Mesh.DOUBLESIDE}, scene);
+  function buildSpriteBase(name, tex, height){
+    const w = height * 0.85;
+    const p1 = BABYLON.MeshBuilder.CreatePlane(name+'_a', { width:w, height:height, sideOrientation:BABYLON.Mesh.DOUBLESIDE }, scene);
+    const p2 = BABYLON.MeshBuilder.CreatePlane(name+'_b', { width:w, height:height, sideOrientation:BABYLON.Mesh.DOUBLESIDE }, scene);
     p1.position.y = height*0.5;
     p2.position.y = height*0.5;
     p2.rotation.y = Math.PI*0.5;
     const merged = BABYLON.Mesh.MergeMeshes([p1,p2], true, true, undefined, false, true);
-    merged.material = buildFoliageMat(name+'Mat', tex);
+    merged.material = buildSpriteMat(name+'Mat', tex);
     merged.isVisible = false;
     return merged;
   }
 
-  const treeBase = buildFoliageBase('tree', treeTex, 5.0, 6.0);
-  const bushBase = buildFoliageBase('bush', bushTex, 2.8, 2.0);
-  const grassBase = buildFoliageBase('grass', grassTex, 2.0, 2.6);
+  const roundTex = createTreeTexture('roundTex', 'round', 256, treePalettes[0]);
+  const roundTex2 = createTreeTexture('roundTex2', 'round', 256, treePalettes[2]);
+  const pineTex = createTreeTexture('pineTex', 'pine', 256, treePalettes[1]);
+  const pineTex2 = createTreeTexture('pineTex2', 'pine', 256, treePalettes[0]);
+  const birchTex = createTreeTexture('birchTex', 'birch', 256, treePalettes[3]);
+  const birchTex2 = createTreeTexture('birchTex2', 'birch', 256, treePalettes[2]);
+  const bushTex = createTreeTexture('bushTex', 'bush', 256, bushPalettes[0]);
+  const bushTex2 = createTreeTexture('bushTex2', 'bush', 256, bushPalettes[1]);
+
+  const treeBaseRound = buildSpriteBase('treeRound', roundTex, 4.0);
+  const treeBaseRound2 = buildSpriteBase('treeRound2', roundTex2, 3.8);
+  const treeBasePine = buildSpriteBase('treePine', pineTex, 4.5);
+  const treeBasePine2 = buildSpriteBase('treePine2', pineTex2, 4.2);
+  const treeBaseBirch = buildSpriteBase('treeBirch', birchTex, 4.2);
+  const treeBaseBirch2 = buildSpriteBase('treeBirch2', birchTex2, 4.0);
+  const bushBaseA = buildSpriteBase('bushA', bushTex, 1.8);
+  const bushBaseB = buildSpriteBase('bushB', bushTex2, 1.6);
 
   function makeTree(x,z,scale=1, kind='round'){
     const y = terrainHeight(x,z);
     const pick = hash2(x*0.17,z*0.13);
-    const inst = treeBase.createInstance('tree');
-    const s = scale * (0.8 + pick*0.55);
-    inst.position.set(x, y - 0.6*s, z);
-    inst.scaling.set(s, s*(0.88+hash2(x*0.29,z*0.23)*0.28), s);
-    inst.rotation.y = pick * Math.PI;
+    const bases = kind === 'pine' ? [treeBasePine,treeBasePine2] : kind === 'birch' ? [treeBaseBirch,treeBaseBirch2] : [treeBaseRound,treeBaseRound2];
+    const base = bases[pick > 0.5 ? 1 : 0];
+    const inst = base.createInstance('tree');
+    inst.position.set(x, y, z);
+    const s = scale * (0.85 + pick*0.35);
+    inst.scaling.set(s, s*(0.9+hash2(x*0.29,z*0.23)*0.25), s);
+    inst.rotation.y = hash2(x*0.11,z*0.11)*Math.PI;
   }
   function makeShrub(x,z,scale=1){
     const y = terrainHeight(x,z);
     const pick = hash2(x*0.23,z*0.19);
-    const inst = bushBase.createInstance('bush');
-    const s = scale * (0.75 + pick*0.5);
-    inst.position.set(x, y - 0.15*s, z);
-    inst.scaling.set(s, s*(0.82+hash2(x*0.31,z*0.27)*0.36), s);
-    inst.rotation.y = pick * Math.PI;
-  }
-  function makeGrassClump(x,z,scale=1){
-    const y = terrainHeight(x,z);
-    const pick = hash2(x*0.19,z*0.17);
-    const inst = grassBase.createInstance('grass');
-    const s = scale * (0.55 + pick*0.6);
-    inst.position.set(x, y - 0.08, z);
-    inst.scaling.set(s, s*(0.85+hash2(x*0.27,z*0.27)*0.35), s);
-    inst.rotation.y = pick * Math.PI;
+    const base = pick > 0.5 ? bushBaseB : bushBaseA;
+    const inst = base.createInstance('bush');
+    inst.position.set(x, y, z);
+    const s = scale * (0.8 + pick*0.4);
+    inst.scaling.set(s, s*(0.85+hash2(x*0.31,z*0.27)*0.3), s);
+    inst.rotation.y = hash2(x*0.09,z*0.09)*Math.PI;
   }
   for(let i=0;i<220;i++){
     const x = -470 + i*4.4;
