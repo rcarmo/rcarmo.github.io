@@ -153,7 +153,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
 </div>
 
 <nav id="cluster-nav" aria-label="Project sections"></nav>
-<div id="hint">drag • wheel • click signs along the trail</div>
+<div id="hint">WASD to walk • mouse to look • click signs • nav bar to travel</div>
 
 <aside id="focus-panel" aria-live="polite">
   <button id="focus-close" type="button" aria-label="Close">✕</button>
@@ -229,15 +229,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   scene.fogDensity = 0.0019;
   scene.fogColor = new BABYLON.Color3(0.83, 0.92, 1.0);
 
-  const camera = new BABYLON.ArcRotateCamera('cam', -1.5, 1.18, 34, new BABYLON.Vector3(0, 5, 0), scene);
+  const camera = new BABYLON.UniversalCamera('cam', new BABYLON.Vector3(0, 4, 0), scene);
   camera.attachControl(canvas, true);
-  camera.lowerRadiusLimit = 16;
-  camera.upperRadiusLimit = 62;
-  camera.lowerBetaLimit = 0.58;
-  camera.upperBetaLimit = 1.35;
-  camera.wheelPrecision = 26;
-  camera.panningSensibility = 0;
-  camera.inertia = 0.88;
+  camera.speed = 1.2;
+  camera.inertia = 0.82;
+  camera.angularSensibility = 3200;
+  camera.minZ = 0.5;
+  camera.keysUp = [87]; camera.keysDown = [83]; camera.keysLeft = [65]; camera.keysRight = [68];
+  camera.ellipsoid = new BABYLON.Vector3(0.5, 0.9, 0.5);
+  camera.checkCollisions = false;
+  const EYE_HEIGHT = 2.2;
 
   const sun = new BABYLON.DirectionalLight('sun', new BABYLON.Vector3(-0.28, -1, -0.15), scene);
   sun.position = new BABYLON.Vector3(80, 140, 20);
@@ -537,15 +538,17 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     return dt;
   }
 
-  function addProjectSign(project, pos, color, tint){
+  function addProjectSign(project, pos, color, tint, faceDir){
     const post = BABYLON.MeshBuilder.CreateBox('post', { width:0.18, height:2.7, depth:0.18 }, scene);
     post.position = pos.add(new BABYLON.Vector3(0,1.35,0));
     const postMat = new BABYLON.StandardMaterial('postMat', scene);
     postMat.diffuseColor = new BABYLON.Color3(0.47,0.39,0.28); post.material = postMat;
 
-    const board = BABYLON.MeshBuilder.CreatePlane('board', { width:4.4, height:2.2 }, scene);
+    const board = BABYLON.MeshBuilder.CreatePlane('board', { width:4.4, height:2.2, sideOrientation:BABYLON.Mesh.DOUBLESIDE }, scene);
     board.position = pos.add(new BABYLON.Vector3(0,3.1,0));
-    board.billboardMode = BABYLON.Mesh.BILLBOARDMODE_Y;
+    if(faceDir){
+      board.rotation.y = Math.atan2(faceDir.x, faceDir.z);
+    }
     const dt = makeSignTexture(project.name, project.desc, color, tint);
     const mat = new BABYLON.StandardMaterial('boardMat', scene);
     mat.diffuseTexture = dt;
@@ -914,14 +917,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     const normal = new BABYLON.Vector3(-tangent.z, 0, tangent.x);
     const side = sectionIndex % 2 === 0 ? 1 : -1;
     const anchor = new BABYLON.Vector3(center.x + normal.x*18*side, terrainHeight(center.x + normal.x*18*side, center.z + normal.z*18*side), center.z + normal.z*18*side);
-    clusterAnchors.push({ id: section.id, label: section.label, center, anchor, color, projects: section.projects });
+    const faceDir = center.subtract(anchor).normalize();
+    clusterAnchors.push({ id: section.id, label: section.label, center, anchor, color, projects: section.projects, faceDir, tangent, normal, side });
 
     const titleSign = addProjectSign({
       name: section.label,
       desc: `${section.projects.length} projects in this area`,
       url: section.projects[0]?.url || '/',
       logo: section.projects[0]?.logo || ''
-    }, anchor.add(new BABYLON.Vector3(0,0,0)), color, tint);
+    }, anchor.add(new BABYLON.Vector3(0,0,0)), color, tint, faceDir);
     titleSign.scaling.scaleInPlace(1.14);
     titleSign.metadata = { clusterId: section.id, clusterOnly: true, label: section.label };
 
@@ -932,7 +936,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
       const px = anchor.x + normal.x*dx + tangent.x*dz*side;
       const pz = anchor.z + normal.z*dx + tangent.z*dz*side;
       const py = terrainHeight(px,pz);
-      addProjectSign(project, new BABYLON.Vector3(px, py, pz), color, tint);
+      addProjectSign(project, new BABYLON.Vector3(px, py, pz), color, tint, faceDir);
     });
 
     const navBtn = document.createElement('button');
@@ -970,29 +974,74 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     focusMeta.textContent = meta.repo || meta.label || '';
     focusDesc.textContent = meta.desc || '';
     focusLink.href = meta.url || '/';
-    focusJump.textContent = meta.clusterOnly ? 'Jump here' : 'Jump cluster';
-    focusJump.onclick = () => focusCluster(meta.clusterId || activeCluster || clusterAnchors[0]?.id);
+    focusJump.textContent = meta.clusterOnly ? 'Walk here' : 'Walk to cluster';
+    focusJump.onclick = () => walkToCluster(meta.clusterId || activeCluster || clusterAnchors[0]?.id);
     if(meta.logo){ focusLogo.src = meta.logo; focusLogo.style.display = 'block'; }
     else { focusLogo.style.display = 'none'; }
   }
   function closeFocus(){ panel.classList.remove('open'); focusMesh = null; }
   focusClose.addEventListener('click', closeFocus);
 
-  let targetAlpha = camera.alpha, targetBeta = camera.beta, targetRadius = camera.radius, targetVec = camera.target.clone();
-  function focusCluster(id){
+  function findNearestPathPoint(pos){
+    let best = null, bestD = Infinity;
+    for(const route of footPathRoutes){
+      for(let i=0;i<route.length;i++){
+        const dx = pos.x - route[i].x, dz = pos.z - route[i].z;
+        const d = dx*dx + dz*dz;
+        if(d < bestD){ bestD = d; best = { route, index: i }; }
+      }
+    }
+    for(let i=0;i<spinePath.length;i++){
+      const dx = pos.x - spinePath[i].x, dz = pos.z - spinePath[i].z;
+      const d = dx*dx + dz*dz;
+      if(d < bestD){ bestD = d; best = { route: spinePath, index: i }; }
+    }
+    return best;
+  }
+
+  let walkPath = null;
+  let walkIndex = 0;
+  let walkSpeed = 18;
+  let isWalking = false;
+
+  function walkToCluster(id){
     const cluster = clusterAnchors.find(c => c.id === id);
     if(!cluster) return;
     activeCluster = id;
     setActiveNav(id);
-    const ahead = spinePath[Math.min(spinePath.length-1, spinePath.findIndex(p => p === cluster.center) + 8)] || cluster.center;
-    const dx = ahead.x - cluster.center.x;
-    const dz = ahead.z - cluster.center.z;
-    targetAlpha = Math.atan2(dz, dx) - Math.PI * 0.55;
-    targetBeta = 1.06;
-    targetRadius = 26;
-    targetVec = new BABYLON.Vector3(cluster.anchor.x, cluster.anchor.y + 4.6, cluster.anchor.z);
-    openFocus({ name: cluster.label, desc: `${cluster.projects.length} project${cluster.projects.length!==1?'s':''} nearby`, url: cluster.projects[0]?.url || '/', logo: cluster.projects[0]?.logo || '', repo: cluster.id, clusterOnly: true, clusterId: cluster.id });
+    const target = cluster.anchor;
+    const start = findNearestPathPoint(camera.position);
+    const end = findNearestPathPoint(target);
+    if(!start || !end) return;
+    const points = [];
+    if(start.route === end.route){
+      const lo = Math.min(start.index, end.index);
+      const hi = Math.max(start.index, end.index);
+      for(let i=lo;i<=hi;i++) points.push(start.route[i]);
+      if(start.index > end.index) points.reverse();
+    } else {
+      for(let i=start.index;i<start.route.length;i++) points.push(start.route[i]);
+      const spineStart = findNearestPathPoint(points[points.length-1] || camera.position);
+      const spineEnd = findNearestPathPoint(target);
+      if(spineStart && spineEnd && spineStart.route === spinePath && spineEnd.route === spinePath){
+        const lo = Math.min(spineStart.index, spineEnd.index);
+        const hi = Math.max(spineStart.index, spineEnd.index);
+        const seg = [];
+        for(let i=lo;i<=hi;i++) seg.push(spinePath[i]);
+        if(spineStart.index > spineEnd.index) seg.reverse();
+        points.push(...seg);
+      }
+      for(let i=0;i<=end.index && i<end.route.length;i++) points.push(end.route[i]);
+    }
+    if(points.length > 1){
+      walkPath = points.map(p => new BABYLON.Vector3(p.x, terrainHeight(p.x,p.z) + EYE_HEIGHT, p.z));
+      walkIndex = 0;
+      isWalking = true;
+    }
+    openFocus({ name: cluster.label, desc: cluster.projects.length + ' project' + (cluster.projects.length!==1?'s':'') + ' nearby', url: cluster.projects[0]?.url || '/', logo: cluster.projects[0]?.logo || '', repo: cluster.id, clusterOnly: true, clusterId: cluster.id });
   }
+
+  function focusCluster(id){ walkToCluster(id); }
 
   const pointer = scene.onPointerObservable.add((info) => {
     if(info.type !== BABYLON.PointerEventTypes.POINTERPICK) return;
@@ -1000,49 +1049,71 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     if(!pick || !pick.hit || !pick.pickedMesh) return;
     const meta = pick.pickedMesh.metadata;
     if(!meta) return;
-    if(meta.clusterOnly){ focusCluster(meta.clusterId); return; }
+    if(meta.clusterOnly){ walkToCluster(meta.clusterId); return; }
     focusMesh = pick.pickedMesh;
     activeCluster = (clusterAnchors.find(c => c.projects.some(p => p.url === meta.url)) || {}).id || activeCluster;
     setActiveNav(activeCluster);
-    targetVec = pick.pickedMesh.position.add(new BABYLON.Vector3(0, 1.8, 0));
-    targetRadius = 18;
-    targetBeta = 0.98;
     openFocus(meta);
   });
 
-  let autoDrive = true;
-  let autoT = 0.08;
-  scene.onPointerDown = () => { autoDrive = false; };
-  canvas.addEventListener('wheel', () => { autoDrive = false; }, { passive:true });
+  function posOnSpine(t){
+    const idx = Math.floor(t * (spinePath.length-1));
+    const p = spinePath[Math.min(idx, spinePath.length-1)];
+    return new BABYLON.Vector3(p.x, terrainHeight(p.x,p.z) + EYE_HEIGHT, p.z);
+  }
+  function dirOnSpine(t){
+    const idx = Math.floor(t * (spinePath.length-1));
+    const p = spinePath[Math.min(idx, spinePath.length-1)];
+    const next = spinePath[Math.min(idx+3, spinePath.length-1)];
+    return new BABYLON.Vector3(next.x - p.x, 0, next.z - p.z).normalize();
+  }
+
+  let autoWalk = true;
+  let autoT = 0.02;
+  scene.onPointerDown = () => { if(!isWalking) autoWalk = false; };
+
+  const startPos = posOnSpine(autoT);
+  const startDir = dirOnSpine(autoT);
+  camera.position = startPos.clone();
+  camera.setTarget(startPos.add(startDir));
 
   scene.registerBeforeRender(() => {
-    if(autoDrive && !panel.classList.contains('open')){
-      autoT += engine.getDeltaTime() * 0.000008;
-      if(autoT > 0.96) autoT = 0.08;
-      const idx = Math.floor(autoT * (spinePath.length-1));
-      const p = spinePath[idx];
-      const next = spinePath[Math.min(spinePath.length-1, idx+4)];
-      targetVec = new BABYLON.Vector3(p.x, terrainHeight(p.x,p.z)+3.8, p.z);
-      targetAlpha = Math.atan2(next.z-p.z, next.x-p.x) - Math.PI*0.48;
-      targetBeta = 1.08;
-      targetRadius = 24;
-      const nearest = clusterAnchors.reduce((best, c) => {
-        const d = BABYLON.Vector3.DistanceSquared(c.center, p);
-        return !best || d < best.d ? { id:c.id, d } : best;
-      }, null);
-      if(nearest && nearest.id !== activeCluster){ activeCluster = nearest.id; setActiveNav(activeCluster); }
+    const dt = engine.getDeltaTime() / 1000;
+    if(isWalking && walkPath){
+      const target = walkPath[walkIndex];
+      const dir = target.subtract(camera.position);
+      const dist = dir.length();
+      if(dist < 0.5){
+        walkIndex++;
+        if(walkIndex >= walkPath.length){ isWalking = false; walkPath = null; autoWalk = false; }
+      } else {
+        const step = dir.normalize().scale(Math.min(walkSpeed * dt, dist));
+        camera.position.addInPlace(step);
+        const lookAt = target.clone();
+        lookAt.y = camera.position.y;
+        camera.setTarget(BABYLON.Vector3.Lerp(camera.getTarget(), lookAt, 0.08));
+      }
+    } else if(autoWalk && !panel.classList.contains('open')){
+      autoT += dt * 0.008;
+      if(autoT > 0.96) autoT = 0.02;
+      const p = posOnSpine(autoT);
+      const d = dirOnSpine(autoT);
+      camera.position = BABYLON.Vector3.Lerp(camera.position, p, 0.04);
+      camera.setTarget(BABYLON.Vector3.Lerp(camera.getTarget(), camera.position.add(d.scale(10)), 0.03));
     }
-    camera.alpha = BABYLON.Scalar.Lerp(camera.alpha, targetAlpha, 0.045);
-    camera.beta = BABYLON.Scalar.Lerp(camera.beta, targetBeta, 0.06);
-    camera.radius = BABYLON.Scalar.Lerp(camera.radius, targetRadius, 0.055);
-    camera.target = BABYLON.Vector3.Lerp(camera.target, targetVec, 0.07);
+    camera.position.y = terrainHeight(camera.position.x, camera.position.z) + EYE_HEIGHT;
+    const nearest = clusterAnchors.reduce((best, c) => {
+      const d = BABYLON.Vector3.DistanceSquared(new BABYLON.Vector3(c.anchor.x,0,c.anchor.z), new BABYLON.Vector3(camera.position.x,0,camera.position.z));
+      return !best || d < best.d ? { id:c.id, d } : best;
+    }, null);
+    if(nearest && nearest.id !== activeCluster){ activeCluster = nearest.id; setActiveNav(activeCluster); }
     if(terrain.material && terrain.material.setVector3){
       terrain.material.setVector3('cameraPosition', camera.position);
       terrain.material.setVector3('sunDir', sun.direction);
     }
   });
 
-  focusCluster(clusterAnchors[0]?.id);
+  walkToCluster(clusterAnchors[0]?.id);
   engine.runRenderLoop(() => scene.render());
   window.addEventListener('resize', () => engine.resize());
 })();
