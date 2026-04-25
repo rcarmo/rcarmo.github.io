@@ -188,7 +188,7 @@ function assetDataUri(pathOrNull: string | null): string | null {
 }
 
 function ogImageUrl(name: string): string {
-  return `${SITE_URL}/assets/og/${name}.svg`;
+  return `${SITE_URL}/assets/og/${name}.png`;
 }
 
 function wrapOgText(text: string, maxChars: number, maxLines: number): string[] {
@@ -268,7 +268,15 @@ function buildOgCardSvg(opts: {
 }
 
 function writeOgCard(name: string, svg: string): void {
-  writeFileSync(join(OG_OUT, `${name}.svg`), svg);
+  const svgPath = join(OG_OUT, `${name}.svg`);
+  const pngPath = join(OG_OUT, `${name}.png`);
+  writeFileSync(svgPath, svg);
+  try {
+    const result = Bun.spawnSync(['rsvg-convert', '-w', '1200', '-h', '630', '-o', pngPath, svgPath]);
+    if (result.exitCode !== 0) console.warn(`  ⚠ rsvg-convert failed for ${name}: ${result.stderr}`);
+  } catch(e) {
+    console.warn(`  ⚠ rsvg-convert not available, skipping PNG for ${name}`);
+  }
 }
 
 function buildMetaTags(opts: {
@@ -288,7 +296,7 @@ function buildMetaTags(opts: {
     `<meta property="og:description" content="${esc(opts.description)}">`,
     `<meta property="og:url" content="${esc(opts.canonicalUrl)}">`,
     `<meta property="og:image" content="${esc(opts.imageUrl)}">`,
-    `<meta property="og:image:type" content="image/svg+xml">`,
+    `<meta property="og:image:type" content="image/png">`,
     `<meta property="og:image:width" content="1200">`,
     `<meta property="og:image:height" content="630">`,
     `<meta property="og:image:alt" content="${esc(opts.imageAlt)}">`,
