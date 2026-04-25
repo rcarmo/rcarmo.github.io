@@ -427,13 +427,29 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     return mat;
   }
   function makeFoliageMesh(name, mat, w, h){
-    const a = BABYLON.MeshBuilder.CreatePlane(name+'a',{width:w,height:h,sideOrientation:BABYLON.Mesh.DOUBLESIDE},scene);
-    const b = BABYLON.MeshBuilder.CreatePlane(name+'b',{width:w,height:h,sideOrientation:BABYLON.Mesh.DOUBLESIDE},scene);
-    a.position.y = h*0.5; b.position.y = h*0.5; b.rotation.y = Math.PI*0.5;
-    const m = BABYLON.Mesh.MergeMeshes([a,b],true,true,undefined,false,true);
-    m.material = mat;
-    m.isVisible = false;
-    return m;
+    const positions = [
+      // plane 1: XY plane (faces Z)
+      -w/2, 0,   0,   w/2, 0,   0,   w/2, h, 0,   -w/2, h, 0,
+      // plane 2: ZY plane (faces X)
+       0,   0,  -w/2,  0,  0,   w/2,  0,  h, w/2,  0,   h, -w/2,
+    ];
+    const indices = [0,1,2, 0,2,3, 2,1,0, 3,2,0, 4,5,6, 4,6,7, 6,5,4, 7,6,4];
+    const normals = [];
+    BABYLON.VertexData.ComputeNormals(positions, indices, normals);
+    const uvs = [
+      0,0, 1,0, 1,1, 0,1,
+      0,0, 1,0, 1,1, 0,1,
+    ];
+    const vd = new BABYLON.VertexData();
+    vd.positions = positions;
+    vd.indices = indices;
+    vd.normals = normals;
+    vd.uvs = uvs;
+    const mesh = new BABYLON.Mesh(name, scene);
+    vd.applyToMesh(mesh);
+    mesh.material = mat;
+    mesh.isVisible = false;
+    return mesh;
   }
 
   const tMat = makeFoliageMat('tMat', treeTex);
