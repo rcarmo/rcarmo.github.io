@@ -422,11 +422,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   function buildAtlasMat(name, tex){
     const mat = new BABYLON.StandardMaterial(name, scene);
     mat.diffuseTexture = tex;
-    mat.opacityTexture = tex;
     mat.useAlphaFromDiffuseTexture = true;
     mat.backFaceCulling = false;
     mat.specularColor = BABYLON.Color3.Black();
-    mat.emissiveColor = new BABYLON.Color3(0.05,0.06,0.04);
+    mat.emissiveColor = new BABYLON.Color3(0.06,0.08,0.05);
     return mat;
   }
   function buildAtlasCellBase(name, tex, cellIdx, gridX, gridY, width, height){
@@ -454,20 +453,20 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   }
 
   const treeBases = [];
-  for(let i=0;i<8;i++) treeBases.push(buildAtlasCellBase('tree'+i, treesNearTex, i, 4, 2, 3.6, 4.2));
+  for(let i=0;i<8;i++) treeBases.push(buildAtlasCellBase('tree'+i, treesNearTex, i, 4, 2, 7.0, 8.5));
   const bushBases = [];
-  for(let i=0;i<8;i++) bushBases.push(buildAtlasCellBase('bush'+i, bushTex, i, 4, 2, 2.0, 1.4));
+  for(let i=0;i<8;i++) bushBases.push(buildAtlasCellBase('bush'+i, bushTex, i, 4, 2, 3.2, 2.4));
   const grassBases = [];
-  for(let i=0;i<4;i++) grassBases.push(buildAtlasCellBase('grass'+i, grassTex, i, 2, 2, 1.0, 1.4));
+  for(let i=0;i<4;i++) grassBases.push(buildAtlasCellBase('grass'+i, grassTex, i, 2, 2, 2.2, 2.8));
 
   function makeTree(x,z,scale=1, kind='round'){
     const y = terrainHeight(x,z);
     const pick = hash2(x*0.17,z*0.13);
     const base = treeBases[Math.floor(pick*8)];
     const inst = base.createInstance('tree');
-    const s = scale * (0.85 + pick*0.35);
-    inst.position.set(x, y, z);
-    inst.scaling.set(s, s*(0.9+hash2(x*0.29,z*0.23)*0.2), s);
+    const s = scale * (0.9 + pick*0.45);
+    inst.position.set(x, y - 0.8*s, z);
+    inst.scaling.set(s, s*(0.88+hash2(x*0.29,z*0.23)*0.28), s);
     inst.rotation.y = pick * Math.PI;
   }
   function makeShrub(x,z,scale=1){
@@ -475,9 +474,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     const pick = hash2(x*0.23,z*0.19);
     const base = bushBases[Math.floor(pick*8)];
     const inst = base.createInstance('bush');
-    const s = scale * (0.8 + pick*0.4);
-    inst.position.set(x, y, z);
-    inst.scaling.set(s, s*(0.85+hash2(x*0.31,z*0.27)*0.3), s);
+    const s = scale * (0.8 + pick*0.45);
+    inst.position.set(x, y - 0.2*s, z);
+    inst.scaling.set(s, s*(0.82+hash2(x*0.31,z*0.27)*0.36), s);
     inst.rotation.y = pick * Math.PI;
   }
   function makeGrassClump(x,z,scale=1){
@@ -485,9 +484,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     const pick = hash2(x*0.19,z*0.17);
     const base = grassBases[Math.floor(pick*4)];
     const inst = base.createInstance('grass');
-    const s = scale * (0.6 + pick*0.5);
-    inst.position.set(x, y, z);
-    inst.scaling.set(s, s*(0.9+hash2(x*0.27,z*0.27)*0.3), s);
+    const s = scale * (0.7 + pick*0.6);
+    inst.position.set(x, y - 0.05, z);
+    inst.scaling.set(s, s*(0.85+hash2(x*0.27,z*0.27)*0.35), s);
     inst.rotation.y = pick * Math.PI;
   }
   await progress(35, 'Placing foliage…');
@@ -683,24 +682,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     edgeMat.diffuseTexture = edgeTex;
     edgeMat.specularColor = BABYLON.Color3.Black();
     edgeMat.zOffset = -1;
-
-    for(let i=0;i<clusterAnchors.length;i++){
-      const ca = clusterAnchors[i];
-      const nearestIdx = spinePath.reduce((best, p, idx) => {
-        const d = BABYLON.Vector3.DistanceSquared(p, new BABYLON.Vector3(ca.anchor.x, 0, ca.anchor.z));
-        return !best || d < best.d ? { idx, d } : best;
-      }, null).idx;
-      const spinePoint = new BABYLON.Vector3(spinePath[nearestIdx].x, terrainHeight(spinePath[nearestIdx].x, spinePath[nearestIdx].z)+0.08, spinePath[nearestIdx].z);
-      const clusterPoint = new BABYLON.Vector3(ca.anchor.x, terrainHeight(ca.anchor.x, ca.anchor.z)+0.08, ca.anchor.z);
-      const mid = BABYLON.Vector3.Lerp(spinePoint, clusterPoint, 0.5);
-      mid.x += (fbm(ca.anchor.x*0.02, ca.anchor.z*0.02)-0.5)*8;
-      mid.z += (fbm(ca.anchor.z*0.02, ca.anchor.x*0.02)-0.5)*8;
-      mid.y = terrainHeight(mid.x, mid.z)+0.08;
-      const spurPoints = BABYLON.Curve3.CreateCatmullRomSpline([spinePoint, mid, clusterPoint], 24).getPoints().map(p => new BABYLON.Vector3(p.x, terrainHeight(p.x,p.z)+0.08, p.z));
-      footPathRoutes.push(spurPoints);
-      buildPathRibbon(spurPoints, 1.6, 'spurEdge_'+i, edgeMat);
-      buildPathRibbon(spurPoints, 1.0, 'spur_'+i, pathMat);
-    }
 
     for(let i=0;i<clusterAnchors.length-1;i++){
       const a = clusterAnchors[i], b = clusterAnchors[i+1];
