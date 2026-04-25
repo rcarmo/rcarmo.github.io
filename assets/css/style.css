@@ -543,6 +543,8 @@ code {
 .btn:hover { border-color: var(--border-strong); background: var(--surface2); text-decoration: none; }
 .btn-primary { background: var(--blue); color: #fff; border-color: var(--blue); }
 .btn-primary:hover { background: var(--blue); border-color: var(--blue); color: #fff; }
+.btn-secondary { background: var(--surface); color: var(--text); border-color: var(--border); }
+.btn-secondary:hover { background: var(--accent-bg); color: var(--accent); border-color: var(--accent); }
 
 /* ── Page layout ──────────────────────────────────────────────────────────── */
 .page-layout {
@@ -939,3 +941,4 @@ footer {
   border-radius:8px;cursor:pointer;
 }
 #lightbox-close:hover { background:rgba(255,255,255,.32); }
+.hero-gallery-fullmap { margin-top:.75rem; }

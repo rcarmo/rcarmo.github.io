@@ -57,11 +57,17 @@
       <div class="hero-gallery" data-gallery tabindex="0" aria-label="Project gallery">
         <div class="hero-gallery-stage">
           
-          <figure class="hero-gallery-slide is-active" data-gallery-slide data-fullsrc="/assets/screenshots/zmk-config-totem/keymap.png">
-            <img src="/assets/screenshots/zmk-config-totem/keymap.png" alt="Full keymap (PNG)" loading="lazy">
+          <figure class="hero-gallery-slide is-active" data-gallery-slide data-fullsrc="/assets/screenshots/zmk-config-totem/layer-base.png">
+            <img src="/assets/screenshots/zmk-config-totem/layer-base.png" alt="Base layer" loading="lazy">
           </figure>
-          <figure class="hero-gallery-slide" data-gallery-slide data-fullsrc="/assets/diagrams/totem-keymap.svg">
-            <object type="image/svg+xml" data="/assets/diagrams/totem-keymap.svg" class="gallery-svg" aria-label="Full keymap (SVG)"></object>
+          <figure class="hero-gallery-slide" data-gallery-slide data-fullsrc="/assets/screenshots/zmk-config-totem/layer-sym.png">
+            <img src="/assets/screenshots/zmk-config-totem/layer-sym.png" alt="Sym layer" loading="lazy">
+          </figure>
+          <figure class="hero-gallery-slide" data-gallery-slide data-fullsrc="/assets/screenshots/zmk-config-totem/layer-nav.png">
+            <img src="/assets/screenshots/zmk-config-totem/layer-nav.png" alt="Nav layer" loading="lazy">
+          </figure>
+          <figure class="hero-gallery-slide" data-gallery-slide data-fullsrc="/assets/screenshots/zmk-config-totem/layer-adjust.png">
+            <img src="/assets/screenshots/zmk-config-totem/layer-adjust.png" alt="Adjust layer" loading="lazy">
           </figure>
         </div>
         <div class="hero-gallery-meta">
@@ -69,7 +75,7 @@
             <div class="hero-gallery-nav">
               <button type="button" class="hero-gallery-btn" data-gallery-prev aria-label="Previous image">◀</button>
               <input class="hero-gallery-goto" data-gallery-goto type="number" min="1" value="1" title="Jump to image">
-              <span class="hero-gallery-status" data-gallery-status>/ 2</span>
+              <span class="hero-gallery-status" data-gallery-status>/ 4</span>
               <button type="button" class="hero-gallery-btn" data-gallery-next aria-label="Next image">▶</button>
             </div>
             <div class="hero-gallery-hint">←/→ keyboard navigation</div>
@@ -77,29 +83,50 @@
           <div class="hero-gallery-caption">
             
             <div class="hero-gallery-caption-item is-active" data-gallery-caption>
-              <div class="hero-gallery-caption-title">Full keymap (PNG)</div>
-              <div class="hero-gallery-caption-body">All 4 layers: Base, Sym, Nav, Adjust</div>
+              <div class="hero-gallery-caption-title">Base layer</div>
+              <div class="hero-gallery-caption-body">QWERTY, home row mods, thumb cluster</div>
               <div class="hero-gallery-caption-actions">
-                <a class="btn btn-sm" href="/assets/screenshots/zmk-config-totem/keymap.png" target="_blank" rel="noopener">View full size ↗</a>
+                <a class="btn btn-sm" href="/assets/screenshots/zmk-config-totem/layer-base.png" target="_blank" rel="noopener">View full size ↗</a>
               </div>
             </div>
             <div class="hero-gallery-caption-item" data-gallery-caption>
-              <div class="hero-gallery-caption-title">Full keymap (SVG)</div>
-              <div class="hero-gallery-caption-body">Scalable version, click to zoom</div>
+              <div class="hero-gallery-caption-title">Sym layer</div>
+              <div class="hero-gallery-caption-body">Symbols, brackets, sticky mods</div>
               <div class="hero-gallery-caption-actions">
-                <a class="btn btn-sm" href="/assets/diagrams/totem-keymap.svg" target="_blank" rel="noopener">View full size ↗</a>
+                <a class="btn btn-sm" href="/assets/screenshots/zmk-config-totem/layer-sym.png" target="_blank" rel="noopener">View full size ↗</a>
+              </div>
+            </div>
+            <div class="hero-gallery-caption-item" data-gallery-caption>
+              <div class="hero-gallery-caption-title">Nav layer</div>
+              <div class="hero-gallery-caption-body">Arrows, mouse, numbers</div>
+              <div class="hero-gallery-caption-actions">
+                <a class="btn btn-sm" href="/assets/screenshots/zmk-config-totem/layer-nav.png" target="_blank" rel="noopener">View full size ↗</a>
+              </div>
+            </div>
+            <div class="hero-gallery-caption-item" data-gallery-caption>
+              <div class="hero-gallery-caption-title">Adjust layer</div>
+              <div class="hero-gallery-caption-body">Bluetooth, media, function keys</div>
+              <div class="hero-gallery-caption-actions">
+                <a class="btn btn-sm" href="/assets/screenshots/zmk-config-totem/layer-adjust.png" target="_blank" rel="noopener">View full size ↗</a>
               </div>
             </div>
           </div>
           <div class="hero-gallery-thumbs" role="tablist" aria-label="Gallery thumbnails">
             
-            <button type="button" class="hero-gallery-thumb is-active" data-gallery-thumb aria-label="Show image 1: Full keymap (PNG)">
-              <img src="/assets/screenshots/zmk-config-totem/keymap.png" alt="" loading="lazy">
+            <button type="button" class="hero-gallery-thumb is-active" data-gallery-thumb aria-label="Show image 1: Base layer">
+              <img src="/assets/screenshots/zmk-config-totem/layer-base.png" alt="" loading="lazy">
             </button>
-            <button type="button" class="hero-gallery-thumb" data-gallery-thumb aria-label="Show image 2: Full keymap (SVG)">
-              <img src="/assets/diagrams/totem-keymap.svg" alt="" loading="lazy">
+            <button type="button" class="hero-gallery-thumb" data-gallery-thumb aria-label="Show image 2: Sym layer">
+              <img src="/assets/screenshots/zmk-config-totem/layer-sym.png" alt="" loading="lazy">
+            </button>
+            <button type="button" class="hero-gallery-thumb" data-gallery-thumb aria-label="Show image 3: Nav layer">
+              <img src="/assets/screenshots/zmk-config-totem/layer-nav.png" alt="" loading="lazy">
+            </button>
+            <button type="button" class="hero-gallery-thumb" data-gallery-thumb aria-label="Show image 4: Adjust layer">
+              <img src="/assets/screenshots/zmk-config-totem/layer-adjust.png" alt="" loading="lazy">
             </button>
           </div>
+          <div class="hero-gallery-fullmap"><button type="button" class="btn btn-secondary" data-lightbox="/assets/diagrams/totem-keymap.svg">View full keymap SVG ↗</button></div>
         </div>
       </div>
     </div>
@@ -238,9 +265,9 @@
     <div id="lightbox-inner"></div>
   </div>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=moeqmjf3"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=moer8cbh"></script>
   <script type="module">
-    import { mount } from '/assets/js/repo-island.mjs?v=moeqmjf3';
+    import { mount } from '/assets/js/repo-island.mjs?v=moer8cbh';
     mount({
       fullName: 'rcarmo/zmk-config-totem',
       heroMetaEl: document.getElementById('hero-meta-island-zmk-config-totem'),

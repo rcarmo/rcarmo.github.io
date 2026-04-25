@@ -25,8 +25,10 @@ Combos for all punctuation.
 7:2 forks-to-stars tells the story.
 
 ## Gallery
-- [Full keymap (PNG)](assets/screenshots/zmk-config-totem/keymap.png) — All 4 layers: Base, Sym, Nav, Adjust
-- [Full keymap (SVG)](assets/diagrams/totem-keymap.svg) — Scalable version, click to zoom
+- [Base layer](assets/screenshots/zmk-config-totem/layer-base.png) — QWERTY, home row mods, thumb cluster
+- [Sym layer](assets/screenshots/zmk-config-totem/layer-sym.png) — Symbols, brackets, sticky mods
+- [Nav layer](assets/screenshots/zmk-config-totem/layer-nav.png) — Arrows, mouse, numbers
+- [Adjust layer](assets/screenshots/zmk-config-totem/layer-adjust.png) — Bluetooth, media, function keys
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">

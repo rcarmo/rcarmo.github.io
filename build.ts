@@ -510,6 +510,16 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
               <img src="/${esc(item.src)}" alt="" loading="lazy">
             </button>`).join("")}
           </div>
+          ${(() => {
+            const candidates = [
+              join(ROOT, 'assets/diagrams', id + '-keymap.svg'),
+              join(ROOT, 'assets/diagrams', id.replace(/^zmk-config-/, '') + '-keymap.svg'),
+            ];
+            const found = candidates.find(c => existsSync(c));
+            if (!found) return '';
+            const src = '/assets/diagrams/' + found.split('/assets/diagrams/')[1];
+            return `<div class="hero-gallery-fullmap"><button type="button" class="btn btn-secondary" data-lightbox="${src}">View full keymap SVG ↗</button></div>`;
+          })()}
         </div>
       </div>
     </div>
