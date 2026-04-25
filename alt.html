@@ -390,6 +390,10 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   const rockMat = new BABYLON.StandardMaterial('rockMat', scene);
   rockMat.diffuseColor = new BABYLON.Color3(0.52,0.50,0.46);
   rockMat.specularColor = new BABYLON.Color3(0.08,0.08,0.08);
+  // Instanced rocks — one draw call instead of thousands of CreateBox
+  const rockBase = BABYLON.MeshBuilder.CreateBox('rockBase', { width:1.4, height:0.7, depth:1.1 }, scene);
+  rockBase.material = rockMat;
+  rockBase.isVisible = false;
   for(let x=-460;x<=460;x+=12){
     for(let z=-160;z<=160;z+=12){
       const slope = sampleSlope(x,z);
@@ -398,89 +402,152 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
       if(rnd < 0.55) continue;
       const y = terrainHeight(x,z);
       const scale = 0.5 + slope * 1.8 + rnd * 0.6;
-      const rock = BABYLON.MeshBuilder.CreateBox('rock', { width:scale*1.4, height:scale*0.7, depth:scale*1.1 }, scene);
+      const rock = rockBase.createInstance('rock');
       rock.position.set(x, y + scale*0.2, z);
+      rock.scaling.set(scale, scale, scale);
       rock.rotation.y = rnd * Math.PI * 2;
       rock.rotation.x = (hash2(x*0.09,z*0.09)-0.5)*0.3;
-      rock.material = rockMat;
       rock.receiveShadows = true;
-      shadowGen.addShadowCaster(rock);
     }
   }
 
-  function loadFoliageTex(url){
-    const tex = new BABYLON.Texture(url, scene, false, false, BABYLON.Texture.BILINEAR_SAMPLINGMODE);
+  // ── Foliage system: Slow Roads-style atlas sprites + wind ──────────────────
+  const FOL_VS = `
+    precision highp float;
+    attribute vec3 position;
+    attribute vec2 uv;
+    uniform mat4 worldViewProjection;
+    uniform float uTime;
+    uniform vec2 uAtlasOff;  // atlas offset: col*0.5, row*0.5
+    uniform float uH;        // sprite height for wind weighting
+    varying vec2 vUV;
+    varying float vAO;
+    void main() {
+      // Select atlas cell: base UVs [0..0.5], shift to correct quadrant
+      vUV = uv + uAtlasOff;
+      // Wind: top of sprite sways, base anchored
+      float t = clamp(position.y / max(uH, 0.01), 0.0, 1.0);
+      float wind = t * t * 0.42;
+      vec3 pos = position;
+      pos.x += sin(uTime * 1.8 + uAtlasOff.x * 9.7 + position.z * 0.12) * wind;
+      pos.z += cos(uTime * 1.4 + uAtlasOff.y * 7.3 + position.x * 0.09) * wind * 0.55;
+      // Fake ambient occlusion: darken base, lighten top
+      vAO = 0.60 + t * 0.40;
+      gl_Position = worldViewProjection * vec4(pos, 1.0);
+    }
+  `;
+  const FOL_FS = `
+    precision highp float;
+    varying vec2 vUV;
+    varying float vAO;
+    uniform sampler2D texSampler;
+    uniform vec3 uTint;
+    void main() {
+      vec4 col = texture2D(texSampler, vUV);
+      if (col.a < 0.12) discard;
+      col.rgb *= vAO;
+      col.rgb += uTint;
+      gl_FragColor = col;
+    }
+  `;
+
+  // Load textures with invertY=true (matches Three.js convention of the source sprites)
+  function loadFoliageTex(url) {
+    const tex = new BABYLON.Texture(url, scene, false, true, BABYLON.Texture.BILINEAR_SAMPLINGMODE);
     tex.hasAlpha = true;
     return tex;
   }
   const treeTex  = loadFoliageTex('/assets/sprites/trees-near.png');
-  const bushTex2 = loadFoliageTex('/assets/sprites/bush.png');
-  const grassTex2= loadFoliageTex('/assets/sprites/grass.png');
+  const bushTex  = loadFoliageTex('/assets/sprites/bush.png');
+  const grassTex = loadFoliageTex('/assets/sprites/grass.png');
 
-  function makeFoliageMat(name, tex){
-    const mat = new BABYLON.StandardMaterial(name, scene);
-    mat.diffuseTexture = tex;
-    mat.useAlphaFromDiffuseTexture = true;
+  // All foliage ShaderMaterials, updated with uTime each frame
+  const foliageMats = [];
+  function makeFoliageMat(name, tex, col, row, h) {
+    const mat = new BABYLON.ShaderMaterial(name, scene,
+      { vertexSource: FOL_VS, fragmentSource: FOL_FS },
+      { attributes:['position','uv'], uniforms:['worldViewProjection','uTime','uAtlasOff','uH','uTint'], samplers:['texSampler'] }
+    );
+    mat.setTexture('texSampler', tex);
+    mat.setVector2('uAtlasOff', new BABYLON.Vector2(col * 0.5, row * 0.5));
+    mat.setFloat('uH', h);
+    mat.setVector3('uTint', new BABYLON.Vector3(0, 0, 0));
+    mat.setFloat('uTime', 0);
     mat.backFaceCulling = false;
-    mat.specularColor = BABYLON.Color3.Black();
-    mat.emissiveColor = new BABYLON.Color3(0.06,0.08,0.05);
+    mat.needAlphaBlending = () => false;
+    mat.needAlphaTesting = () => true;
+    foliageMats.push(mat);
     return mat;
   }
-  function makeFoliageMesh(name, mat, w, h){
+
+  // Cross-plane geometry: two quads at 90°, correct atlas UVs [0..0.5], all-up normals
+  function makeCrossGeom(w, h) {
+    const hw = w / 2;
     const positions = [
-      // plane 1: XY plane (faces Z)
-      -w/2, 0,   0,   w/2, 0,   0,   w/2, h, 0,   -w/2, h, 0,
-      // plane 2: ZY plane (faces X)
-       0,   0,  -w/2,  0,  0,   w/2,  0,  h, w/2,  0,   h, -w/2,
+      -hw, 0, 0,   hw, 0, 0,   hw, h, 0,   -hw, h, 0,   // plane 1 (XY)
+       0, 0,-hw,    0, 0, hw,   0, h, hw,    0, h,-hw,   // plane 2 (ZY)
     ];
-    const indices = [0,1,2, 0,2,3, 2,1,0, 3,2,0, 4,5,6, 4,6,7, 6,5,4, 7,6,4];
-    const normals = [];
-    BABYLON.VertexData.ComputeNormals(positions, indices, normals);
+    // All normals upward (matches Slow Roads — gives correct ambient lighting)
+    const normals = [
+      0,1,0, 0,1,0, 0,1,0, 0,1,0,
+      0,1,0, 0,1,0, 0,1,0, 0,1,0,
+    ];
+    // UVs: [0..0.5] x [0..0.5] — atlas offset shifts to correct quadrant
     const uvs = [
-      0,0, 1,0, 1,1, 0,1,
-      0,0, 1,0, 1,1, 0,1,
+      0,0, 0.5,0, 0.5,0.5, 0,0.5,
+      0,0, 0.5,0, 0.5,0.5, 0,0.5,
     ];
-    const vd = new BABYLON.VertexData();
-    vd.positions = positions;
-    vd.indices = indices;
-    vd.normals = normals;
-    vd.uvs = uvs;
-    const mesh = new BABYLON.Mesh(name, scene);
-    vd.applyToMesh(mesh);
-    mesh.material = mat;
-    mesh.isVisible = false;
-    return mesh;
+    // Double-sided indices (both winding orders per quad)
+    const indices = [0,1,2, 0,2,3, 2,1,0, 3,2,0, 4,5,6, 4,6,7, 6,5,4, 7,6,4];
+    return { positions, normals, uvs, indices };
   }
 
-  const tMat = makeFoliageMat('tMat', treeTex);
-  const bMat = makeFoliageMat('bMat', bushTex2);
-  const gMat = makeFoliageMat('gMat', grassTex2);
+  // 4 atlas variants per type (2x2 grid: col 0/1, row 0/1)
+  const treeMeshes = [], bushMeshes = [], grassMeshes = [];
+  for (let v = 0; v < 4; v++) {
+    const col = v % 2, row = Math.floor(v / 2);
 
-  const tMesh = makeFoliageMesh('tree', tMat, 7.0, 8.5);
-  const bMesh = makeFoliageMesh('bush', bMat, 3.2, 2.4);
-  const gMesh = makeFoliageMesh('grass', gMat, 2.2, 2.8);
+    function buildFoliageMesh(namePrefix, mat, w, h, arr) {
+      const geom = makeCrossGeom(w, h);
+      const vd = new BABYLON.VertexData();
+      vd.positions = geom.positions; vd.normals = geom.normals;
+      vd.uvs = geom.uvs; vd.indices = geom.indices;
+      const mesh = new BABYLON.Mesh(namePrefix + v, scene);
+      vd.applyToMesh(mesh);
+      mesh.material = mat;
+      mesh.isVisible = false;
+      arr.push(mesh);
+    }
+    buildFoliageMesh('tree',  makeFoliageMat('tMat'+v, treeTex,  col, row, 8.5), 7.0, 8.5, treeMeshes);
+    buildFoliageMesh('bush',  makeFoliageMat('bMat'+v, bushTex,  col, row, 2.4), 3.2, 2.4, bushMeshes);
+    buildFoliageMesh('grass', makeFoliageMat('gMat'+v, grassTex, col, row, 2.8), 2.2, 2.8, grassMeshes);
+  }
 
   function makeTree(x,z,scale=1,kind='round'){
     const y=terrainHeight(x,z), pick=hash2(x*0.17,z*0.13);
-    const s=scale*(0.9+pick*0.45), inst=tMesh.createInstance('t');
+    const v=Math.floor(pick*4)%4, s=scale*(0.9+pick*0.45);
+    const inst=treeMeshes[v].createInstance('t');
     inst.position.set(x, y-0.8*s, z);
     inst.scaling.set(s, s*(0.88+hash2(x*0.29,z*0.23)*0.28), s);
-    inst.rotation.y = pick*Math.PI;
+    inst.rotation.y=pick*Math.PI*2;
   }
   function makeShrub(x,z,scale=1){
     const y=terrainHeight(x,z), pick=hash2(x*0.23,z*0.19);
-    const s=scale*(0.8+pick*0.45), inst=bMesh.createInstance('b');
+    const v=Math.floor(pick*4)%4, s=scale*(0.8+pick*0.45);
+    const inst=bushMeshes[v].createInstance('b');
     inst.position.set(x, y-0.2*s, z);
     inst.scaling.set(s, s*(0.82+hash2(x*0.31,z*0.27)*0.36), s);
-    inst.rotation.y = pick*Math.PI;
+    inst.rotation.y=pick*Math.PI*2;
   }
   function makeGrassClump(x,z,scale=1){
     const y=terrainHeight(x,z), pick=hash2(x*0.19,z*0.17);
-    const s=scale*(0.7+pick*0.6), inst=gMesh.createInstance('g');
+    const v=Math.floor(pick*4)%4, s=scale*(0.7+pick*0.6);
+    const inst=grassMeshes[v].createInstance('g');
     inst.position.set(x, y-0.05, z);
     inst.scaling.set(s, s*(0.85+hash2(x*0.27,z*0.27)*0.35), s);
-    inst.rotation.y = pick*Math.PI;
+    inst.rotation.y=pick*Math.PI*2;
   }
+
   await progress(35, 'Placing foliage…');
   for(let i=0;i<220;i++){
     const x = -470 + i*4.4;
@@ -1080,6 +1147,9 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
 
   scene.registerBeforeRender(() => {
     const dt = engine.getDeltaTime() / 1000;
+    // Update foliage wind animation
+    const t = performance.now() * 0.001;
+    for (const m of foliageMats) m.setFloat('uTime', t);
     if(isWalking && walkPath){
       disableCameraInput();
       const target = walkPath[walkIndex];
