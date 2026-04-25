@@ -387,6 +387,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   }
 
   function drawTreeSilhouette(ctx, cx, w, h, kind, palette){
+    ctx.clearRect(0, 0, w*2, h*2);
     const trunkW = w*0.08, trunkH = h*0.38;
     ctx.fillStyle = palette.trunk;
     ctx.beginPath();
@@ -429,6 +430,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     }
   }
   function drawBushSilhouette(ctx, cx, w, h, palette){
+    ctx.clearRect(0, 0, w*2, h*2);
     const count = 3 + Math.floor(Math.random()*2);
     for(let i=0;i<count;i++){
       const bx = cx + (i-count/2)*w*0.22;
@@ -440,23 +442,15 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     ctx.fillStyle = palette.leafLight+'66';
     ctx.beginPath(); ctx.ellipse(cx, h*0.45, w*0.15, h*0.12, 0, 0, Math.PI*2); ctx.fill();
   }
-  function createSpriteAtlas(name, kind, size, palettes){
-    const cols = 2, rows = palettes.length;
-    const dt = new BABYLON.DynamicTexture(name, { width:size*cols, height:size*rows }, scene, true);
+  function createTreeTexture(name, kind, size, palette){
+    const dt = new BABYLON.DynamicTexture(name, { width:size, height:size }, scene, true);
     const ctx = dt.getContext();
-    ctx.clearRect(0,0,size*cols,size*rows);
-    for(let r=0;r<rows;r++){
-      for(let c=0;c<cols;c++){
-        const ox = c*size, oy = r*size;
-        ctx.save(); ctx.translate(ox, oy);
-        if(kind === 'bush') drawBushSilhouette(ctx, size/2, size, size, palettes[r]);
-        else drawTreeSilhouette(ctx, size/2, size, size, kind === 'pine' ? 'pine' : kind === 'birch' ? 'birch' : 'round', palettes[r]);
-        ctx.restore();
-      }
-    }
+    ctx.clearRect(0,0,size,size);
+    if(kind === 'bush') drawBushSilhouette(ctx, size/2, size, size, palette);
+    else drawTreeSilhouette(ctx, size/2, size, size, kind, palette);
     dt.hasAlpha = true;
     dt.update(false);
-    return { texture: dt, cols, rows };
+    return dt;
   }
 
   const treePalettes = [
@@ -470,53 +464,66 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     { leaf:'#3a6830', leafLight:'#589642' },
     { leaf:'#5a8a48', leafLight:'#78a860' },
   ];
-  const roundAtlas = createSpriteAtlas('roundAtlas', 'round', 256, treePalettes);
-  const pineAtlas = createSpriteAtlas('pineAtlas', 'pine', 256, treePalettes);
-  const birchAtlas = createSpriteAtlas('birchAtlas', 'birch', 256, treePalettes);
-  const bushAtlas = createSpriteAtlas('bushAtlas', 'bush', 256, bushPalettes);
 
-  function buildSpriteMat(name, atlas){
+  function buildSpriteMat(name, tex){
     const mat = new BABYLON.StandardMaterial(name, scene);
-    mat.diffuseTexture = atlas.texture;
-    mat.opacityTexture = atlas.texture;
+    mat.diffuseTexture = tex;
+    mat.opacityTexture = tex;
     mat.useAlphaFromDiffuseTexture = true;
     mat.backFaceCulling = false;
     mat.specularColor = BABYLON.Color3.Black();
     mat.emissiveColor = new BABYLON.Color3(0.04,0.05,0.03);
     return mat;
   }
-  function buildSpriteBase(name, atlas, height){
+  function buildSpriteBase(name, tex, height){
     const w = height * 0.85;
-    const p1 = BABYLON.MeshBuilder.CreatePlane(name+'_a', { width:w, height:height }, scene);
-    const p2 = p1.clone(name+'_b');
+    const p1 = BABYLON.MeshBuilder.CreatePlane(name+'_a', { width:w, height:height, sideOrientation:BABYLON.Mesh.DOUBLESIDE }, scene);
+    const p2 = BABYLON.MeshBuilder.CreatePlane(name+'_b', { width:w, height:height, sideOrientation:BABYLON.Mesh.DOUBLESIDE }, scene);
     p1.position.y = height*0.5;
     p2.position.y = height*0.5;
     p2.rotation.y = Math.PI*0.5;
     const merged = BABYLON.Mesh.MergeMeshes([p1,p2], true, true, undefined, false, true);
-    merged.material = buildSpriteMat(name+'Mat', atlas);
+    merged.material = buildSpriteMat(name+'Mat', tex);
     merged.isVisible = false;
     return merged;
   }
 
-  const treeBaseRound = buildSpriteBase('treeRound', roundAtlas, 4.0);
-  const treeBasePine = buildSpriteBase('treePine', pineAtlas, 4.5);
-  const treeBaseBirch = buildSpriteBase('treeBirch', birchAtlas, 4.2);
-  const bushBase = buildSpriteBase('bushBase', bushAtlas, 1.8);
+  const roundTex = createTreeTexture('roundTex', 'round', 256, treePalettes[0]);
+  const roundTex2 = createTreeTexture('roundTex2', 'round', 256, treePalettes[2]);
+  const pineTex = createTreeTexture('pineTex', 'pine', 256, treePalettes[1]);
+  const pineTex2 = createTreeTexture('pineTex2', 'pine', 256, treePalettes[0]);
+  const birchTex = createTreeTexture('birchTex', 'birch', 256, treePalettes[3]);
+  const birchTex2 = createTreeTexture('birchTex2', 'birch', 256, treePalettes[2]);
+  const bushTex = createTreeTexture('bushTex', 'bush', 256, bushPalettes[0]);
+  const bushTex2 = createTreeTexture('bushTex2', 'bush', 256, bushPalettes[1]);
+
+  const treeBaseRound = buildSpriteBase('treeRound', roundTex, 4.0);
+  const treeBaseRound2 = buildSpriteBase('treeRound2', roundTex2, 3.8);
+  const treeBasePine = buildSpriteBase('treePine', pineTex, 4.5);
+  const treeBasePine2 = buildSpriteBase('treePine2', pineTex2, 4.2);
+  const treeBaseBirch = buildSpriteBase('treeBirch', birchTex, 4.2);
+  const treeBaseBirch2 = buildSpriteBase('treeBirch2', birchTex2, 4.0);
+  const bushBaseA = buildSpriteBase('bushA', bushTex, 1.8);
+  const bushBaseB = buildSpriteBase('bushB', bushTex2, 1.6);
 
   function makeTree(x,z,scale=1, kind='round'){
     const y = terrainHeight(x,z);
-    const base = kind === 'pine' ? treeBasePine : kind === 'birch' ? treeBaseBirch : treeBaseRound;
+    const pick = hash2(x*0.17,z*0.13);
+    const bases = kind === 'pine' ? [treeBasePine,treeBasePine2] : kind === 'birch' ? [treeBaseBirch,treeBaseBirch2] : [treeBaseRound,treeBaseRound2];
+    const base = bases[pick > 0.5 ? 1 : 0];
     const inst = base.createInstance('tree');
     inst.position.set(x, y, z);
-    const s = scale * (0.85 + hash2(x*0.17,z*0.13)*0.35);
+    const s = scale * (0.85 + pick*0.35);
     inst.scaling.set(s, s*(0.9+hash2(x*0.29,z*0.23)*0.25), s);
     inst.rotation.y = hash2(x*0.11,z*0.11)*Math.PI;
   }
   function makeShrub(x,z,scale=1){
     const y = terrainHeight(x,z);
-    const inst = bushBase.createInstance('bush');
+    const pick = hash2(x*0.23,z*0.19);
+    const base = pick > 0.5 ? bushBaseB : bushBaseA;
+    const inst = base.createInstance('bush');
     inst.position.set(x, y, z);
-    const s = scale * (0.8 + hash2(x*0.23,z*0.19)*0.4);
+    const s = scale * (0.8 + pick*0.4);
     inst.scaling.set(s, s*(0.85+hash2(x*0.31,z*0.27)*0.3), s);
     inst.rotation.y = hash2(x*0.09,z*0.09)*Math.PI;
   }
