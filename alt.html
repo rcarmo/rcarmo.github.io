@@ -508,6 +508,70 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
   const bushBaseA = buildSpriteBase('bushA', bushTex, 1.8);
   const bushBaseB = buildSpriteBase('bushB', bushTex2, 1.6);
 
+  function createGrassTexture(name, blades, shadow, flowers){
+    const dt = new BABYLON.DynamicTexture(name, { width:256, height:256 }, scene, false);
+    const ctx = dt.getContext();
+    ctx.clearRect(0,0,256,256);
+    for(let i=0;i<72;i++){
+      const x = 10 + ((i*31)%236);
+      const h = 50 + (i%8)*22;
+      const lean = ((i%9)-4)*3.5;
+      const thick = 2.2 + (i%4)*0.8;
+      ctx.strokeStyle = shadow;
+      ctx.lineWidth = thick + 1.5;
+      ctx.beginPath();
+      ctx.moveTo(x, 250);
+      ctx.bezierCurveTo(x+lean*0.2, 220, x+lean*0.6, 250-h*0.6, x+lean, 250-h);
+      ctx.stroke();
+      ctx.strokeStyle = blades[i % blades.length];
+      ctx.lineWidth = thick;
+      ctx.beginPath();
+      ctx.moveTo(x, 250);
+      ctx.bezierCurveTo(x+lean*0.25, 222, x+lean*0.65, 250-h*0.55, x+lean*1.05, 250-h);
+      ctx.stroke();
+      if(i%5===0){
+        ctx.strokeStyle = blades[(i+2) % blades.length];
+        ctx.lineWidth = thick*0.6;
+        ctx.beginPath();
+        ctx.moveTo(x+2, 250);
+        ctx.bezierCurveTo(x+lean*0.3+1, 225, x+lean*0.5+2, 250-h*0.5, x+lean*0.8, 250-h+8);
+        ctx.stroke();
+      }
+    }
+    if(flowers){
+      for(let i=0;i<18;i++){
+        const fx = 20 + ((i*47)%216);
+        const fy = 130 + ((i*29)%100);
+        ctx.fillStyle = flowers[i % flowers.length];
+        ctx.beginPath();
+        ctx.arc(fx, fy, 2.5 + (i%3), 0, Math.PI*2);
+        ctx.fill();
+        ctx.fillStyle = '#fff8';
+        ctx.beginPath();
+        ctx.arc(fx, fy, 1.2, 0, Math.PI*2);
+        ctx.fill();
+      }
+    }
+    dt.hasAlpha = true;
+    dt.update(false);
+    return dt;
+  }
+
+  const grassTexA = createGrassTexture('grassTexA',
+    ['rgba(98,158,62,0.95)','rgba(120,176,78,0.95)','rgba(82,142,55,0.94)'],
+    'rgba(38,72,28,0.3)', null);
+  const grassTexB = createGrassTexture('grassTexB',
+    ['rgba(156,148,78,0.94)','rgba(172,160,86,0.93)','rgba(140,132,72,0.93)'],
+    'rgba(82,70,36,0.28)', null);
+  const flowerTexA = createGrassTexture('flowerTexA',
+    ['rgba(108,168,72,0.95)','rgba(92,150,62,0.94)'],
+    'rgba(42,78,32,0.28)',
+    ['rgba(240,200,80,0.9)','rgba(255,180,60,0.88)','rgba(220,220,100,0.85)']);
+
+  const grassBaseA = buildSpriteBase('grassA', grassTexA, 2.0);
+  const grassBaseB = buildSpriteBase('grassB', grassTexB, 2.0);
+  const flowerBaseA = buildSpriteBase('flowerA', flowerTexA, 2.0);
+
   function makeTree(x,z,scale=1, kind='round'){
     const y = terrainHeight(x,z);
     const pick = hash2(x*0.17,z*0.13);
@@ -528,6 +592,16 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     const s = scale * (0.8 + pick*0.4);
     inst.scaling.set(s, s*(0.85+hash2(x*0.31,z*0.27)*0.3), s);
     inst.rotation.y = hash2(x*0.09,z*0.09)*Math.PI;
+  }
+  function makeGrassClump(x,z,scale=1){
+    const y = terrainHeight(x,z);
+    const pick = hash2(x*0.19,z*0.17);
+    const base = pick > 0.82 ? flowerBaseA : (pick > 0.45 ? grassBaseB : grassBaseA);
+    const inst = base.createInstance('grass');
+    const s = scale * (0.55 + pick*0.6);
+    inst.position.set(x, y - 0.08, z);
+    inst.scaling.set(s, s*(0.85+hash2(x*0.27,z*0.27)*0.35), s);
+    inst.rotation.y = pick * Math.PI;
   }
   for(let i=0;i<220;i++){
     const x = -470 + i*4.4;
