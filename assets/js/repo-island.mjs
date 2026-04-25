@@ -173,7 +173,7 @@ function renderStatsBar(el, repo) {
   `;
 }
 
-function renderHeroStats(el, repoMap, repoCount) {
+function renderHeroStats(el, repoMap, repoCount, totalPublicRepos) {
   if (!el) return;
   const repos = Object.values(repoMap || {});
   if (!repos.length) {
@@ -198,8 +198,8 @@ function renderHeroStats(el, repoMap, repoCount) {
       <span class="hero-stat-label">Total stars</span>
     </div>
     <div class="hero-stat">
-      <span class="hero-stat-value">${repoCount}</span>
-      <span class="hero-stat-label">Repositories</span>
+      <span class="hero-stat-value">${repoCount}${totalPublicRepos ? ` <span class="hero-stat-total">/ ${fmtNum(totalPublicRepos)}</span>` : ''}</span>
+      <span class="hero-stat-label">Portfolio repos</span>
     </div>
     <div class="hero-stat">
       <span class="hero-stat-value hero-stat-langs">${top3.join(' · ') || '—'}</span>
@@ -300,7 +300,10 @@ export function mountIndex(allFullNames) {
 export function mountHeroStats(el, allFullNames) {
   if (!el) return;
   el.innerHTML = `<span class="metric">Loading stats…</span>`;
+  const userFetch = fetch('https://api.github.com/users/rcarmo', { headers: { Accept: 'application/vnd.github+json' } })
+    .then(r => r.ok ? r.json() : null).catch(() => null);
   fetchAllRepos(allFullNames)
-    .then((repoMap) => renderHeroStats(el, repoMap, allFullNames.length))
-    .catch(() => renderHeroStats(el, {}, allFullNames.length));
+    .then(repoMap => userFetch.then(user =>
+      renderHeroStats(el, repoMap, allFullNames.length, user?.public_repos ?? null)))
+    .catch(() => renderHeroStats(el, {}, allFullNames.length, null));
 }
