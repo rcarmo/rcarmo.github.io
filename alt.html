@@ -1037,6 +1037,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
       walkPath = points.map(p => new BABYLON.Vector3(p.x, terrainHeight(p.x,p.z) + EYE_HEIGHT, p.z));
       walkIndex = 0;
       isWalking = true;
+      autoWalk = false;
+      userControl = false;
     }
     openFocus({ name: cluster.label, desc: cluster.projects.length + ' project' + (cluster.projects.length!==1?'s':'') + ' nearby', url: cluster.projects[0]?.url || '/', logo: cluster.projects[0]?.logo || '', repo: cluster.id, clusterOnly: true, clusterId: cluster.id });
   }
@@ -1070,36 +1072,68 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
 
   let autoWalk = true;
   let autoT = 0.02;
-  scene.onPointerDown = () => { if(!isWalking) autoWalk = false; };
+  let userControl = false;
+  scene.onPointerDown = () => {
+    if(!isWalking){ autoWalk = false; userControl = true; }
+  };
 
   const startPos = posOnSpine(autoT);
   const startDir = dirOnSpine(autoT);
   camera.position = startPos.clone();
   camera.setTarget(startPos.add(startDir));
 
+  function disableCameraInput(){ camera.detachControl(); }
+  function enableCameraInput(){ camera.attachControl(canvas, true); }
+
   scene.registerBeforeRender(() => {
     const dt = engine.getDeltaTime() / 1000;
     if(isWalking && walkPath){
+      disableCameraInput();
       const target = walkPath[walkIndex];
       const dir = target.subtract(camera.position);
+      dir.y = 0;
       const dist = dir.length();
-      if(dist < 0.5){
+      if(dist < 0.8){
         walkIndex++;
-        if(walkIndex >= walkPath.length){ isWalking = false; walkPath = null; autoWalk = false; }
+        if(walkIndex >= walkPath.length){
+          isWalking = false;
+          walkPath = null;
+          autoWalk = false;
+          userControl = true;
+          enableCameraInput();
+        }
       } else {
-        const step = dir.normalize().scale(Math.min(walkSpeed * dt, dist));
-        camera.position.addInPlace(step);
-        const lookAt = target.clone();
-        lookAt.y = camera.position.y;
-        camera.setTarget(BABYLON.Vector3.Lerp(camera.getTarget(), lookAt, 0.08));
+        const speed = Math.min(walkSpeed * dt, dist);
+        const step = dir.normalize().scale(speed);
+        camera.position.x += step.x;
+        camera.position.z += step.z;
+        const lookTarget = camera.position.add(dir.normalize().scale(10));
+        lookTarget.y = camera.position.y;
+        const currentTarget = camera.getTarget();
+        camera.setTarget(new BABYLON.Vector3(
+          currentTarget.x + (lookTarget.x - currentTarget.x) * 0.06,
+          camera.position.y,
+          currentTarget.z + (lookTarget.z - currentTarget.z) * 0.06
+        ));
       }
-    } else if(autoWalk && !panel.classList.contains('open')){
-      autoT += dt * 0.008;
+    } else if(autoWalk && !userControl && !panel.classList.contains('open')){
+      disableCameraInput();
+      autoT += dt * 0.006;
       if(autoT > 0.96) autoT = 0.02;
       const p = posOnSpine(autoT);
       const d = dirOnSpine(autoT);
-      camera.position = BABYLON.Vector3.Lerp(camera.position, p, 0.04);
-      camera.setTarget(BABYLON.Vector3.Lerp(camera.getTarget(), camera.position.add(d.scale(10)), 0.03));
+      camera.position.x += (p.x - camera.position.x) * 0.03;
+      camera.position.z += (p.z - camera.position.z) * 0.03;
+      const lookTarget = camera.position.add(d.scale(12));
+      lookTarget.y = camera.position.y;
+      const currentTarget = camera.getTarget();
+      camera.setTarget(new BABYLON.Vector3(
+        currentTarget.x + (lookTarget.x - currentTarget.x) * 0.02,
+        camera.position.y,
+        currentTarget.z + (lookTarget.z - currentTarget.z) * 0.02
+      ));
+    } else {
+      enableCameraInput();
     }
     camera.position.y = terrainHeight(camera.position.x, camera.position.z) + EYE_HEIGHT;
     const nearest = clusterAnchors.reduce((best, c) => {
@@ -1113,7 +1147,7 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     }
   });
 
-  walkToCluster(clusterAnchors[0]?.id);
+  if(clusterAnchors[0]) setActiveNav(clusterAnchors[0].id);
   engine.runRenderLoop(() => scene.render());
   window.addEventListener('resize', () => engine.resize());
 })();
