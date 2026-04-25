@@ -473,10 +473,16 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
     <div class="hero-media-inner">
       <div class="hero-gallery" data-gallery tabindex="0" aria-label="Project gallery">
         <div class="hero-gallery-stage">
-          ${gallery.map((item, index) => `
-          <figure class="hero-gallery-slide${index === 0 ? ' is-active' : ''}" data-gallery-slide>
-            <img src="/${esc(item.src)}" alt="${esc(item.title)}" loading="lazy">
-          </figure>`).join("")}
+          ${gallery.map((item, index) => {
+            const isSvg = item.src.endsWith('.svg');
+            const mediaEl = isSvg
+              ? `<object type="image/svg+xml" data="/${esc(item.src)}" class="gallery-svg" aria-label="${esc(item.title)}"></object>`
+              : `<img src="/${esc(item.src)}" alt="${esc(item.title)}" loading="lazy">`;
+            return `
+          <figure class="hero-gallery-slide${index === 0 ? ' is-active' : ''}" data-gallery-slide data-fullsrc="/${esc(item.src)}">
+            ${mediaEl}
+          </figure>`;
+          }).join("")}
         </div>
         <div class="hero-gallery-meta">
           <div class="hero-gallery-nav-row">
@@ -493,6 +499,9 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
             <div class="hero-gallery-caption-item${index === 0 ? ' is-active' : ''}" data-gallery-caption>
               <div class="hero-gallery-caption-title">${esc(item.title)}</div>
               ${item.caption ? `<div class="hero-gallery-caption-body">${esc(item.caption)}</div>` : ""}
+              <div class="hero-gallery-caption-actions">
+                <a class="btn btn-sm" href="/${esc(item.src)}" target="_blank" rel="noopener">View full size ↗</a>
+              </div>
             </div>`).join("")}
           </div>
           <div class="hero-gallery-thumbs" role="tablist" aria-label="Gallery thumbnails">
@@ -614,6 +623,11 @@ ${posts.length ? `      <section class="sec" id="s-posts">
     <span class="foot-r"><a href="/">Home</a> · <a href="${ghUrl}">Source</a></span>
   </footer>
 
+  <div id="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button id="lightbox-close" aria-label="Close">×</button>
+    <div id="lightbox-inner"></div>
+  </div>
+
   <script type="module" src="/assets/js/repo-island.mjs?v=${ASSET_VERSION}"></script>
   <script type="module">
     import { mount } from '/assets/js/repo-island.mjs?v=${ASSET_VERSION}';
@@ -627,6 +641,39 @@ ${posts.length ? `      <section class="sec" id="s-posts">
     });
   </script>
   <script>
+    // Lightbox
+    const overlay = document.getElementById('lightbox-overlay');
+    const inner = document.getElementById('lightbox-inner');
+    const closeBtn = document.getElementById('lightbox-close');
+    function openLightbox(src) {
+      inner.innerHTML = src.endsWith('.svg')
+        ? '<object type="image/svg+xml" data="' + src + '"></object>'
+        : '<img src="' + src + '" alt="">';
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+      inner.innerHTML = '';
+    }
+    if (overlay) {
+      overlay.addEventListener('click', function(e){ if(e.target===overlay) closeLightbox(); });
+      closeBtn.addEventListener('click', closeLightbox);
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeLightbox(); });
+      document.querySelectorAll('[data-lightbox]').forEach(function(btn){
+        btn.addEventListener('click', function(){ openLightbox(btn.dataset.lightbox); });
+      });
+      document.querySelectorAll('.btn-sm[href]').forEach(function(a){
+        const src = a.getAttribute('href');
+        if(src && (src.endsWith('.svg')||src.endsWith('.png')||src.endsWith('.jpg'))){
+          a.addEventListener('click', function(e){
+            e.preventDefault();
+            openLightbox(src);
+          });
+        }
+      });
+    }
     // Scroll-spy for TOC
     const tocLinks = document.querySelectorAll('.toc-link');
     if (tocLinks.length) {

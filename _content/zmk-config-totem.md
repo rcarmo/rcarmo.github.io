@@ -24,6 +24,10 @@ Combos for all punctuation.
 ### 🍴 Template-ready
 7:2 forks-to-stars tells the story.
 
+## Gallery
+- [Full keymap (PNG)](assets/screenshots/zmk-config-totem/keymap.png) — All 4 layers: Base, Sym, Nav, Adjust
+- [Full keymap (SVG)](assets/diagrams/totem-keymap.svg) — Scalable version, click to zoom
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">
   <style>
