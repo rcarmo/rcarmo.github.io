@@ -386,146 +386,182 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     }
   }
 
-  function drawTreeSilhouette(ctx, cx, w, h, kind, palette){
-    ctx.clearRect(0, 0, w*2, h*2);
-    const trunkW = w*0.08, trunkH = h*0.38;
-    ctx.fillStyle = palette.trunk;
-    ctx.beginPath();
-    ctx.moveTo(cx-trunkW, h);
-    ctx.lineTo(cx-trunkW*0.7, h-trunkH);
-    ctx.lineTo(cx+trunkW*0.7, h-trunkH);
-    ctx.lineTo(cx+trunkW, h);
-    ctx.fill();
-    if(kind === 'pine'){
-      const layers = 4 + Math.floor(Math.random()*2);
-      for(let i=0;i<layers;i++){
-        const frac = i/layers;
-        const ly = h - trunkH*0.5 - (h*0.55)*frac;
-        const lw = (w*0.48)*(1-frac*0.7);
-        const lh = h*0.18*(1-frac*0.2);
-        ctx.fillStyle = i%2===0 ? palette.leaf : palette.leafLight;
-        ctx.beginPath();
-        ctx.moveTo(cx, ly-lh);
-        ctx.quadraticCurveTo(cx-lw*1.1, ly-lh*0.2, cx-lw, ly);
-        ctx.lineTo(cx+lw, ly);
-        ctx.quadraticCurveTo(cx+lw*1.1, ly-lh*0.2, cx, ly-lh);
-        ctx.fill();
-      }
-    } else if(kind === 'birch'){
-      const crowns = [{x:cx-w*0.12, y:h*0.28, r:w*0.22},{x:cx+w*0.10, y:h*0.20, r:w*0.19},{x:cx, y:h*0.14, r:w*0.16}];
-      crowns.forEach((c,i) => {
-        ctx.fillStyle = i%2===0 ? palette.leaf : palette.leafLight;
-        ctx.beginPath(); ctx.ellipse(c.x, c.y, c.r, c.r*0.85, 0, 0, Math.PI*2); ctx.fill();
-        ctx.fillStyle = palette.leafLight+'88';
-        ctx.beginPath(); ctx.ellipse(c.x-c.r*0.2, c.y-c.r*0.15, c.r*0.5, c.r*0.4, 0, 0, Math.PI*2); ctx.fill();
-      });
-    } else {
-      const crownY = h*0.30, crownRx = w*0.40, crownRy = h*0.32;
-      ctx.fillStyle = palette.leaf;
-      ctx.beginPath(); ctx.ellipse(cx, crownY, crownRx, crownRy, 0, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = palette.leafLight;
-      ctx.beginPath(); ctx.ellipse(cx-crownRx*0.25, crownY-crownRy*0.18, crownRx*0.55, crownRy*0.50, -0.2, 0, Math.PI*2); ctx.fill();
-      ctx.fillStyle = palette.leaf+'cc';
-      ctx.beginPath(); ctx.ellipse(cx+crownRx*0.3, crownY+crownRy*0.12, crownRx*0.40, crownRy*0.38, 0.15, 0, Math.PI*2); ctx.fill();
+  BABYLON.Effect.ShadersStore.foliageVertexShader = `
+    precision highp float;
+    attribute vec3 position;
+    attribute vec3 normal;
+    attribute vec2 uv;
+    attribute vec4 world0;
+    attribute vec4 world1;
+    attribute vec4 world2;
+    attribute vec4 world3;
+    attribute float variant;
+    attribute float shadow;
+    uniform mat4 viewProjection;
+    uniform vec2 atlasGrid;
+    varying vec2 vUV;
+    varying float vShadow;
+    varying float vNoise;
+    varying float vTint;
+    void main(void){
+      mat4 instWorld = mat4(world0, world1, world2, world3);
+      vec4 wp = instWorld * vec4(position, 1.0);
+      float cellX = mod(variant, atlasGrid.x);
+      float cellY = floor(variant / atlasGrid.x);
+      vec2 cellSize = vec2(1.0/atlasGrid.x, 1.0/atlasGrid.y);
+      vUV = uv * cellSize + vec2(cellX, cellY) * cellSize;
+      vShadow = 1.0 - shadow * 0.45;
+      float n1 = fract(sin(dot(wp.xz*0.01, vec2(127.1,311.7)))*43758.5);
+      float n2 = fract(sin(dot(wp.xz*0.00125, vec2(269.5,183.3)))*43758.5);
+      vNoise = n1;
+      vTint = n2;
+      gl_Position = viewProjection * wp;
     }
-  }
-  function drawBushSilhouette(ctx, cx, w, h, palette){
-    ctx.clearRect(0, 0, w*2, h*2);
-    const count = 3 + Math.floor(Math.random()*2);
-    for(let i=0;i<count;i++){
-      const bx = cx + (i-count/2)*w*0.22;
-      const by = h*0.55;
-      const br = w*0.18 + Math.random()*w*0.08;
-      ctx.fillStyle = i%2===0 ? palette.leaf : palette.leafLight;
-      ctx.beginPath(); ctx.ellipse(bx, by, br, br*0.75, 0, 0, Math.PI*2); ctx.fill();
+  `;
+  BABYLON.Effect.ShadersStore.foliageFragmentShader = `
+    precision highp float;
+    varying vec2 vUV;
+    varying float vShadow;
+    varying float vNoise;
+    varying float vTint;
+    uniform sampler2D diffuseMap;
+    uniform vec4 colouration;
+    void main(void){
+      vec4 tex = texture2D(diffuseMap, vUV);
+      if(tex.a < 0.15) discard;
+      vec3 color = tex.rgb;
+      color += colouration.rgb * vTint * 0.12;
+      color *= vShadow;
+      color *= 0.88 + vNoise * 0.24;
+      gl_FragColor = vec4(color, tex.a);
     }
-    ctx.fillStyle = palette.leafLight+'66';
-    ctx.beginPath(); ctx.ellipse(cx, h*0.45, w*0.15, h*0.12, 0, 0, Math.PI*2); ctx.fill();
-  }
-  function createTreeTexture(name, kind, size, palette){
-    const dt = new BABYLON.DynamicTexture(name, { width:size, height:size }, scene, true);
-    const ctx = dt.getContext();
-    ctx.clearRect(0,0,size,size);
-    if(kind === 'bush') drawBushSilhouette(ctx, size/2, size, size, palette);
-    else drawTreeSilhouette(ctx, size/2, size, size, kind, palette);
-    dt.hasAlpha = true;
-    dt.update(false);
-    return dt;
-  }
+  `;
 
-  const treePalettes = [
-    { trunk:'#5a4530', leaf:'#3d7a35', leafLight:'#5a9648' },
-    { trunk:'#4a3822', leaf:'#2d6828', leafLight:'#4a8a3c' },
-    { trunk:'#6b5540', leaf:'#4a8840', leafLight:'#68a858' },
-    { trunk:'#c8bfaf', leaf:'#52a04a', leafLight:'#72b86a' },
-  ];
-  const bushPalettes = [
-    { leaf:'#4a7a38', leafLight:'#68964a' },
-    { leaf:'#3a6830', leafLight:'#589642' },
-    { leaf:'#5a8a48', leafLight:'#78a860' },
-  ];
+  function loadAtlasTexture(url){
+    const tex = new BABYLON.Texture(url, scene, false, true, BABYLON.Texture.BILINEAR_SAMPLINGMODE);
+    tex.hasAlpha = true;
+    tex.wrapU = BABYLON.Texture.CLAMP_ADDRESSMODE;
+    tex.wrapV = BABYLON.Texture.CLAMP_ADDRESSMODE;
+    return tex;
+  }
+  const treesNearTex = loadAtlasTexture('/assets/sprites/trees-near.png');
+  const treesFarTex = loadAtlasTexture('/assets/sprites/trees-far.png');
+  const bushTex = loadAtlasTexture('/assets/sprites/bush.png');
+  const grassTex = loadAtlasTexture('/assets/sprites/grass.png');
 
-  function buildSpriteMat(name, tex){
-    const mat = new BABYLON.StandardMaterial(name, scene);
-    mat.diffuseTexture = tex;
-    mat.opacityTexture = tex;
-    mat.useAlphaFromDiffuseTexture = true;
+  function buildFoliageMat(name, atlasTex, gridX, gridY, tint){
+    const mat = new BABYLON.ShaderMaterial(name, scene, {vertex:'foliage', fragment:'foliage'}, {
+      attributes:['position','normal','uv','world0','world1','world2','world3','variant','shadow'],
+      uniforms:['viewProjection','atlasGrid','colouration'],
+      samplers:['diffuseMap'],
+      needAlphaBlending: true,
+    });
+    mat.setTexture('diffuseMap', atlasTex);
+    mat.setVector2('atlasGrid', new BABYLON.Vector2(gridX, gridY));
+    mat.setColor4('colouration', new BABYLON.Color4(tint[0],tint[1],tint[2],1));
     mat.backFaceCulling = false;
-    mat.specularColor = BABYLON.Color3.Black();
-    mat.emissiveColor = new BABYLON.Color3(0.04,0.05,0.03);
+    mat.alphaMode = BABYLON.Engine.ALPHA_COMBINE;
     return mat;
   }
-  function buildSpriteBase(name, tex, height){
-    const w = height * 0.85;
-    const p1 = BABYLON.MeshBuilder.CreatePlane(name+'_a', { width:w, height:height, sideOrientation:BABYLON.Mesh.DOUBLESIDE }, scene);
-    const p2 = BABYLON.MeshBuilder.CreatePlane(name+'_b', { width:w, height:height, sideOrientation:BABYLON.Mesh.DOUBLESIDE }, scene);
+
+  const treeNearMat = buildFoliageMat('treeNearMat', treesNearTex, 4, 2, [0.05,0.08,-0.02]);
+  const treeFarMat = buildFoliageMat('treeFarMat', treesFarTex, 2, 2, [0.04,0.06,-0.01]);
+  const bushMat = buildFoliageMat('bushMat', bushTex, 4, 2, [0.06,0.09,-0.02]);
+  const grassMat = buildFoliageMat('grassMat', grassTex, 2, 2, [0.04,0.07,-0.01]);
+
+  function buildCrossedQuad(name, width, height){
+    const p1 = BABYLON.MeshBuilder.CreatePlane(name+'A', {width,height,sideOrientation:BABYLON.Mesh.DOUBLESIDE}, scene);
+    const p2 = BABYLON.MeshBuilder.CreatePlane(name+'B', {width,height,sideOrientation:BABYLON.Mesh.DOUBLESIDE}, scene);
     p1.position.y = height*0.5;
     p2.position.y = height*0.5;
     p2.rotation.y = Math.PI*0.5;
     const merged = BABYLON.Mesh.MergeMeshes([p1,p2], true, true, undefined, false, true);
-    merged.material = buildSpriteMat(name+'Mat', tex);
-    merged.isVisible = false;
     return merged;
   }
 
-  const roundTex = createTreeTexture('roundTex', 'round', 256, treePalettes[0]);
-  const roundTex2 = createTreeTexture('roundTex2', 'round', 256, treePalettes[2]);
-  const pineTex = createTreeTexture('pineTex', 'pine', 256, treePalettes[1]);
-  const pineTex2 = createTreeTexture('pineTex2', 'pine', 256, treePalettes[0]);
-  const birchTex = createTreeTexture('birchTex', 'birch', 256, treePalettes[3]);
-  const birchTex2 = createTreeTexture('birchTex2', 'birch', 256, treePalettes[2]);
-  const bushTex = createTreeTexture('bushTex', 'bush', 256, bushPalettes[0]);
-  const bushTex2 = createTreeTexture('bushTex2', 'bush', 256, bushPalettes[1]);
+  const MAX_TREES = 4000;
+  const MAX_BUSH = 3000;
+  const MAX_GRASS = 12000;
 
-  const treeBaseRound = buildSpriteBase('treeRound', roundTex, 4.0);
-  const treeBaseRound2 = buildSpriteBase('treeRound2', roundTex2, 3.8);
-  const treeBasePine = buildSpriteBase('treePine', pineTex, 4.5);
-  const treeBasePine2 = buildSpriteBase('treePine2', pineTex2, 4.2);
-  const treeBaseBirch = buildSpriteBase('treeBirch', birchTex, 4.2);
-  const treeBaseBirch2 = buildSpriteBase('treeBirch2', birchTex2, 4.0);
-  const bushBaseA = buildSpriteBase('bushA', bushTex, 1.8);
-  const bushBaseB = buildSpriteBase('bushB', bushTex2, 1.6);
+  function buildInstancedFoliage(name, baseMesh, mat, maxCount, gridX, gridY){
+    const geo = baseMesh.geometry || baseMesh.getVerticesData;
+    const instMesh = baseMesh.clone(name+'_inst');
+    instMesh.material = mat;
+    instMesh.isVisible = true;
+    instMesh.alwaysSelectAsActiveMesh = true;
+    const variantBuf = new Float32Array(maxCount);
+    const shadowBuf = new Float32Array(maxCount);
+    const matrices = new Float32Array(maxCount * 16);
+    let count = 0;
+    const tmpMatrix = BABYLON.Matrix.Identity();
+    return {
+      mesh: instMesh,
+      variants: variantBuf,
+      shadows: shadowBuf,
+      matrices: matrices,
+      count: 0,
+      maxCount: maxCount,
+      gridX: gridX,
+      gridY: gridY,
+      add(x,y,z, scale, rotY, variant, shadow){
+        if(this.count >= this.maxCount) return;
+        const i = this.count;
+        BABYLON.Matrix.ComposeToRef(
+          new BABYLON.Vector3(scale, scale*(0.9+hash2(x*0.29,z*0.23)*0.2), scale),
+          BABYLON.Quaternion.RotationYawPitchRoll(rotY, 0, 0),
+          new BABYLON.Vector3(x, y, z),
+          tmpMatrix
+        );
+        tmpMatrix.copyToArray(this.matrices, i*16);
+        this.variants[i] = variant % (gridX * gridY);
+        this.shadows[i] = shadow;
+        this.count++;
+      },
+      finalize(){
+        this.mesh.thinInstanceSetBuffer('matrix', this.matrices.slice(0, this.count*16), 16, false);
+        this.mesh.thinInstanceSetBuffer('variant', this.variants.slice(0, this.count), 1, false);
+        this.mesh.thinInstanceSetBuffer('shadow', this.shadows.slice(0, this.count), 1, false);
+        this.mesh.thinInstanceCount = this.count;
+      }
+    };
+  }
+
+  const treeBase = buildCrossedQuad('treeBase', 3.6, 4.2);
+  treeBase.isVisible = false;
+  const treeFarBase = buildCrossedQuad('treeFarBase', 6.0, 7.0);
+  treeFarBase.isVisible = false;
+  const bushBaseMesh = buildCrossedQuad('bushBase', 2.2, 1.6);
+  bushBaseMesh.isVisible = false;
+  const grassBase = buildCrossedQuad('grassBase', 1.0, 1.6);
+  grassBase.isVisible = false;
+
+  const treeInst = buildInstancedFoliage('trees', treeBase, treeNearMat, MAX_TREES, 4, 2);
+  const bushInst = buildInstancedFoliage('bushes', bushBaseMesh, bushMat, MAX_BUSH, 4, 2);
+  const grassInst = buildInstancedFoliage('grass', grassBase, grassMat, MAX_GRASS, 2, 2);
 
   function makeTree(x,z,scale=1, kind='round'){
     const y = terrainHeight(x,z);
     const pick = hash2(x*0.17,z*0.13);
-    const bases = kind === 'pine' ? [treeBasePine,treeBasePine2] : kind === 'birch' ? [treeBaseBirch,treeBaseBirch2] : [treeBaseRound,treeBaseRound2];
-    const base = bases[pick > 0.5 ? 1 : 0];
-    const inst = base.createInstance('tree');
-    inst.position.set(x, y, z);
+    const variant = Math.floor(pick * 8);
+    const shadow = clamp(hash2(x*0.31,z*0.27)*0.6, 0, 1);
     const s = scale * (0.85 + pick*0.35);
-    inst.scaling.set(s, s*(0.9+hash2(x*0.29,z*0.23)*0.25), s);
-    inst.rotation.y = hash2(x*0.11,z*0.11)*Math.PI;
+    const rot = pick * Math.PI;
+    treeInst.add(x, y - 0.3, z, s, rot, variant, shadow);
   }
   function makeShrub(x,z,scale=1){
     const y = terrainHeight(x,z);
     const pick = hash2(x*0.23,z*0.19);
-    const base = pick > 0.5 ? bushBaseB : bushBaseA;
-    const inst = base.createInstance('bush');
-    inst.position.set(x, y, z);
+    const variant = Math.floor(pick * 8);
+    const shadow = clamp(hash2(x*0.37,z*0.33)*0.5, 0, 1);
     const s = scale * (0.8 + pick*0.4);
-    inst.scaling.set(s, s*(0.85+hash2(x*0.31,z*0.27)*0.3), s);
-    inst.rotation.y = hash2(x*0.09,z*0.09)*Math.PI;
+    bushInst.add(x, y - 0.1, z, s, pick*Math.PI, variant, shadow);
+  }
+  function makeGrassClump(x,z,scale=1){
+    const y = terrainHeight(x,z);
+    const pick = hash2(x*0.19,z*0.17);
+    const variant = Math.floor(pick * 4);
+    const shadow = clamp(hash2(x*0.41,z*0.37)*0.4, 0, 1);
+    grassInst.add(x, y, z, scale*(0.6+pick*0.5), pick*Math.PI, variant, shadow);
   }
   for(let i=0;i<220;i++){
     const x = -470 + i*4.4;
@@ -686,54 +722,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
       ctx.fillStyle = 'rgba(255,255,255,0.02)';
       ctx.fillRect(0,y,1024,10);
     }
-    dt.update(false);
-    return dt;
-  }
-  function createGrassTexture(name, blades, shadow, flowers){
-    const dt = new BABYLON.DynamicTexture(name, { width:256, height:256 }, scene, false);
-    const ctx = dt.getContext();
-    ctx.clearRect(0,0,256,256);
-    for(let i=0;i<72;i++){
-      const x = 10 + ((i*31)%236);
-      const h = 50 + (i%8)*22;
-      const lean = ((i%9)-4)*3.5;
-      const thick = 2.2 + (i%4)*0.8;
-      ctx.strokeStyle = shadow;
-      ctx.lineWidth = thick + 1.5;
-      ctx.beginPath();
-      ctx.moveTo(x, 250);
-      ctx.bezierCurveTo(x+lean*0.2, 220, x+lean*0.6, 250-h*0.6, x+lean, 250-h);
-      ctx.stroke();
-      ctx.strokeStyle = blades[i % blades.length];
-      ctx.lineWidth = thick;
-      ctx.beginPath();
-      ctx.moveTo(x, 250);
-      ctx.bezierCurveTo(x+lean*0.25, 222, x+lean*0.65, 250-h*0.55, x+lean*1.05, 250-h);
-      ctx.stroke();
-      if(i%5===0){
-        ctx.strokeStyle = blades[(i+2) % blades.length];
-        ctx.lineWidth = thick*0.6;
-        ctx.beginPath();
-        ctx.moveTo(x+2, 250);
-        ctx.bezierCurveTo(x+lean*0.3+1, 225, x+lean*0.5+2, 250-h*0.5, x+lean*0.8, 250-h+8);
-        ctx.stroke();
-      }
-    }
-    if(flowers){
-      for(let i=0;i<18;i++){
-        const fx = 20 + ((i*47)%216);
-        const fy = 130 + ((i*29)%100);
-        ctx.fillStyle = flowers[i % flowers.length];
-        ctx.beginPath();
-        ctx.arc(fx, fy, 2.5 + (i%3), 0, Math.PI*2);
-        ctx.fill();
-        ctx.fillStyle = '#fff8';
-        ctx.beginPath();
-        ctx.arc(fx, fy, 1.2, 0, Math.PI*2);
-        ctx.fill();
-      }
-    }
-    dt.hasAlpha = true;
     dt.update(false);
     return dt;
   }
@@ -998,49 +986,6 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
     terrain.material = shader;
   }
   function scatterEcology(){
-    const grassTexA = createGrassTexture('grassTexA',
-      ['rgba(98,158,62,0.95)','rgba(120,176,78,0.95)','rgba(82,142,55,0.94)'],
-      'rgba(38,72,28,0.3)', null);
-    const grassTexB = createGrassTexture('grassTexB',
-      ['rgba(156,148,78,0.94)','rgba(172,160,86,0.93)','rgba(140,132,72,0.93)'],
-      'rgba(82,70,36,0.28)', null);
-    const grassTexC = createGrassTexture('grassTexC',
-      ['rgba(68,128,58,0.94)','rgba(88,148,68,0.94)','rgba(56,112,48,0.93)'],
-      'rgba(30,62,24,0.3)', null);
-    const flowerTexA = createGrassTexture('flowerTexA',
-      ['rgba(108,168,72,0.95)','rgba(92,150,62,0.94)'],
-      'rgba(42,78,32,0.28)',
-      ['rgba(240,200,80,0.9)','rgba(255,180,60,0.88)','rgba(220,220,100,0.85)']);
-    const flowerTexB = createGrassTexture('flowerTexB',
-      ['rgba(100,160,68,0.95)','rgba(86,144,58,0.94)'],
-      'rgba(38,72,28,0.28)',
-      ['rgba(200,140,200,0.88)','rgba(180,120,220,0.85)','rgba(240,180,200,0.82)']);
-    function buildGrassBase(name, tex, tint){
-      const p1 = BABYLON.MeshBuilder.CreatePlane(name+'_a', { width:0.9, height:1.8 }, scene);
-      const p2 = p1.clone(name+'_b');
-      const p3 = p1.clone(name+'_c');
-      p1.position.y = p2.position.y = p3.position.y = 0.9;
-      p2.rotation.y = Math.PI/3;
-      p3.rotation.y = -Math.PI/3;
-      const merged = BABYLON.Mesh.MergeMeshes([p1,p2,p3], true, true, undefined, false, true);
-      const mat = new BABYLON.StandardMaterial(name+'Mat', scene);
-      mat.diffuseTexture = tex;
-      mat.opacityTexture = tex;
-      mat.useAlphaFromDiffuseTexture = true;
-      mat.backFaceCulling = false;
-      mat.specularColor = BABYLON.Color3.Black();
-      mat.emissiveColor = tint.scale(0.06);
-      merged.material = mat;
-      merged.isVisible = false;
-      return merged;
-    }
-    const lushGrass = buildGrassBase('lushGrass', grassTexA, new BABYLON.Color3(0.40,0.58,0.28));
-    const dryGrass = buildGrassBase('dryGrass', grassTexB, new BABYLON.Color3(0.58,0.52,0.26));
-    const darkGrass = buildGrassBase('darkGrass', grassTexC, new BABYLON.Color3(0.32,0.50,0.24));
-    const flowers = buildGrassBase('flowerGrass', flowerTexA, new BABYLON.Color3(0.52,0.46,0.28));
-    const flowers2 = buildGrassBase('flowerGrass2', flowerTexB, new BABYLON.Color3(0.48,0.40,0.52));
-    const grassBases = [lushGrass, dryGrass, darkGrass];
-    const flowerBases = [flowers, flowers2];
     for(let x=-480;x<=480;x+=3.2){
       for(let z=-170;z<=170;z+=3.2){
         const jitterX = (hash2(x*0.21,z*0.21)-0.5)*1.8;
@@ -1055,15 +1000,8 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
         const profile = biomeProfiles[(clusterPalette[biome.dominant?.id]||{}).foliage || 'grove'] || biomeProfiles.grove;
         const density = profile.grassDensity * clamp(1 - slope*1.35, 0, 1) * clamp(pathD/7, 0.15, 1) * clamp(spineD/12, 0.3, 1);
         const rnd = hash2(px*0.19 + 9, pz*0.19 - 4);
-        const y = terrainHeight(px,pz);
         if(rnd < density * 0.28){
-          const scale = 0.45 + hash2(px*0.31,pz*0.31)*0.65;
-          const grassIdx = Math.floor(hash2(px*0.43,pz*0.43)*grassBases.length);
-          const base = profile.grassDensity > 0.58 ? grassBases[grassIdx] : dryGrass;
-          const inst = base.createInstance('grassInst');
-          inst.position.set(px, y, pz);
-          inst.scaling.set(scale, scale*(1.0 + hash2(px*0.27,pz*0.27)*0.4), scale);
-          inst.rotation.y = hash2(px*0.11,pz*0.11) * Math.PI;
+          makeGrassClump(px, pz, 0.45 + hash2(px*0.31,pz*0.31)*0.65);
         }
         if(rnd > 0.90 && profile.shrubDensity > 0.12 && pathD > 3.0){
           makeShrub(px,pz, 0.42 + hash2(px*0.41,pz*0.41)*0.34);
@@ -1075,15 +1013,13 @@ html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe
           makeTree(px,pz, 0.65 + hash2(px*0.37,pz*0.37)*0.5, treeKind);
         }
         if(rnd > 0.95 && hash2(px*0.07,pz*0.07) > 0.65 && pathD > 2.8){
-          const flowerBase = flowerBases[Math.floor(hash2(px*0.33,pz*0.33)*flowerBases.length)];
-          const inst = flowerBase.createInstance('flowerInst');
-          const scale = 0.45 + hash2(px*0.24,pz*0.24)*0.35;
-          inst.position.set(px, y, pz);
-          inst.scaling.set(scale, scale*1.1, scale);
-          inst.rotation.y = hash2(px*0.09,pz*0.09) * Math.PI;
+          makeGrassClump(px, pz, 0.35 + hash2(px*0.24,pz*0.24)*0.35);
         }
       }
     }
+    treeInst.finalize();
+    bushInst.finalize();
+    grassInst.finalize();
   }
 
   sections.forEach((section, sectionIndex) => {
