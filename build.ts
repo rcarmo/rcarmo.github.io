@@ -823,6 +823,7 @@ ${metaTags}
       <div id="hero-stats-island" class="hero-stats hero-stats-centered"></div>
     </div>
   </header>
+  <p class="index-intro">These were things I thought should exist, so I started making them. Turns out there were quite a few&hellip;</p>
 
   <main class="index-main">
     ${sectionsHtml}
