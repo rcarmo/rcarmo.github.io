@@ -626,9 +626,9 @@
     <span class="foot-r"><a href="https://taoofmac.com">Blog</a> · <a href="https://github.com/rcarmo">GitHub</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=moe9ctlf"></script>
+  <script type="module" src="/assets/js/repo-island.mjs?v=moe9k9qf"></script>
   <script type="module">
-    import { mountIndex, mountHeroStats } from '/assets/js/repo-island.mjs?v=moe9ctlf';
+    import { mountIndex, mountHeroStats } from '/assets/js/repo-island.mjs?v=moe9k9qf';
     const ALL_FULL_NAMES = ["rcarmo/PhotosExport","rcarmo/agentbox","rcarmo/apfelstrudel","rcarmo/asterisk-embedding-model","rcarmo/azure-docker-swarm-cluster","rcarmo/azure-k3s-cluster","rcarmo/azure-stable-diffusion","rcarmo/azure-transcription-helper","rcarmo/bun-opds-server","usetrmnl/byos_fastapi","rcarmo/codebits-tv","rcarmo/daisy","rcarmo/drawterm","rcarmo/feed-summarizer","rcarmo/ghostty-web","rcarmo/gi","rcarmo/gnome-thumbnailers","rcarmo/go-ai","rcarmo/go-busybox","rcarmo/go-ooxml","rcarmo/go-rdp","rcarmo/go-te","rcarmo/gotel","rcarmo/ground-init","rcarmo/gte-go","rcarmo/haiku-arm64-build","rcarmo/homekit-steam-user-switcher","rcarmo/imapbackup","rcarmo/kata","rcarmo/macemu-jit","rcarmo/mdnsbridge","rcarmo/ml-sharp","rcarmo/node-red-dashboard","rcarmo/onepage-by-spec","rcarmo/orangepi-build","rcarmo/piclaw","piku/piku","rcarmo/pngcanvas","rcarmo/proxmox-zpool-monitoring","rcarmo/pve-microvm","rcarmo/python-office-mcp-server","rcarmo/python-steward","rcarmo/soup-strainer","rcarmo/syncthing-kicker","rcarmo/umcp","rcarmo/vibes","rcarmo/webterm","rcarmo/zmk-config-totem"];
     mountIndex(ALL_FULL_NAMES);
     mountHeroStats(document.getElementById('hero-stats-island'), ALL_FULL_NAMES);
@@ -666,8 +666,8 @@
       search() {
         const popup = document.getElementById('typeahead-popup');
         if (!this.buffer) { this.clear(); return; }
-        const re = new RegExp(this.buffer.replace(/[.*+?^${}()|[\]\]/g, '\$&'), 'i');
-        this.matches = this.getAllItems().filter(item => re.test(item.name + ' ' + item.tagline)).slice(0, 8);
+        const q = this.buffer.toLowerCase();
+        this.matches = this.getAllItems().filter(function(item){ return (item.name + ' ' + item.tagline).toLowerCase().indexOf(q) >= 0; }).slice(0, 8);
         if (!this.matches.length) { this.clear(); return; }
         popup.innerHTML = '<div class="typeahead-header"><span class="typeahead-query">' + this.esc(this.buffer) + '</span><kbd>↑↓</kbd> navigate · <kbd>⏎</kbd> open · <kbd>esc</kbd> close</div>' +
           this.matches.map((m, i) =>

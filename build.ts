@@ -875,8 +875,8 @@ ${metaTags}
       search() {
         const popup = document.getElementById('typeahead-popup');
         if (!this.buffer) { this.clear(); return; }
-        const re = new RegExp(this.buffer.replace(/[.*+?^\$\{\}()|[\\]\\]/g, '\\\$&'), 'i');
-        this.matches = this.getAllItems().filter(item => re.test(item.name + ' ' + item.tagline)).slice(0, 8);
+        const q = this.buffer.toLowerCase();
+        this.matches = this.getAllItems().filter(function(item){ return (item.name + ' ' + item.tagline).toLowerCase().indexOf(q) >= 0; }).slice(0, 8);
         if (!this.matches.length) { this.clear(); return; }
         popup.innerHTML = '<div class="typeahead-header"><span class="typeahead-query">' + this.esc(this.buffer) + '</span><kbd>↑↓</kbd> navigate · <kbd>⏎</kbd> open · <kbd>esc</kbd> close</div>' +
           this.matches.map((m, i) =>
