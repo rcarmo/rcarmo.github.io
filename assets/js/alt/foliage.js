@@ -2,29 +2,34 @@
 import { hash2 } from './utils.js';
 import { terrainHeight } from './terrain.js';
 
-// Vertex shader: atlas UV selection + wind animation
+// Vertex shader: atlas UV selection + wind + correct instancing
 const FOL_VS = `
   precision highp float;
   attribute vec3 position;
   attribute vec2 uv;
-  uniform mat4 worldViewProjection;
+  // Per-instance world matrix supplied by Babylon.js createInstance()
+  attribute vec4 world0;
+  attribute vec4 world1;
+  attribute vec4 world2;
+  attribute vec4 world3;
+
+  uniform mat4 viewProjection;
   uniform float uTime;
   uniform vec2  uAtlasOff;
   uniform float uH;
   varying vec2  vUV;
   varying float vAO;
+
   void main() {
-    // Select atlas cell: base UVs [0..0.5], shift to correct quadrant
     vUV = uv + uAtlasOff;
-    // Wind: top of sprite sways, base anchored
     float t    = clamp(position.y / max(uH, 0.01), 0.0, 1.0);
     float wind = t * t * 0.42;
     vec3 pos   = position;
-    pos.x += sin(uTime*1.8 + uAtlasOff.x*9.7  + position.z*0.12) * wind;
-    pos.z += cos(uTime*1.4 + uAtlasOff.y*7.3  + position.x*0.09) * wind * 0.55;
-    // Fake AO: darken base, brighten top
+    pos.x += sin(uTime * 1.8 + uAtlasOff.x * 9.7  + position.z * 0.12) * wind;
+    pos.z += cos(uTime * 1.4 + uAtlasOff.y * 7.3  + position.x * 0.09) * wind * 0.55;
+    mat4 worldMat = mat4(world0, world1, world2, world3);
     vAO = 0.60 + t * 0.40;
-    gl_Position = worldViewProjection * vec4(pos, 1.0);
+    gl_Position = viewProjection * worldMat * vec4(pos, 1.0);
   }
 `;
 

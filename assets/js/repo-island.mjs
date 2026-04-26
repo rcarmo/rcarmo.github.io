@@ -176,8 +176,24 @@ function renderStatsBar(el, repo) {
 function renderHeroStats(el, repoMap, repoCount, totalPublicRepos) {
   if (!el) return;
   const repos = Object.values(repoMap || {});
+
+  const totalLabel = totalPublicRepos
+    ? ` <span class="hero-stat-total">/ ${fmtNum(totalPublicRepos)}</span>` : '';
+
   if (!repos.length) {
-    el.innerHTML = `<span class="metric">GitHub stats temporarily unavailable</span>`;
+    el.innerHTML = `
+    <div class="hero-stat">
+      <span class="hero-stat-value">—</span>
+      <span class="hero-stat-label">Total stars</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-value">${repoCount}${totalLabel}</span>
+      <span class="hero-stat-label">Featured repos</span>
+    </div>
+    <div class="hero-stat">
+      <span class="hero-stat-value hero-stat-langs">—</span>
+      <span class="hero-stat-label">Top languages</span>
+    </div>`;
     return;
   }
 
@@ -198,7 +214,7 @@ function renderHeroStats(el, repoMap, repoCount, totalPublicRepos) {
       <span class="hero-stat-label">Total stars</span>
     </div>
     <div class="hero-stat">
-      <span class="hero-stat-value">${repoCount}${totalPublicRepos ? ` <span class="hero-stat-total">/ ${fmtNum(totalPublicRepos)}</span>` : ''}</span>
+      <span class="hero-stat-value">${repoCount}${totalLabel}</span>
       <span class="hero-stat-label">Featured repos</span>
     </div>
     <div class="hero-stat">
