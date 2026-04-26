@@ -31,6 +31,9 @@ Per-request token usage and USD cost breakdown.
 ### 🔐 OAuth support
 Built-in device flow / PKCE helpers for supported providers.
 
+## Posts
+- [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 280">
   <style>

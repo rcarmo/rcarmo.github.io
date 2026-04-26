@@ -26,8 +26,9 @@ Live token streaming. No polling, no spinners.
 One Python file. One HTML file. Clone and run.
 
 ## Posts
-- [Vibing with the Agent Control Protocol](https://taoofmac.com/space/notes/2026/02/01/2100) — 2026-02-01
+- [Notes for April 13-19](https://taoofmac.com/space/notes/2026/04/19/1400) — 2026-04-21
 - [Notes for February 2-7](https://taoofmac.com/space/notes/2026/02/07/2000) — 2026-02-07
+- [Vibing with the Agent Control Protocol](https://taoofmac.com/space/notes/2026/02/01/2100) — 2026-02-01
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 230">

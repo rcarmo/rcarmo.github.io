@@ -27,6 +27,9 @@ Bundled bitmap font for rendering ASCII labels directly onto the canvas — usef
 ### 📦 Single-file library
 The entire library is one Python file — copy it into your project and import it with no installation.
 
+## Posts
+- [Python](https://taoofmac.com/space/dev/python) — 2026-04-25
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 206">
   <style>

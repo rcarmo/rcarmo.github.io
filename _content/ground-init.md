@@ -23,8 +23,9 @@ apt and rpm-ostree support.
 Pure Python 3 stdlib.
 
 ## Posts
-- [Reviving a MacBook Air with Fedora Silverblue](https://taoofmac.com/space/blog/2025/11/05/2200) — 2025-11-05
+- [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
 - [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
+- [Reviving a MacBook Air with Fedora Silverblue](https://taoofmac.com/space/blog/2025/11/05/2200) — 2025-11-05
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220">

@@ -29,10 +29,11 @@ Native ARM64 JIT backend for emulating PowerPC Macs.
 Lower latency than X11.
 
 ## Posts
-- [Notes for July 15-21](https://taoofmac.com/space/notes/2024/07/21/1800) — 2024-07-21
-- [Notes for December 25-31](https://taoofmac.com/space/notes/2025/12/31/1830) — 2025-12-31
-- [Notes for March 23-29](https://taoofmac.com/space/notes/2026/03/29/1300) — 2026-03-29
+- [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
 - [Notes for March 30 – April 5](https://taoofmac.com/space/notes/2026/04/05/1700) — 2026-04-05
+- [Notes for March 23-29](https://taoofmac.com/space/notes/2026/03/29/1300) — 2026-03-29
+- [Notes for December 25-31](https://taoofmac.com/space/notes/2025/12/31/1830) — 2025-12-31
+- [Notes for July 15-21](https://taoofmac.com/space/notes/2024/07/21/1800) — 2024-07-21
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">

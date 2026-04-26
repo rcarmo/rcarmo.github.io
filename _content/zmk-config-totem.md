@@ -31,6 +31,9 @@ Combos for all punctuation.
 - [Nav layer](assets/screenshots/zmk-config-totem/layer-nav.png) — Arrows, mouse, numbers
 - [Adjust layer](assets/screenshots/zmk-config-totem/layer-adjust.png) — Bluetooth, media, function keys
 
+## Posts
+- [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">
   <style>

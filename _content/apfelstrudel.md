@@ -28,6 +28,9 @@ All synthesis runs in the browser with zero latency configuration — connect to
 ### 🧩 Extensible backends
 Swap out the AI backend by pointing the WebSocket URL at any OpenAI-compatible endpoint.
 
+## Posts
+- [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 662 240">
   <style>

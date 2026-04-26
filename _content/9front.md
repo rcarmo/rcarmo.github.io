@@ -28,6 +28,9 @@ Produces a 64 MB bootable image with Allwinner SPL at 8 KiB, U-Boot at 16.8 MiB,
 ### 🧩 Pinned bootstrap blobs
 Board bootstrap binaries (SPL, U-Boot, DTB) are checked in under `bootstrap/orangepi4pro/` so the build is fully reproducible without a BSP toolchain.
 
+## Posts
+- [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 240">
   <style>

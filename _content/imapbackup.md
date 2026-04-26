@@ -27,6 +27,9 @@ Tested with Gmail (app passwords), Microsoft 365, Fastmail, Dovecot, and Cyrus I
 ### 🐍 Single-file script
 No dependencies beyond the Python standard library — copy one file, run it, done.
 
+## Posts
+- [Python](https://taoofmac.com/space/dev/python) — 2026-04-25
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 220">
   <style>

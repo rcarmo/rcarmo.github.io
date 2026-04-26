@@ -26,6 +26,8 @@ Appears as a machine type option. Managed like any VM.
 dpkg -r restores original qemu-server files.
 
 ## Posts
+- [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
+- [Notes for April 13-19](https://taoofmac.com/space/notes/2026/04/19/1400) — 2026-04-21
 - [Notes for April 13-19](https://taoofmac.com/space/notes/2026/04/19/1400#proxmox-microvms) — 2026-04-19
 
 ## Diagram

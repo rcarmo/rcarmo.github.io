@@ -28,6 +28,9 @@ Creates and uses predictable paths for code, data, config, logs, env/runtime sta
 ### 🔐 Secrets and deploy helpers
 Includes helper commands for Swarm secrets, Traefik inspection, mode switching, and simple git push deployment hooks.
 
+## Posts
+- [Go (lang)](https://taoofmac.com/space/dev/golang) — 2026-04-25
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 240">
   <style>

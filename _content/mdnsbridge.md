@@ -28,6 +28,9 @@ Compiled Go — no runtime, no dependencies, drops into any Linux system or mini
 ### 🔄 Loop prevention
 Tracks recently forwarded records and suppresses re-forwarding to avoid amplification loops in meshed networks.
 
+## Posts
+- [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220">
   <style>
