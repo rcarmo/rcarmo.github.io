@@ -199,7 +199,7 @@ function renderHeroStats(el, repoMap, repoCount, totalPublicRepos) {
     </div>
     <div class="hero-stat">
       <span class="hero-stat-value">${repoCount}${totalPublicRepos ? ` <span class="hero-stat-total">/ ${fmtNum(totalPublicRepos)}</span>` : ''}</span>
-      <span class="hero-stat-label">Portfolio repos</span>
+      <span class="hero-stat-label">Featured repos</span>
     </div>
     <div class="hero-stat">
       <span class="hero-stat-value hero-stat-langs">${top3.join(' · ') || '—'}</span>
