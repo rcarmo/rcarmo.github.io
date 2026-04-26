@@ -29,7 +29,7 @@
     <text x="344" y="258" font-family="IBM Plex Sans,Inter,system-ui,sans-serif" font-size="58" font-weight="700" fill="#0f172a">rcarmo</text>
     <text x="344" y="330" font-family="Inter,system-ui,sans-serif" font-size="28" fill="#334155">Open source projects by Rui Carmo</text>
     <rect x="344" y="468" width="212" height="48" rx="24" fill="#eff6ff" stroke="#dbeafe"/>
-    <text x="450" y="500" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="20" fill="#1e3a8a">49 projects</text>
+    <text x="450" y="500" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="20" fill="#1e3a8a">50 projects</text>
     <text x="1046" y="508" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="600" fill="#64748b">rcarmo.github.io</text>
   </g>
 </svg>
