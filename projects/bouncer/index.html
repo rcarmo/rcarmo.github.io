@@ -3,52 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>go-dance — rcarmo</title>
-<meta name="description" content="Local-first private CA for homelabs — ACME, single binary, step-ca embedded.">
+<title>bouncer — rcarmo</title>
+<meta name="description" content="Passkey-only reverse proxy with built-in CA, iOS onboarding, and Cloudflare Tunnel support.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="rcarmo.github.io">
-<meta property="og:title" content="go-dance — rcarmo">
-<meta property="og:description" content="Local-first private CA for homelabs — ACME, single binary, step-ca embedded.">
-<meta property="og:url" content="https://rcarmo.github.io/projects/go-dance/">
-<meta property="og:image" content="https://rcarmo.github.io/assets/og/go-dance.png">
+<meta property="og:title" content="bouncer — rcarmo">
+<meta property="og:description" content="Passkey-only reverse proxy with built-in CA, iOS onboarding, and Cloudflare Tunnel support.">
+<meta property="og:url" content="https://rcarmo.github.io/projects/bouncer/">
+<meta property="og:image" content="https://rcarmo.github.io/assets/og/bouncer.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="go-dance project card">
+<meta property="og:image:alt" content="bouncer project card">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="go-dance — rcarmo">
-<meta name="twitter:description" content="Local-first private CA for homelabs — ACME, single binary, step-ca embedded.">
-<meta name="twitter:image" content="https://rcarmo.github.io/assets/og/go-dance.png">
-<meta name="twitter:image:alt" content="go-dance project card">
+<meta name="twitter:title" content="bouncer — rcarmo">
+<meta name="twitter:description" content="Passkey-only reverse proxy with built-in CA, iOS onboarding, and Cloudflare Tunnel support.">
+<meta name="twitter:image" content="https://rcarmo.github.io/assets/og/bouncer.png">
+<meta name="twitter:image:alt" content="bouncer project card">
 <link rel="stylesheet" href="/assets/css/style.css">
 <link id="dynamic-favicon" rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/favicon.png">
-<link rel="canonical" href="https://rcarmo.github.io/projects/go-dance/">
+<link rel="canonical" href="https://rcarmo.github.io/projects/bouncer/">
 </head>
 <body>
   <nav class="topnav">
     <a href="/" class="nav-home">rcarmo</a>
-    <a href="https://github.com/rcarmo/go-dance" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
+    <a href="https://github.com/rcarmo/bouncer" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
   <header class="hero hero-project" id="hero" data-section="infrastructure">
     <div class="hero-inner">
-      <img class="hero-logo" src="/assets/logos-opt/go-dance.png" alt="Local-first private CA for homelabs — ACME, single binary, step-ca embedded. logo">
+      <img class="hero-logo" src="/assets/logos-opt/bouncer.png" alt="Passkey-only reverse proxy with built-in CA, iOS onboarding, and Cloudflare Tunnel support. logo">
       <div class="hero-text">
         <div class="hero-kicker">Project</div>
         <div class="hero-title-row">
-          <h1>go-dance</h1>
-          <span class="badge badge-active">active</span>
+          <h1>bouncer</h1>
+          <span class="badge badge-stable">stable</span>
         </div>
-        <p class="hero-tagline">Local-first private CA for homelabs — ACME, single binary, step-ca embedded.</p>
-        <div id="hero-meta-island-go-dance" class="hero-meta">
+        <p class="hero-tagline">Passkey-only reverse proxy with built-in CA, iOS onboarding, and Cloudflare Tunnel support.</p>
+        <div id="hero-meta-island-bouncer" class="hero-meta">
           <!-- live: stars, forks, language -->
         </div>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="https://github.com/rcarmo/go-dance" target="_blank" rel="noopener">View on GitHub ↗</a>
+          <a class="btn btn-primary" href="https://github.com/rcarmo/bouncer" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
-      <div id="hero-related-go-dance" class="hero-related" hidden></div>
+      <div id="hero-related-bouncer" class="hero-related" hidden></div>
     </div>
   </header>
 
@@ -62,18 +62,18 @@
     </aside>
 
     <main class="content">
-      <div id="stats-island-go-dance" class="stats-bar">
+      <div id="stats-island-bouncer" class="stats-bar">
         <!-- live: stars, forks, issues, created -->
       </div>
 
       <section class="sec" id="s-about">
         <div class="sec-label">Overview</div>
-        <p><code>dance</code> is a dead-simple private certificate authority for LAN and homelab use. A single Go binary wraps an embedded <code>step-ca</code> backend and exposes a browser-friendly landing page, a password-protected admin UI, and a fully functional ACME endpoint — so Caddy and other ACME clients enroll without any extra plumbing.</p>
+        <p>A Go reverse proxy that gates any backend HTTP service behind WebAuthn passkeys — no passwords, no TOTP codes. Ships a built-in CA for zero-config local TLS, generates <code>.mobileconfig</code> profiles for iOS/macOS trust installation, and supports Cloudflare Tunnel mode to skip local TLS entirely. A 6-digit one-time enrollment token, optional Pushover alerts with geolocation, and multi-site host routing complete the picture.</p>
       </section>
 
       <section class="sec" id="s-how">
         <div class="sec-label">How it works</div>
-        <p><code>step-ca</code> runs in-process, writing to SQLite. <code>dance</code> fronts it with session-authenticated admin routes, a certificate inventory view, passive revocation, and EAB token management. Root certificate onboarding pages handle macOS, iOS, and other platforms. Everything is a single binary launched with environment variables — no daemon config files, no systemd units, no service mesh.</p>
+        <p>On startup, Bouncer generates a root CA and server certificate automatically, then listens for HTTPS connections. Unauthenticated requests are redirected to an onboarding flow where a user registers a passkey using a one-time token. Once enrolled, sessions last 7 days (persisted across restarts). Authenticated requests are forwarded transparently to the backend. In Cloudflare Tunnel mode, Cloudflare provides HTTPS and Bouncer skips all local TLS.</p>
       </section>
 
       <section class="sec" id="s-features">
@@ -81,42 +81,50 @@
         <div class="features-grid">
           
     <div class="feature">
+      <div class="feature-icon">🔑</div>
+      <div>
+        <div class="feature-title">Passkey-only auth</div>
+        <div class="feature-body"><p>WebAuthn — no passwords, no TOTP. Same-origin enforced.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
       <div class="feature-icon">🔐</div>
       <div>
-        <div class="feature-title">Embedded private CA</div>
-        <div class="feature-body"><p><code>step-ca</code> runs in-process; no separate daemon needed.</p></div>
-      </div>
-    </div>
-
-    <div class="feature">
-      <div class="feature-icon">📜</div>
-      <div>
-        <div class="feature-title">ACME endpoint</div>
-        <div class="feature-body"><p>Compatible with Caddy, certbot, and any RFC 8555 client.</p></div>
-      </div>
-    </div>
-
-    <div class="feature">
-      <div class="feature-icon">🖥</div>
-      <div>
-        <div class="feature-title">Admin UI</div>
-        <div class="feature-body"><p>Certificate inventory, revocation, EAB token creation — all in-browser.</p></div>
+        <div class="feature-title">Built-in CA</div>
+        <div class="feature-body"><p>Root CA + server cert generated on first run. No mkcert, no Let's Encrypt.</p></div>
       </div>
     </div>
 
     <div class="feature">
       <div class="feature-icon">📲</div>
       <div>
-        <div class="feature-title">Trust onboarding</div>
-        <div class="feature-body"><p>Root cert download pages for macOS, iOS, and generic platforms.</p></div>
+        <div class="feature-title">iOS / macOS onboarding</div>
+        <div class="feature-body"><p>Serves <code>.mobileconfig</code> trust profiles; passkey enrolment from Safari.</p></div>
       </div>
     </div>
 
     <div class="feature">
-      <div class="feature-icon">🗄</div>
+      <div class="feature-icon">☁️</div>
       <div>
-        <div class="feature-title">SQLite state</div>
-        <div class="feature-body"><p>Audit log and admin state in a single local file.</p></div>
+        <div class="feature-title">Cloudflare Tunnel mode</div>
+        <div class="feature-body"><p>Skip local TLS entirely — Cloudflare provides HTTPS.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🔢</div>
+      <div>
+        <div class="feature-title">One-time enrolment token</div>
+        <div class="feature-body"><p>6-digit token on demand, logged + optional Pushover alert with IP / geo.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🌐</div>
+      <div>
+        <div class="feature-title">Multi-site host routing</div>
+        <div class="feature-body"><p>Multiple backends in a single instance, per-site passkey stores.</p></div>
       </div>
     </div>
 
@@ -124,7 +132,7 @@
       <div class="feature-icon">📦</div>
       <div>
         <div class="feature-title">Single binary</div>
-        <div class="feature-body"><p><code>go build ./cmd/dance</code> — one file, no runtime deps.</p></div>
+        <div class="feature-body"><p>Static Go binary; Docker-ready.</p></div>
       </div>
     </div>
         </div>
@@ -132,16 +140,18 @@
 
       <section class="sec" id="s-diagram">
         <div class="sec-label">Architecture</div>
-        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 160">
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 170">
   <style>
     @media (prefers-color-scheme: dark) {
       .box { fill:#1a1e2a; stroke:#2a3040; stroke-width:1.5; }
-      .hi  { fill:#0d2220; stroke:#207060; stroke-width:1.5; }
+      .hi  { fill:#0d1e38; stroke:#2b5cb0; stroke-width:1.5; }
+      .hi2 { fill:#0d2220; stroke:#207060; stroke-width:1.5; }
       .label{ fill:#d0daf0; } .sub{ fill:#5070a0; }
     }
     @media (prefers-color-scheme: light) {
       .box { fill:#fff; stroke:#c8d0e0; stroke-width:1.5; }
-      .hi  { fill:#d1fae5; stroke:#059669; stroke-width:1.5; }
+      .hi  { fill:#dbeafe; stroke:#3b82f6; stroke-width:1.5; }
+      .hi2 { fill:#d1fae5; stroke:#059669; stroke-width:1.5; }
       .label{ fill:#1a2a40; } .sub{ fill:#5070a0; }
     }
     text { font-family:-apple-system,"Segoe UI",Helvetica,sans-serif; }
@@ -154,37 +164,41 @@
     </marker>
   </defs>
 
-  <!-- Client -->
-  <rect x="8"   y="40" width="110" height="80" rx="8" class="box"/>
-  <text x="63"  y="74" text-anchor="middle" class="label">ACME Client</text>
-  <text x="63"  y="91" text-anchor="middle" class="sub">Caddy / certbot</text>
-  <text x="63"  y="107" text-anchor="middle" class="sub">/ browser</text>
+  <!-- Browser / device -->
+  <rect x="8"   y="30" width="110" height="110" rx="8" class="box"/>
+  <text x="63"  y="62" text-anchor="middle" class="label">Browser</text>
+  <text x="63"  y="79" text-anchor="middle" class="sub">Passkey auth</text>
+  <text x="63"  y="95" text-anchor="middle" class="sub">iOS .mobileconfig</text>
+  <text x="63"  y="111" text-anchor="middle" class="sub">enrolment token</text>
 
-  <line x1="118" y1="80" x2="154" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="118" y1="85" x2="154" y2="85" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 
-  <!-- dance binary -->
-  <rect x="156" y="20" width="180" height="120" rx="8" class="hi"/>
-  <text x="246" y="50" text-anchor="middle" class="label">dance (single binary)</text>
-  <text x="246" y="68" text-anchor="middle" class="sub">Admin UI · ACME routes</text>
-  <text x="246" y="84" text-anchor="middle" class="sub">Trust onboarding pages</text>
-  <text x="246" y="100" text-anchor="middle" class="sub">Session auth · EAB tokens</text>
-  <text x="246" y="116" text-anchor="middle" class="sub">Certificate inventory</text>
+  <!-- Bouncer -->
+  <rect x="156" y="10" width="200" height="150" rx="8" class="hi"/>
+  <text x="256" y="40" text-anchor="middle" class="label">Bouncer</text>
+  <text x="256" y="58" text-anchor="middle" class="sub">WebAuthn · sessions</text>
+  <text x="256" y="74" text-anchor="middle" class="sub">Built-in CA + TLS</text>
+  <text x="256" y="90" text-anchor="middle" class="sub">Onboarding flow</text>
+  <text x="256" y="106" text-anchor="middle" class="sub">Multi-site routing</text>
+  <text x="256" y="122" text-anchor="middle" class="sub">Pushover alerts + geo</text>
+  <text x="256" y="138" text-anchor="middle" class="sub">Cloudflare Tunnel mode</text>
 
-  <line x1="336" y1="80" x2="372" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <line x1="356" y1="85" x2="392" y2="85" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 
-  <!-- step-ca -->
-  <rect x="374" y="40" width="120" height="80" rx="8" class="box"/>
-  <text x="434" y="74" text-anchor="middle" class="label">step-ca</text>
-  <text x="434" y="91" text-anchor="middle" class="sub">embedded CA</text>
-  <text x="434" y="107" text-anchor="middle" class="sub">in-process</text>
+  <!-- Backend -->
+  <rect x="394" y="50" width="120" height="70" rx="8" class="hi2"/>
+  <text x="454" y="80" text-anchor="middle" class="label">Backend</text>
+  <text x="454" y="97" text-anchor="middle" class="sub">any HTTP service</text>
 
-  <line x1="494" y1="80" x2="530" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <!-- Sessions store -->
+  <rect x="534" y="30" width="158" height="110" rx="8" class="box"/>
+  <text x="613" y="60" text-anchor="middle" class="label">Local State</text>
+  <text x="613" y="77" text-anchor="middle" class="sub">bouncer.json</text>
+  <text x="613" y="93" text-anchor="middle" class="sub">users + config</text>
+  <text x="613" y="109" text-anchor="middle" class="sub">sessions file</text>
+  <text x="613" y="125" text-anchor="middle" class="sub">CA key + cert</text>
 
-  <!-- SQLite -->
-  <rect x="532" y="40" width="120" height="80" rx="8" class="box"/>
-  <text x="592" y="74" text-anchor="middle" class="label">SQLite</text>
-  <text x="592" y="91" text-anchor="middle" class="sub">certs · audit</text>
-  <text x="592" y="107" text-anchor="middle" class="sub">admin state</text>
+  <line x1="514" y1="85" x2="530" y2="85" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 </svg></div>
       </section>
 
@@ -196,7 +210,7 @@
 
   <footer>
     <span class="foot-l">rcarmo.github.io</span>
-    <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/go-dance">Source</a></span>
+    <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/bouncer">Source</a></span>
   </footer>
 
   <div id="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Image viewer">
@@ -208,12 +222,12 @@
   <script type="module">
     import { mount } from '/assets/js/repo-island.mjs?v=mohqq98a';
     mount({
-      fullName: 'rcarmo/go-dance',
-      heroMetaEl: document.getElementById('hero-meta-island-go-dance'),
-      statsEl:    document.getElementById('stats-island-go-dance'),
-      releasesEl: document.getElementById('rel-island-go-dance'),
-      relatedEl:  document.getElementById('hero-related-go-dance'),
-      relatedCandidates: [{"id":"bouncer","fullName":"rcarmo/bouncer","logo":"/assets/logos-opt/bouncer.png"},{"id":"bun-opds-server","fullName":"rcarmo/bun-opds-server","logo":"/assets/logos-opt/default-00.png"},{"id":"codebits-tv","fullName":"rcarmo/codebits-tv","logo":"/assets/logos-opt/codebits-tv.png"},{"id":"gotel","fullName":"rcarmo/gotel","logo":"/assets/logos-opt/gotel.png"},{"id":"ground-init","fullName":"rcarmo/ground-init","logo":"/assets/logos-opt/ground-init.png"},{"id":"mdnsbridge","fullName":"rcarmo/mdnsbridge","logo":"/assets/logos-opt/mdnsbridge.png"},{"id":"node-red-dashboard","fullName":"rcarmo/node-red-dashboard","logo":"/assets/logos-opt/default-01.png"},{"id":"onepage-by-spec","fullName":"rcarmo/onepage-by-spec","logo":"/assets/logos-opt/default-01.png"},{"id":"proxmox-zpool-monitoring","fullName":"rcarmo/proxmox-zpool-monitoring","logo":"/assets/logos-opt/default-01.png"},{"id":"pve-microvm","fullName":"rcarmo/pve-microvm","logo":"/assets/logos-opt/pve-microvm.png"},{"id":"syncthing-kicker","fullName":"rcarmo/syncthing-kicker","logo":"/assets/logos-opt/syncthing-kicker.png"}],
+      fullName: 'rcarmo/bouncer',
+      heroMetaEl: document.getElementById('hero-meta-island-bouncer'),
+      statsEl:    document.getElementById('stats-island-bouncer'),
+      releasesEl: document.getElementById('rel-island-bouncer'),
+      relatedEl:  document.getElementById('hero-related-bouncer'),
+      relatedCandidates: [{"id":"bun-opds-server","fullName":"rcarmo/bun-opds-server","logo":"/assets/logos-opt/default-00.png"},{"id":"codebits-tv","fullName":"rcarmo/codebits-tv","logo":"/assets/logos-opt/codebits-tv.png"},{"id":"go-dance","fullName":"rcarmo/go-dance","logo":"/assets/logos-opt/go-dance.png"},{"id":"gotel","fullName":"rcarmo/gotel","logo":"/assets/logos-opt/gotel.png"},{"id":"ground-init","fullName":"rcarmo/ground-init","logo":"/assets/logos-opt/ground-init.png"},{"id":"mdnsbridge","fullName":"rcarmo/mdnsbridge","logo":"/assets/logos-opt/mdnsbridge.png"},{"id":"node-red-dashboard","fullName":"rcarmo/node-red-dashboard","logo":"/assets/logos-opt/default-01.png"},{"id":"onepage-by-spec","fullName":"rcarmo/onepage-by-spec","logo":"/assets/logos-opt/default-01.png"},{"id":"proxmox-zpool-monitoring","fullName":"rcarmo/proxmox-zpool-monitoring","logo":"/assets/logos-opt/default-01.png"},{"id":"pve-microvm","fullName":"rcarmo/pve-microvm","logo":"/assets/logos-opt/pve-microvm.png"},{"id":"syncthing-kicker","fullName":"rcarmo/syncthing-kicker","logo":"/assets/logos-opt/syncthing-kicker.png"}],
     });
   </script>
   <script>
