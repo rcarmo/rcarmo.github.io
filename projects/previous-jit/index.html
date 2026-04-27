@@ -3,52 +3,52 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>daisy — rcarmo</title>
-<meta name="description" content="AI SPEC-driven speed coding demo — a disk usage analyser built live with GitHub Copilot in Swift.">
+<title>previous-jit — rcarmo</title>
+<meta name="description" content="ARM64 JIT-enabled fork of the Previous NeXT emulator — transplanting a modern AArch64 JIT toolchain.">
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="rcarmo.github.io">
-<meta property="og:title" content="daisy — rcarmo">
-<meta property="og:description" content="AI SPEC-driven speed coding demo — a disk usage analyser built live with GitHub Copilot in Swift.">
-<meta property="og:url" content="https://rcarmo.github.io/projects/daisy/">
-<meta property="og:image" content="https://rcarmo.github.io/assets/og/daisy.png">
+<meta property="og:title" content="previous-jit — rcarmo">
+<meta property="og:description" content="ARM64 JIT-enabled fork of the Previous NeXT emulator — transplanting a modern AArch64 JIT toolchain.">
+<meta property="og:url" content="https://rcarmo.github.io/projects/previous-jit/">
+<meta property="og:image" content="https://rcarmo.github.io/assets/og/previous-jit.png">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1200">
 <meta property="og:image:height" content="630">
-<meta property="og:image:alt" content="daisy project card">
+<meta property="og:image:alt" content="previous-jit project card">
 <meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="daisy — rcarmo">
-<meta name="twitter:description" content="AI SPEC-driven speed coding demo — a disk usage analyser built live with GitHub Copilot in Swift.">
-<meta name="twitter:image" content="https://rcarmo.github.io/assets/og/daisy.png">
-<meta name="twitter:image:alt" content="daisy project card">
+<meta name="twitter:title" content="previous-jit — rcarmo">
+<meta name="twitter:description" content="ARM64 JIT-enabled fork of the Previous NeXT emulator — transplanting a modern AArch64 JIT toolchain.">
+<meta name="twitter:image" content="https://rcarmo.github.io/assets/og/previous-jit.png">
+<meta name="twitter:image:alt" content="previous-jit project card">
 <link rel="stylesheet" href="/assets/css/style.css">
 <link id="dynamic-favicon" rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/favicon.png">
-<link rel="canonical" href="https://rcarmo.github.io/projects/daisy/">
+<link rel="canonical" href="https://rcarmo.github.io/projects/previous-jit/">
 </head>
 <body>
   <nav class="topnav">
     <a href="/" class="nav-home">rcarmo</a>
-    <a href="https://github.com/rcarmo/daisy" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
+    <a href="https://github.com/rcarmo/previous-jit" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
   </nav>
 
   <header class="hero hero-project" id="hero" data-section="macos">
     <div class="hero-inner">
-      <img class="hero-logo" src="/assets/logos-opt/daisy.png" alt="AI SPEC-driven speed coding demo — a disk usage analyser built live with GitHub Copilot in Swift. logo">
+      <img class="hero-logo" src="/assets/logos-opt/previous-jit.png" alt="ARM64 JIT-enabled fork of the Previous NeXT emulator — transplanting a modern AArch64 JIT toolchain. logo">
       <div class="hero-text">
         <div class="hero-kicker">Project</div>
         <div class="hero-title-row">
-          <h1>daisy</h1>
+          <h1>previous-jit</h1>
           <span class="badge badge-active">active</span>
         </div>
-        <p class="hero-tagline">AI SPEC-driven speed coding demo — a disk usage analyser built live with GitHub Copilot in Swift.</p>
-        <div id="hero-meta-island-daisy" class="hero-meta">
+        <p class="hero-tagline">ARM64 JIT-enabled fork of the Previous NeXT emulator — transplanting a modern AArch64 JIT toolchain.</p>
+        <div id="hero-meta-island-previous-jit" class="hero-meta">
           <!-- live: stars, forks, language -->
         </div>
         <div class="hero-actions">
-          <a class="btn btn-primary" href="https://github.com/rcarmo/daisy" target="_blank" rel="noopener">View on GitHub ↗</a>
+          <a class="btn btn-primary" href="https://github.com/rcarmo/previous-jit" target="_blank" rel="noopener">View on GitHub ↗</a>
         </div>
       </div>
-      <div id="hero-related-daisy" class="hero-related" hidden></div>
+      <div id="hero-related-previous-jit" class="hero-related" hidden></div>
     </div>
   </header>
 
@@ -62,18 +62,18 @@
     </aside>
 
     <main class="content">
-      <div id="stats-island-daisy" class="stats-bar">
+      <div id="stats-island-previous-jit" class="stats-bar">
         <!-- live: stars, forks, issues, created -->
       </div>
 
       <section class="sec" id="s-about">
         <div class="sec-label">Overview</div>
-        <p>Daisy is a macOS disk usage visualiser built as a live speed-coding demo, writing a full spec first and then letting GitHub Copilot drive the implementation. The result is a native SwiftUI app that scans a directory tree and renders a treemap of file sizes — built in one session to show what AI-assisted development looks like in practice.</p>
+        <p>An ARM64 JIT-focused fork of <a href="https://previous.alternative-system.com/" target="_blank" rel="noopener">Previous</a>, the NeXT Computer emulator. Doing for Previous what <code>macemu-jit</code> did for Basilisk II and SheepShaver: bring over a newer AArch64-capable JIT toolchain, wire it into the emulator cleanly, and build a fast validation loop around it.</p>
       </section>
 
       <section class="sec" id="s-how">
         <div class="sec-label">How it works</div>
-        <p>The app walks the file system asynchronously, accumulates sizes per directory, and renders an interactive treemap using SwiftUI Canvas. The AI spec was written first as structured comments describing the intended behaviour; Copilot then filled in the implementation. The repo includes the original spec alongside the finished code as a record of the process.</p>
+        <p>The transplanted <code>uae_cpu_2026</code> JIT/compiler subtree is vendored under <code>src/cpu/uae_cpu_2026/</code>. A bridge layer initialises the compiler inside Previous's CPU loop. A suite of shell harnesses runs interpreter vs JIT opcode equivalence checks and headless boot smoke tests against a fresh-copied disk image per run. Host ASLR is disabled for deterministic JIT mappings.</p>
       </section>
 
       <section class="sec" id="s-features">
@@ -81,42 +81,42 @@
         <div class="features-grid">
           
     <div class="feature">
-      <div class="feature-icon">📊</div>
+      <div class="feature-icon">🏗</div>
       <div>
-        <div class="feature-title">Treemap visualisation</div>
-        <div class="feature-body"><p>Interactive SwiftUI treemap showing relative directory sizes at a glance — click to drill down.</p></div>
+        <div class="feature-title">Transplanted JIT runtime</div>
+        <div class="feature-body"><p><code>uae_cpu_2026</code> vendored; bridge and runtime scaffolding complete.</p></div>
       </div>
     </div>
 
     <div class="feature">
-      <div class="feature-icon">⚡</div>
+      <div class="feature-icon">🔬</div>
       <div>
-        <div class="feature-title">Async file scanning</div>
-        <div class="feature-body"><p>Background scanning with progress updates; the UI stays responsive while large trees are traversed.</p></div>
+        <div class="feature-title">Opcode equivalence harness</div>
+        <div class="feature-body"><p>Interpreter vs JIT comparison across risky and missing opcode families.</p></div>
       </div>
     </div>
 
     <div class="feature">
-      <div class="feature-icon">🤖</div>
+      <div class="feature-icon">💨</div>
       <div>
-        <div class="feature-title">Spec-first AI workflow</div>
-        <div class="feature-body"><p>The full Copilot session is documented — shows how writing a precise spec before prompting improves output quality.</p></div>
+        <div class="feature-title">Headless boot harness</div>
+        <div class="feature-body"><p>Fresh disk image per run — clean, reproducible bring-up tests.</p></div>
       </div>
     </div>
 
     <div class="feature">
-      <div class="feature-icon">🍎</div>
+      <div class="feature-icon">🖥</div>
       <div>
-        <div class="feature-title">Native SwiftUI</div>
-        <div class="feature-body"><p>Runs on macOS with no Electron or web layer — fast, low memory, integrates with the system file picker.</p></div>
+        <div class="feature-title">Full NeXT hardware emulation</div>
+        <div class="feature-body"><p>Original 68030 Cube, NeXTcube/station variants, NeXTdimension board.</p></div>
       </div>
     </div>
 
     <div class="feature">
-      <div class="feature-icon">📝</div>
+      <div class="feature-icon">🔩</div>
       <div>
-        <div class="feature-title">Reproducible methodology</div>
-        <div class="feature-body"><p>Demonstrates a repeatable pattern: write spec → review with AI → implement → refine, applicable to any project.</p></div>
+        <div class="feature-title">Experimental build flag</div>
+        <div class="feature-body"><p><code>-DENABLE_EXPERIMENTAL_UAE2026_JIT=ON</code> — keeps upstream usable in parallel.</p></div>
       </div>
     </div>
         </div>
@@ -124,57 +124,63 @@
 
       <section class="sec" id="s-diagram">
         <div class="sec-label">Architecture</div>
-        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 160">
   <style>
     @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
+      .box { fill:#1a1e2a; stroke:#2a3040; stroke-width:1.5; }
+      .hi  { fill:#1a0d28; stroke:#7030a0; stroke-width:1.5; }
+      .hi2 { fill:#0d1e38; stroke:#2b5cb0; stroke-width:1.5; }
+      .label{ fill:#d0daf0; } .sub{ fill:#5070a0; }
     }
     @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
+      .box { fill:#fff; stroke:#c8d0e0; stroke-width:1.5; }
+      .hi  { fill:#ede9fe; stroke:#7c3aed; stroke-width:1.5; }
+      .hi2 { fill:#dbeafe; stroke:#3b82f6; stroke-width:1.5; }
+      .label{ fill:#1a2a40; } .sub{ fill:#5070a0; }
     }
-    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
-    .label { font-size: 13px; font-weight: 600; }
-    .sub { font-size: 11px; }
+    text { font-family:-apple-system,"Segoe UI",Helvetica,sans-serif; }
+    .label{ font-size:13px; font-weight:600; }
+    .sub  { font-size:11px; }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
       <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
     </marker>
-    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
-      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
-    </marker>
   </defs>
-  <rect width="660" height="180" class="bg" rx="8"/>
 
-  <rect x="20" y="24" width="160" height="60" rx="8" class="box-accent"/>
-  <text x="100" y="50" text-anchor="middle" class="label">AI spec</text>
-  <text x="100" y="68" text-anchor="middle" class="sub">structured comments</text>
+  <!-- Previous core -->
+  <rect x="8"   y="30" width="130" height="100" rx="8" class="box"/>
+  <text x="73"  y="62" text-anchor="middle" class="label">Previous core</text>
+  <text x="73"  y="79" text-anchor="middle" class="sub">NeXT HW emulation</text>
+  <text x="73"  y="95" text-anchor="middle" class="sub">M68K interpreter</text>
+  <text x="73"  y="111" text-anchor="middle" class="sub">68030 / 68040</text>
 
-  <rect x="250" y="24" width="160" height="60" rx="8" class="box-warm"/>
-  <text x="330" y="50" text-anchor="middle" class="label">Copilot</text>
-  <text x="330" y="68" text-anchor="middle" class="sub">code generation</text>
+  <line x1="138" y1="80" x2="174" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 
-  <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
-  <text x="560" y="50" text-anchor="middle" class="label">SwiftUI</text>
-  <text x="560" y="68" text-anchor="middle" class="sub">treemap app</text>
+  <!-- JIT bridge -->
+  <rect x="176" y="30" width="140" height="100" rx="8" class="hi"/>
+  <text x="246" y="62" text-anchor="middle" class="label">JIT Bridge</text>
+  <text x="246" y="79" text-anchor="middle" class="sub">uae2026_jit_bridge.cpp</text>
+  <text x="246" y="95" text-anchor="middle" class="sub">compiler_unit.cpp</text>
+  <text x="246" y="111" text-anchor="middle" class="sub">CPU loop hooks</text>
 
+  <line x1="316" y1="80" x2="352" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 
-  <path d="M180,54 L250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
-  <path d="M410,54 L480,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+  <!-- uae_cpu_2026 -->
+  <rect x="354" y="30" width="150" height="100" rx="8" class="hi2"/>
+  <text x="429" y="62" text-anchor="middle" class="label">uae_cpu_2026</text>
+  <text x="429" y="79" text-anchor="middle" class="sub">AArch64 JIT compiler</text>
+  <text x="429" y="95" text-anchor="middle" class="sub">transplanted from</text>
+  <text x="429" y="111" text-anchor="middle" class="sub">macemu-jit</text>
+
+  <line x1="504" y1="80" x2="540" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <!-- ARM64 host -->
+  <rect x="542" y="30" width="130" height="100" rx="8" class="box"/>
+  <text x="607" y="62" text-anchor="middle" class="label">ARM64 Host</text>
+  <text x="607" y="79" text-anchor="middle" class="sub">Apple Silicon</text>
+  <text x="607" y="95" text-anchor="middle" class="sub">Raspberry Pi 5</text>
+  <text x="607" y="111" text-anchor="middle" class="sub">Orange Pi</text>
 </svg></div>
       </section>
 
@@ -186,7 +192,7 @@
 
   <footer>
     <span class="foot-l">rcarmo.github.io</span>
-    <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/daisy">Source</a></span>
+    <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/previous-jit">Source</a></span>
   </footer>
 
   <div id="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Image viewer">
@@ -198,12 +204,12 @@
   <script type="module">
     import { mount } from '/assets/js/repo-island.mjs?v=mohozhij';
     mount({
-      fullName: 'rcarmo/daisy',
-      heroMetaEl: document.getElementById('hero-meta-island-daisy'),
-      statsEl:    document.getElementById('stats-island-daisy'),
-      releasesEl: document.getElementById('rel-island-daisy'),
-      relatedEl:  document.getElementById('hero-related-daisy'),
-      relatedCandidates: [{"id":"PhotosExport","fullName":"rcarmo/PhotosExport","logo":"/assets/logos-opt/PhotosExport.png"},{"id":"drawterm","fullName":"rcarmo/drawterm","logo":"/assets/logos-opt/drawterm.png"},{"id":"homekit-steam-user-switcher","fullName":"rcarmo/homekit-steam-user-switcher","logo":"/assets/logos-opt/default-01.png"},{"id":"macemu-jit","fullName":"rcarmo/macemu-jit","logo":"/assets/logos-opt/macemu-jit.png"},{"id":"previous-jit","fullName":"rcarmo/previous-jit","logo":"/assets/logos-opt/previous-jit.png"},{"id":"swift-usb-video-viewer","fullName":"rcarmo/swift-usb-video-viewer","logo":"/assets/logos-opt/swift-usb-video-viewer.png"}],
+      fullName: 'rcarmo/previous-jit',
+      heroMetaEl: document.getElementById('hero-meta-island-previous-jit'),
+      statsEl:    document.getElementById('stats-island-previous-jit'),
+      releasesEl: document.getElementById('rel-island-previous-jit'),
+      relatedEl:  document.getElementById('hero-related-previous-jit'),
+      relatedCandidates: [{"id":"PhotosExport","fullName":"rcarmo/PhotosExport","logo":"/assets/logos-opt/PhotosExport.png"},{"id":"daisy","fullName":"rcarmo/daisy","logo":"/assets/logos-opt/daisy.png"},{"id":"drawterm","fullName":"rcarmo/drawterm","logo":"/assets/logos-opt/drawterm.png"},{"id":"homekit-steam-user-switcher","fullName":"rcarmo/homekit-steam-user-switcher","logo":"/assets/logos-opt/default-01.png"},{"id":"macemu-jit","fullName":"rcarmo/macemu-jit","logo":"/assets/logos-opt/macemu-jit.png"},{"id":"swift-usb-video-viewer","fullName":"rcarmo/swift-usb-video-viewer","logo":"/assets/logos-opt/swift-usb-video-viewer.png"}],
     });
   </script>
   <script>
