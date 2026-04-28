@@ -1,6 +1,6 @@
 ---
 section: infrastructure
-status: stable
+status: experimental
 created: 2026-03-01
 logo: assets/logos-opt/bouncer.png
 tagline: Passkey-only reverse proxy with built-in CA, iOS onboarding, and Cloudflare Tunnel support.
