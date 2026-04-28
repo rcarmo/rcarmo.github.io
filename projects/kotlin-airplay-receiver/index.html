@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>kotlin-airplay-receiver — rcarmo</title>
+<meta name="description" content="AirPlay receiver for the Lenovo ThinkSmart View — Kotlin + native RAOP, no UI, full-screen mirroring.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="rcarmo.github.io">
+<meta property="og:title" content="kotlin-airplay-receiver — rcarmo">
+<meta property="og:description" content="AirPlay receiver for the Lenovo ThinkSmart View — Kotlin + native RAOP, no UI, full-screen mirroring.">
+<meta property="og:url" content="https://rcarmo.github.io/projects/kotlin-airplay-receiver/">
+<meta property="og:image" content="https://rcarmo.github.io/assets/og/kotlin-airplay-receiver.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="kotlin-airplay-receiver project card">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="kotlin-airplay-receiver — rcarmo">
+<meta name="twitter:description" content="AirPlay receiver for the Lenovo ThinkSmart View — Kotlin + native RAOP, no UI, full-screen mirroring.">
+<meta name="twitter:image" content="https://rcarmo.github.io/assets/og/kotlin-airplay-receiver.png">
+<meta name="twitter:image:alt" content="kotlin-airplay-receiver project card">
+<link rel="stylesheet" href="/assets/css/style.css">
+<link id="dynamic-favicon" rel="icon" href="/favicon.ico">
+<link rel="apple-touch-icon" href="/favicon.png">
+<link rel="canonical" href="https://rcarmo.github.io/projects/kotlin-airplay-receiver/">
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window,document,"clarity","script","wiph32r6h2");
+</script>
+</head>
+<body>
+  <nav class="topnav">
+    <a href="/" class="nav-home">rcarmo</a>
+    <a href="https://github.com/rcarmo/kotlin-airplay-receiver" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
+  </nav>
+
+  <header class="hero hero-project" id="hero" data-section="hardware">
+    <div class="hero-inner">
+      <img class="hero-logo" src="/assets/logos-opt/kotlin-airplay-receiver.png" alt="AirPlay receiver for the Lenovo ThinkSmart View — Kotlin + native RAOP, no UI, full-screen mirroring. logo">
+      <div class="hero-text">
+        <div class="hero-kicker">Project</div>
+        <div class="hero-title-row">
+          <h1>kotlin-airplay-receiver</h1>
+          <span class="badge badge-active">active</span>
+        </div>
+        <p class="hero-tagline">AirPlay receiver for the Lenovo ThinkSmart View — Kotlin + native RAOP, no UI, full-screen mirroring.</p>
+        <div id="hero-meta-island-kotlin-airplay-receiver" class="hero-meta">
+          <!-- live: stars, forks, language -->
+        </div>
+        <div class="hero-actions">
+          <a class="btn btn-primary" href="https://github.com/rcarmo/kotlin-airplay-receiver" target="_blank" rel="noopener">View on GitHub ↗</a>
+        </div>
+      </div>
+      <div id="hero-related-kotlin-airplay-receiver" class="hero-related" hidden></div>
+    </div>
+  </header>
+
+
+  <div class="page-layout">
+    <aside class="toc-sidebar">
+      <a href="#s-about" class="toc-link" data-section="s-about">Overview</a>
+      <a href="#s-how" class="toc-link" data-section="s-how">How it works</a>
+      <a href="#s-features" class="toc-link" data-section="s-features">Features</a>
+      <a href="#s-diagram" class="toc-link" data-section="s-diagram">Diagram</a>
+    </aside>
+
+    <main class="content">
+      <div id="stats-island-kotlin-airplay-receiver" class="stats-bar">
+        <!-- live: stars, forks, issues, created -->
+      </div>
+
+      <section class="sec" id="s-about">
+        <div class="sec-label">Overview</div>
+        <p>A minimal Android AirPlay receiver built for the Lenovo ThinkSmart View (Android 8.1, 8-inch 1280×800 screen). Advertises itself as an AirPlay/RAOP target over Bonjour, receives H.264 screen mirroring and AAC audio from any Apple device, and renders full-screen with no in-app controls — the device just becomes a dedicated wireless display.</p>
+      </section>
+
+      <section class="sec" id="s-how">
+        <div class="sec-label">How it works</div>
+        <p>The Kotlin application layer handles lifecycle, surface management, and audio output via <code>AudioTrack</code>. The native C/C++ stack underneath handles RAOP/AirPlay signalling, H.264 decryption and demux, AAC decoding, and JNI bridging to the Kotlin surface. DNS-SD registration uses vendored Java Bonjour bindings. The mirrored stream is held at 1280×720 and scaled to fill the screen by Android's surface compositor.</p>
+      </section>
+
+      <section class="sec" id="s-features">
+        <div class="sec-label">Features</div>
+        <div class="features-grid">
+          
+    <div class="feature">
+      <div class="feature-icon">📡</div>
+      <div>
+        <div class="feature-title">AirPlay / RAOP receiver</div>
+        <div class="feature-body"><p>Advertises under the device name — any Apple device sees it as a standard AirPlay target.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🎬</div>
+      <div>
+        <div class="feature-title">H.264 screen mirroring</div>
+        <div class="feature-body"><p>Native decode pipeline; full-screen <code>SurfaceView</code> with no distortion on 1280×800.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🔊</div>
+      <div>
+        <div class="feature-title">AAC audio</div>
+        <div class="feature-body"><p>RAOP audio stack decodes AAC and plays PCM through <code>AudioTrack</code>.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🖥</div>
+      <div>
+        <div class="feature-title">ThinkSmart View tuned</div>
+        <div class="feature-body"><p>Designed for the Lenovo ThinkSmart View's 8.1 Android runtime and display constraints.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">📦</div>
+      <div>
+        <div class="feature-title">CI-built APKs</div>
+        <div class="feature-body"><p>GitHub Actions produces <code>Receiver-release.apk</code> on every push — no local Android toolchain needed.</p></div>
+      </div>
+    </div>
+
+    <div class="feature">
+      <div class="feature-icon">🔒</div>
+      <div>
+        <div class="feature-title">GPLv3</div>
+        <div class="feature-body"><p>Native Playfair component retains GPLv3; all vendored code documented in <code>docs/vendor-audit.md</code>.</p></div>
+      </div>
+    </div>
+        </div>
+      </section>
+
+      <section class="sec" id="s-diagram">
+        <div class="sec-label">Architecture</div>
+        <div class="diagram-wrap"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 160">
+  <style>
+    @media (prefers-color-scheme: dark) {
+      .box { fill:#1a1e2a; stroke:#2a3040; stroke-width:1.5; }
+      .hi  { fill:#0d1e38; stroke:#2b5cb0; stroke-width:1.5; }
+      .hi2 { fill:#0d2220; stroke:#207060; stroke-width:1.5; }
+      .label{ fill:#d0daf0; } .sub{ fill:#5070a0; }
+    }
+    @media (prefers-color-scheme: light) {
+      .box { fill:#fff; stroke:#c8d0e0; stroke-width:1.5; }
+      .hi  { fill:#dbeafe; stroke:#3b82f6; stroke-width:1.5; }
+      .hi2 { fill:#d1fae5; stroke:#059669; stroke-width:1.5; }
+      .label{ fill:#1a2a40; } .sub{ fill:#5070a0; }
+    }
+    text { font-family:-apple-system,"Segoe UI",Helvetica,sans-serif; }
+    .label{ font-size:13px; font-weight:600; }
+    .sub  { font-size:11px; }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+  </defs>
+
+  <!-- Apple device -->
+  <rect x="8"   y="35" width="110" height="90" rx="8" class="box"/>
+  <text x="63"  y="68" text-anchor="middle" class="label">Apple Device</text>
+  <text x="63"  y="85" text-anchor="middle" class="sub">iPhone / iPad</text>
+  <text x="63"  y="101" text-anchor="middle" class="sub">Mac / AirPlay</text>
+
+  <line x1="118" y1="80" x2="154" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <!-- Native stack -->
+  <rect x="156" y="15" width="160" height="130" rx="8" class="hi2"/>
+  <text x="236" y="44" text-anchor="middle" class="label">Native C/C++ Stack</text>
+  <text x="236" y="62" text-anchor="middle" class="sub">RAOP / AirPlay</text>
+  <text x="236" y="78" text-anchor="middle" class="sub">H.264 decrypt + demux</text>
+  <text x="236" y="94" text-anchor="middle" class="sub">AAC decode → PCM</text>
+  <text x="236" y="110" text-anchor="middle" class="sub">Bonjour / DNS-SD</text>
+  <text x="236" y="126" text-anchor="middle" class="sub">JNI bridge</text>
+
+  <line x1="316" y1="80" x2="352" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <!-- Kotlin app -->
+  <rect x="354" y="15" width="150" height="130" rx="8" class="hi"/>
+  <text x="429" y="44" text-anchor="middle" class="label">Kotlin App</text>
+  <text x="429" y="62" text-anchor="middle" class="sub">SurfaceView (H.264)</text>
+  <text x="429" y="78" text-anchor="middle" class="sub">AudioTrack (PCM)</text>
+  <text x="429" y="94" text-anchor="middle" class="sub">Lifecycle management</text>
+  <text x="429" y="110" text-anchor="middle" class="sub">Android 8.1 / API 27</text>
+  <text x="429" y="126" text-anchor="middle" class="sub">No UI — full-screen only</text>
+
+  <line x1="504" y1="80" x2="540" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+
+  <!-- Device -->
+  <rect x="542" y="35" width="110" height="90" rx="8" class="box"/>
+  <text x="597" y="68" text-anchor="middle" class="label">ThinkSmart</text>
+  <text x="597" y="85" text-anchor="middle" class="sub">View 8"</text>
+  <text x="597" y="101" text-anchor="middle" class="sub">1280×800 display</text>
+</svg></div>
+      </section>
+
+
+
+
+    </main>
+  </div>
+
+  <footer>
+    <span class="foot-l">rcarmo.github.io</span>
+    <span class="foot-r"><a href="/">Home</a> · <a href="https://github.com/rcarmo/kotlin-airplay-receiver">Source</a></span>
+  </footer>
+
+  <div id="lightbox-overlay" role="dialog" aria-modal="true" aria-label="Image viewer">
+    <button id="lightbox-close" aria-label="Close">×</button>
+    <div id="lightbox-inner"></div>
+  </div>
+
+  <script type="module" src="/assets/js/repo-island.mjs?v=moixa3ua"></script>
+  <script type="module">
+    import { mount } from '/assets/js/repo-island.mjs?v=moixa3ua';
+    mount({
+      fullName: 'rcarmo/kotlin-airplay-receiver',
+      heroMetaEl: document.getElementById('hero-meta-island-kotlin-airplay-receiver'),
+      statsEl:    document.getElementById('stats-island-kotlin-airplay-receiver'),
+      releasesEl: document.getElementById('rel-island-kotlin-airplay-receiver'),
+      relatedEl:  document.getElementById('hero-related-kotlin-airplay-receiver'),
+      relatedCandidates: [{"id":"9front","fullName":"rcarmo/9front","logo":"/assets/logos-opt/9front.png"},{"id":"byos_fastapi","fullName":"usetrmnl/byos_fastapi","logo":"/assets/logos-opt/byos_fastapi.png"},{"id":"haiku-arm64-build","fullName":"rcarmo/haiku-arm64-build","logo":"/assets/logos-opt/haiku-arm64-build.png"},{"id":"orangepi-build","fullName":"rcarmo/orangepi-build","logo":"/assets/logos-opt/orangepi-build.png"},{"id":"zmk-config-totem","fullName":"rcarmo/zmk-config-totem","logo":"/assets/logos-opt/zmk-config-totem.png"}],
+    });
+  </script>
+  <script>
+    // Lightbox
+    const overlay = document.getElementById('lightbox-overlay');
+    const inner = document.getElementById('lightbox-inner');
+    const closeBtn = document.getElementById('lightbox-close');
+    function openLightbox(src) {
+      inner.innerHTML = src.endsWith('.svg')
+        ? '<object type="image/svg+xml" data="' + src + '"></object>'
+        : '<img src="' + src + '" alt="">';
+      overlay.classList.add('open');
+      document.body.style.overflow = 'hidden';
+    }
+    function closeLightbox() {
+      overlay.classList.remove('open');
+      document.body.style.overflow = '';
+      inner.innerHTML = '';
+    }
+    if (overlay) {
+      overlay.addEventListener('click', function(e){ if(e.target===overlay) closeLightbox(); });
+      closeBtn.addEventListener('click', closeLightbox);
+      document.addEventListener('keydown', function(e){ if(e.key==='Escape') closeLightbox(); });
+      document.querySelectorAll('[data-lightbox]').forEach(function(btn){
+        btn.addEventListener('click', function(){ openLightbox(btn.dataset.lightbox); });
+      });
+      document.querySelectorAll('.btn-sm[href]').forEach(function(a){
+        const src = a.getAttribute('href');
+        if(src && (src.endsWith('.svg')||src.endsWith('.png')||src.endsWith('.jpg'))){
+          a.addEventListener('click', function(e){
+            e.preventDefault();
+            openLightbox(src);
+          });
+        }
+      });
+    }
+    // Scroll-spy for TOC
+    const tocLinks = document.querySelectorAll('.toc-link');
+    if (tocLinks.length) {
+      const sections = [...tocLinks].map(l => ({
+        link: l,
+        el: document.getElementById(l.dataset.section)
+      })).filter(s => s.el);
+      const obs = new IntersectionObserver(entries => {
+        for (const e of entries) {
+          if (e.isIntersecting) {
+            tocLinks.forEach(l => l.classList.remove('active'));
+            const match = sections.find(s => s.el === e.target);
+            if (match) match.link.classList.add('active');
+          }
+        }
+      }, { rootMargin: '-20% 0px -70% 0px' });
+      sections.forEach(s => obs.observe(s.el));
+    }
+
+    document.querySelectorAll('[data-gallery]').forEach((gallery) => {
+      const slides = [...gallery.querySelectorAll('[data-gallery-slide]')];
+      const captions = [...gallery.querySelectorAll('[data-gallery-caption]')];
+      const prev = gallery.querySelector('[data-gallery-prev]');
+      const next = gallery.querySelector('[data-gallery-next]');
+      const goto = gallery.querySelector('[data-gallery-goto]');
+      const status = gallery.querySelector('[data-gallery-status]');
+      const thumbs = [...gallery.querySelectorAll('[data-gallery-thumb]')];
+      let index = 0;
+
+      function renderGallery(nextIndex) {
+        index = Math.max(0, Math.min(slides.length - 1, nextIndex));
+        slides.forEach((slide, i) => {
+          slide.classList.toggle('is-active', i === index);
+        });
+        captions.forEach((caption, i) => caption.classList.toggle('is-active', i === index));
+        thumbs.forEach((thumb, i) => {
+          thumb.classList.toggle('is-active', i === index);
+          thumb.setAttribute('aria-pressed', i === index ? 'true' : 'false');
+        });
+        if (goto) {
+          goto.value = String(index + 1);
+          goto.max = String(slides.length);
+        }
+        if (status) status.textContent = '/ ' + slides.length;
+        if (prev) prev.disabled = index <= 0;
+        if (next) next.disabled = index >= slides.length - 1;
+      }
+
+      prev?.addEventListener('click', () => renderGallery(index - 1));
+      next?.addEventListener('click', () => renderGallery(index + 1));
+      goto?.addEventListener('change', () => renderGallery(Number(goto.value || 1) - 1));
+      goto?.addEventListener('keydown', (e) => {
+        if (e.key === 'Enter') renderGallery(Number(goto.value || 1) - 1);
+      });
+      thumbs.forEach((thumb, i) => thumb.addEventListener('click', () => renderGallery(i)));
+      gallery.addEventListener('keydown', (e) => {
+        if (e.key === 'ArrowLeft') { e.preventDefault(); renderGallery(index - 1); }
+        if (e.key === 'ArrowRight') { e.preventDefault(); renderGallery(index + 1); }
+        if (e.key === 'Home') { e.preventDefault(); renderGallery(0); }
+        if (e.key === 'End') { e.preventDefault(); renderGallery(slides.length - 1); }
+      });
+      renderGallery(0);
+    });
+  </script>
+</body>
+</html>
