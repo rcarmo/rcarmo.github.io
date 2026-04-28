@@ -19,6 +19,13 @@ const ASSETS  = join(ROOT, "assets");
 const OG_OUT  = join(ASSETS, "og");
 const SITE_URL = "https://rcarmo.github.io";
 const ASSET_VERSION = Date.now().toString(36);
+const CLARITY_SNIPPET = `<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window,document,"clarity","script","wiph32r6h2");
+<\/script>`;
 mkdirSync(OUT, { recursive: true });
 mkdirSync(OG_OUT, { recursive: true });
 
@@ -552,6 +559,7 @@ ${metaTags}
 <link id="dynamic-favicon" rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/favicon.png">
 <link rel="canonical" href="${canonicalUrl}">
+${CLARITY_SNIPPET}
 </head>
 <body>
   <nav class="topnav">
@@ -868,6 +876,7 @@ ${metaTags}
 <link id="dynamic-favicon" rel="icon" href="/favicon.ico">
 <link rel="apple-touch-icon" href="/favicon.png">
 <link rel="canonical" href="${SITE_URL}/">
+${CLARITY_SNIPPET}
 </head>
 <body>
   <nav class="topnav">
