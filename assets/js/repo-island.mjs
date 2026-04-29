@@ -251,7 +251,7 @@ function renderHeroRelated(el, currentFullName, relatedCandidates, repoMap) {
     <div class="related-label">Related</div>
     ${ranked.map((candidate) => {
       const img = candidate.logo ? `<img src="${candidate.logo}" alt="" class="related-logo">` : '<span class="related-logo" aria-hidden="true"></span>';
-      return `<a href="/projects/${candidate.id}.html" class="related-link">${img}<span>${candidate.id}</span></a>`;
+      return `<a href="/projects/${candidate.id}/" class="related-link">${img}<span>${candidate.id}</span></a>`;
     }).join('')}
   `;
   el.hidden = false;
