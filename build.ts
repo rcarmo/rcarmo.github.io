@@ -274,12 +274,14 @@ function buildOgCardSvg(opts: {
 </svg>`;
 }
 
+const RSVG_CONVERT = ['/home/linuxbrew/.linuxbrew/bin/rsvg-convert', 'rsvg-convert'].find(p => { try { return Bun.spawnSync([p,'--version']).exitCode === 0; } catch { return false; } }) ?? 'rsvg-convert';
+
 function writeOgCard(name: string, svg: string): void {
   const svgPath = join(OG_OUT, `${name}.svg`);
   const pngPath = join(OG_OUT, `${name}.png`);
   writeFileSync(svgPath, svg);
   try {
-    const result = Bun.spawnSync(['rsvg-convert', '-w', '1200', '-h', '630', '-o', pngPath, svgPath]);
+    const result = Bun.spawnSync([RSVG_CONVERT, '-w', '1200', '-h', '630', '-o', pngPath, svgPath]);
     if (result.exitCode !== 0) console.warn(`  ⚠ rsvg-convert failed for ${name}: ${result.stderr}`);
   } catch(e) {
     console.warn(`  ⚠ rsvg-convert not available, skipping PNG for ${name}`);
