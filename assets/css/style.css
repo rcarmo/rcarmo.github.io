@@ -477,7 +477,7 @@ code {
   object-fit: cover;
 }
 .hero-logo {
-  width: 132px; height: 132px; object-fit: contain;
+  width: 238px; height: 238px; object-fit: contain;
   flex-shrink: 0;
 }
 .hero-text { flex: 1; min-width: 0; }
@@ -525,7 +525,7 @@ code {
   .card-logo { width: 88px; height: 88px; }
   .card-logo-lg { width: 112px; height: 112px; }
   .hero-inner { flex-direction: column; align-items: center; text-align: center; }
-  .hero-logo { width: 160px; height: 160px; margin: 0 auto 0.25rem; }
+  .hero-logo { width: 288px; height: 288px; margin: 0 auto 0.25rem; }
   .hero-title-row { justify-content: center; }
   .hero-tagline { text-align: center; }
   .hero-meta { justify-content: center; }
