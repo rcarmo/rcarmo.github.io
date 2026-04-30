@@ -239,14 +239,14 @@ function buildOgCardSvg(opts: {
   const safeX = 80, safeY = 80;
   const safeW = 1280 - 2 * safeX, safeH = 640 - 2 * safeY; // 1120×480
 
-  // Logo: 280×280 inside the card, vertically centred
-  const logoSize = 280;
-  const logoX = safeX + 36;
+  // Logo: 320×320 inside the card, vertically centred
+  const logoSize = 320;
+  const logoX = safeX + 24;
   const logoY = safeY + Math.round((safeH - logoSize) / 2);
 
   const textX = logoX + logoSize + 44;
-  const descLines = wrapOgText(opts.description, 32, 3);
-  const nameFontSize = title.length > 24 ? 46 : title.length > 18 ? 54 : 64;
+  const descLines = wrapOgText(opts.description, 30, 3);
+  const nameFontSize = title.length > 24 ? 44 : title.length > 18 ? 52 : 60;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -275,25 +275,26 @@ function buildOgCardSvg(opts: {
   <g filter="url(#shadow)">
     <rect x="${safeX}" y="${safeY}" width="${safeW}" height="${safeH}" rx="20" fill="#ffffff"/>
     <rect x="${safeX}" y="${safeY}" width="${safeW}" height="${safeH}" rx="20" fill="none" stroke="#d7e3f4"/>
-    <!-- Accent bar: straight, thick enough to cover top rounded corners -->
+    <!-- Accent bar: straight, thick -->
     <rect x="${safeX}" y="${safeY}" width="${safeW}" height="24" fill="url(#accent)"/>
+    <!-- Repo roundrect — top right -->
+    <rect x="${safeX + safeW - 260}" y="${safeY + 40}" width="240" height="44" rx="8" fill="#eff6ff" stroke="#dbeafe"/>
+    <text x="${safeX + safeW - 140}" y="${safeY + 69}" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="18" fill="#1e3a8a">${meta}</text>
     <!-- Logo -->
     <rect x="${logoX}" y="${logoY}" width="${logoSize}" height="${logoSize}" rx="36" fill="#eff6ff" stroke="#dbe5f1"/>
     ${imageDataUri
-      ? `<image href="${imageDataUri}" x="${logoX + 12}" y="${logoY + 12}" width="${logoSize - 24}" height="${logoSize - 24}" preserveAspectRatio="xMidYMid meet" clip-path="url(#logoClip)"/>`
+      ? `<image href="${imageDataUri}" x="${logoX + 10}" y="${logoY + 10}" width="${logoSize - 20}" height="${logoSize - 20}" preserveAspectRatio="xMidYMid meet" clip-path="url(#logoClip)"/>`
       : `<text x="${logoX + logoSize/2}" y="${logoY + logoSize * 0.62}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="96" font-weight="700" fill="#2563eb">\u25c9</text>`}
     <!-- Kicker -->
-    <text x="${textX}" y="${safeY + 110}" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="700" letter-spacing="1.5" fill="${accent}">${kicker}</text>
+    <text x="${textX}" y="${safeY + 120}" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="700" letter-spacing="1.5" fill="${accent}">${kicker}</text>
     <!-- Title -->
-    <text x="${textX}" y="${safeY + 185}" font-family="Inter,system-ui,sans-serif" font-size="${nameFontSize}" font-weight="700" fill="#0f172a">${title}</text>
+    <text x="${textX}" y="${safeY + 195}" font-family="Inter,system-ui,sans-serif" font-size="${nameFontSize}" font-weight="700" fill="#0f172a">${title}</text>
     <!-- Description -->
     ${descLines.map((line, i) =>
-      `<text x="${textX}" y="${safeY + 252 + i * 46}" font-family="Inter,system-ui,sans-serif" font-size="32" fill="#334155">${esc(line)}</text>`
+      `<text x="${textX}" y="${safeY + 262 + i * 48}" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">${esc(line)}</text>`
     ).join('\n    ')}
-    <!-- Meta -->
-    <rect x="${textX}" y="${safeY + safeH - 70}" width="240" height="48" rx="24" fill="#eff6ff" stroke="#dbeafe"/>
-    <text x="${textX + 120}" y="${safeY + safeH - 38}" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="20" fill="#1e3a8a">${meta}</text>
-    <text x="${safeX + safeW - 24}" y="${safeY + safeH - 38}" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="600" fill="#64748b">rcarmo.github.io</text>
+    <!-- Site -->
+    <text x="${safeX + safeW - 24}" y="${safeY + safeH - 28}" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="600" fill="#64748b">rcarmo.github.io</text>
   </g>
 </svg>`;
 }
