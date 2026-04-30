@@ -258,14 +258,14 @@ function renderHeroRelated(el, currentFullName, relatedCandidates, repoMap) {
 }
 
 async function renderReleaseList(el, fullName, badgeEl) {
-  if (!el || !fullName) return;
-  el.innerHTML = `<div class="rel-loading"><span class="skel" style="width:10rem"></span></div>`;
+  if (!fullName || (!el && !badgeEl)) return;
+  if (el) el.innerHTML = `<div class="rel-loading"><span class="skel" style="width:10rem"></span></div>`;
   try {
     const res = await fetch(`https://api.github.com/repos/${fullName}/releases?per_page=5`);
     if (!res.ok) throw new Error('release fetch failed');
     const releases = await res.json();
     if (!Array.isArray(releases) || !releases.length) {
-      el.innerHTML = '';
+      if (el) el.innerHTML = '';
       return;
     }
 
@@ -276,15 +276,17 @@ async function renderReleaseList(el, fullName, badgeEl) {
       badgeEl.innerHTML = `<a href="${url}" target="_blank" rel="noopener" class="release-badge">${tag}</a>`;
     }
 
-    el.innerHTML = `<div class="release-list">${releases.map((r) => `
-      <div class="release-item">
-        <span class="rel-tag">${r.tag_name || ''}</span>
-        <span class="rel-date">${fmtDate(r.published_at)}</span>
-        <span class="rel-name">${r.name && r.name !== r.tag_name ? r.name : ''}</span>
-      </div>
-    `).join('')}</div>`;
+    if (el) {
+      el.innerHTML = `<div class="release-list">${releases.map((r) => `
+        <div class="release-item">
+          <span class="rel-tag">${r.tag_name || ''}</span>
+          <span class="rel-date">${fmtDate(r.published_at)}</span>
+          <span class="rel-name">${r.name && r.name !== r.tag_name ? r.name : ''}</span>
+        </div>
+      `).join('')}</div>`;
+    }
   } catch {
-    el.innerHTML = '';
+    if (el) el.innerHTML = '';
   }
 }
 
@@ -301,7 +303,7 @@ export function mount({ fullName, heroMetaEl, statsEl, releasesEl, releaseBadgeE
     renderHeroRelated(relatedEl, fullName, relatedCandidates, {});
   });
 
-  if (releasesEl) renderReleaseList(releasesEl, fullName, releaseBadgeEl);
+  renderReleaseList(releasesEl, fullName, releaseBadgeEl);
 }
 
 export function mountIndex(allFullNames) {
