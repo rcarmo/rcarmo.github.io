@@ -234,11 +234,22 @@ function buildOgCardSvg(opts: {
   const kicker = esc(opts.kicker);
   const meta = esc(opts.meta || "rcarmo.github.io");
   const imageDataUri = opts.imageDataUri || "";
-  const descLines = wrapOgText(opts.description, 42, 3)
-    .map((line, index) => `<text x="344" y="${330 + index * 38}" font-family="Inter,system-ui,sans-serif" font-size="28" fill="#334155">${esc(line)}</text>`)
-    .join("\n    ");
+
+  // 1280×640, 80px unsafe zone
+  const safeX = 80, safeY = 80;
+  const safeW = 1280 - 2 * safeX, safeH = 640 - 2 * safeY; // 1120×480
+
+  // Logo: 200×200 inside the card
+  const logoX = safeX + 44;
+  const logoY = safeY + Math.round((safeH - 200) / 2);
+
+  const textX = logoX + 200 + 44;
+  const descLines = wrapOgText(opts.description, 36, 3);
+  const nameFontSize = title.length > 24 ? 42 : title.length > 18 ? 50 : 58;
+
   return `<?xml version="1.0" encoding="UTF-8"?>
-<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630" role="img" aria-label="${title}">
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="${title}">
   <defs>
     <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
       <stop offset="0%" stop-color="#f5f9ff"/>
@@ -249,27 +260,38 @@ function buildOgCardSvg(opts: {
       <stop offset="100%" stop-color="#1d4ed8"/>
     </linearGradient>
     <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
-      <feDropShadow dx="0" dy="24" stdDeviation="30" flood-color="#8aa3c4" flood-opacity="0.20"/>
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#8aa3c4" flood-opacity="0.18"/>
     </filter>
     <clipPath id="logoClip">
-      <rect x="120" y="153" width="170" height="170" rx="36"/>
+      <rect x="${logoX}" y="${logoY}" width="200" height="200" rx="36"/>
     </clipPath>
   </defs>
-  <rect width="1200" height="630" fill="url(#bg)"/>
-  <circle cx="1110" cy="92" r="220" fill="#dbeafe" opacity="0.7"/>
-  <circle cx="102" cy="578" r="190" fill="#eff6ff" opacity="0.85"/>
+  <!-- Background -->
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <circle cx="1180" cy="100" r="240" fill="#dbeafe" opacity="0.7"/>
+  <circle cx="110" cy="590" r="200" fill="#eff6ff" opacity="0.85"/>
+  <!-- Card -->
   <g filter="url(#shadow)">
-    <rect x="66" y="66" width="1068" height="498" rx="34" fill="#ffffff"/>
-    <rect x="66" y="66" width="1068" height="498" rx="34" fill="none" stroke="#d7e3f4"/>
-    <rect x="66" y="66" width="1068" height="14" rx="14" fill="url(#accent)"/>
-    <rect x="120" y="153" width="170" height="170" rx="36" fill="#eff6ff" stroke="#dbe5f1"/>
-    ${imageDataUri ? `<image href="${imageDataUri}" x="136" y="169" width="138" height="138" preserveAspectRatio="xMidYMid meet" clip-path="url(#logoClip)"/>` : `<text x="205" y="256" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="72" font-weight="700" fill="#2563eb">◉</text>`}
-    <text x="344" y="178" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="700" letter-spacing="1.5" fill="${accent}">${kicker}</text>
-    <text x="344" y="258" font-family="IBM Plex Sans,Inter,system-ui,sans-serif" font-size="58" font-weight="700" fill="#0f172a">${title}</text>
-    ${descLines}
-    <rect x="344" y="468" width="212" height="48" rx="24" fill="#eff6ff" stroke="#dbeafe"/>
-    <text x="450" y="500" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="20" fill="#1e3a8a">${meta}</text>
-    <text x="1046" y="508" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="600" fill="#64748b">rcarmo.github.io</text>
+    <rect x="${safeX}" y="${safeY}" width="${safeW}" height="${safeH}" rx="34" fill="#ffffff"/>
+    <rect x="${safeX}" y="${safeY}" width="${safeW}" height="${safeH}" rx="34" fill="none" stroke="#d7e3f4"/>
+    <rect x="${safeX}" y="${safeY}" width="${safeW}" height="14" rx="14" fill="url(#accent)"/>
+    <!-- Logo -->
+    <rect x="${logoX}" y="${logoY}" width="200" height="200" rx="36" fill="#eff6ff" stroke="#dbe5f1"/>
+    ${imageDataUri
+      ? `<image href="${imageDataUri}" x="${logoX + 12}" y="${logoY + 12}" width="176" height="176" preserveAspectRatio="xMidYMid meet" clip-path="url(#logoClip)"/>`
+      : `<text x="${logoX + 100}" y="${logoY + 125}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="80" font-weight="700" fill="#2563eb">\u25c9</text>`}
+    <!-- Kicker -->
+    <text x="${textX}" y="${safeY + 130}" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="700" letter-spacing="1.5" fill="${accent}">${kicker}</text>
+    <!-- Title -->
+    <text x="${textX}" y="${safeY + 200}" font-family="Inter,system-ui,sans-serif" font-size="${nameFontSize}" font-weight="700" fill="#0f172a">${title}</text>
+    <!-- Description -->
+    ${descLines.map((line, i) =>
+      `<text x="${textX}" y="${safeY + 260 + i * 40}" font-family="Inter,system-ui,sans-serif" font-size="28" fill="#334155">${esc(line)}</text>`
+    ).join('\n    ')}
+    <!-- Meta -->
+    <rect x="${textX}" y="${safeY + safeH - 70}" width="220" height="44" rx="22" fill="#eff6ff" stroke="#dbeafe"/>
+    <text x="${textX + 110}" y="${safeY + safeH - 40}" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="18" fill="#1e3a8a">${meta}</text>
+    <text x="${safeX + safeW - 30}" y="${safeY + safeH - 40}" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="600" fill="#64748b">rcarmo.github.io</text>
   </g>
 </svg>`;
 }
@@ -281,7 +303,7 @@ function writeOgCard(name: string, svg: string): void {
   const pngPath = join(OG_OUT, `${name}.png`);
   writeFileSync(svgPath, svg);
   try {
-    const result = Bun.spawnSync([RSVG_CONVERT, '-w', '1200', '-h', '630', '-o', pngPath, svgPath]);
+    const result = Bun.spawnSync([RSVG_CONVERT, '-w', '1280', '-h', '640', '-o', pngPath, svgPath]);
     if (result.exitCode !== 0) console.warn(`  ⚠ rsvg-convert failed for ${name}: ${result.stderr}`);
   } catch(e) {
     console.warn(`  ⚠ rsvg-convert not available, skipping PNG for ${name}`);
@@ -302,9 +324,9 @@ function buildSocialCardSvg(opts: {
   const descLines = wrapOgText(opts.description, 38, 3);
   const lineHeight = 48;
 
-  // Safe zone: 40px border (light grey outside)
-  const safeX = 40, safeY = 40;
-  const safeW = 1280 - 2 * safeX, safeH = 640 - 2 * safeY; // 1200×560
+  // Safe zone: 80px border (light grey outside)
+  const safeX = 80, safeY = 80;
+  const safeW = 1280 - 2 * safeX, safeH = 640 - 2 * safeY; // 1120×480
 
   // Logo: 320×320, centred vertically in safe zone
   const logoSize = 320;
@@ -385,8 +407,8 @@ function buildMetaTags(opts: {
     `<meta property="og:url" content="${esc(opts.canonicalUrl)}">`,
     `<meta property="og:image" content="${esc(opts.imageUrl)}">`,
     `<meta property="og:image:type" content="image/png">`,
-    `<meta property="og:image:width" content="1200">`,
-    `<meta property="og:image:height" content="630">`,
+    `<meta property="og:image:width" content="1280">`,
+    `<meta property="og:image:height" content="640">`,
     `<meta property="og:image:alt" content="${esc(opts.imageAlt)}">`,
     `<meta name="twitter:card" content="summary_large_image">`,
     `<meta name="twitter:title" content="${esc(opts.title)}">`,
