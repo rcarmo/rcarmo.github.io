@@ -584,6 +584,7 @@ ${CLARITY_SNIPPET}
         </div>
         <div class="hero-actions">
           <a class="btn btn-primary" href="${ghUrl}" target="_blank" rel="noopener">View on GitHub ↗</a>
+          <span id="hero-release-badge-${id}" class="hero-release-badge"></span>
         </div>
       </div>
       <div id="hero-related-${id}" class="hero-related" hidden></div>
@@ -651,14 +652,24 @@ ${posts.length ? `      <section class="sec" id="s-posts">
   <script type="module" src="/assets/js/repo-island.mjs?v=${ASSET_VERSION}"></script>
   <script type="module">
     import { mount } from '/assets/js/repo-island.mjs?v=${ASSET_VERSION}';
+    import { mountTypeahead } from '/assets/js/typeahead.js?v=${ASSET_VERSION}';
     mount({
       fullName: '${fullName}',
       heroMetaEl: document.getElementById('hero-meta-island-${id}'),
       statsEl:    document.getElementById('stats-island-${id}'),
       releasesEl: document.getElementById('rel-island-${id}'),
+      releaseBadgeEl: document.getElementById('hero-release-badge-${id}'),
       relatedEl:  document.getElementById('hero-related-${id}'),
       relatedCandidates: ${JSON.stringify(relatedCandidates)},
     });
+    const TYPEAHEAD_DATA = ${JSON.stringify(allProjects.map(p => ({
+      name: p.id,
+      tagline: p.fm.tagline || '',
+      url: `/projects/${p.id}/`,
+      logo: logoSrc(p) || '',
+      section: p.fm.section || '',
+    })))};
+    mountTypeahead(() => TYPEAHEAD_DATA);
   </script>
   <script>
     // Lightbox
@@ -912,83 +923,15 @@ ${CLARITY_SNIPPET}
     <span class="foot-r"><a href="https://carmo.io">Career</a> · <a href="https://taoofmac.com">Blog</a> · <a href="https://github.com/rcarmo">GitHub</a></span>
   </footer>
 
-  <script type="module" src="/assets/js/repo-island.mjs?v=${ASSET_VERSION}"></script>
   <script type="module">
     import { mountIndex, mountHeroStats } from '/assets/js/repo-island.mjs?v=${ASSET_VERSION}';
+    import { mountTypeahead, itemsFromCards } from '/assets/js/typeahead.js?v=${ASSET_VERSION}';
     const ALL_FULL_NAMES = ${JSON.stringify(allFullNames)};
     mountIndex(ALL_FULL_NAMES);
     mountHeroStats(document.getElementById('hero-stats-island'), ALL_FULL_NAMES);
+    mountTypeahead(itemsFromCards);
   </script>
-  <script>
-  (function(){
-    const typeahead = {
-      buffer: '',
-      matches: [],
-      selectedIndex: -1,
-      isActive: false,
 
-      init() {
-        document.addEventListener('keydown', (e) => {
-          if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA' || e.target.isContentEditable) return;
-          if (e.key === 'Escape') { this.clear(); return; }
-          if (e.key === 'Backspace') { e.preventDefault(); this.buffer = this.buffer.slice(0,-1); this.search(); return; }
-          if (e.key === 'ArrowDown' && this.isActive) { e.preventDefault(); this.selectedIndex = (this.selectedIndex+1) % this.matches.length; this.highlight(); return; }
-          if (e.key === 'ArrowUp' && this.isActive) { e.preventDefault(); this.selectedIndex = (this.selectedIndex-1+this.matches.length) % this.matches.length; this.highlight(); return; }
-          if (e.key === 'Enter' && this.isActive && this.selectedIndex >= 0) { e.preventDefault(); window.location.href = this.matches[this.selectedIndex].url; this.clear(); return; }
-          if (e.key.length === 1 && !e.ctrlKey && !e.metaKey) { this.buffer += e.key; this.search(); }
-        });
-      },
-
-      getAllItems() {
-        return [...document.querySelectorAll('.card')].map(card => ({
-          name: (card.querySelector('.card-name') || card.querySelector('.card-name-featured'))?.textContent?.trim() || '',
-          tagline: (card.querySelector('.card-tagline') || card.querySelector('.card-tagline-featured'))?.textContent?.trim() || '',
-          url: card.getAttribute('href') || '#',
-          logo: card.querySelector('img')?.getAttribute('src') || '',
-          section: card.closest('.idx-section')?.querySelector('.idx-section-title')?.textContent?.trim() || '',
-        }));
-      },
-
-      search() {
-        const popup = document.getElementById('typeahead-popup');
-        if (!this.buffer) { this.clear(); return; }
-        const q = this.buffer.toLowerCase();
-        this.matches = this.getAllItems().filter(function(item){ return (item.name + ' ' + item.tagline).toLowerCase().indexOf(q) >= 0; }).slice(0, 8);
-        if (!this.matches.length) { this.clear(); return; }
-        popup.innerHTML = '<div class="typeahead-header"><span class="typeahead-query">' + this.esc(this.buffer) + '</span><kbd>↑↓</kbd> navigate · <kbd>⏎</kbd> open · <kbd>esc</kbd> close</div>' +
-          this.matches.map((m, i) =>
-            '<a class="typeahead-item' + (i===0?' active':'') + '" href="' + this.esc(m.url) + '">' +
-            (m.logo ? '<img class="typeahead-logo" src="' + this.esc(m.logo) + '" alt="">' : '<span class="typeahead-logo-placeholder"></span>') +
-            '<div class="typeahead-text"><div class="typeahead-name">' + this.esc(m.name) + '</div>' +
-            '<div class="typeahead-tagline">' + this.esc(m.tagline) + '</div></div>' +
-            '<span class="typeahead-section">' + this.esc(m.section) + '</span></a>'
-          ).join('');
-        popup.classList.remove('hidden');
-        this.isActive = true;
-        this.selectedIndex = 0;
-      },
-
-      highlight() {
-        const items = document.querySelectorAll('.typeahead-item');
-        items.forEach((el, i) => el.classList.toggle('active', i === this.selectedIndex));
-        if (items[this.selectedIndex]) items[this.selectedIndex].scrollIntoView({ block: 'nearest' });
-      },
-
-      clear() {
-        this.buffer = '';
-        this.matches = [];
-        this.selectedIndex = -1;
-        this.isActive = false;
-        const popup = document.getElementById('typeahead-popup');
-        popup.classList.add('hidden');
-        popup.innerHTML = '';
-      },
-
-      esc(s) { return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
-    };
-    typeahead.init();
-  })();
-  </script>
 </body>
 </html>`;
 }

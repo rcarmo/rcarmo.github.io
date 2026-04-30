@@ -257,7 +257,7 @@ function renderHeroRelated(el, currentFullName, relatedCandidates, repoMap) {
   el.hidden = false;
 }
 
-async function renderReleaseList(el, fullName) {
+async function renderReleaseList(el, fullName, badgeEl) {
   if (!el || !fullName) return;
   el.innerHTML = `<div class="rel-loading"><span class="skel" style="width:10rem"></span></div>`;
   try {
@@ -267,6 +267,13 @@ async function renderReleaseList(el, fullName) {
     if (!Array.isArray(releases) || !releases.length) {
       el.innerHTML = '';
       return;
+    }
+
+    // Populate latest-release badge
+    if (badgeEl && releases[0]?.tag_name) {
+      const tag = releases[0].tag_name;
+      const url = `https://github.com/${fullName}/releases/tag/${encodeURIComponent(tag)}`;
+      badgeEl.innerHTML = `<a href="${url}" target="_blank" rel="noopener" class="release-badge">${tag}</a>`;
     }
 
     el.innerHTML = `<div class="release-list">${releases.map((r) => `
@@ -281,7 +288,7 @@ async function renderReleaseList(el, fullName) {
   }
 }
 
-export function mount({ fullName, heroMetaEl, statsEl, releasesEl, relatedEl, relatedCandidates = [] }) {
+export function mount({ fullName, heroMetaEl, statsEl, releasesEl, releaseBadgeEl, relatedEl, relatedCandidates = [] }) {
   const fetchNames = [fullName, ...relatedCandidates.map((candidate) => candidate.fullName)];
   fetchAllRepos(fetchNames).then((repoMap) => {
     const repo = repoMap[fullName] || null;
@@ -294,7 +301,7 @@ export function mount({ fullName, heroMetaEl, statsEl, releasesEl, relatedEl, re
     renderHeroRelated(relatedEl, fullName, relatedCandidates, {});
   });
 
-  if (releasesEl) renderReleaseList(releasesEl, fullName);
+  if (releasesEl) renderReleaseList(releasesEl, fullName, releaseBadgeEl);
 }
 
 export function mountIndex(allFullNames) {
