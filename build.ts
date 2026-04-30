@@ -306,8 +306,8 @@ function buildSocialCardSvg(opts: {
   const safeX = 40, safeY = 40;
   const safeW = 1280 - 2 * safeX, safeH = 640 - 2 * safeY; // 1200×560
 
-  // Logo: 240×240, centred vertically in safe zone
-  const logoSize = 240;
+  // Logo: 320×320, centred vertically in safe zone
+  const logoSize = 320;
   const logoX = safeX + 40;
   const logoY = safeY + Math.round((safeH - logoSize) / 2);
 
