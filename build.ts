@@ -601,7 +601,6 @@ ${CLARITY_SNIPPET}
         </div>
         <div class="hero-actions">
           <a class="btn btn-primary" href="${ghUrl}" target="_blank" rel="noopener">View on GitHub ↗</a>
-          <span id="hero-release-badge-${id}" class="hero-release-badge"></span>
         </div>
       </div>
       <div id="hero-related-${id}" class="hero-related" hidden></div>
@@ -680,7 +679,6 @@ ${posts.length ? `      <section class="sec" id="s-posts">
       heroMetaEl: document.getElementById('hero-meta-island-${id}'),
       statsEl:    document.getElementById('stats-island-${id}'),
       releasesEl: document.getElementById('rel-island-${id}'),
-      releaseBadgeEl: document.getElementById('hero-release-badge-${id}'),
       relatedEl:  document.getElementById('hero-related-${id}'),
       relatedCandidates: ${JSON.stringify(relatedCandidates)},
     });

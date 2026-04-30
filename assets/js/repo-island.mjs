@@ -151,7 +151,7 @@ function renderHeroMeta(el, repo) {
   `;
 }
 
-function renderStatsBar(el, repo) {
+function renderStatsBar(el, repo, fullName) {
   if (!el) return;
   el.innerHTML = `
     <div class="stat">
@@ -170,7 +170,32 @@ function renderStatsBar(el, repo) {
       <div class="stat-label">Created</div>
       <div class="stat-value stat-value-sm">${repo ? repo.created_at?.slice(0, 4) : '—'}</div>
     </div>
+    <div class="stat stat-release" id="stat-release" style="display:none">
+      <div class="stat-label">Release</div>
+      <div class="stat-value stat-value-sm"><a id="stat-release-link" href="#"></a></div>
+    </div>
   `;
+  // Fetch latest release and append inline
+  if (fullName) {
+    fetch(`https://api.github.com/repos/${fullName}/releases?per_page=1`)
+      .then(r => r.ok ? r.json() : [])
+      .then(releases => {
+        if (Array.isArray(releases) && releases.length && releases[0].tag_name) {
+          const tag = releases[0].tag_name;
+          const url = `https://github.com/${fullName}/releases/tag/${encodeURIComponent(tag)}`;
+          const stat = el.querySelector('#stat-release');
+          const link = el.querySelector('#stat-release-link');
+          if (stat && link) {
+            link.href = url;
+            link.target = '_blank';
+            link.rel = 'noopener';
+            link.textContent = tag;
+            stat.style.display = '';
+          }
+        }
+      })
+      .catch(() => {});
+  }
 }
 
 function renderHeroStats(el, repoMap, repoCount, totalPublicRepos) {
@@ -257,53 +282,43 @@ function renderHeroRelated(el, currentFullName, relatedCandidates, repoMap) {
   el.hidden = false;
 }
 
-async function renderReleaseList(el, fullName, badgeEl) {
-  if (!fullName || (!el && !badgeEl)) return;
-  if (el) el.innerHTML = `<div class="rel-loading"><span class="skel" style="width:10rem"></span></div>`;
+async function renderReleaseList(el, fullName) {
+  if (!fullName || !el) return;
+  el.innerHTML = `<div class="rel-loading"><span class="skel" style="width:10rem"></span></div>`;
   try {
     const res = await fetch(`https://api.github.com/repos/${fullName}/releases?per_page=5`);
     if (!res.ok) throw new Error('release fetch failed');
     const releases = await res.json();
     if (!Array.isArray(releases) || !releases.length) {
-      if (el) el.innerHTML = '';
+      el.innerHTML = '';
       return;
     }
-
-    // Populate latest-release badge
-    if (badgeEl && releases[0]?.tag_name) {
-      const tag = releases[0].tag_name;
-      const url = `https://github.com/${fullName}/releases/tag/${encodeURIComponent(tag)}`;
-      badgeEl.innerHTML = `<a href="${url}" target="_blank" rel="noopener" class="release-badge">${tag}</a>`;
-    }
-
-    if (el) {
-      el.innerHTML = `<div class="release-list">${releases.map((r) => `
-        <div class="release-item">
-          <span class="rel-tag">${r.tag_name || ''}</span>
-          <span class="rel-date">${fmtDate(r.published_at)}</span>
-          <span class="rel-name">${r.name && r.name !== r.tag_name ? r.name : ''}</span>
-        </div>
-      `).join('')}</div>`;
-    }
+    el.innerHTML = `<div class="release-list">${releases.map((r) => `
+      <div class="release-item">
+        <span class="rel-tag">${r.tag_name || ''}</span>
+        <span class="rel-date">${fmtDate(r.published_at)}</span>
+        <span class="rel-name">${r.name && r.name !== r.tag_name ? r.name : ''}</span>
+      </div>
+    `).join('')}</div>`;
   } catch {
-    if (el) el.innerHTML = '';
+    el.innerHTML = '';
   }
 }
 
-export function mount({ fullName, heroMetaEl, statsEl, releasesEl, releaseBadgeEl, relatedEl, relatedCandidates = [] }) {
+export function mount({ fullName, heroMetaEl, statsEl, releasesEl, relatedEl, relatedCandidates = [] }) {
   const fetchNames = [fullName, ...relatedCandidates.map((candidate) => candidate.fullName)];
   fetchAllRepos(fetchNames).then((repoMap) => {
     const repo = repoMap[fullName] || null;
     renderHeroMeta(heroMetaEl, repo);
-    renderStatsBar(statsEl, repo);
+    renderStatsBar(statsEl, repo, fullName);
     renderHeroRelated(relatedEl, fullName, relatedCandidates, repoMap);
   }).catch(() => {
     renderHeroMeta(heroMetaEl, null);
-    renderStatsBar(statsEl, null);
+    renderStatsBar(statsEl, null, fullName);
     renderHeroRelated(relatedEl, fullName, relatedCandidates, {});
   });
 
-  renderReleaseList(releasesEl, fullName, releaseBadgeEl);
+  renderReleaseList(releasesEl, fullName);
 }
 
 export function mountIndex(allFullNames) {
