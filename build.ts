@@ -277,9 +277,9 @@ function buildOgCardSvg(opts: {
     <rect x="${safeX}" y="${safeY}" width="${safeW}" height="${safeH}" rx="20" fill="none" stroke="#d7e3f4"/>
     <!-- Accent bar: straight, thick -->
     <rect x="${safeX}" y="${safeY}" width="${safeW}" height="24" fill="url(#accent)"/>
-    <!-- Repo roundrect — top right -->
-    <rect x="${safeX + safeW - 260}" y="${safeY + 40}" width="240" height="44" rx="8" fill="#eff6ff" stroke="#dbeafe"/>
-    <text x="${safeX + safeW - 140}" y="${safeY + 69}" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="18" fill="#1e3a8a">${meta}</text>
+    <!-- Repo roundrect — top right, auto-sized -->
+    ${(() => { const rw = Math.max(meta.length * 11 + 28, 120); return `<rect x="${safeX + safeW - rw - 20}" y="${safeY + 38}" width="${rw}" height="44" rx="8" fill="#eff6ff" stroke="#dbeafe"/>
+    <text x="${safeX + safeW - 20 - rw/2}" y="${safeY + 67}" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="18" font-weight="700" fill="#1e3a8a">${meta}</text>`; })()}
     <!-- Logo -->
     <rect x="${logoX}" y="${logoY}" width="${logoSize}" height="${logoSize}" rx="36" fill="#eff6ff" stroke="#dbe5f1"/>
     ${imageDataUri
