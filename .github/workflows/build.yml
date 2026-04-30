@@ -20,8 +20,8 @@ jobs:
         with:
           bun-version: latest
 
-      - name: Install rsvg-convert
-        run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq librsvg2-bin
+      - name: Install rsvg-convert and fonts
+        run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq librsvg2-bin fonts-inter
 
       - name: Build site
         run: bun run build.ts

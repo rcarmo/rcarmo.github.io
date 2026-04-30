@@ -8,7 +8,7 @@
  *
  * Usage: bun run build.ts
  */
-import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, rmSync } from "node:fs";
+import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, rmSync, unlinkSync } from "node:fs";
 import { extname, join } from "node:path";
 
 // ── Paths ────────────────────────────────────────────────────────────────────
@@ -288,6 +288,74 @@ function writeOgCard(name: string, svg: string): void {
   }
 }
 
+// ── Social card (1280×640, GitHub OG-style) ─────────────────────────────────
+
+function buildSocialCardSvg(opts: {
+  name: string;
+  description: string;
+  imageDataUri?: string | null;
+}): string {
+  const name = esc(opts.name);
+  const imageDataUri = opts.imageDataUri || '';
+
+  // Word-wrap the description: ~50 chars per line, max 3 lines
+  const descLines = wrapOgText(opts.description, 50, 3);
+  const lineHeight = 42;
+
+  // Layout: vertically centre the whole group in the 640px canvas
+  // Logo 180×180 sits to the left; text block beside it
+  const nameLineH = 56;
+  const gapAfterName = 16;
+  const textBlockH = nameLineH + gapAfterName + descLines.length * lineHeight;
+  const groupH = Math.max(180, textBlockH);
+  const groupY = Math.round((640 - groupH) / 2);
+
+  const logoX = 120;
+  const logoY = groupY + Math.round((groupH - 180) / 2);
+  const textX = logoX + 180 + 60; // logo width + gap
+  const textCenterY = groupY + Math.round(groupH / 2); // vertical centre of group
+  const nameY = textCenterY - (textBlockH / 2) + nameLineH - 8;
+  const descStartY = nameY + gapAfterName + lineHeight - 4;
+
+  return `<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="${name}">
+  <rect width="1280" height="640" fill="#ffffff"/>
+  <defs>
+    <clipPath id="socialLogoClip">
+      <rect x="${logoX}" y="${logoY}" width="180" height="180" rx="32"/>
+    </clipPath>
+  </defs>
+  <!-- Logo -->
+  <rect x="${logoX}" y="${logoY}" width="180" height="180" rx="32" fill="#f3f4f6" stroke="#e5e7eb"/>
+  ${imageDataUri
+    ? `<image href="${imageDataUri}" x="${logoX + 10}" y="${logoY + 10}" width="160" height="160" preserveAspectRatio="xMidYMid meet" clip-path="url(#socialLogoClip)"/>`
+    : `<text x="${logoX + 90}" y="${logoY + 112}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="72" font-weight="700" fill="#9ca3af">◉</text>`}
+  <!-- Name -->
+  <text x="${textX}" y="${nameY}" font-family="Inter,system-ui,sans-serif" font-size="52" font-weight="700" fill="#111827">${name}</text>
+  <!-- Description -->
+  ${descLines.map((line, i) =>
+    `<text x="${textX}" y="${descStartY + i * lineHeight}" font-family="Inter,system-ui,sans-serif" font-size="30" fill="#4b5563">${esc(line)}</text>`
+  ).join('\n  ')}
+</svg>`;
+}
+
+function writeSocialCard(id: string, svg: string): void {
+  const dir = join(ROOT, 'projects', id);
+  mkdirSync(dir, { recursive: true });
+  const svgPath = join(dir, 'social.svg');
+  const pngPath = join(dir, 'social.png');
+  writeFileSync(svgPath, svg);
+  try {
+    const result = Bun.spawnSync([RSVG_CONVERT, '-w', '1280', '-h', '640', '-o', pngPath, svgPath]);
+    if (result.exitCode !== 0) console.warn(`  ⚠ social card failed for ${id}: ${result.stderr}`);
+    // Remove intermediate SVG
+    unlinkSync(svgPath);
+  } catch(e) {
+    console.warn(`  ⚠ rsvg-convert not available, skipping social card for ${id}`);
+  }
+}
+
 function buildMetaTags(opts: {
   title: string;
   description: string;
@@ -441,6 +509,14 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
     accent: palette[fm.section || ''] || '#2563eb',
     meta: fullName,
   }));
+
+  // Social card (1280×640, GitHub OG-style)
+  writeSocialCard(id, buildSocialCardSvg({
+    name: id,
+    description: fm.tagline || '',
+    imageDataUri: assetDataUri(logo),
+  }));
+
   const metaTags = buildMetaTags({
     title: `${id} — rcarmo`,
     description: fm.tagline || '',
