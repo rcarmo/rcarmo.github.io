@@ -239,13 +239,14 @@ function buildOgCardSvg(opts: {
   const safeX = 80, safeY = 80;
   const safeW = 1280 - 2 * safeX, safeH = 640 - 2 * safeY; // 1120×480
 
-  // Logo: 200×200 inside the card
-  const logoX = safeX + 44;
-  const logoY = safeY + Math.round((safeH - 200) / 2);
+  // Logo: 280×280 inside the card, vertically centred
+  const logoSize = 280;
+  const logoX = safeX + 36;
+  const logoY = safeY + Math.round((safeH - logoSize) / 2);
 
-  const textX = logoX + 200 + 44;
-  const descLines = wrapOgText(opts.description, 36, 3);
-  const nameFontSize = title.length > 24 ? 42 : title.length > 18 ? 50 : 58;
+  const textX = logoX + logoSize + 44;
+  const descLines = wrapOgText(opts.description, 32, 3);
+  const nameFontSize = title.length > 24 ? 46 : title.length > 18 ? 54 : 64;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
@@ -263,7 +264,7 @@ function buildOgCardSvg(opts: {
       <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#8aa3c4" flood-opacity="0.18"/>
     </filter>
     <clipPath id="logoClip">
-      <rect x="${logoX}" y="${logoY}" width="200" height="200" rx="36"/>
+      <rect x="${logoX}" y="${logoY}" width="${logoSize}" height="${logoSize}" rx="36"/>
     </clipPath>
   </defs>
   <!-- Background -->
@@ -272,26 +273,27 @@ function buildOgCardSvg(opts: {
   <circle cx="110" cy="590" r="200" fill="#eff6ff" opacity="0.85"/>
   <!-- Card -->
   <g filter="url(#shadow)">
-    <rect x="${safeX}" y="${safeY}" width="${safeW}" height="${safeH}" rx="34" fill="#ffffff"/>
-    <rect x="${safeX}" y="${safeY}" width="${safeW}" height="${safeH}" rx="34" fill="none" stroke="#d7e3f4"/>
-    <rect x="${safeX}" y="${safeY}" width="${safeW}" height="14" rx="14" fill="url(#accent)"/>
+    <rect x="${safeX}" y="${safeY}" width="${safeW}" height="${safeH}" rx="20" fill="#ffffff"/>
+    <rect x="${safeX}" y="${safeY}" width="${safeW}" height="${safeH}" rx="20" fill="none" stroke="#d7e3f4"/>
+    <!-- Accent bar: straight, thick enough to cover top rounded corners -->
+    <rect x="${safeX}" y="${safeY}" width="${safeW}" height="24" fill="url(#accent)"/>
     <!-- Logo -->
-    <rect x="${logoX}" y="${logoY}" width="200" height="200" rx="36" fill="#eff6ff" stroke="#dbe5f1"/>
+    <rect x="${logoX}" y="${logoY}" width="${logoSize}" height="${logoSize}" rx="36" fill="#eff6ff" stroke="#dbe5f1"/>
     ${imageDataUri
-      ? `<image href="${imageDataUri}" x="${logoX + 12}" y="${logoY + 12}" width="176" height="176" preserveAspectRatio="xMidYMid meet" clip-path="url(#logoClip)"/>`
-      : `<text x="${logoX + 100}" y="${logoY + 125}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="80" font-weight="700" fill="#2563eb">\u25c9</text>`}
+      ? `<image href="${imageDataUri}" x="${logoX + 12}" y="${logoY + 12}" width="${logoSize - 24}" height="${logoSize - 24}" preserveAspectRatio="xMidYMid meet" clip-path="url(#logoClip)"/>`
+      : `<text x="${logoX + logoSize/2}" y="${logoY + logoSize * 0.62}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="96" font-weight="700" fill="#2563eb">\u25c9</text>`}
     <!-- Kicker -->
-    <text x="${textX}" y="${safeY + 130}" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="700" letter-spacing="1.5" fill="${accent}">${kicker}</text>
+    <text x="${textX}" y="${safeY + 110}" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="700" letter-spacing="1.5" fill="${accent}">${kicker}</text>
     <!-- Title -->
-    <text x="${textX}" y="${safeY + 200}" font-family="Inter,system-ui,sans-serif" font-size="${nameFontSize}" font-weight="700" fill="#0f172a">${title}</text>
+    <text x="${textX}" y="${safeY + 185}" font-family="Inter,system-ui,sans-serif" font-size="${nameFontSize}" font-weight="700" fill="#0f172a">${title}</text>
     <!-- Description -->
     ${descLines.map((line, i) =>
-      `<text x="${textX}" y="${safeY + 260 + i * 40}" font-family="Inter,system-ui,sans-serif" font-size="28" fill="#334155">${esc(line)}</text>`
+      `<text x="${textX}" y="${safeY + 252 + i * 46}" font-family="Inter,system-ui,sans-serif" font-size="32" fill="#334155">${esc(line)}</text>`
     ).join('\n    ')}
     <!-- Meta -->
-    <rect x="${textX}" y="${safeY + safeH - 70}" width="220" height="44" rx="22" fill="#eff6ff" stroke="#dbeafe"/>
-    <text x="${textX + 110}" y="${safeY + safeH - 40}" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="18" fill="#1e3a8a">${meta}</text>
-    <text x="${safeX + safeW - 30}" y="${safeY + safeH - 40}" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="600" fill="#64748b">rcarmo.github.io</text>
+    <rect x="${textX}" y="${safeY + safeH - 70}" width="240" height="48" rx="24" fill="#eff6ff" stroke="#dbeafe"/>
+    <text x="${textX + 120}" y="${safeY + safeH - 38}" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="20" fill="#1e3a8a">${meta}</text>
+    <text x="${safeX + safeW - 24}" y="${safeY + safeH - 38}" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="600" fill="#64748b">rcarmo.github.io</text>
   </g>
 </svg>`;
 }
