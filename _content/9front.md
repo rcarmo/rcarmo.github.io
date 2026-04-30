@@ -9,6 +9,9 @@ logo: assets/logos-opt/9front.png
 ## About
 A port of [9front](http://9front.org) — the community fork of Plan 9 from Bell Labs — to the [Orange Pi 4 Pro](http://www.orangepi.org/html/hardWare/computerAndMicrocontrollers/service-and-support/Orange-Pi-4-Pro.html) (Allwinner A733, 8-core ARM64). Provides a QEMU-based development workflow and SD card image builder for bringing up 9front on new hardware.
 
+## Motivation
+I needed a refresher on `uboot` as a stepping stone to get [Haiku](haiku-arm64-build) running that board, and Plan9/9front is a kernel simple enough to wrap my head around while doing hardware bringup. And being who I am, I decided to be systematic about it.
+
 ## How it works
 A cross-compilation harness builds the kernel inside a running 9front QEMU instance via automated `expect` scripts. Port files in `port/a733/` are packed into a FAT image, mounted inside the VM, compiled against the 9front kernel tree, and the resulting kernel is extracted and placed into a bootable SD card image with Allwinner SPL and U-Boot.
 

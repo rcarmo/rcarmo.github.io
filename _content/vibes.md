@@ -9,6 +9,11 @@ logo: assets/logos-opt/vibes.png
 ## About
 Vibes is a lightweight Python web app for talking to AI coding agents from a phone. Supports ACP (GitHub Copilot CLI, OpenAI Codex) and Pi agents via RPC. Single Python file server, single HTML UI, no build step.
 
+## Motivation
+I wanted something I could use on my iPhone and iPad, but I found the idea of using OpenClaw and 
+After creating [Vibes](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting, so when I stumbled upon [Pi](https://pi.dev) and its amazing extensibility, I knew I had found a great way to explore how to build an agent-based IDE that I could run from my iPad. I am now converting it to Go, original Python code in the `python` branch.
+
+
 ## How it works
 The server uses aiohttp with server-sent events for streaming. When a message arrives from the browser, it forwards to the configured agent backend and streams tokens back via SSE. The UI is a single HTML file — no bundler, no npm. Fork it and make it yours in an afternoon. PiClaw and Vibes share the same web UI codebase.
 
@@ -21,9 +26,6 @@ copilot --acp, OpenAI Codex, Pi agents. Protocol adapters are pluggable.
 
 ### 🚿 SSE streaming
 Live token streaming. No polling, no spinners.
-
-### 🔩 Zero build step
-One Python file. One HTML file. Clone and run.
 
 ## Posts
 - [Notes for April 13-19](https://taoofmac.com/space/notes/2026/04/19/1400) — 2026-04-21
