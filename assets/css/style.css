@@ -964,3 +964,18 @@ footer {
 }
 .release-badge::before { content:'🏷 '; font-style:normal; }
 .release-badge:hover { background:var(--accent-bg);color:var(--accent);border-color:var(--accent); }
+
+/* ── Motivation / Background section ────────────────────────────────────── */
+.sec-motivation {
+  background: var(--surface2);
+  border-left: 3px solid var(--accent);
+  border-radius: var(--radius);
+  padding: 1.25rem 1.5rem;
+}
+.sec-motivation .sec-label {
+  color: var(--accent);
+}
+.motivation-body p { margin-bottom: 0.75rem; color: var(--text-dim); font-style: italic; }
+.motivation-body p:last-child { margin-bottom: 0; }
+.motivation-body a { color: var(--accent); }
+.motivation-body a:hover { text-decoration: underline; }

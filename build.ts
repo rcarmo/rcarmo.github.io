@@ -317,7 +317,7 @@ function buildMetaTags(opts: {
   ].join("\n");
 }
 
-function mdToHtml(md: string): string {
+function mdToHtml(md: string, resolveProjectLinks = false): string {
   // Minimal markdown→html: paragraphs, inline code, bold, italic, links
   // Preserves raw HTML (SVGs, etc.) passed through
   return md
@@ -332,10 +332,23 @@ function mdToHtml(md: string): string {
         .replace(/`([^`]+)`/g, "<code>$1</code>")
         .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
         .replace(/\*([^*]+)\*/g, "<em>$1</em>")
-        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+        .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, label, href) => {
+          // Local project link: bare name with no slash/protocol → /projects/{name}/
+          const isLocal = resolveProjectLinks &&
+            !/^https?:\/\//.test(href) &&
+            !href.startsWith('/') &&
+            !href.startsWith('.');
+          const resolved = isLocal ? `/projects/${href}/` : href;
+          const external = /^https?:\/\//.test(resolved);
+          return `<a href="${resolved}"${ external ? ' target="_blank" rel="noopener"' : ''}>${label}</a>`;
+        });
       return `<p>${block}</p>`;
     })
     .join("\n");
+}
+
+function mdToHtmlLocal(md: string): string {
+  return mdToHtml(md, true);
 }
 
 // ── Logo handling ────────────────────────────────────────────────────────────
@@ -439,6 +452,9 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
 
   // Gather content sections
   const aboutHtml    = getSectionHtml(project, "About");
+  const motivationSection = getSection(project, "Motivation") || getSection(project, "Background");
+  const motivationHtml = motivationSection ? mdToHtmlLocal(motivationSection.body) : "";
+  const motivationLabel = motivationSection?.heading || "";
   const howHtml      = getSectionHtml(project, "How it works");
   const gallerySection = getSection(project, "Gallery");
   const gallery      = gallerySection ? parseGallery(gallerySection.body) : [];
@@ -452,6 +468,7 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
   // TOC
   const toc: { id: string; label: string }[] = [];
   if (aboutHtml) toc.push({ id: "s-about", label: "Overview" });
+  if (motivationHtml) toc.push({ id: "s-motivation", label: motivationLabel });
   if (howHtml) toc.push({ id: "s-how", label: "How it works" });
   if (features.length) toc.push({ id: "s-features", label: "Features" });
   if (diagramSection) toc.push({ id: "s-diagram", label: "Diagram" });
@@ -605,6 +622,11 @@ ${heroGalleryHtml}
 ${aboutHtml ? `      <section class="sec" id="s-about">
         <div class="sec-label">Overview</div>
         ${aboutHtml}
+      </section>` : ""}
+
+${motivationHtml ? `      <section class="sec sec-motivation" id="s-motivation">
+        <div class="sec-label">${esc(motivationLabel)}</div>
+        <div class="motivation-body">${motivationHtml}</div>
       </section>` : ""}
 
 ${howHtml ? `      <section class="sec" id="s-how">
