@@ -1,4 +1,4 @@
-name: Build portfolio site
+name: Build and deploy portfolio site
 on:
   push:
     tags:
@@ -14,7 +14,7 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
-          fetch-depth: 0   # full history so push doesn't fail on shallow clone
+          fetch-depth: 0
 
       - uses: oven-sh/setup-bun@v2
         with:
@@ -26,16 +26,20 @@ jobs:
       - name: Build site
         run: bun run build.ts
 
-      - name: Commit and push if changed
-        run: |
-          git config user.name  "github-actions[bot]"
-          git config user.email "github-actions[bot]@users.noreply.github.com"
-          git add index.html projects/ assets/og/ assets/fonts/
-          if git diff --cached --quiet; then
-            echo "Nothing to commit."
-            exit 0
-          fi
-          git commit -m "Rebuild site [skip ci]"
-          # Pull any remote changes with merge (never rebase) before pushing
-          git pull --no-rebase --no-edit origin master || true
-          git push origin HEAD:master
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
+          force_orphan: true
+          exclude_assets: >-
+            .gitignore,.gitattributes,
+            .github,
+            _content,
+            build.ts,package.json,bun.lockb,bun.lock,
+            AUDIT.md,AGENTS.md,
+            workitems,
+            node_modules,
+            .pi
+          commit_message: "Deploy ${{ github.ref_name }} [skip ci]"
