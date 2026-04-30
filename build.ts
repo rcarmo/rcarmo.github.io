@@ -298,44 +298,55 @@ function buildSocialCardSvg(opts: {
   const name = esc(opts.name);
   const imageDataUri = opts.imageDataUri || '';
 
-  // Word-wrap the description: ~50 chars per line, max 3 lines
-  const descLines = wrapOgText(opts.description, 50, 3);
-  const lineHeight = 42;
+  // Word-wrap the description: ~38 chars per line, max 3 lines
+  const descLines = wrapOgText(opts.description, 38, 3);
+  const lineHeight = 48;
 
-  // Layout: vertically centre the whole group in the 640px canvas
-  // Logo 180×180 sits to the left; text block beside it
-  const nameLineH = 56;
-  const gapAfterName = 16;
+  // Safe zone: 40px border (light grey outside)
+  const safeX = 40, safeY = 40;
+  const safeW = 1280 - 2 * safeX, safeH = 640 - 2 * safeY; // 1200×560
+
+  // Logo: 240×240, centred vertically in safe zone
+  const logoSize = 240;
+  const logoX = safeX + 40;
+  const logoY = safeY + Math.round((safeH - logoSize) / 2);
+
+  // Text starts after logo + gap
+  const textX = logoX + logoSize + 56;
+
+  // Vertically centre name + description block in safe zone
+  const nameLineH = 64;
+  const gapAfterName = 20;
   const textBlockH = nameLineH + gapAfterName + descLines.length * lineHeight;
-  const groupH = Math.max(180, textBlockH);
-  const groupY = Math.round((640 - groupH) / 2);
+  const textY = safeY + Math.round((safeH - textBlockH) / 2);
+  const nameY = textY + nameLineH - 8;
+  const descStartY = nameY + gapAfterName + lineHeight - 6;
 
-  const logoX = 120;
-  const logoY = groupY + Math.round((groupH - 180) / 2);
-  const textX = logoX + 180 + 60; // logo width + gap
-  const textCenterY = groupY + Math.round(groupH / 2); // vertical centre of group
-  const nameY = textCenterY - (textBlockH / 2) + nameLineH - 8;
-  const descStartY = nameY + gapAfterName + lineHeight - 4;
+  // Adaptive name font size: shrink for long names
+  const nameFontSize = name.length > 24 ? 44 : name.length > 18 ? 52 : 60;
 
   return `<?xml version="1.0" encoding="UTF-8"?>
 <svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
      width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="${name}">
-  <rect width="1280" height="640" fill="#ffffff"/>
+  <!-- Unsafe zone (light grey) -->
+  <rect width="1280" height="640" fill="#f0f0f0"/>
+  <!-- Safe zone (white) -->
+  <rect x="${safeX}" y="${safeY}" width="${safeW}" height="${safeH}" fill="#ffffff"/>
   <defs>
     <clipPath id="socialLogoClip">
-      <rect x="${logoX}" y="${logoY}" width="180" height="180" rx="32"/>
+      <rect x="${logoX}" y="${logoY}" width="${logoSize}" height="${logoSize}" rx="36"/>
     </clipPath>
   </defs>
   <!-- Logo -->
-  <rect x="${logoX}" y="${logoY}" width="180" height="180" rx="32" fill="#f3f4f6" stroke="#e5e7eb"/>
+  <rect x="${logoX}" y="${logoY}" width="${logoSize}" height="${logoSize}" rx="36" fill="#f3f4f6" stroke="#e5e7eb"/>
   ${imageDataUri
-    ? `<image href="${imageDataUri}" x="${logoX + 10}" y="${logoY + 10}" width="160" height="160" preserveAspectRatio="xMidYMid meet" clip-path="url(#socialLogoClip)"/>`
-    : `<text x="${logoX + 90}" y="${logoY + 112}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="72" font-weight="700" fill="#9ca3af">◉</text>`}
+    ? `<image href="${imageDataUri}" x="${logoX + 10}" y="${logoY + 10}" width="${logoSize - 20}" height="${logoSize - 20}" preserveAspectRatio="xMidYMid meet" clip-path="url(#socialLogoClip)"/>`
+    : `<text x="${logoX + logoSize/2}" y="${logoY + logoSize * 0.62}" text-anchor="middle" font-family="Inter,system-ui,sans-serif" font-size="96" font-weight="700" fill="#9ca3af">\u25c9</text>`}
   <!-- Name -->
-  <text x="${textX}" y="${nameY}" font-family="Inter,system-ui,sans-serif" font-size="52" font-weight="700" fill="#111827">${name}</text>
+  <text x="${textX}" y="${nameY}" font-family="Inter,system-ui,sans-serif" font-size="${nameFontSize}" font-weight="700" fill="#111827">${name}</text>
   <!-- Description -->
   ${descLines.map((line, i) =>
-    `<text x="${textX}" y="${descStartY + i * lineHeight}" font-family="Inter,system-ui,sans-serif" font-size="30" fill="#4b5563">${esc(line)}</text>`
+    `<text x="${textX}" y="${descStartY + i * lineHeight}" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#4b5563">${esc(line)}</text>`
   ).join('\n  ')}
 </svg>`;
 }
