@@ -30,21 +30,21 @@ make install, thumbnails appear immediately.
 - [Homelab Update](https://taoofmac.com/space/blog/2022/10/28/1900) — 2022-10-28
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 208">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 188">
   <style>
     /* Default: light mode (for rsvg-convert and non-media-query agents) */
     .bg { fill: transparent; }
-    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box { fill: #ffffff; stroke: #707070; stroke-width: 1.5; }
     .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-green { fill: #74a7ff; stroke: #012f7b; stroke-width: 1.5; }
     .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
-    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
-    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
-    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-purple { fill: #adadad; stroke: #000000; stroke-width: 1.5; }
+    .box-teal { fill: #ebebeb; stroke: #474747; stroke-width: 1.5; }
+    .box-slate { fill: #a7c6ff; stroke: #0042a9; stroke-width: 1.5; }
+    .box-indigo { fill: #dfeed4; stroke: #4e7a27; stroke-width: 1.5; }
+    .box-rose { fill: #dfeed4; stroke: #76bb40; stroke-width: 1.5; }
     .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
-    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .box-cyan { fill: #d9c9fe; stroke: #5e30eb; stroke-width: 1.5; }
     .label { fill: #1a2a40; }
     .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
@@ -52,17 +52,17 @@ make install, thumbnails appear immediately.
     .sub { font-size: 11px; }
     @media (prefers-color-scheme: dark) {
       .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box { fill: #1a1e2a; stroke: #505050; }
       .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
-      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-green { fill: #0a1a3a; stroke: #4a80d0; }
       .box-warm { fill: #221a10; stroke: #a06020; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; }
-      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
-      .box-slate { fill: #1e293b; stroke: #475569; }
-      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
-      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-purple { fill: #222222; stroke: #666666; }
+      .box-teal { fill: #1e1e1e; stroke: #666666; }
+      .box-slate { fill: #0d1a38; stroke: #4a7ad0; }
+      .box-indigo { fill: #1a2810; stroke: #5a8a30; }
+      .box-rose { fill: #1a2810; stroke: #5aaa30; }
       .box-orange { fill: #2a1a08; stroke: #f97316; }
-      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .box-cyan { fill: #1a1030; stroke: #7040d0; }
       .label { fill: #d0daf0; }
       .sub { fill: #5070a0; }
     }
@@ -75,28 +75,28 @@ make install, thumbnails appear immediately.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="780" height="208" class="bg" rx="8"/>
+  <rect width="720" height="188" class="bg" rx="8"/>
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="120" y="56" text-anchor="middle" class="label">GNOME Files</text>
   <text x="120" y="74" text-anchor="middle" class="sub">thumbnailer call</text>
 
-  <rect x="290" y="30" width="180" height="60" rx="8" class="box-accent"/>
-  <text x="380" y="56" text-anchor="middle" class="label">RAW/HEIC</text>
-  <text x="380" y="74" text-anchor="middle" class="sub">dcraw · libheif</text>
+  <rect x="270" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="360" y="56" text-anchor="middle" class="label">RAW/HEIC</text>
+  <text x="360" y="74" text-anchor="middle" class="sub">dcraw · libheif</text>
 
-  <rect x="290" y="118" width="180" height="60" rx="8" class="box-warm"/>
-  <text x="380" y="144" text-anchor="middle" class="label">3D (STL/OBJ)</text>
-  <text x="380" y="162" text-anchor="middle" class="sub">blender headless</text>
+  <rect x="270" y="118" width="180" height="60" rx="8" class="box-warm"/>
+  <text x="360" y="144" text-anchor="middle" class="label">3D (STL/OBJ)</text>
+  <text x="360" y="162" text-anchor="middle" class="sub">blender headless</text>
 
-  <rect x="550" y="30" width="180" height="60" rx="8" class="box"/>
-  <text x="640" y="56" text-anchor="middle" class="label">PNG thumb</text>
-  <text x="640" y="74" text-anchor="middle" class="sub">~256px cache</text>
+  <rect x="510" y="30" width="180" height="60" rx="8" class="box"/>
+  <text x="600" y="56" text-anchor="middle" class="label">PNG thumb</text>
+  <text x="600" y="74" text-anchor="middle" class="sub">~256px cache</text>
 
-  <path d="M210,60 L290,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-  <path d="M210,60 L236,60 Q250,60 250,74 L250,134 Q250,148 264,148 L290,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-  <path d="M470,60 L550,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-  <path d="M470,148 L496,148 Q510,148 510,134 L510,74 Q510,60 524,60 L550,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M210,60 L270,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M210,60 L226,60 Q240,60 240,74 L240,134 Q240,148 254,148 L270,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M450,60 L510,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M450,148 L466,148 Q480,148 480,134 L480,74 Q480,60 494,60 L510,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
 
 </svg>
