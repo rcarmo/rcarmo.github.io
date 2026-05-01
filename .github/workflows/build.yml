@@ -26,6 +26,9 @@ jobs:
       - name: Build site
         run: bun run build.ts
 
+      - name: Audit links
+        run: bun audit-links.ts
+
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -37,7 +40,7 @@ jobs:
             .gitignore,.gitattributes,
             .github,
             _content,
-            build.ts,package.json,bun.lockb,bun.lock,
+            build.ts,audit-links.ts,package.json,bun.lockb,bun.lock,
             AUDIT.md,AGENTS.md,
             workitems,
             node_modules,

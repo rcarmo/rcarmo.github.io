@@ -533,7 +533,7 @@ function getSection(project: Project, heading: string): Section | undefined {
 
 function getSectionHtml(project: Project, heading: string): string {
   const s = getSection(project, heading);
-  return s ? mdToHtml(s.body) : "";
+  return s ? mdToHtmlLocal(s.body) : "";
 }
 
 // ── Build project page ───────────────────────────────────────────────────────
@@ -613,7 +613,7 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
       <div class="feature-icon">${f.icon}</div>
       <div>
         <div class="feature-title">${esc(f.title)}</div>
-        <div class="feature-body">${mdToHtml(f.body)}</div>
+        <div class="feature-body">${mdToHtmlLocal(f.body)}</div>
       </div>
     </div>`).join("\n");
 
