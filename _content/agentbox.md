@@ -35,31 +35,42 @@ Run privileged and agents get their own Docker daemon.
 - [Thoughts on AI-Assisted Software Development in 2026](https://taoofmac.com/space/notes/2026/02/01/2130) — 2026-02-01
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 640 230">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 728 202">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -69,38 +80,35 @@ Run privileged and agents get their own Docker daemon.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
+  <rect width="728" height="202" class="bg" rx="8"/>
 
-  <!-- Row 1: Agent runtimes -->
-  <rect x="16" y="20" width="130" height="70" rx="8" class="box-green"/>
-  <text x="81" y="48" text-anchor="middle" class="label">Agent CLIs</text>
-  <text x="81" y="65" text-anchor="middle" class="sub">copilot · codex · pi</text>
-  <text x="81" y="79" text-anchor="middle" class="sub">claude · toad</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Agent CLI</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">claude / toad / aider</text>
 
-  <rect x="170" y="20" width="130" height="70" rx="8" class="box"/>
-  <text x="235" y="48" text-anchor="middle" class="label">Dev tools</text>
-  <text x="235" y="65" text-anchor="middle" class="sub">git · gh · bun · uv</text>
-  <text x="235" y="79" text-anchor="middle" class="sub">brew · make</text>
+  <rect x="30" y="118" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="120" y="144" text-anchor="middle" class="label">webterm</text>
+  <text x="120" y="162" text-anchor="middle" class="sub">browser terminal UI</text>
 
-  <rect x="324" y="20" width="140" height="70" rx="8" class="box-purple"/>
-  <text x="394" y="48" text-anchor="middle" class="label">Opt-in services</text>
-  <text x="394" y="65" text-anchor="middle" class="sub">Docker-in-Docker</text>
-  <text x="394" y="79" text-anchor="middle" class="sub">SSH · RDP + XFCE</text>
+  <rect x="262" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <rect x="274" y="30" width="180" height="60" rx="8" class="box-slate"/>
+  <text x="364" y="56" text-anchor="middle" class="label">Docker container</text>
+  <text x="364" y="74" text-anchor="middle" class="sub">isolated sandbox</text>
+  <rect x="278" y="98" width="82" height="48" rx="6" class="box"/>
+  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Dev tools</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">git · bun · python</text>
+  <rect x="368" y="98" width="82" height="48" rx="6" class="box"/>
+  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Shell</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">bash + tmux</text>
 
-  <!-- Row 2: Runtime base -->
-  <rect x="16" y="110" width="230" height="55" rx="8" class="box-accent"/>
-  <text x="131" y="135" text-anchor="middle" class="label">Debian Trixie container</text>
-  <text x="131" y="151" text-anchor="middle" class="sub">agent user · passwordless sudo</text>
+  <rect x="518" y="30" width="180" height="60" rx="8" class="box-warm"/>
+  <text x="608" y="56" text-anchor="middle" class="label">Shared workspace</text>
+  <text x="608" y="74" text-anchor="middle" class="sub">bind-mounted volume</text>
 
-  <rect x="270" y="110" width="194" height="55" rx="8" class="box-warm"/>
-  <text x="367" y="135" text-anchor="middle" class="label">/workspace</text>
-  <text x="367" y="151" text-anchor="middle" class="sub">bind mount · SKILL.md skeleton</text>
+  <path d="M210,60 L274,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M454,60 L518,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M210,148 L228,148 Q242,148 242,134 L242,74 Q242,60 256,60 L274,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <text x="242" y="54" text-anchor="middle" class="sub">SSH/exec</text>
 
-  <!-- Arrows: row 1 → row 2 -->
-  <line x1="81" y1="90" x2="81" y2="108" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="235" y1="90" x2="235" y2="108" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="394" y1="90" x2="394" y2="108" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-
-  <!-- Dashed isolation boundary -->
-  <line x1="16" y1="185" x2="464" y2="185" stroke="#5070a0" stroke-width="1" stroke-dasharray="5,3"/>
-  <text x="240" y="200" text-anchor="middle" class="sub">container isolation boundary · host mounts /workspace only</text>
+  <text x="364" y="198" text-anchor="middle" class="sub">Docker sandbox for coding agents with shared workspace</text>
 </svg>

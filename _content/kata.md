@@ -32,31 +32,42 @@ Includes helper commands for Swarm secrets, Traefik inspection, mode switching, 
 - [Go (lang)](https://taoofmac.com/space/dev/golang) — 2026-04-25
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 240">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 326">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -66,36 +77,37 @@ Includes helper commands for Swarm secrets, Traefik inspection, mode switching, 
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
+  <rect width="1040" height="326" class="bg" rx="8"/>
 
-  <rect x="20" y="82" width="150" height="72" rx="8" class="box"/>
-  <text x="95" y="110" text-anchor="middle" class="label">kata-compose.yaml</text>
-  <text x="95" y="127" text-anchor="middle" class="sub">app definition</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box"/>
+  <text x="120" y="56" text-anchor="middle" class="label">kata-compose.yaml</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">app definition</text>
 
-  <rect x="230" y="82" width="170" height="72" rx="8" class="box-accent"/>
-  <text x="315" y="110" text-anchor="middle" class="label">kata wrapper</text>
-  <text x="315" y="127" text-anchor="middle" class="sub">expand helpers + merge config</text>
+  <rect x="290" y="30" width="180" height="60" rx="8" class="box"/>
+  <text x="380" y="56" text-anchor="middle" class="label">kata wrapper</text>
+  <text x="380" y="74" text-anchor="middle" class="sub">expand helpers + merge config</text>
 
-  <rect x="460" y="22" width="150" height="60" rx="8" class="box-purple"/>
-  <text x="535" y="48" text-anchor="middle" class="label">Runtime helpers</text>
-  <text x="535" y="65" text-anchor="middle" class="sub">Python · Node · PHP · Bun</text>
+  <rect x="550" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="640" y="56" text-anchor="middle" class="label">Runtime helpers</text>
+  <text x="640" y="74" text-anchor="middle" class="sub">Python · Node · PHP · Bun</text>
 
-  <rect x="460" y="92" width="150" height="60" rx="8" class="box-green"/>
-  <text x="535" y="118" text-anchor="middle" class="label">Generated compose</text>
-  <text x="535" y="135" text-anchor="middle" class="sub">.docker-compose.yaml</text>
+  <rect x="550" y="118" width="180" height="60" rx="8" class="box-slate"/>
+  <text x="640" y="144" text-anchor="middle" class="label">Generated compose</text>
+  <text x="640" y="162" text-anchor="middle" class="sub">.docker-compose.yaml</text>
 
-  <rect x="460" y="162" width="150" height="60" rx="8" class="box-warm"/>
-  <text x="535" y="188" text-anchor="middle" class="label">App layout</text>
-  <text x="535" y="205" text-anchor="middle" class="sub">code · data · config · logs</text>
+  <rect x="550" y="206" width="180" height="60" rx="8" class="box"/>
+  <text x="640" y="232" text-anchor="middle" class="label">App layout</text>
+  <text x="640" y="250" text-anchor="middle" class="sub">code · data · config · logs</text>
 
-  <rect x="650" y="82" width="90" height="72" rx="8" class="box-green"/>
-  <text x="695" y="110" text-anchor="middle" class="label">Deploy</text>
-  <text x="695" y="127" text-anchor="middle" class="sub">Compose / Swarm</text>
+  <rect x="810" y="30" width="180" height="60" rx="8" class="box-slate"/>
+  <text x="900" y="56" text-anchor="middle" class="label">Deploy</text>
+  <text x="900" y="74" text-anchor="middle" class="sub">Compose / Swarm</text>
 
-  <line x1="170" y1="118" x2="226" y2="118" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="400" y1="118" x2="456" y2="52" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="400" y1="118" x2="456" y2="122" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="400" y1="118" x2="456" y2="192" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="610" y1="122" x2="646" y2="118" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
+  <path d="M210,60 L290,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M470,60 L550,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M470,60 L496,60 Q510,60 510,74 L510,134 Q510,148 524,148 L550,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M470,60 L496,60 Q510,60 510,74 L510,222 Q510,236 524,236 L550,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M730,148 L756,148 Q770,148 770,134 L770,74 Q770,60 784,60 L810,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <text x="380" y="236" text-anchor="middle" class="sub">optional Traefik routing and deploy hooks sit on top of a predictable per-app Docker layout</text>
+  <text x="520" y="318" text-anchor="middle" class="sub">optional Traefik routing and deploy hooks sit on top of a predictable per-app Docker layout</text>
 </svg>

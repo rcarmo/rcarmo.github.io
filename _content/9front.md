@@ -35,31 +35,42 @@ Board bootstrap binaries (SPL, U-Boot, DTB) are checked in under `bootstrap/oran
 - [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 240">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 114">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -69,43 +80,29 @@ Board bootstrap binaries (SPL, U-Boot, DTB) are checked in under `bootstrap/oran
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
+  <rect width="1040" height="114" class="bg" rx="8"/>
 
-  <!-- Host -->
-  <rect x="20" y="60" width="140" height="120" rx="8" class="box"/>
-  <text x="90" y="85" text-anchor="middle" class="label">Host</text>
-  <text x="90" y="103" text-anchor="middle" class="sub">port/a733/</text>
-  <text x="90" y="119" text-anchor="middle" class="sub">make portdisk</text>
-  <text x="90" y="135" text-anchor="middle" class="sub">make kernel</text>
-  <text x="90" y="151" text-anchor="middle" class="sub">make sdcard</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Host</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">make sdcard</text>
 
-  <!-- QEMU 9front -->
-  <rect x="220" y="60" width="150" height="120" rx="8" class="box-accent"/>
-  <text x="295" y="85" text-anchor="middle" class="label">QEMU 9front</text>
-  <text x="295" y="103" text-anchor="middle" class="sub">aarch64 VM</text>
-  <text x="295" y="119" text-anchor="middle" class="sub">FAT portdisk</text>
-  <text x="295" y="135" text-anchor="middle" class="sub">dircp + mk</text>
-  <text x="295" y="151" text-anchor="middle" class="sub">→ 9a733.u</text>
+  <rect x="290" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="380" y="56" text-anchor="middle" class="label">QEMU 9front</text>
+  <text x="380" y="74" text-anchor="middle" class="sub">→ 9a733.u</text>
 
-  <!-- SD Image -->
-  <rect x="440" y="60" width="150" height="120" rx="8" class="box-warm"/>
-  <text x="515" y="85" text-anchor="middle" class="label">SD Card Image</text>
-  <text x="515" y="103" text-anchor="middle" class="sub">SPL @ 8 KiB</text>
-  <text x="515" y="119" text-anchor="middle" class="sub">U-Boot @ 16.8 MiB</text>
-  <text x="515" y="135" text-anchor="middle" class="sub">FAT32: kernel</text>
-  <text x="515" y="151" text-anchor="middle" class="sub">+ boot.scr</text>
+  <rect x="550" y="30" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="640" y="56" text-anchor="middle" class="label">SD Card Image</text>
+  <text x="640" y="74" text-anchor="middle" class="sub">+ boot.scr</text>
 
-  <!-- Hardware -->
-  <rect x="660" y="74" width="100" height="92" rx="8" class="box-green"/>
-  <text x="710" y="102" text-anchor="middle" class="label">Orange Pi</text>
-  <text x="710" y="118" text-anchor="middle" class="label">4 Pro</text>
-  <text x="710" y="138" text-anchor="middle" class="sub">A733 ARM64</text>
-  <text x="710" y="154" text-anchor="middle" class="sub">9front kernel</text>
+  <rect x="810" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="900" y="56" text-anchor="middle" class="label">4 Pro</text>
+  <text x="900" y="74" text-anchor="middle" class="sub">9front kernel</text>
 
-  <!-- Arrows -->
-  <path d="M160,100 Q190,100 216,100" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <text x="188" y="95" text-anchor="middle" class="sub">FAT img</text>
-  <path d="M370,120 Q405,120 436,120" fill="none" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <text x="403" y="115" text-anchor="middle" class="sub">extract</text>
-  <path d="M590,120 Q625,120 656,120" fill="none" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <text x="623" y="115" text-anchor="middle" class="sub">dd →</text>
+  <path d="M210,60 L290,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <text x="250" y="54" text-anchor="middle" class="sub">QEMU</text>
+  <path d="M470,60 L550,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M730,60 L810,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <text x="770" y="54" text-anchor="middle" class="sub">flash</text>
+
+  <text x="520" y="110" text-anchor="middle" class="sub">dd →</text>
 </svg>

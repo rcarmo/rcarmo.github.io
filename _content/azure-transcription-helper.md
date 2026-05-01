@@ -28,56 +28,77 @@ Uses Azure Cognitive Services continuous recognition for high accuracy across ac
 Single Python script with minimal dependencies — `python transcribe.py input.mp4` and you're done.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 230">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 238">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #7f95b5; }
-    }
-    @media (prefers-color-scheme: light) {
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
-    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#5070a0"/></marker>
-    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#3b82f6"/></marker>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
   </defs>
+  <rect width="1040" height="238" class="bg" rx="8"/>
 
-  <rect x="20" y="82" width="140" height="66" rx="10" class="box"/>
-  <text x="90" y="110" text-anchor="middle" class="label">Media file</text>
-  <text x="90" y="127" text-anchor="middle" class="sub">MP4 / MOV / MP3 / MKV</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Media file</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">MP4 / MOV / MP3 / MKV</text>
 
-  <rect x="220" y="82" width="150" height="66" rx="10" class="box-accent"/>
-  <text x="295" y="110" text-anchor="middle" class="label">ffmpeg</text>
-  <text x="295" y="127" text-anchor="middle" class="sub">extract 16 kHz mono WAV</text>
+  <rect x="290" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="380" y="56" text-anchor="middle" class="label">ffmpeg</text>
+  <text x="380" y="74" text-anchor="middle" class="sub">extract 16 kHz mono WAV</text>
 
-  <rect x="430" y="82" width="150" height="66" rx="10" class="box-accent"/>
-  <image href="/assets/azure-icons/speech-services.svg" x="494" y="92" width="22" height="22"/>
-  <text x="505" y="127" text-anchor="middle" class="label">Azure Speech</text>
-  <text x="505" y="142" text-anchor="middle" class="sub">continuous recognition</text>
+  <rect x="550" y="30" width="180" height="60" rx="8" class="box-slate"/>
+  <text x="640" y="56" text-anchor="middle" class="label">Azure Speech</text>
+  <text x="640" y="74" text-anchor="middle" class="sub">continuous recognition</text>
 
-  <rect x="640" y="28" width="100" height="66" rx="10" class="box-green"/>
-  <text x="690" y="56" text-anchor="middle" class="label">Transcript</text>
-  <text x="690" y="73" text-anchor="middle" class="sub">plain text</text>
+  <rect x="810" y="30" width="180" height="60" rx="8" class="box-teal"/>
+  <text x="900" y="56" text-anchor="middle" class="label">Transcript</text>
+  <text x="900" y="74" text-anchor="middle" class="sub">plain text</text>
 
-  <rect x="640" y="136" width="100" height="66" rx="10" class="box-green"/>
-  <text x="690" y="164" text-anchor="middle" class="label">Subtitles</text>
-  <text x="690" y="181" text-anchor="middle" class="sub">SRT output</text>
+  <rect x="810" y="118" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="900" y="144" text-anchor="middle" class="label">Subtitles</text>
+  <text x="900" y="162" text-anchor="middle" class="sub">SRT output</text>
 
-  <line x1="160" y1="115" x2="216" y2="115" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="370" y1="115" x2="426" y2="115" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="580" y1="115" x2="636" y2="61" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="580" y1="115" x2="636" y2="169" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <path d="M210,60 L290,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M470,60 L550,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M730,60 L810,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M730,60 L756,60 Q770,60 770,74 L770,134 Q770,148 784,148 L810,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <text x="380" y="222" text-anchor="middle" class="sub">timestamped phrases become a readable transcript and a subtitle file ready for upload</text>
+  <text x="520" y="230" text-anchor="middle" class="sub">timestamped phrases become a readable transcript and a subtitle file ready for upload</text>
 </svg>

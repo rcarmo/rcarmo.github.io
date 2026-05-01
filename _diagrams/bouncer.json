@@ -1,0 +1,22 @@
+{
+  "nodes": [
+    {
+      "id": "browser",
+      "label": "Browser",
+      "sub": "enrolment token",
+      "column": 0,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "local-state",
+      "label": "Local State",
+      "sub": "CA key + cert",
+      "column": 1,
+      "row": 0,
+      "tag": "state"
+    }
+  ],
+  "edges": [],
+  "title": "any HTTP service"
+}

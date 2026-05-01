@@ -35,63 +35,62 @@ Multiple backends in a single instance, per-site passkey stores.
 Static Go binary; Docker-ready.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 170">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150">
   <style>
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
     @media (prefers-color-scheme: dark) {
-      .box { fill:#1a1e2a; stroke:#2a3040; stroke-width:1.5; }
-      .hi  { fill:#0d1e38; stroke:#2b5cb0; stroke-width:1.5; }
-      .hi2 { fill:#0d2220; stroke:#207060; stroke-width:1.5; }
-      .label{ fill:#d0daf0; } .sub{ fill:#5070a0; }
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
     }
-    @media (prefers-color-scheme: light) {
-      .box { fill:#fff; stroke:#c8d0e0; stroke-width:1.5; }
-      .hi  { fill:#dbeafe; stroke:#3b82f6; stroke-width:1.5; }
-      .hi2 { fill:#d1fae5; stroke:#059669; stroke-width:1.5; }
-      .label{ fill:#1a2a40; } .sub{ fill:#5070a0; }
-    }
-    text { font-family:-apple-system,"Segoe UI",Helvetica,sans-serif; }
-    .label{ font-size:13px; font-weight:600; }
-    .sub  { font-size:11px; }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
       <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
     </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
   </defs>
+  <rect width="520" height="150" class="bg" rx="8"/>
 
-  <!-- Browser / device -->
-  <rect x="8"   y="30" width="110" height="110" rx="8" class="box"/>
-  <text x="63"  y="62" text-anchor="middle" class="label">Browser</text>
-  <text x="63"  y="79" text-anchor="middle" class="sub">Passkey auth</text>
-  <text x="63"  y="95" text-anchor="middle" class="sub">iOS .mobileconfig</text>
-  <text x="63"  y="111" text-anchor="middle" class="sub">enrolment token</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Browser</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">enrolment token</text>
 
-  <line x1="118" y1="85" x2="154" y2="85" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <rect x="290" y="30" width="180" height="60" rx="8" class="box"/>
+  <text x="380" y="56" text-anchor="middle" class="label">Local State</text>
+  <text x="380" y="74" text-anchor="middle" class="sub">CA key + cert</text>
 
-  <!-- Bouncer -->
-  <rect x="156" y="10" width="200" height="150" rx="8" class="hi"/>
-  <text x="256" y="40" text-anchor="middle" class="label">Bouncer</text>
-  <text x="256" y="58" text-anchor="middle" class="sub">WebAuthn · sessions</text>
-  <text x="256" y="74" text-anchor="middle" class="sub">Built-in CA + TLS</text>
-  <text x="256" y="90" text-anchor="middle" class="sub">Onboarding flow</text>
-  <text x="256" y="106" text-anchor="middle" class="sub">Multi-site routing</text>
-  <text x="256" y="122" text-anchor="middle" class="sub">Pushover alerts + geo</text>
-  <text x="256" y="138" text-anchor="middle" class="sub">Cloudflare Tunnel mode</text>
 
-  <line x1="356" y1="85" x2="392" y2="85" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
 
-  <!-- Backend -->
-  <rect x="394" y="50" width="120" height="70" rx="8" class="hi2"/>
-  <text x="454" y="80" text-anchor="middle" class="label">Backend</text>
-  <text x="454" y="97" text-anchor="middle" class="sub">any HTTP service</text>
-
-  <!-- Sessions store -->
-  <rect x="534" y="30" width="158" height="110" rx="8" class="box"/>
-  <text x="613" y="60" text-anchor="middle" class="label">Local State</text>
-  <text x="613" y="77" text-anchor="middle" class="sub">bouncer.json</text>
-  <text x="613" y="93" text-anchor="middle" class="sub">users + config</text>
-  <text x="613" y="109" text-anchor="middle" class="sub">sessions file</text>
-  <text x="613" y="125" text-anchor="middle" class="sub">CA key + cert</text>
-
-  <line x1="514" y1="85" x2="530" y2="85" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <text x="260" y="142" text-anchor="middle" class="sub">any HTTP service</text>
 </svg>

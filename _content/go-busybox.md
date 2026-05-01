@@ -31,31 +31,42 @@ OS-dependent applets stub under WASM.
 - [Notes for February 8-15](https://taoofmac.com/space/notes/2026/02/15/1530) — 2026-02-15
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 240">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 202">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -65,39 +76,33 @@ OS-dependent applets stub under WASM.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="760" height="240" class="bg" rx="8"/>
+  <rect width="1040" height="202" class="bg" rx="8"/>
 
-  <rect x="20" y="86" width="150" height="68" rx="8" class="box-accent"/>
-  <text x="95" y="113" text-anchor="middle" class="label">busybox</text>
-  <text x="95" y="131" text-anchor="middle" class="sub">multi-call entrypoint</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Go applets</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">cat · grep · wc · ...</text>
 
-  <rect x="250" y="26" width="180" height="56" rx="8" class="box"/>
-  <text x="340" y="50" text-anchor="middle" class="label">ls · cat · grep</text>
-  <text x="340" y="67" text-anchor="middle" class="sub">cmd/* applets</text>
+  <rect x="290" y="30" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="380" y="56" text-anchor="middle" class="label">TinyGo compiler</text>
+  <text x="380" y="74" text-anchor="middle" class="sub">multicall binary</text>
 
-  <rect x="250" y="92" width="180" height="56" rx="8" class="box"/>
-  <text x="340" y="116" text-anchor="middle" class="label">find · sed · awk</text>
-  <text x="340" y="133" text-anchor="middle" class="sub">cmd/* applets</text>
+  <rect x="550" y="30" width="180" height="60" rx="8" class="box-warm"/>
+  <text x="640" y="56" text-anchor="middle" class="label">Native binary</text>
+  <text x="640" y="74" text-anchor="middle" class="sub">linux/darwin/windows</text>
 
-  <rect x="250" y="158" width="180" height="56" rx="8" class="box"/>
-  <text x="340" y="182" text-anchor="middle" class="label">ps · tar · wget</text>
-  <text x="340" y="199" text-anchor="middle" class="sub">57 utilities total</text>
+  <rect x="550" y="118" width="180" height="60" rx="8" class="box-warm"/>
+  <text x="640" y="144" text-anchor="middle" class="label">WASM binary</text>
+  <text x="640" y="162" text-anchor="middle" class="sub">4.7 MB sandboxed</text>
 
-  <rect x="510" y="40" width="190" height="64" rx="8" class="box-green"/>
-  <text x="605" y="66" text-anchor="middle" class="label">Static native binary</text>
-  <text x="605" y="84" text-anchor="middle" class="sub">single executable</text>
+  <rect x="810" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="900" y="56" text-anchor="middle" class="label">AI agent</text>
+  <text x="900" y="74" text-anchor="middle" class="sub">wazero runtime</text>
 
-  <rect x="510" y="126" width="190" height="64" rx="8" class="box-warm"/>
-  <text x="605" y="152" text-anchor="middle" class="label">busybox.wasm</text>
-  <text x="605" y="170" text-anchor="middle" class="sub">TinyGo · ~2 MB · stubs</text>
+  <path d="M210,60 L290,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M470,60 L550,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M470,60 L496,60 Q510,60 510,74 L510,134 Q510,148 524,148 L550,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M730,148 L756,148 Q770,148 770,134 L770,74 Q770,60 784,60 L810,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <text x="770" y="54" text-anchor="middle" class="sub">sandbox</text>
 
-  <path d="M170,120 L210,120 Q220,120 220,110 L220,64 Q220,54 230,54 L250,54" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-  <path d="M170,120 L250,120" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
-  <path d="M170,120 L210,120 Q220,120 220,130 L220,186 Q220,186 230,186 L250,186" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-
-  <path d="M430,54 L470,54 Q480,54 480,60 L480,72 Q480,72 490,72 L510,72" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-  <path d="M430,120 L470,120 Q480,120 480,136 L480,158 Q480,158 490,158 L510,158" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
-  <path d="M430,186 L470,186 Q480,186 480,172 L480,158 Q480,158 490,158 L510,158" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-
-  <text x="380" y="230" text-anchor="middle" class="sub">Compiles to a native multi-call binary or a sandboxable WASM module</text>
+  <text x="520" y="198" text-anchor="middle" class="sub">Busybox utilities in Go, compilable to WASM for sandboxed agent execution</text>
 </svg>

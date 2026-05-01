@@ -26,69 +26,88 @@ CUDA, the web UI, and helper scripts are installed automatically on first boot.
 - [A Diffuse Return](https://taoofmac.com/space/blog/2022/11/27/1800) — 2022-11-27
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 280">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 326">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #7f95b5; }
-    }
-    @media (prefers-color-scheme: light) {
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
-    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#5070a0"/></marker>
-    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto"><path d="M0,0 L8,4 L0,8z" fill="#3b82f6"/></marker>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
   </defs>
+  <rect width="1040" height="326" class="bg" rx="8"/>
 
-  <rect x="20" y="102" width="130" height="76" rx="10" class="box"/>
-  <image href="/assets/azure-icons/templates.svg" x="74" y="113" width="22" height="22"/>
-  <text x="85" y="153" text-anchor="middle" class="label">ARM template</text>
-  <text x="85" y="169" text-anchor="middle" class="sub">compute.json</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-slate"/>
+  <text x="120" y="56" text-anchor="middle" class="label">ARM template</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">compute.json</text>
 
-  <rect x="200" y="20" width="180" height="68" rx="10" class="box-green"/>
-  <image href="/assets/azure-icons/storage-accounts.svg" x="279" y="29" width="22" height="22"/>
-  <text x="290" y="66" text-anchor="middle" class="label">Diagnostics storage</text>
-  <text x="290" y="81" text-anchor="middle" class="sub">boot diagnostics account</text>
+  <rect x="290" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="380" y="56" text-anchor="middle" class="label">Diagnostics storage</text>
+  <text x="380" y="74" text-anchor="middle" class="sub">boot diagnostics account</text>
 
-  <rect x="200" y="106" width="180" height="68" rx="10" class="box-accent"/>
-  <image href="/assets/azure-icons/virtual-machine.svg" x="279" y="115" width="22" height="22"/>
-  <text x="290" y="152" text-anchor="middle" class="label">GPU spot VM</text>
-  <text x="290" y="167" text-anchor="middle" class="sub">Ubuntu + OS disk only</text>
+  <rect x="290" y="118" width="180" height="60" rx="8" class="box-green"/>
+  <text x="380" y="144" text-anchor="middle" class="label">GPU spot VM</text>
+  <text x="380" y="162" text-anchor="middle" class="sub">Ubuntu + OS disk only</text>
 
-  <rect x="200" y="192" width="180" height="68" rx="10" class="box"/>
-  <text x="290" y="228" text-anchor="middle" class="label">Network resources</text>
-  <text x="290" y="243" text-anchor="middle" class="sub">VNet + NIC + PIP + NSG</text>
+  <rect x="290" y="206" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="380" y="232" text-anchor="middle" class="label">Network resources</text>
+  <text x="380" y="250" text-anchor="middle" class="sub">VNet + NIC + PIP + NSG</text>
 
-  <rect x="450" y="52" width="180" height="68" rx="10" class="box-green"/>
-  <text x="540" y="88" text-anchor="middle" class="label">cloud-init</text>
-  <text x="540" y="103" text-anchor="middle" class="sub">CUDA + AUTOMATIC1111</text>
+  <rect x="550" y="30" width="180" height="60" rx="8" class="box-slate"/>
+  <text x="640" y="56" text-anchor="middle" class="label">cloud-init</text>
+  <text x="640" y="74" text-anchor="middle" class="sub">CUDA + AUTOMATIC1111</text>
 
-  <rect x="450" y="160" width="180" height="68" rx="10" class="box-accent"/>
-  <text x="540" y="196" text-anchor="middle" class="label">Spot helper</text>
-  <text x="540" y="211" text-anchor="middle" class="sub">preemption + maintenance</text>
+  <rect x="550" y="118" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="640" y="144" text-anchor="middle" class="label">Spot helper</text>
+  <text x="640" y="162" text-anchor="middle" class="sub">preemption + maintenance</text>
 
-  <rect x="700" y="102" width="140" height="76" rx="10" class="box-green"/>
-  <text x="770" y="136" text-anchor="middle" class="label">Web UI</text>
-  <text x="770" y="152" text-anchor="middle" class="sub">SSH tunnel → 7860</text>
+  <rect x="810" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="900" y="56" text-anchor="middle" class="label">Web UI</text>
+  <text x="900" y="74" text-anchor="middle" class="sub">SSH tunnel → 7860</text>
 
-  <line x1="150" y1="121" x2="196" y2="54" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="150" y1="140" x2="196" y2="140" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="150" y1="159" x2="196" y2="226" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="380" y1="140" x2="446" y2="86" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="380" y1="140" x2="446" y2="194" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="630" y1="86" x2="696" y2="126" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="630" y1="194" x2="696" y2="154" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <path d="M210,60 L290,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M210,60 L236,60 Q250,60 250,74 L250,134 Q250,148 264,148 L290,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M210,60 L236,60 Q250,60 250,74 L250,222 Q250,236 264,236 L290,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M470,148 L496,148 Q510,148 510,134 L510,74 Q510,60 524,60 L550,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M470,148 L550,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M730,60 L810,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M730,148 L756,148 Q770,148 770,134 L770,74 Q770,60 784,60 L810,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <text x="430" y="272" text-anchor="middle" class="sub">actual compute.json layout: diagnostics account, one spot VM, one network stack, and VM bootstrap scripts feeding the web UI</text>
+  <text x="520" y="318" text-anchor="middle" class="sub">actual compute.json layout: diagnostics account, one spot VM, one network stack, and VM bootstrap scripts feeding the web UI</text>
 </svg>

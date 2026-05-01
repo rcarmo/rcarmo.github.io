@@ -35,31 +35,42 @@ Built-in device flow / PKCE helpers for supported providers.
 - [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 860 280">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1066 202">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -69,43 +80,49 @@ Built-in device flow / PKCE helpers for supported providers.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="860" height="280" class="bg" rx="8"/>
+  <rect width="1066" height="202" class="bg" rx="8"/>
 
-  <rect x="20" y="72" width="180" height="72" rx="8" class="box-accent"/>
-  <text x="110" y="100" text-anchor="middle" class="label">Go app / agent</text>
-  <text x="110" y="118" text-anchor="middle" class="sub">Context + tools + model</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Your Go app</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">Stream() / Complete()</text>
 
-  <rect x="270" y="40" width="220" height="78" rx="8" class="box-green"/>
-  <text x="380" y="70" text-anchor="middle" class="label">go-ai core</text>
-  <text x="380" y="88" text-anchor="middle" class="sub">Stream() / Complete()</text>
-  <text x="380" y="106" text-anchor="middle" class="sub">provider registry + event stream</text>
+  <rect x="30" y="118" width="180" height="60" rx="8" class="box"/>
+  <text x="120" y="144" text-anchor="middle" class="label">Config</text>
+  <text x="120" y="162" text-anchor="middle" class="sub">auth.json · env vars</text>
 
-  <rect x="270" y="156" width="220" height="72" rx="8" class="box-purple"/>
-  <text x="380" y="184" text-anchor="middle" class="label">Shared types</text>
-  <text x="380" y="202" text-anchor="middle" class="sub">Message · Context · ToolCall · Usage</text>
+  <rect x="262" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <rect x="274" y="30" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="364" y="56" text-anchor="middle" class="label">Registry</text>
+  <text x="364" y="74" text-anchor="middle" class="sub">provider + model discovery</text>
+  <rect x="278" y="98" width="82" height="48" rx="6" class="box-teal"/>
+  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Tool calling</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">auto-dispatch</text>
+  <rect x="368" y="98" width="82" height="48" rx="6" class="box"/>
+  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Context mgmt</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">overflow/trim</text>
 
-  <rect x="560" y="24" width="180" height="72" rx="8" class="box"/>
-  <text x="650" y="52" text-anchor="middle" class="label">Provider adapters</text>
-  <text x="650" y="70" text-anchor="middle" class="sub">OpenAI · Anthropic · Google</text>
-  <text x="650" y="88" text-anchor="middle" class="sub">Mistral · Bedrock · Codex</text>
+  <rect x="510" y="22" width="294" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <rect x="567" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="657" y="64" text-anchor="middle" class="label">Providers</text>
+  <rect x="526" y="98" width="82" height="48" rx="6" class="box-indigo"/>
+  <text x="567" y="119" text-anchor="middle" class="label" style="font-size:11px">OpenAI</text>
+  <text x="567" y="133" text-anchor="middle" class="sub" style="font-size:9px">Chat + Responses</text>
+  <rect x="616" y="98" width="82" height="48" rx="6" class="box-indigo"/>
+  <text x="657" y="119" text-anchor="middle" class="label" style="font-size:11px">Anthropic</text>
+  <text x="657" y="133" text-anchor="middle" class="sub" style="font-size:9px">Messages API</text>
+  <rect x="706" y="98" width="82" height="48" rx="6" class="box-indigo"/>
+  <text x="747" y="119" text-anchor="middle" class="label" style="font-size:11px">Copilot</text>
+  <text x="747" y="133" text-anchor="middle" class="sub" style="font-size:9px">OAuth + token</text>
 
-  <rect x="560" y="120" width="180" height="72" rx="8" class="box-warm"/>
-  <text x="650" y="148" text-anchor="middle" class="label">Model registry</text>
-  <text x="650" y="166" text-anchor="middle" class="sub">generated models + discovery</text>
+  <rect x="856" y="30" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="946" y="56" text-anchor="middle" class="label">Event stream</text>
+  <text x="946" y="74" text-anchor="middle" class="sub">SSE deltas · tool calls</text>
 
-  <rect x="560" y="216" width="180" height="44" rx="8" class="box-warm"/>
-  <text x="650" y="242" text-anchor="middle" class="label">OAuth helpers · PKCE/device flow</text>
+  <path d="M210,60 L274,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M210,148 L228,148 Q242,148 242,134 L242,74 Q242,60 256,60 L274,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M454,60 L567,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <text x="511" y="54" text-anchor="middle" class="sub">SSE</text>
+  <path d="M747,60 L856,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <rect x="770" y="72" width="70" height="72" rx="8" class="box-green"/>
-  <text x="805" y="100" text-anchor="middle" class="label">LLM</text>
-  <text x="805" y="118" text-anchor="middle" class="sub">APIs</text>
-
-  <path d="M200,108 L270,108" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
-  <path d="M380,118 L380,156" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-  <path d="M490,79 L525,79 Q535,79 535,69 L535,60 Q535,60 545,60 L560,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-  <path d="M490,79 L525,79 Q535,79 535,146 L535,156 Q535,156 545,156 L560,156" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-  <path d="M490,79 L525,79 Q535,79 535,228 L535,238 Q535,238 545,238 L560,238" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ah)"/>
-  <path d="M740,60 L755,60 Q765,60 765,70 L765,98 Q765,108 770,108" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
-
-  <text x="430" y="268" text-anchor="middle" class="sub">JSON-compatible with pi-ai for Go ↔ TypeScript hand-off</text>
+  <text x="533" y="198" text-anchor="middle" class="sub">Unified Go inference library — multi-provider streaming with tool calling</text>
 </svg>

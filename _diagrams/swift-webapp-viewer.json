@@ -1,0 +1,17 @@
+{
+  "title": "Native macOS shell for site-specific browsers — no Safari chrome",
+  "nodes": [
+    { "id": "config",  "label": "URL config",        "sub": "plist / CLI arg",           "tag": "state",      "column": 0, "row": 0 },
+    { "id": "app",     "label": "WebKit shell",       "sub": "WKWebView wrapper",         "tag": "web",        "column": 1, "row": 0,
+      "children": [
+        { "id": "nav",   "label": "Navigation",  "sub": "URL filtering",  "tag": "processing" },
+        { "id": "keys",  "label": "Key handler",  "sub": "⌘W · fullscreen", "tag": "web" }
+      ]
+    },
+    { "id": "window",  "label": "Native window",      "sub": "no browser furniture",      "tag": "output",     "column": 2, "row": 0 }
+  ],
+  "edges": [
+    { "from": "config", "to": "app",    "accent": true },
+    { "from": "app",    "to": "window" }
+  ]
+}

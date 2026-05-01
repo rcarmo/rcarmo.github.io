@@ -29,61 +29,62 @@ Original 68030 Cube, NeXTcube/station variants, NeXTdimension board.
 `-DENABLE_EXPERIMENTAL_UAE2026_JIT=ON` — keeps upstream usable in parallel.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 680 160">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 520 150">
   <style>
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
     @media (prefers-color-scheme: dark) {
-      .box { fill:#1a1e2a; stroke:#2a3040; stroke-width:1.5; }
-      .hi  { fill:#1a0d28; stroke:#7030a0; stroke-width:1.5; }
-      .hi2 { fill:#0d1e38; stroke:#2b5cb0; stroke-width:1.5; }
-      .label{ fill:#d0daf0; } .sub{ fill:#5070a0; }
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
     }
-    @media (prefers-color-scheme: light) {
-      .box { fill:#fff; stroke:#c8d0e0; stroke-width:1.5; }
-      .hi  { fill:#ede9fe; stroke:#7c3aed; stroke-width:1.5; }
-      .hi2 { fill:#dbeafe; stroke:#3b82f6; stroke-width:1.5; }
-      .label{ fill:#1a2a40; } .sub{ fill:#5070a0; }
-    }
-    text { font-family:-apple-system,"Segoe UI",Helvetica,sans-serif; }
-    .label{ font-size:13px; font-weight:600; }
-    .sub  { font-size:11px; }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
       <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
     </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
   </defs>
+  <rect width="520" height="150" class="bg" rx="8"/>
 
-  <!-- Previous core -->
-  <rect x="8"   y="30" width="130" height="100" rx="8" class="box"/>
-  <text x="73"  y="62" text-anchor="middle" class="label">Previous core</text>
-  <text x="73"  y="79" text-anchor="middle" class="sub">NeXT HW emulation</text>
-  <text x="73"  y="95" text-anchor="middle" class="sub">M68K interpreter</text>
-  <text x="73"  y="111" text-anchor="middle" class="sub">68030 / 68040</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Previous core</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">68030 / 68040</text>
 
-  <line x1="138" y1="80" x2="174" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <rect x="290" y="30" width="180" height="60" rx="8" class="box-slate"/>
+  <text x="380" y="56" text-anchor="middle" class="label">ARM64 Host</text>
+  <text x="380" y="74" text-anchor="middle" class="sub">Orange Pi</text>
 
-  <!-- JIT bridge -->
-  <rect x="176" y="30" width="140" height="100" rx="8" class="hi"/>
-  <text x="246" y="62" text-anchor="middle" class="label">JIT Bridge</text>
-  <text x="246" y="79" text-anchor="middle" class="sub">uae2026_jit_bridge.cpp</text>
-  <text x="246" y="95" text-anchor="middle" class="sub">compiler_unit.cpp</text>
-  <text x="246" y="111" text-anchor="middle" class="sub">CPU loop hooks</text>
+  <path d="M210,60 L290,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <line x1="316" y1="80" x2="352" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-
-  <!-- uae_cpu_2026 -->
-  <rect x="354" y="30" width="150" height="100" rx="8" class="hi2"/>
-  <text x="429" y="62" text-anchor="middle" class="label">uae_cpu_2026</text>
-  <text x="429" y="79" text-anchor="middle" class="sub">AArch64 JIT compiler</text>
-  <text x="429" y="95" text-anchor="middle" class="sub">transplanted from</text>
-  <text x="429" y="111" text-anchor="middle" class="sub">macemu-jit</text>
-
-  <line x1="504" y1="80" x2="540" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-
-  <!-- ARM64 host -->
-  <rect x="542" y="30" width="130" height="100" rx="8" class="box"/>
-  <text x="607" y="62" text-anchor="middle" class="label">ARM64 Host</text>
-  <text x="607" y="79" text-anchor="middle" class="sub">Apple Silicon</text>
-  <text x="607" y="95" text-anchor="middle" class="sub">Raspberry Pi 5</text>
-  <text x="607" y="111" text-anchor="middle" class="sub">Orange Pi</text>
+  <text x="260" y="142" text-anchor="middle" class="sub">macemu-jit</text>
 </svg>

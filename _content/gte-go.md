@@ -36,31 +36,42 @@ Default `make` produces a fully self-contained static binary with no C dependenc
 - [GOGC comparison](assets/screenshots/gte-go/gogc-comparison.svg) — GC pressure under different GOGC settings
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 780 280">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 818 202">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -70,46 +81,39 @@ Default `make` produces a fully self-contained static binary with no C dependenc
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
+  <rect width="818" height="202" class="bg" rx="8"/>
 
-  <!-- Input -->
-  <rect x="20" y="100" width="120" height="64" rx="8" class="box"/>
-  <text x="80" y="126" text-anchor="middle" class="label">Go string</text>
-  <text x="80" y="142" text-anchor="middle" class="sub">text input</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Input text</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">query or document</text>
 
-  <!-- Tokenizer -->
-  <rect x="190" y="100" width="130" height="64" rx="8" class="box-accent"/>
-  <text x="255" y="126" text-anchor="middle" class="label">WordPiece</text>
-  <text x="255" y="142" text-anchor="middle" class="sub">tokenizer in Go</text>
+  <rect x="30" y="118" width="180" height="60" rx="8" class="box"/>
+  <text x="120" y="144" text-anchor="middle" class="label">GGUF weights</text>
+  <text x="120" y="162" text-anchor="middle" class="sub">23 MB model file</text>
 
-  <!-- SIMD Kernels -->
-  <rect x="370" y="80" width="160" height="104" rx="8" class="box-purple"/>
-  <text x="450" y="108" text-anchor="middle" class="label">SIMD Kernels</text>
-  <text x="450" y="126" text-anchor="middle" class="sub">AVX2+FMA / NEON</text>
-  <text x="450" y="144" text-anchor="middle" class="sub">NT matmul, dot, pack</text>
-  <text x="450" y="162" text-anchor="middle" class="sub">1 alloc, 0 goroutines</text>
+  <rect x="262" y="22" width="294" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <rect x="319" y="30" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="409" y="56" text-anchor="middle" class="label">Embed pipeline</text>
+  <text x="409" y="74" text-anchor="middle" class="sub">single static binary</text>
+  <rect x="278" y="98" width="82" height="48" rx="6" class="box-purple"/>
+  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Tokenizer</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">WordPiece</text>
+  <rect x="368" y="98" width="82" height="48" rx="6" class="box-purple"/>
+  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">6L Attention</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">BERT encoder</text>
+  <rect x="458" y="98" width="82" height="48" rx="6" class="box-purple"/>
+  <text x="499" y="119" text-anchor="middle" class="label" style="font-size:11px">Mean pool</text>
+  <text x="499" y="133" text-anchor="middle" class="sub" style="font-size:9px">L2 normalize</text>
 
-  <!-- Output -->
-  <rect x="580" y="100" width="100" height="64" rx="8" class="box-green"/>
-  <text x="630" y="126" text-anchor="middle" class="label">[]float32</text>
-  <text x="630" y="142" text-anchor="middle" class="sub">384-dim L2-norm</text>
+  <rect x="608" y="30" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="698" y="56" text-anchor="middle" class="label">384-dim vector</text>
+  <text x="698" y="74" text-anchor="middle" class="sub">similarity · clustering</text>
 
-  <!-- Model file -->
-  <rect x="390" y="20" width="120" height="36" rx="8" class="box-warm"/>
-  <text x="450" y="43" text-anchor="middle" class="sub">.gtemodel weights</text>
+  <path d="M210,60 L319,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M210,148 L251,148 Q265,148 265,134 L265,74 Q265,60 279,60 L319,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M499,60 L608,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
 
-  <!-- Perf box -->
-  <rect x="370" y="210" width="160" height="48" rx="8" class="box"/>
-  <text x="450" y="232" text-anchor="middle" class="sub">~10ms/embed amd64</text>
-  <text x="450" y="248" text-anchor="middle" class="sub">~700 B/s GC pressure</text>
-
-  <!-- Arrows -->
-  <line x1="140" y1="132" x2="186" y2="132" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="320" y1="132" x2="366" y2="132" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="530" y1="132" x2="576" y2="132" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="450" y1="56" x2="450" y2="76" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="450" y1="184" x2="450" y2="206" stroke="#5070a0" stroke-width="1.2" stroke-dasharray="4,3" marker-end="url(#ah)"/>
-
-  <text x="390" y="270" text-anchor="middle" class="sub">pure Go + SIMD assembly — no CGo, no gonum, no goroutine churn</text>
+  <text x="409" y="198" text-anchor="middle" class="sub">Pure Go GTE-small — single binary, 1 alloc per embed, flat latency</text>
 </svg>
 
 ## Posts

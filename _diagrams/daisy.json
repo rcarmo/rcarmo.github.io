@@ -1,0 +1,39 @@
+{
+  "nodes": [
+    {
+      "id": "ai-spec",
+      "label": "AI spec",
+      "sub": "structured comments",
+      "column": 0,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "copilot",
+      "label": "Copilot",
+      "sub": "code generation",
+      "column": 1,
+      "row": 0,
+      "tag": "external"
+    },
+    {
+      "id": "swiftui",
+      "label": "SwiftUI",
+      "sub": "treemap app",
+      "column": 2,
+      "row": 0,
+      "tag": "web"
+    }
+  ],
+  "edges": [
+    {
+      "from": "ai-spec",
+      "to": "copilot"
+    },
+    {
+      "from": "copilot",
+      "to": "swiftui"
+    }
+  ],
+  "title": ""
+}

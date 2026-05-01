@@ -28,31 +28,42 @@ Pure Python 3 stdlib.
 - [Reviving a MacBook Air with Fedora Silverblue](https://taoofmac.com/space/blog/2025/11/05/2200) — 2025-11-05
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 220">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 818 178">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -62,31 +73,32 @@ Pure Python 3 stdlib.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
+  <rect width="818" height="178" class="bg" rx="8"/>
 
-  <rect x="20" y="76" width="140" height="68" rx="8" class="box-warm"/>
-  <text x="90" y="104" text-anchor="middle" class="label">YAML config</text>
-  <text x="90" y="121" text-anchor="middle" class="sub">desired state</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">YAML config</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">steps · packages · files</text>
 
-  <rect x="230" y="76" width="170" height="68" rx="8" class="box-accent"/>
-  <text x="315" y="104" text-anchor="middle" class="label">ground-init</text>
-  <text x="315" y="121" text-anchor="middle" class="sub">check current state first</text>
+  <rect x="262" y="22" width="294" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <rect x="319" y="30" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="409" y="56" text-anchor="middle" class="label">Provisioner</text>
+  <text x="409" y="74" text-anchor="middle" class="sub">Python orchestrator</text>
+  <rect x="278" y="98" width="82" height="48" rx="6" class="box-slate"/>
+  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Network</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">interfaces</text>
+  <rect x="368" y="98" width="82" height="48" rx="6" class="box-slate"/>
+  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Packages</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">apt / pip</text>
+  <rect x="458" y="98" width="82" height="48" rx="6" class="box-warm"/>
+  <text x="499" y="119" text-anchor="middle" class="label" style="font-size:11px">Files</text>
+  <text x="499" y="133" text-anchor="middle" class="sub" style="font-size:9px">templates</text>
 
-  <rect x="470" y="24" width="160" height="56" rx="8" class="box-green"/>
-  <text x="550" y="48" text-anchor="middle" class="label">Packages</text>
-  <text x="550" y="65" text-anchor="middle" class="sub">apt / rpm-ostree</text>
+  <rect x="608" y="30" width="180" height="60" rx="8" class="box-slate"/>
+  <text x="698" y="56" text-anchor="middle" class="label">Target VM</text>
+  <text x="698" y="74" text-anchor="middle" class="sub">SSH / local exec</text>
 
-  <rect x="470" y="84" width="160" height="56" rx="8" class="box"/>
-  <text x="550" y="108" text-anchor="middle" class="label">Files + users</text>
-  <text x="550" y="125" text-anchor="middle" class="sub">content, ownership, accounts</text>
+  <path d="M210,60 L319,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M499,60 L608,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <rect x="470" y="144" width="160" height="56" rx="8" class="box-purple"/>
-  <text x="550" y="168" text-anchor="middle" class="label">Services + scripts</text>
-  <text x="550" y="185" text-anchor="middle" class="sub">systemd, git, shell hooks</text>
-
-  <line x1="160" y1="110" x2="226" y2="110" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="400" y1="110" x2="466" y2="52" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="400" y1="110" x2="466" y2="112" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="400" y1="110" x2="466" y2="172" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-
-  <text x="360" y="214" text-anchor="middle" class="sub">re-running verifies and converges state instead of redoing work</text>
+  <text x="409" y="174" text-anchor="middle" class="sub">Declarative VM provisioning — cloud-init alternative for bare metal</text>
 </svg>

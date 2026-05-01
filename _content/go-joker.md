@@ -33,75 +33,83 @@ Designed to be embedded in gi as the Clojure scripting engine; same process, min
 - [Cross-language comparison](assets/screenshots/go-joker/benchmark-cross-language.svg) — Joker vs Goja, Bun/JSC, Python 3.13
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 700 160">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 202">
   <style>
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
     @media (prefers-color-scheme: dark) {
-      .box { fill:#1a1e2a; stroke:#2a3040; stroke-width:1.5; }
-      .hi  { fill:#0d1e38; stroke:#2b5cb0; stroke-width:1.5; }
-      .hi2 { fill:#0d2220; stroke:#207060; stroke-width:1.5; }
-      .hi3 { fill:#1a0d28; stroke:#7030a0; stroke-width:1.5; }
-      .label{ fill:#d0daf0; } .sub{ fill:#5070a0; }
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
     }
-    @media (prefers-color-scheme: light) {
-      .box { fill:#fff; stroke:#c8d0e0; stroke-width:1.5; }
-      .hi  { fill:#dbeafe; stroke:#3b82f6; stroke-width:1.5; }
-      .hi2 { fill:#d1fae5; stroke:#059669; stroke-width:1.5; }
-      .hi3 { fill:#ede9fe; stroke:#7c3aed; stroke-width:1.5; }
-      .label{ fill:#1a2a40; } .sub{ fill:#5070a0; }
-    }
-    text { font-family:-apple-system,"Segoe UI",Helvetica,sans-serif; }
-    .label{ font-size:13px; font-weight:600; }
-    .sub  { font-size:11px; }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
       <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
     </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
   </defs>
+  <rect width="1040" height="202" class="bg" rx="8"/>
 
-  <!-- Input -->
-  <rect x="8"   y="40" width="90" height="80" rx="8" class="box"/>
-  <text x="53"  y="74" text-anchor="middle" class="label">Clojure</text>
-  <text x="53"  y="91" text-anchor="middle" class="sub">source code</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Joker source</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">Clojure-like syntax</text>
 
-  <line x1="98" y1="80" x2="130" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <rect x="290" y="30" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="380" y="56" text-anchor="middle" class="label">Reader + Parser</text>
+  <text x="380" y="74" text-anchor="middle" class="sub">AST generation</text>
 
-  <!-- Parser -->
-  <rect x="132" y="40" width="100" height="80" rx="8" class="hi"/>
-  <text x="182" y="68" text-anchor="middle" class="label">Parser</text>
-  <text x="182" y="85" text-anchor="middle" class="sub">TCO rewriting</text>
-  <text x="182" y="101" text-anchor="middle" class="sub">macro expand</text>
+  <rect x="550" y="30" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="640" y="56" text-anchor="middle" class="label">IR Compiler</text>
+  <text x="640" y="74" text-anchor="middle" class="sub">tco + optimizations</text>
 
-  <!-- Arrow down to IR -->
-  <line x1="232" y1="80" x2="264" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <rect x="550" y="118" width="180" height="60" rx="8" class="box-warm"/>
+  <text x="640" y="144" text-anchor="middle" class="label">WASM target</text>
+  <text x="640" y="162" text-anchor="middle" class="sub">browser / wazero</text>
 
-  <!-- IR compiler -->
-  <rect x="266" y="25" width="120" height="110" rx="8" class="hi2"/>
-  <text x="326" y="52" text-anchor="middle" class="label">IR Compiler</text>
-  <text x="326" y="70" text-anchor="middle" class="sub">26-opcode bytecode</text>
-  <text x="326" y="86" text-anchor="middle" class="sub">fast-path eval</text>
-  <text x="326" y="102" text-anchor="middle" class="sub">trampoline TCO</text>
-  <text x="326" y="118" text-anchor="middle" class="sub">transient vectors</text>
+  <rect x="810" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="900" y="56" text-anchor="middle" class="label">Bytecode VM</text>
+  <text x="900" y="74" text-anchor="middle" class="sub">register-based dispatch</text>
 
-  <!-- Arrow to WASM -->
-  <line x1="386" y1="60" x2="418" y2="45" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <!-- Arrow to tree-walker -->
-  <line x1="386" y1="100" x2="418" y2="110" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <rect x="810" y="118" width="180" height="60" rx="8" class="box-teal"/>
+  <text x="900" y="144" text-anchor="middle" class="label">Go interop</text>
+  <text x="900" y="162" text-anchor="middle" class="sub">host function bridge</text>
 
-  <!-- WASM -->
-  <rect x="420" y="15" width="130" height="55" rx="8" class="hi3"/>
-  <text x="485" y="40" text-anchor="middle" class="label">WASM / wazero</text>
-  <text x="485" y="57" text-anchor="middle" class="sub">527× on arithmetic</text>
+  <path d="M210,60 L290,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M470,60 L550,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M730,60 L810,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <text x="770" y="54" text-anchor="middle" class="sub">IR</text>
+  <path d="M640,90 L640,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M900,90 L900,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <!-- Fallback -->
-  <rect x="420" y="90" width="130" height="55" rx="8" class="box"/>
-  <text x="485" y="115" text-anchor="middle" class="label">Tree-walker</text>
-  <text x="485" y="132" text-anchor="middle" class="sub">Joker fallback path</text>
-
-  <!-- Arrow out -->
-  <line x1="550" y1="42" x2="580" y2="80" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="550" y1="117" x2="580" y2="85" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="582" y="55" width="110" height="50" rx="8" class="box"/>
-  <text x="637" y="78" text-anchor="middle" class="label">Result</text>
-  <text x="637" y="95" text-anchor="middle" class="sub">gi / embedding</text>
+  <text x="520" y="198" text-anchor="middle" class="sub">Clojure-like interpreter with IR bytecode compiler — 527× faster than tree-walking</text>
 </svg>

@@ -1,0 +1,39 @@
+{
+  "nodes": [
+    {
+      "id": "keymap-c",
+      "label": "keymap.c",
+      "sub": "ZMK config",
+      "column": 0,
+      "row": 0,
+      "tag": "state"
+    },
+    {
+      "id": "github-ci",
+      "label": "GitHub CI",
+      "sub": "ZMK build action",
+      "column": 1,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "-uf2-firmware",
+      "label": ".uf2 firmware",
+      "sub": "Totem keyboard",
+      "column": 2,
+      "row": 0,
+      "tag": "backend"
+    }
+  ],
+  "edges": [
+    {
+      "from": "keymap-c",
+      "to": "github-ci"
+    },
+    {
+      "from": "github-ci",
+      "to": "-uf2-firmware"
+    }
+  ],
+  "title": ""
+}

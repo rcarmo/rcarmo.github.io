@@ -1,0 +1,19 @@
+{
+  "title": "Apple SHARP — video super-resolution with MPS acceleration",
+  "nodes": [
+    { "id": "input",    "label": "Input video",      "sub": "low-res frames",          "tag": "input",      "column": 0, "row": 0 },
+    { "id": "pipeline", "label": "SHARP pipeline",    "sub": "PyTorch + MPS",           "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "anchor", "label": "Anchor net",  "sub": "frame align",   "tag": "processing" },
+        { "id": "fuse",   "label": "Fusion net",   "sub": "temporal merge", "tag": "processing" }
+      ]
+    },
+    { "id": "weights",  "label": "Pretrained weights", "sub": "Apple checkpoints",       "tag": "state",      "column": 0, "row": 1 },
+    { "id": "output",   "label": "Output video",       "sub": "4× super-resolved",       "tag": "output",     "column": 2, "row": 0 }
+  ],
+  "edges": [
+    { "from": "input",   "to": "pipeline", "accent": true },
+    { "from": "weights", "to": "pipeline" },
+    { "from": "pipeline","to": "output",   "accent": true }
+  ]
+}

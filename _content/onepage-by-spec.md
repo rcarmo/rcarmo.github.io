@@ -28,31 +28,42 @@ No dependencies, no build step — copy one file to serve it from anywhere, incl
 Written to demonstrate LLM spec methodology — the original spec is included alongside the generated code.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 180">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1058 178">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -62,21 +73,37 @@ Written to demonstrate LLM spec methodology — the original spec is included al
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="660" height="180" class="bg" rx="8"/>
+  <rect width="1058" height="178" class="bg" rx="8"/>
 
-  <rect x="20" y="24" width="160" height="60" rx="8" class="box-warm"/>
-  <text x="100" y="50" text-anchor="middle" class="label">Spec file</text>
-  <text x="100" y="68" text-anchor="middle" class="sub">structured comments</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Written spec</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">plain English rules</text>
 
-  <rect x="250" y="24" width="160" height="60" rx="8" class="box-accent"/>
-  <text x="330" y="50" text-anchor="middle" class="label">LLM codegen</text>
-  <text x="330" y="68" text-anchor="middle" class="sub">Copilot / GPT</text>
+  <rect x="270" y="30" width="180" height="60" rx="8" class="box-indigo"/>
+  <text x="360" y="56" text-anchor="middle" class="label">LLM codegen</text>
+  <text x="360" y="74" text-anchor="middle" class="sub">iterative refinement</text>
 
-  <rect x="480" y="24" width="160" height="60" rx="8" class="box-green"/>
-  <text x="560" y="50" text-anchor="middle" class="label">Single HTML</text>
-  <text x="560" y="68" text-anchor="middle" class="sub">browser homepage</text>
+  <rect x="502" y="22" width="294" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <rect x="559" y="30" width="180" height="60" rx="8" class="box-warm"/>
+  <text x="649" y="56" text-anchor="middle" class="label">Single HTML file</text>
+  <text x="649" y="74" text-anchor="middle" class="sub">self-contained app</text>
+  <rect x="518" y="98" width="82" height="48" rx="6" class="box-accent"/>
+  <text x="559" y="119" text-anchor="middle" class="label" style="font-size:11px">CSS Grid</text>
+  <text x="559" y="133" text-anchor="middle" class="sub" style="font-size:9px">dense layout</text>
+  <rect x="608" y="98" width="82" height="48" rx="6" class="box-accent"/>
+  <text x="649" y="119" text-anchor="middle" class="label" style="font-size:11px">Hash router</text>
+  <text x="649" y="133" text-anchor="middle" class="sub" style="font-size:9px">#/tab routing</text>
+  <rect x="698" y="98" width="82" height="48" rx="6" class="box-green"/>
+  <text x="739" y="119" text-anchor="middle" class="label" style="font-size:11px">Data fetch</text>
+  <text x="739" y="133" text-anchor="middle" class="sub" style="font-size:9px">live widgets</text>
 
+  <rect x="848" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="938" y="56" text-anchor="middle" class="label">Browser</text>
+  <text x="938" y="74" text-anchor="middle" class="sub">zero-deploy dashboard</text>
 
-  <path d="M180,54 L250,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
-  <path d="M410,54 L480,54" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" marker-end="url(#ahs)"/>
+  <path d="M210,60 L270,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M450,60 L559,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M739,60 L848,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+
+  <text x="529" y="174" text-anchor="middle" class="sub">Single-page dashboard — LLM-generated from a written spec</text>
 </svg>

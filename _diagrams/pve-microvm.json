@@ -1,0 +1,21 @@
+{
+  "title": "Firecracker-like microVMs for Proxmox VE — KVM isolation, <200 ms boot",
+  "nodes": [
+    { "id": "pkg",      "label": "Debian package",     "sub": "pve-microvm .deb",         "tag": "artifacts",  "column": 0, "row": 0 },
+    { "id": "proxmox",  "label": "Proxmox VE",          "sub": "qemu-server patched",      "tag": "infra",      "column": 1, "row": 0,
+      "children": [
+        { "id": "patch",  "label": "Perl patches", "sub": "machine type",  "tag": "processing" },
+        { "id": "kernel", "label": "Kernel overlay", "sub": "virtio-only", "tag": "artifacts" }
+      ]
+    },
+    { "id": "microvm",  "label": "microvm",             "sub": "QEMU machine type",        "tag": "processing", "column": 2, "row": 0 },
+    { "id": "vm",       "label": "Guest VM",             "sub": "< 200 ms boot",           "tag": "output",     "column": 3, "row": 0 },
+    { "id": "oci",      "label": "OCI import",           "sub": "container → VM",           "tag": "input",      "column": 0, "row": 1 }
+  ],
+  "edges": [
+    { "from": "pkg",     "to": "proxmox", "accent": true },
+    { "from": "oci",     "to": "proxmox" },
+    { "from": "proxmox", "to": "microvm" },
+    { "from": "microvm", "to": "vm",      "accent": true }
+  ]
+}

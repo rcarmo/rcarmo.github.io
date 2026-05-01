@@ -36,80 +36,80 @@ Name a method `tool_<name>` or `prompt_<name>` — discovery, schema generation,
 - [Notes on SKILL.md vs MCP](https://taoofmac.com/space/notes/2026/01/14/0830) — 2026-01-14
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 740 200">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 968 178">
   <style>
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
     @media (prefers-color-scheme: dark) {
-      .box { fill:#1a1e2a; stroke:#2a3040; stroke-width:1.5; }
-      .hi  { fill:#0d2220; stroke:#207060; stroke-width:1.5; }
-      .hi2 { fill:#0d1e38; stroke:#2b5cb0; stroke-width:1.5; }
-      .hi3 { fill:#221a10; stroke:#a06020; stroke-width:1.5; }
-      .label{ fill:#d0daf0; } .sub{ fill:#5070a0; }
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
     }
-    @media (prefers-color-scheme: light) {
-      .box { fill:#fff; stroke:#c8d0e0; stroke-width:1.5; }
-      .hi  { fill:#d1fae5; stroke:#059669; stroke-width:1.5; }
-      .hi2 { fill:#dbeafe; stroke:#3b82f6; stroke-width:1.5; }
-      .hi3 { fill:#fef3c7; stroke:#d97706; stroke-width:1.5; }
-      .label{ fill:#1a2a40; } .sub{ fill:#5070a0; }
-    }
-    text { font-family:-apple-system,"Segoe UI",Helvetica,sans-serif; }
-    .label{ font-size:13px; font-weight:600; }
-    .sub  { font-size:11px; }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
       <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
     </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
   </defs>
+  <rect width="968" height="178" class="bg" rx="8"/>
 
-  <!-- MCP Host -->
-  <rect x="8" y="55" width="110" height="90" rx="8" class="hi2"/>
-  <text x="63" y="88" text-anchor="middle" class="label">MCP Host</text>
-  <text x="63" y="105" text-anchor="middle" class="sub">Claude · Cursor</text>
-  <text x="63" y="121" text-anchor="middle" class="sub">Copilot · gi</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Your Python code</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">tool_* / prompt_* methods</text>
 
-  <!-- Transport labels -->
-  <text x="163" y="42" text-anchor="middle" class="sub" font-weight="600">stdio</text>
-  <text x="163" y="100" text-anchor="middle" class="sub" font-weight="600">SSE</text>
-  <text x="163" y="158" text-anchor="middle" class="sub" font-weight="600">TCP</text>
+  <rect x="262" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <rect x="274" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="364" y="56" text-anchor="middle" class="label">MCPServer</text>
+  <text x="364" y="74" text-anchor="middle" class="sub">introspect + JSON Schema</text>
+  <rect x="278" y="98" width="82" height="48" rx="6" class="box-purple"/>
+  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Discovery</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">auto naming</text>
+  <rect x="368" y="98" width="82" height="48" rx="6" class="box-purple"/>
+  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Schema gen</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">type hints</text>
 
-  <line x1="118" y1="80" x2="200" y2="55" stroke="#5070a0" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#ah)"/>
-  <line x1="118" y1="100" x2="200" y2="100" stroke="#5070a0" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#ah)"/>
-  <line x1="118" y1="120" x2="200" y2="145" stroke="#5070a0" stroke-width="1.2" stroke-dasharray="4,2" marker-end="url(#ah)"/>
+  <rect x="518" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="608" y="56" text-anchor="middle" class="label">Transport</text>
+  <text x="608" y="74" text-anchor="middle" class="sub">stdio · SSE · TCP</text>
 
-  <!-- umcp core -->
-  <rect x="202" y="20" width="160" height="160" rx="8" class="hi"/>
-  <text x="282" y="52" text-anchor="middle" class="label">umcp / aioumcp</text>
-  <text x="282" y="70" text-anchor="middle" class="sub">JSON-RPC 2.0 dispatch</text>
-  <text x="282" y="86" text-anchor="middle" class="sub">tool_* discovery</text>
-  <text x="282" y="102" text-anchor="middle" class="sub">prompt_* discovery</text>
-  <text x="282" y="118" text-anchor="middle" class="sub">type hint → JSON Schema</text>
-  <text x="282" y="134" text-anchor="middle" class="sub">annotation inference</text>
-  <text x="282" y="150" text-anchor="middle" class="sub">strict arg validation</text>
-  <text x="282" y="166" text-anchor="middle" class="sub">sync + async</text>
+  <rect x="758" y="30" width="180" height="60" rx="8" class="box-indigo"/>
+  <text x="848" y="56" text-anchor="middle" class="label">MCP client</text>
+  <text x="848" y="74" text-anchor="middle" class="sub">Claude · Copilot · Pi</text>
 
-  <line x1="362" y1="80" x2="398" y2="60" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="362" y1="120" x2="398" y2="140" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
+  <path d="M210,60 L274,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M454,60 L518,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <text x="486" y="54" text-anchor="middle" class="sub">JSON-RPC</text>
+  <path d="M698,60 L758,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
 
-  <!-- Tools -->
-  <rect x="400" y="20" width="160" height="70" rx="8" class="box"/>
-  <text x="480" y="50" text-anchor="middle" class="label">tool_* methods</text>
-  <text x="480" y="67" text-anchor="middle" class="sub">compute · disk · network</text>
-  <text x="480" y="83" text-anchor="middle" class="sub">docstring → description</text>
-
-  <!-- Prompts -->
-  <rect x="400" y="110" width="160" height="70" rx="8" class="hi3"/>
-  <text x="480" y="140" text-anchor="middle" class="label">prompt_* methods</text>
-  <text x="480" y="157" text-anchor="middle" class="sub">structured templates</text>
-  <text x="480" y="173" text-anchor="middle" class="sub">category annotations</text>
-
-  <line x1="560" y1="55" x2="596" y2="55" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="560" y1="145" x2="596" y2="145" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <rect x="598" y="20" width="134" height="160" rx="8" class="box"/>
-  <text x="665" y="55" text-anchor="middle" class="label">External</text>
-  <text x="665" y="72" text-anchor="middle" class="sub">APIs · DBs</text>
-  <text x="665" y="88" text-anchor="middle" class="sub">files · services</text>
-  <text x="665" y="130" text-anchor="middle" class="label">AI Context</text>
-  <text x="665" y="147" text-anchor="middle" class="sub">reusable</text>
-  <text x="665" y="163" text-anchor="middle" class="sub">prompt packs</text>
+  <text x="484" y="174" text-anchor="middle" class="sub">Zero-dependency Python MCP framework — convention over decoration</text>
 </svg>

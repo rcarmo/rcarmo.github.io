@@ -29,31 +29,42 @@ Weights ship as an ONNX model — drop into any language with an ONNX Runtime bi
 Evaluated against STS-B and SICK-R; results and training curves included in the repo for reproducibility.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 220">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1040 114">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -63,29 +74,29 @@ Evaluated against STS-B and SICK-R; results and training curves included in the 
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
+  <rect width="1040" height="114" class="bg" rx="8"/>
 
-  <rect x="20" y="72" width="150" height="72" rx="8" class="box"/>
-  <text x="95" y="100" text-anchor="middle" class="label">Text input</text>
-  <text x="95" y="117" text-anchor="middle" class="sub">sentence / query</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Text input</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">sentence / query</text>
 
-  <rect x="230" y="72" width="150" height="72" rx="8" class="box-purple"/>
-  <text x="305" y="100" text-anchor="middle" class="label">Tokenizer</text>
-  <text x="305" y="117" text-anchor="middle" class="sub">WordPiece</text>
+  <rect x="290" y="30" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="380" y="56" text-anchor="middle" class="label">Tokenizer</text>
+  <text x="380" y="74" text-anchor="middle" class="sub">WordPiece</text>
 
-  <rect x="440" y="72" width="170" height="72" rx="8" class="box-accent"/>
-  <text x="525" y="100" text-anchor="middle" class="label">Distilled transformer</text>
-  <text x="525" y="117" text-anchor="middle" class="sub">contrastive encoder</text>
+  <rect x="550" y="30" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="640" y="56" text-anchor="middle" class="label">Distilled transformer</text>
+  <text x="640" y="74" text-anchor="middle" class="sub">contrastive encoder</text>
 
-  <rect x="650" y="72" width="90" height="72" rx="8" class="box-green"/>
-  <text x="695" y="100" text-anchor="middle" class="label">256-dim</text>
-  <text x="695" y="117" text-anchor="middle" class="sub">vector</text>
+  <rect x="810" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="900" y="56" text-anchor="middle" class="label">256-dim</text>
+  <text x="900" y="74" text-anchor="middle" class="sub">vector</text>
 
-  <rect x="470" y="24" width="110" height="28" rx="8" class="box"/>
-  <text x="525" y="42" text-anchor="middle" class="sub">ONNX Runtime</text>
+  <path d="M210,60 L290,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <text x="250" y="54" text-anchor="middle" class="sub">tokens</text>
+  <path d="M470,60 L550,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M730,60 L810,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <text x="770" y="54" text-anchor="middle" class="sub">embed</text>
 
-  <line x1="170" y1="108" x2="226" y2="108" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="380" y1="108" x2="436" y2="108" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="610" y1="108" x2="646" y2="108" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-
-  <text x="380" y="188" text-anchor="middle" class="sub">small-footprint embeddings for semantic search, clustering, and RAG</text>
+  <text x="520" y="110" text-anchor="middle" class="sub">small-footprint embeddings for semantic search, clustering, and RAG</text>
 </svg>

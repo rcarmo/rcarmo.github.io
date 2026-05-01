@@ -1,0 +1,27 @@
+{
+  "nodes": [
+    {
+      "id": "apple-device",
+      "label": "Apple Device",
+      "sub": "Mac / AirPlay",
+      "column": 0,
+      "row": 0,
+      "tag": "state"
+    },
+    {
+      "id": "thinksmart",
+      "label": "ThinkSmart",
+      "sub": "1280\u00d7800 display",
+      "column": 1,
+      "row": 0,
+      "tag": "state"
+    }
+  ],
+  "edges": [
+    {
+      "from": "apple-device",
+      "to": "thinksmart"
+    }
+  ],
+  "title": "No UI \u2014 full-screen only"
+}

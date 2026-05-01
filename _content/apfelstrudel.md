@@ -32,31 +32,42 @@ Swap out the AI backend by pointing the WebSocket URL at any OpenAI-compatible e
 - [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 662 240">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 728 202">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -66,43 +77,39 @@ Swap out the AI backend by pointing the WebSocket URL at any OpenAI-compatible e
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
+  <rect width="728" height="202" class="bg" rx="8"/>
 
-  <!-- col1: x=16..186, col2: x=246..416, col3: x=476..646 -->
-  <!-- row1: y=20..110, row2: y=140..200 -->
+  <rect x="22" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <rect x="34" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="124" y="64" text-anchor="middle" class="label">Browser</text>
+  <rect x="38" y="98" width="82" height="48" rx="6" class="box-accent"/>
+  <text x="79" y="119" text-anchor="middle" class="label" style="font-size:11px">Strudel editor</text>
+  <text x="79" y="133" text-anchor="middle" class="sub" style="font-size:9px">CodeMirror</text>
+  <rect x="128" y="98" width="82" height="48" rx="6" class="box-purple"/>
+  <text x="169" y="119" text-anchor="middle" class="label" style="font-size:11px">Chat sidebar</text>
+  <text x="169" y="133" text-anchor="middle" class="sub" style="font-size:9px">AI messages</text>
 
-  <rect x="16" y="20" width="170" height="90" rx="8" class="box-accent"/>
-  <text x="101" y="52" text-anchor="middle" class="label">Strudel editor</text>
-  <text x="101" y="69" text-anchor="middle" class="sub">multi-tab · undo/redo</text>
-  <text x="101" y="84" text-anchor="middle" class="sub">AI chat panel</text>
+  <rect x="278" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="368" y="56" text-anchor="middle" class="label">Bun server</text>
+  <text x="368" y="74" text-anchor="middle" class="sub">HTTP + WebSocket</text>
 
-  <rect x="246" y="20" width="170" height="90" rx="8" class="box-green"/>
-  <text x="331" y="52" text-anchor="middle" class="label">Bun server</text>
-  <text x="331" y="69" text-anchor="middle" class="sub">static files · WebSocket</text>
-  <text x="331" y="84" text-anchor="middle" class="sub">session persistence</text>
+  <rect x="278" y="118" width="180" height="60" rx="8" class="box-teal"/>
+  <text x="368" y="144" text-anchor="middle" class="label">MCP tools</text>
+  <text x="368" y="162" text-anchor="middle" class="sub">evaluate · set_tempo · get</text>
 
-  <rect x="476" y="20" width="170" height="90" rx="8" class="box-purple"/>
-  <text x="561" y="52" text-anchor="middle" class="label">LLM</text>
-  <text x="561" y="69" text-anchor="middle" class="sub">OpenAI · Azure</text>
-  <text x="561" y="84" text-anchor="middle" class="sub">LM Studio</text>
+  <rect x="518" y="30" width="180" height="60" rx="8" class="box-indigo"/>
+  <text x="608" y="56" text-anchor="middle" class="label">LLM provider</text>
+  <text x="608" y="74" text-anchor="middle" class="sub">OpenAI / Anthropic / local</text>
 
-  <rect x="16" y="140" width="170" height="60" rx="8" class="box-warm"/>
-  <text x="101" y="166" text-anchor="middle" class="label">Web Audio</text>
-  <text x="101" y="183" text-anchor="middle" class="sub">synths · samples · MIDI</text>
+  <rect x="518" y="118" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="608" y="144" text-anchor="middle" class="label">Web Audio</text>
+  <text x="608" y="162" text-anchor="middle" class="sub">SuperDough synthesis</text>
 
-  <rect x="476" y="140" width="170" height="60" rx="8" class="box"/>
-  <text x="561" y="166" text-anchor="middle" class="label">Code suggestions</text>
-  <text x="561" y="183" text-anchor="middle" class="sub">one-click apply</text>
+  <path d="M214,60 L278,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <text x="246" y="54" text-anchor="middle" class="sub">WebSocket</text>
+  <path d="M458,60 L518,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M368,90 L368,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M458,148 L518,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <!-- Row 1: editor -> server -> LLM (60px gaps, arrows span gap) -->
-  <line x1="190" y1="65" x2="242" y2="65" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-  <line x1="420" y1="65" x2="472" y2="65" stroke="#3b82f6" stroke-width="1.5" marker-end="url(#ahs)"/>
-
-  <!-- Down: editor -> web audio, LLM -> suggestions (30px gaps) -->
-  <line x1="101" y1="114" x2="101" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-  <line x1="561" y1="114" x2="561" y2="136" stroke="#5070a0" stroke-width="1.5" marker-end="url(#ah)"/>
-
-  <!-- Return: suggestions right edge -> below -> web audio right edge -->
-  <line x1="476" y1="170" x2="188" y2="170" stroke="#5070a0" stroke-width="1.5" stroke-dasharray="5,3" marker-end="url(#ah)"/>
-
-  <text x="331" y="232" text-anchor="middle" class="sub">audio stays client-side · agent communicates over WebSocket</text>
+  <text x="364" y="198" text-anchor="middle" class="sub">AI-assisted live coding with Strudel.cc + MCP tools</text>
 </svg>

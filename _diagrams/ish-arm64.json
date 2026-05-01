@@ -1,0 +1,19 @@
+{
+  "title": "ARM64 Linux shell on iOS — AArch64 emulation for Alpine bootstrap",
+  "nodes": [
+    { "id": "ios",     "label": "iOS app",           "sub": "App Store / sideload",     "tag": "web",        "column": 0, "row": 0 },
+    { "id": "ish",     "label": "iSH runtime",        "sub": "syscall translation",      "tag": "backend",    "column": 1, "row": 0,
+      "children": [
+        { "id": "cpu",    "label": "ARM64 emu",   "sub": "AArch64 JIT",   "tag": "processing" },
+        { "id": "signal", "label": "Signals",       "sub": "POSIX compat",   "tag": "processing" }
+      ]
+    },
+    { "id": "alpine",  "label": "Alpine Linux",       "sub": "apk package manager",      "tag": "infra",      "column": 2, "row": 0 },
+    { "id": "tools",   "label": "Language runtimes",   "sub": "Python · Node · etc.",     "tag": "output",     "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "ios",    "to": "ish",    "accent": true },
+    { "from": "ish",    "to": "alpine" },
+    { "from": "alpine", "to": "tools",  "label": "apk", "accent": true }
+  ]
+}

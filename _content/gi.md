@@ -35,33 +35,42 @@ Reads `AGENTS.md`, operates against a workspace root, and exposes workspace file
 - [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 380">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1058 266">
   <style>
-    @media (prefers-color-scheme: dark) {
-      .bg { fill: transparent; }
-      .box { fill: #1a1e2a; stroke: #2a3040; stroke-width: 1.5; }
-      .box-accent { fill: #0d1e38; stroke: #2b5cb0; stroke-width: 1.5; }
-      .box-green { fill: #0d2220; stroke: #207060; stroke-width: 1.5; }
-      .box-warm { fill: #221a10; stroke: #a06020; stroke-width: 1.5; }
-      .box-purple { fill: #1a0d28; stroke: #7030a0; stroke-width: 1.5; }
-      .box-teal { fill: #0d2228; stroke: #1a8a7a; stroke-width: 1.5; }
-      .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
-    }
-    @media (prefers-color-scheme: light) {
-      .bg { fill: transparent; }
-      .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
-      .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
-      .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
-      .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
-      .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
-      .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
-      .label { fill: #1a2a40; }
-      .sub { fill: #5070a0; }
-    }
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #c8d0e0; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #d1fae5; stroke: #059669; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #ede9fe; stroke: #7c3aed; stroke-width: 1.5; }
+    .box-teal { fill: #ccfbf1; stroke: #0d9488; stroke-width: 1.5; }
+    .box-slate { fill: #f1f5f9; stroke: #64748b; stroke-width: 1.5; }
+    .box-indigo { fill: #e0e7ff; stroke: #4f46e5; stroke-width: 1.5; }
+    .box-rose { fill: #ffe4e6; stroke: #e11d48; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #cffafe; stroke: #0891b2; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #2a3040; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0d2220; stroke: #207060; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #1a0d28; stroke: #7030a0; }
+      .box-teal { fill: #0d2228; stroke: #1a8a7a; }
+      .box-slate { fill: #1e293b; stroke: #475569; }
+      .box-indigo { fill: #1e1b4b; stroke: #6366f1; }
+      .box-rose { fill: #2a0a12; stroke: #f43f5e; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #082f3a; stroke: #06b6d4; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
   </style>
   <defs>
     <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
@@ -71,80 +80,48 @@ Reads `AGENTS.md`, operates against a workspace root, and exposes workspace file
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="900" height="380" class="bg" rx="8"/>
+  <rect width="1058" height="266" class="bg" rx="8"/>
 
-  <!-- Left: Piclaw web UI -->
-  <rect x="20" y="112" width="180" height="72" rx="8" class="box-accent"/>
-  <text x="110" y="140" text-anchor="middle" class="label">Piclaw web UI</text>
-  <text x="110" y="158" text-anchor="middle" class="sub">verbatim TS source</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Piclaw web UI</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">verbatim TS source</text>
 
-  <!-- Centre top: Gi web/API layer -->
-  <rect x="270" y="40" width="200" height="72" rx="8" class="box-green"/>
-  <text x="370" y="68" text-anchor="middle" class="label">Gi web/API layer</text>
-  <text x="370" y="86" text-anchor="middle" class="sub">REST + SSE + workspace APIs</text>
+  <rect x="30" y="118" width="180" height="60" rx="8" class="box"/>
+  <text x="120" y="144" text-anchor="middle" class="label">Pi-compatible config</text>
+  <text x="120" y="162" text-anchor="middle" class="sub">auth.json · AGENTS.md</text>
 
-  <!-- Centre middle: Turn engine -->
-  <rect x="270" y="144" width="200" height="72" rx="8" class="box-purple"/>
-  <text x="370" y="172" text-anchor="middle" class="label">Turn engine</text>
-  <text x="370" y="190" text-anchor="middle" class="sub">append-only queue / cancel / stream</text>
+  <rect x="319" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="409" y="56" text-anchor="middle" class="label">Gi API layer</text>
+  <text x="409" y="74" text-anchor="middle" class="sub">REST + SSE + files</text>
 
-  <!-- Centre bottom: Scripting engines (under turn engine) -->
-  <rect x="230" y="252" width="160" height="56" rx="8" class="box-teal"/>
-  <text x="310" y="276" text-anchor="middle" class="label">go-joker (Clojure)</text>
-  <text x="310" y="292" text-anchor="middle" class="sub">IR bytecode · Go interop</text>
+  <rect x="262" y="110" width="294" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <rect x="319" y="118" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="409" y="144" text-anchor="middle" class="label">Turn engine</text>
+  <text x="409" y="162" text-anchor="middle" class="sub">append-only · cancel · replay</text>
+  <rect x="278" y="186" width="82" height="48" rx="6" class="box-teal"/>
+  <text x="319" y="207" text-anchor="middle" class="label" style="font-size:11px">go-joker</text>
+  <text x="319" y="221" text-anchor="middle" class="sub" style="font-size:9px">Clojure</text>
+  <rect x="368" y="186" width="82" height="48" rx="6" class="box-teal"/>
+  <text x="409" y="207" text-anchor="middle" class="label" style="font-size:11px">goja</text>
+  <text x="409" y="221" text-anchor="middle" class="sub" style="font-size:9px">JavaScript</text>
+  <rect x="458" y="186" width="82" height="48" rx="6" class="box"/>
+  <text x="499" y="207" text-anchor="middle" class="label" style="font-size:11px">SQLite</text>
+  <text x="499" y="221" text-anchor="middle" class="sub" style="font-size:9px">state store</text>
 
-  <rect x="410" y="252" width="140" height="56" rx="8" class="box-teal"/>
-  <text x="480" y="276" text-anchor="middle" class="label">goja (JavaScript)</text>
-  <text x="480" y="292" text-anchor="middle" class="sub">ES5.1+ scripting</text>
+  <rect x="608" y="30" width="180" height="60" rx="8" class="box-indigo"/>
+  <text x="698" y="56" text-anchor="middle" class="label">go-ai</text>
+  <text x="698" y="74" text-anchor="middle" class="sub">multi-provider inference</text>
 
-  <!-- Right column -->
-  <rect x="600" y="20" width="170" height="56" rx="8" class="box-warm"/>
-  <text x="685" y="44" text-anchor="middle" class="label">go-ai inference</text>
-  <text x="685" y="60" text-anchor="middle" class="sub">provider auth + streaming</text>
+  <rect x="848" y="30" width="180" height="60" rx="8" class="box-indigo"/>
+  <text x="938" y="56" text-anchor="middle" class="label">Models</text>
+  <text x="938" y="74" text-anchor="middle" class="sub">Copilot · OpenAI · Anthropic</text>
 
-  <rect x="600" y="92" width="170" height="56" rx="8" class="box"/>
-  <text x="685" y="116" text-anchor="middle" class="label">SQLite store</text>
-  <text x="685" y="132" text-anchor="middle" class="sub">sessions · messages · events</text>
+  <path d="M210,60 L319,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <text x="265" y="54" text-anchor="middle" class="sub">SSE</text>
+  <path d="M210,148 L319,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M409,90 L409,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M499,148 L540,148 Q554,148 554,134 L554,74 Q554,60 568,60 L608,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M788,60 L848,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <rect x="600" y="164" width="170" height="56" rx="8" class="box-warm"/>
-  <text x="685" y="188" text-anchor="middle" class="label">Pi-compatible config</text>
-  <text x="685" y="204" text-anchor="middle" class="sub">auth.json · AGENTS.md</text>
-
-  <!-- Far right: Models -->
-  <rect x="810" y="60" width="70" height="56" rx="8" class="box-green"/>
-  <text x="845" y="84" text-anchor="middle" class="label">Models</text>
-  <text x="845" y="100" text-anchor="middle" class="sub">Copilot</text>
-
-  <!-- Arrows: all orthogonal with rounded corners (r=8) -->
-
-  <!-- Piclaw UI → Gi API -->
-  <path d="M200,148 L248,148 Q256,148 256,112 L256,76 Q256,68 264,68 L270,68"
-        fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
-  <text x="228" y="100" text-anchor="middle" class="sub">REST+SSE</text>
-
-  <!-- Gi API → Turn engine -->
-  <path d="M370,112 L370,144"
-        fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-
-  <!-- Turn engine → go-ai (right, up) -->
-  <path d="M470,165 L560,165 Q568,165 568,56 L568,48 Q568,40 576,40 L600,40"
-        fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
-
-  <!-- Turn engine → SQLite (right, straight) -->
-  <path d="M470,180 L560,180 Q568,180 568,120 Q568,112 576,112 L600,112"
-        fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-
-  <!-- Turn engine → config (right, down) -->
-  <path d="M470,195 L560,195 Q568,195 568,192 Q568,192 576,192 L600,192"
-        fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-
-  <!-- Turn engine → scripting (down) -->
-  <path d="M370,216 L370,244 Q370,252 378,252 L390,252"
-        fill="none" stroke="#0d9488" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-
-  <!-- go-ai → Models -->
-  <path d="M770,48 L790,48 Q798,48 798,68 L798,80 Q798,88 806,88 L810,88"
-        fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
-
-  <text x="450" y="366" text-anchor="middle" class="sub">Go turn engine + Piclaw UI + go-ai inference + Clojure/JS scripting</text>
+  <text x="529" y="262" text-anchor="middle" class="sub">Go coding agent — Piclaw UI + go-ai inference + Clojure/JS scripting</text>
 </svg>

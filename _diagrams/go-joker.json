@@ -1,0 +1,18 @@
+{
+  "title": "Clojure-like interpreter with IR bytecode compiler — 527× faster than tree-walking",
+  "nodes": [
+    { "id": "source",   "label": "Joker source",    "sub": "Clojure-like syntax",      "tag": "input",      "column": 0, "row": 0 },
+    { "id": "reader",   "label": "Reader + Parser",  "sub": "AST generation",           "tag": "processing", "column": 1, "row": 0 },
+    { "id": "compiler", "label": "IR Compiler",      "sub": "tco + optimizations",      "tag": "processing", "column": 2, "row": 0 },
+    { "id": "vm",       "label": "Bytecode VM",      "sub": "register-based dispatch",  "tag": "backend",    "column": 3, "row": 0 },
+    { "id": "interop",  "label": "Go interop",       "sub": "host function bridge",     "tag": "scripting",  "column": 3, "row": 1 },
+    { "id": "wasm",     "label": "WASM target",      "sub": "browser / wazero",         "tag": "artifacts",  "column": 2, "row": 1 }
+  ],
+  "edges": [
+    { "from": "source",   "to": "reader",   "accent": true },
+    { "from": "reader",   "to": "compiler" },
+    { "from": "compiler", "to": "vm",       "label": "IR", "accent": true },
+    { "from": "compiler", "to": "wasm" },
+    { "from": "vm",       "to": "interop" }
+  ]
+}
