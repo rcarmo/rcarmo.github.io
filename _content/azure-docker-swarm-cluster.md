@@ -1,5 +1,5 @@
 ---
-section: cloud
+section: cloud-deployment
 status: archived
 created: 2016-09-13
 tagline: Auto-scaling Docker Swarm cluster for Azure — ARM template plus Makefile, manager and worker VMSS included.

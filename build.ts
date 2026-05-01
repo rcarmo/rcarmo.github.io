@@ -527,13 +527,12 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
   const canonicalUrl = `${SITE_URL}/projects/${id}/`;
   const logo = logoSrc(project);
   const palette = {
-    'ai-agents': '#2d6dff',
-    'ai-ml': '#7a4cff',
-    'cloud': '#1ba1e3',
-    'hardware': '#d97706',
-    'infrastructure': '#0f9f7a',
+    'ai': '#2d6dff',
+    'cloud-deployment': '#1ba1e3',
+    'apple': '#db2777',
+    'retro-embedded': '#d97706',
+    'networking': '#0f9f7a',
     'libraries': '#a16207',
-    'macos': '#db2777',
     'terminal': '#1f7a50',
     'featured': '#2563eb',
   } as Record<string, string>;
@@ -941,12 +940,12 @@ function buildIndex(projects: Project[]): string {
 
   // Section display names (derive from key)
   const SECTION_LABELS: Record<string,string> = {
-    'ai-agents': 'AI Agents',
-    'ai-ml': 'AI & ML',
-    'macos': 'macOS',
-    'infrastructure': 'Infrastructure',
+    'ai': 'AI',
+    'cloud-deployment': 'Cloud & Deployment',
+    'apple': 'Apple',
+    'retro-embedded': 'Retro & Embedded',
+    'networking': 'Networking & Services',
     'terminal': 'Terminal & CLI',
-    'hardware': 'Hardware',
     'libraries': 'Libraries',
   };
   function sectionLabel(key: string): string {

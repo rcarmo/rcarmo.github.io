@@ -1,5 +1,5 @@
 ---
-section: ai-agents
+section: ai
 status: active
 created: 2026-01-30
 tagline: Mobile-first web UI for AI agents — ACP and Pi over RPC, zero build step.

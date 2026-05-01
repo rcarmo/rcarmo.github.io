@@ -1,5 +1,5 @@
 ---
-section: ai-agents
+section: ai
 status: experimental
 created: 2026-04-22
 tagline: Go coding agent harness with Piclaw-compatible web UI, append-only turn engine, and go-ai inference.

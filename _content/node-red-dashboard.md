@@ -1,5 +1,5 @@
 ---
-section: infrastructure
+section: networking
 status: maintained
 created: 2025-12-21
 tagline: Custom dashboard UI for Node-RED — tailored widgets and layout for homelab sensor data and automation flows.

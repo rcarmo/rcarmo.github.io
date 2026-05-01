@@ -1,6 +1,6 @@
 ---
 repo: usetrmnl/byos_fastapi
-section: hardware
+section: retro-embedded
 status: active
 created: 2025-12-13
 tagline: TRMNL BYOS — self-hosted FastAPI server for the TRMNL e-ink display, replacing the cloud backend.

@@ -1,5 +1,5 @@
 ---
-section: hardware
+section: retro-embedded
 status: active
 created: 2026-03-01
 tagline: Debian image builder for Orange Pi 6 Plus — Cix P1 SoC patches on top of the official build system.

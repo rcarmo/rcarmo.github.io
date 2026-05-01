@@ -1,5 +1,5 @@
 ---
-section: cloud
+section: cloud-deployment
 status: experimental
 created: 2025-11-22
 tagline: Extract audio from media files and build transcripts and subtitles via Azure Speech Services.

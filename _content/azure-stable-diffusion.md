@@ -1,5 +1,5 @@
 ---
-section: cloud
+section: cloud-deployment
 status: stable
 created: 2022-11-27
 tagline: One-command Stable Diffusion on Azure GPU spot instances.

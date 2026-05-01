@@ -1,5 +1,5 @@
 ---
-section: infrastructure
+section: cloud-deployment
 status: active
 created: 2026-04-18
 tagline: Firecracker-like microVMs for Proxmox VE — KVM isolation, under 200 ms boot.

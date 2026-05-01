@@ -1,5 +1,5 @@
 ---
-section: hardware
+section: retro-embedded
 status: stable
 created: 2025-11-08
 logo: assets/logos-opt/zmk-config-totem.png

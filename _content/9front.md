@@ -1,5 +1,5 @@
 ---
-section: hardware
+section: retro-embedded
 status: experimental
 created: 2025-01-01
 tagline: Porting 9front to ARM64 — Orange Pi 4 Pro (Allwinner A733)

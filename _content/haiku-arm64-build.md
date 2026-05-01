@@ -1,5 +1,5 @@
 ---
-section: hardware
+section: retro-embedded
 status: active
 created: 2026-04-18
 tagline: Build environment and automation for compiling Haiku OS on ARM64.

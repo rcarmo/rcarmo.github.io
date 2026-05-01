@@ -1,5 +1,5 @@
 ---
-section: macos
+section: apple
 status: active
 created: 2026-04-28
 logo: assets/logos-opt/swift-webapp-viewer.png

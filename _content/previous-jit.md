@@ -1,5 +1,5 @@
 ---
-section: macos
+section: apple
 status: active
 created: 2026-04-27
 logo: assets/logos-opt/previous-jit.png

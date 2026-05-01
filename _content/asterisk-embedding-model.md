@@ -1,5 +1,5 @@
 ---
-section: ai-ml
+section: ai
 status: experimental
 created: 2026-01-03
 tagline: A small text embedding model trained for low-resource hardware — fast semantic search on a Raspberry Pi.

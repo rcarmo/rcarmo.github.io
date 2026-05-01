@@ -1,5 +1,5 @@
 ---
-section: macos
+section: apple
 status: stable
 created: 2025-12-27
 tagline: Export your complete Apple Photos library — originals, edits, Live Photos, metadata.

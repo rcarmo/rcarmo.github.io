@@ -1,5 +1,5 @@
 ---
-section: hardware
+section: apple
 status: active
 created: 2026-04-28
 logo: assets/logos-opt/kotlin-airplay-receiver.png

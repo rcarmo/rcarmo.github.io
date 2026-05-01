@@ -1,5 +1,5 @@
 ---
-section: infrastructure
+section: networking
 status: active
 created: 2026-01-08
 tagline: Self-contained OTel collector — SQLite storage, built-in trace viewer.

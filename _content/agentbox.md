@@ -1,5 +1,5 @@
 ---
-section: ai-agents
+section: ai
 status: active
 created: 2026-01-11
 tagline: Docker sandbox for coding agents — preinstalled runtimes, opt-in services, DinD.

@@ -1,5 +1,5 @@
 ---
-section: infrastructure
+section: networking
 status: experimental
 created: 2026-01-06
 tagline: Digital signage for hackathons and events — multicast video streaming to any screen on the LAN, the ghetto way.

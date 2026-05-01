@@ -1,5 +1,5 @@
 ---
-section: infrastructure
+section: cloud-deployment
 status: active
 created: 2023-03-20
 tagline: Idempotent Linux bootstrap — YAML-driven, like cloud-init for bare metal.

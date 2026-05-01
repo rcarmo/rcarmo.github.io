@@ -1,5 +1,5 @@
 ---
-section: ai-agents
+section: ai
 status: active
 created: 2025-05-30
 tagline: Micro MCP server — zero deps, stdio / SSE / TCP, sync and async, naming convention over decoration.

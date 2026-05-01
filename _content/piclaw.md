@@ -1,5 +1,5 @@
 ---
-section: ai-agents
+section: ai
 featured: true
 status: active
 created: 2026-02-17

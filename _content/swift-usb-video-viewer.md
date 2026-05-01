@@ -1,5 +1,5 @@
 ---
-section: macos
+section: apple
 status: stable
 created: 2026-04-26
 logo: assets/logos-opt/swift-usb-video-viewer.png

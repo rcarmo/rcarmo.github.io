@@ -1,5 +1,5 @@
 ---
-section: infrastructure
+section: cloud-deployment
 status: active
 created: 2026-04-27
 logo: assets/logos-opt/go-dance.png
