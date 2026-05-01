@@ -31,9 +31,6 @@ ES5.1+ scripting engine for lightweight tool extensions without a Node dependenc
 ### 📁 Workspace-centric
 Reads `AGENTS.md`, operates against a workspace root, and exposes workspace file APIs.
 
-### 🧪 Playwright-tested
-End-to-end UX tests cover the running web interface against isolated test instances.
-
 ## Posts
 - [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
 
