@@ -183,6 +183,16 @@ function linkifyTagline(escaped: string): string {
   );
 }
 
+/** Render a tagline through the markdown parser (inline, no <p> wrapper) */
+function taglineHtml(raw: string): string {
+  return mdToHtml(raw).replace(/<\/?p>/g, '');
+}
+
+/** Return plain-text tagline for meta tags / OG cards (strip markdown syntax) */
+function taglinePlain(raw: string): string {
+  return raw.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+}
+
 function mimeTypeFor(path: string): string {
   const ext = extname(path).toLowerCase();
   if (ext === ".svg") return "image/svg+xml";
@@ -546,7 +556,7 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
   } as Record<string, string>;
   writeOgCard(id, buildOgCardSvg({
     title: id,
-    description: fm.tagline || '',
+    description: taglinePlain(fm.tagline || ''),
     kicker: (fm.section || 'project').replace(/-/g, ' ').toUpperCase(),
     imageDataUri: assetDataUri(logo),
     accent: palette[fm.section || ''] || '#2563eb',
@@ -556,13 +566,13 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
   // Social card (1280×640, GitHub OG-style)
   writeSocialCard(id, buildSocialCardSvg({
     name: id,
-    description: fm.tagline || '',
+    description: taglinePlain(fm.tagline || ''),
     imageDataUri: assetDataUri(logo),
   }));
 
   const metaTags = buildMetaTags({
     title: `${id} — rcarmo`,
-    description: fm.tagline || '',
+    description: taglinePlain(fm.tagline || ''),
     canonicalUrl,
     imageUrl: ogImageUrl(id),
     imageAlt: `${id} project card`,
@@ -714,7 +724,7 @@ ${CLARITY_SNIPPET}
           <h1>${esc(id)}</h1>
           ${statusBadge}
         </div>
-        <p class="hero-tagline">${linkifyTagline(esc(fm.tagline || ""))}</p>
+        <p class="hero-tagline">${taglineHtml(fm.tagline || "")}</p>
         <div id="hero-meta-island-${id}" class="hero-meta">
           <!-- live: stars, forks, language -->
         </div>
@@ -803,7 +813,7 @@ ${posts.length ? `      <section class="sec" id="s-posts">
     });
     const TYPEAHEAD_DATA = ${JSON.stringify(allProjects.map(p => ({
       name: p.id,
-      tagline: p.fm.tagline || '',
+      tagline: taglinePlain(p.fm.tagline || ''),
       url: `/projects/${p.id}/`,
       logo: logoSrc(p) || '',
       section: p.fm.section || '',
@@ -977,7 +987,7 @@ function buildIndex(projects: Project[]): string {
           <div class="card-body card-body-featured">
             <div class="card-kicker">Featured project</div>
             <div class="card-name card-name-featured">${esc(p.id)}</div>
-            <div class="card-tagline card-tagline-featured">${linkifyTagline(esc(p.fm.tagline || ""))}</div>
+            <div class="card-tagline card-tagline-featured">${taglineHtml(p.fm.tagline || "")}</div>
             <div id="card-meta-${p.id}" class="card-meta card-meta-featured"></div>
           </div>
         </a>`;
@@ -1000,7 +1010,7 @@ function buildIndex(projects: Project[]): string {
           ${logoHtml}
           <div class="card-body">
             <div class="card-name">${esc(p.id)}</div>
-            <div class="card-tagline">${esc(p.fm.tagline || "")}</div>
+            <div class="card-tagline">${taglineHtml(p.fm.tagline || "")}</div>
             <div id="card-meta-${p.id}" class="card-meta">
               <!-- live: stars, language -->
             </div>

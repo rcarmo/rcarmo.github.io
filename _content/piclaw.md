@@ -3,7 +3,7 @@ section: ai
 featured: true
 status: active
 created: 2026-02-17
-tagline: A self-hosted AI agent workspace — mobile-first streaming UI, infinite tools
+tagline: A self-hosted AI agent workspace — mobile-first streaming UI, [infinite tools](https://github.com/rcarmo/piclaw-addons)
 logo: assets/logos-opt/piclaw.png
 ---
 
