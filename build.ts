@@ -175,6 +175,14 @@ function esc(s: string): string {
   return s.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;").replace(/"/g,"&quot;");
 }
 
+/** Replace known phrases in escaped taglines with clickable links */
+function linkifyTagline(escaped: string): string {
+  return escaped.replace(
+    /infinite tools/i,
+    '<a href="https://github.com/rcarmo/piclaw-addons" target="_blank" rel="noopener">infinite tools</a>'
+  );
+}
+
 function mimeTypeFor(path: string): string {
   const ext = extname(path).toLowerCase();
   if (ext === ".svg") return "image/svg+xml";
@@ -706,7 +714,7 @@ ${CLARITY_SNIPPET}
           <h1>${esc(id)}</h1>
           ${statusBadge}
         </div>
-        <p class="hero-tagline">${esc(fm.tagline || "")}</p>
+        <p class="hero-tagline">${linkifyTagline(esc(fm.tagline || ""))}</p>
         <div id="hero-meta-island-${id}" class="hero-meta">
           <!-- live: stars, forks, language -->
         </div>
@@ -969,7 +977,7 @@ function buildIndex(projects: Project[]): string {
           <div class="card-body card-body-featured">
             <div class="card-kicker">Featured project</div>
             <div class="card-name card-name-featured">${esc(p.id)}</div>
-            <div class="card-tagline card-tagline-featured">${esc(p.fm.tagline || "")}</div>
+            <div class="card-tagline card-tagline-featured">${linkifyTagline(esc(p.fm.tagline || ""))}</div>
             <div id="card-meta-${p.id}" class="card-meta card-meta-featured"></div>
           </div>
         </a>`;
