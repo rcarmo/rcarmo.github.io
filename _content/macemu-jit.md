@@ -1,5 +1,5 @@
 ---
-section: apple
+section: retro-embedded
 status: maintained
 created: 2025-12-30
 logo: assets/logos-opt/macemu-jit.png
