@@ -1,5 +1,5 @@
 ---
-section: cloud-deployment
+section: cloud-infra
 status: experimental
 created: 2026-03-01
 logo: assets/logos-opt/bouncer.png

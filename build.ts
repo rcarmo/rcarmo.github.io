@@ -528,7 +528,7 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
   const logo = logoSrc(project);
   const palette = {
     'ai': '#2d6dff',
-    'cloud-deployment': '#1ba1e3',
+    'cloud-infra': '#1ba1e3',
     'apple': '#db2777',
     'retro-embedded': '#d97706',
     'networking': '#0f9f7a',
@@ -941,7 +941,7 @@ function buildIndex(projects: Project[]): string {
   // Section display names (derive from key)
   const SECTION_LABELS: Record<string,string> = {
     'ai': 'AI',
-    'cloud-deployment': 'Cloud & Deployment',
+    'cloud-infra': 'Cloud & Infra',
     'apple': 'Apple',
     'retro-embedded': 'Retro & Embedded',
     'networking': 'Networking & Services',
