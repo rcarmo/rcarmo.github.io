@@ -1,5 +1,5 @@
 ---
-section: ai
+section: networking
 status: stable
 created: 2025-11-21
 tagline: LLM-powered RSS digest — full-text extraction, runs on a Raspberry Pi.
