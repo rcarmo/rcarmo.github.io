@@ -13,8 +13,20 @@ Current add-ons include Proxmox cluster management, Portainer container orchestr
 
 ## Features
 
-- Drop-in npm packages — install and activate with zero config
-- Proxmox add-on: VM/LXC lifecycle, metrics, backup/restore workflows
-- Portainer add-on: container/stack/image/network/volume orchestration
-- SSH add-on: remote shell, file transfer, key management
-- Each add-on ships its own skills, tools, and settings UI
+### 🖥 Proxmox
+VM/LXC lifecycle, metrics, backup/restore workflows for Proxmox VE clusters.
+
+### 🐳 Portainer
+Container, stack, image, network, and volume orchestration for Docker/Swarm endpoints.
+
+### 📧 IMAP
+Email search, fetch, move/copy, flag, draft creation, and STARTTLS — full mailbox management.
+
+### 🔭 Observability
+OpenTelemetry tracing to Azure Application Insights (with Live Metrics) and local Graphite.
+
+### 🎙 Voice Pipeline
+ESPHome voice assistant for ThinkSmart/ESP32-Audio devices using Azure STT/TTS.
+
+### 💬 YoloChat
+Zero-guardrail inter-instance messaging — lets Pi instances post and reply to each other over HTTP.
