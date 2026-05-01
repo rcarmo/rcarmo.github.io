@@ -987,7 +987,7 @@ function buildIndex(projects: Project[]): string {
           <div class="card-body card-body-featured">
             <div class="card-kicker">Featured project</div>
             <div class="card-name card-name-featured">${esc(p.id)}</div>
-            <div class="card-tagline card-tagline-featured">${taglineHtml(p.fm.tagline || "")}</div>
+            <div class="card-tagline card-tagline-featured">${esc(taglinePlain(p.fm.tagline || ""))}</div>
             <div id="card-meta-${p.id}" class="card-meta card-meta-featured"></div>
           </div>
         </a>`;
@@ -1010,7 +1010,7 @@ function buildIndex(projects: Project[]): string {
           ${logoHtml}
           <div class="card-body">
             <div class="card-name">${esc(p.id)}</div>
-            <div class="card-tagline">${taglineHtml(p.fm.tagline || "")}</div>
+            <div class="card-tagline">${esc(taglinePlain(p.fm.tagline || ""))}</div>
             <div id="card-meta-${p.id}" class="card-meta">
               <!-- live: stars, language -->
             </div>
