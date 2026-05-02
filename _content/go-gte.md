@@ -30,10 +30,10 @@ No goroutine churn means predictable p50/p99. Batching reduces jitter 3–5× fu
 Default `make` produces a fully self-contained static binary with no C dependencies — portable to any amd64 or arm64 target.
 
 ## Gallery
-- [Optimization results](assets/screenshots/gte-go/optimization-results.svg) — 4-phase optimization from baseline to SIMD
-- [Jitter plot](assets/screenshots/gte-go/jitter-plot.svg) — 5000-embed jitter across discrete and batched modes
-- [Batch latency](assets/screenshots/gte-go/batch-latency.svg) — batch size vs latency scaling
-- [GOGC comparison](assets/screenshots/gte-go/gogc-comparison.svg) — GC pressure under different GOGC settings
+- [Optimization results](assets/screenshots/go-gte/optimization-results.svg) — 4-phase optimization from baseline to SIMD
+- [Jitter plot](assets/screenshots/go-gte/jitter-plot.svg) — 5000-embed jitter across discrete and batched modes
+- [Batch latency](assets/screenshots/go-gte/batch-latency.svg) — batch size vs latency scaling
+- [GOGC comparison](assets/screenshots/go-gte/gogc-comparison.svg) — GC pressure under different GOGC settings
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 818 202">
