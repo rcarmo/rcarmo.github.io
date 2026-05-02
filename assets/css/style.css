@@ -155,7 +155,7 @@ code {
    ══════════════════════════════════════════════════════════════════════════════ */
 
 .hero-index {
-  padding: 5rem var(--gap) 1.5rem;
+  padding: 5rem var(--gap) 2rem;
   background: var(--bg-subtle);
   border-bottom: 1px solid var(--border);
 }
@@ -913,8 +913,8 @@ footer {
   font-size: 1.05rem;
   color: var(--dim);
   max-width: 640px;
-  margin: -0.5rem auto 1rem;
-  padding: 0 1.5rem;
+  margin: 0.5rem auto 1.5rem;
+  padding: 0.5rem 1.5rem 0;
   line-height: 1.6;
   font-style: italic;
 }
