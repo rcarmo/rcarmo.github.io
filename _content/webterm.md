@@ -1,5 +1,5 @@
 ---
-section: terminal
+section: remote-access
 status: active
 created: 2026-01-18
 tagline: Go web terminal with multi-session dashboard mode — built for AI agent workflows.

@@ -1,5 +1,5 @@
 ---
-section: terminal
+section: remote-access
 status: active
 created: 2026-01-24
 tagline: Browser-based RDP client — full MS-RDPBCGR spec, Go backend, WASM frontend.

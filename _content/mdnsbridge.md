@@ -1,5 +1,5 @@
 ---
-section: networking
+section: remote-access
 status: active
 created: 2026-02-02
 tagline: mDNS bridge — relay Bonjour/Avahi service announcements across network segments.

@@ -552,6 +552,7 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
     'networking': '#0f9f7a',
     'libraries': '#a16207',
     'terminal': '#1f7a50',
+    'remote-access': '#6d28d9',
     'featured': '#2563eb',
   } as Record<string, string>;
   writeOgCard(id, buildOgCardSvg({
@@ -964,6 +965,7 @@ function buildIndex(projects: Project[]): string {
     'retro-embedded': 'Retro & Embedded',
     'networking': 'Networking & Services',
     'terminal': 'Terminal & CLI',
+    'remote-access': 'Remote Access',
     'libraries': 'Libraries',
   };
   function sectionLabel(key: string): string {

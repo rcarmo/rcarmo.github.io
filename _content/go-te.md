@@ -1,5 +1,5 @@
 ---
-section: terminal
+section: remote-access
 status: active
 created: 2026-02-13
 tagline: VT100/VT520 terminal library for Go — pyte-faithful, ESCTest2, SVG export.

@@ -1,5 +1,5 @@
 ---
-section: terminal
+section: remote-access
 status: active
 created: 2026-01-28
 tagline: Ghostty terminal sessions in a browser — xterm.js compatibility.
