@@ -1,5 +1,5 @@
 ---
-section: apple
+section: cloud-infra
 status: stable
 created: 2025-08-09
 tagline: Switch Steam accounts on a shared PC via HomeKit.
