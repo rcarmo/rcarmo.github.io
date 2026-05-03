@@ -953,7 +953,8 @@ function buildIndex(projects: Project[]): string {
   }
 
   // Featured projects (pinned at top, across any section)
-  const featured = projects.filter(p => p.fm.featured);
+  const featured = projects.filter(p => p.fm.featured)
+    .sort((a, b) => a.id === 'piclaw' ? -1 : b.id === 'piclaw' ? 1 : a.id.localeCompare(b.id));
 
   // Section order: alphabetical (no more special "highlight" section)
   const sectionOrder = [...groups.keys()].sort((a, b) => a.localeCompare(b));
