@@ -1,5 +1,5 @@
 ---
-section: ai
+section: ai-ml
 status: active
 created: 2026-01-15
 tagline: Pure Go GTE-Small text embeddings — hand-written SIMD, 1 allocation per embed, predictable flat latency.

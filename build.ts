@@ -545,7 +545,8 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
   const canonicalUrl = `${SITE_URL}/projects/${id}/`;
   const logo = logoSrc(project);
   const palette = {
-    'ai': '#2d6dff',
+    'ai-ml': '#7a4cff',
+    'agents': '#2d6dff',
     'cloud-infra': '#1ba1e3',
     'apple': '#db2777',
     'retro-embedded': '#d97706',
@@ -959,7 +960,8 @@ function buildIndex(projects: Project[]): string {
 
   // Section display names (derive from key)
   const SECTION_LABELS: Record<string,string> = {
-    'ai': 'AI',
+    'ai-ml': 'AI & ML',
+    'agents': 'Agents',
     'cloud-infra': 'Cloud & Infra',
     'apple': 'Apple',
     'retro-embedded': 'Retro & Embedded',

@@ -1,7 +1,7 @@
 ---
 id: piclaw-addons
 repo: rcarmo/piclaw-addons
-section: ai
+section: agents
 tagline: Community extensions and add-ons for PiClaw — Proxmox, Portainer, SSH, and more
 ---
 

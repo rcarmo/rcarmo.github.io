@@ -1,5 +1,5 @@
 ---
-section: ai
+section: agents
 status: active
 created: 2026-03-12
 tagline: MCP server for Microsoft Office automation — read, write, and manipulate Word, Excel, and PowerPoint files.

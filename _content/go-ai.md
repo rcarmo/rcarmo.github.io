@@ -1,5 +1,5 @@
 ---
-section: ai
+section: ai-ml
 status: experimental
 created: 2026-04-22
 tagline: Unified LLM API for Go — streaming, tool calling, model registry, and multi-provider support.

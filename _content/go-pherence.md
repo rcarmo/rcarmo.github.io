@@ -1,7 +1,7 @@
 ---
 id: go-pherence
 repo: rcarmo/go-pherence
-section: ai
+section: ai-ml
 tagline: Minimal tensor framework in pure Go — SIMD assembly, GPU compute, runs LLMs
 ---
 

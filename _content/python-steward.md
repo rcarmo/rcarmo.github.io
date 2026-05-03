@@ -1,5 +1,5 @@
 ---
-section: ai
+section: agents
 status: experimental
 created: 2025-12-20
 tagline: The simplest coding agent harness that could possibly work — Python, tool use, done.
