@@ -504,12 +504,10 @@ function selectRandomFallbackProject(projects: Project[]): void {
 }
 
 function fallbackLogoPath(project: Project): string | null {
-  // Distribute default icons evenly using a hash of the project id
-  // This ensures variety even among same-age projects
-  let hash = 0;
-  for (let i = 0; i < project.id.length; i++) hash = (hash * 31 + project.id.charCodeAt(i)) >>> 0;
-  const variant = hash % 6; // 0-5 variants available
-  const fallbackName = `default-0${variant}.png`;
+  const age = projectAgeYears(project);
+  const fallbackName = project.id === RANDOM_FALLBACK_PROJECT_ID
+    ? "default-05.png"
+    : `default-0${Math.min(age, 4)}.png`;
   const fallbackPath = `assets/logos-opt/${fallbackName}`;
   const fullPath = join(ROOT, fallbackPath);
   return existsSync(fullPath) ? `/${fallbackPath}` : null;
