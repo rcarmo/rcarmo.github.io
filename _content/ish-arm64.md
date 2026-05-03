@@ -3,6 +3,7 @@ id: ish-arm64
 repo: rcarmo/ish-arm64
 section: retro-embedded
 tagline: ARM64 bring-up fork of iSH — Linux shell for iOS with AArch64 emulation
+created: 2026-04-30
 ---
 
 ## About
