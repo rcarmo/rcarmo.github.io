@@ -1,0 +1,29 @@
+{
+  "title": "Pure Go tensor framework — lazy DAG, SIMD + GPU kernels, LLM inference",
+  "nodes": [
+    { "id": "weights",   "label": "Model weights",      "sub": "safetensors / GPTQ INT4",  "tag": "input",      "column": 0, "row": 0 },
+    { "id": "dag",       "label": "Lazy tensor DAG",    "sub": "fusion + graph rewrite",   "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "pattern", "label": "Pattern match", "sub": "16 rewrite rules", "tag": "processing" },
+        { "id": "fuse",    "label": "Op fusion",      "sub": "elementwise 2×",  "tag": "processing" }
+      ]
+    },
+    { "id": "backends",  "label": "Compute backends",   "sub": "",                         "tag": "backend",    "column": 2, "row": 0,
+      "children": [
+        { "id": "simd",  "label": "SIMD GEMM",  "sub": "AVX2 / NEON",  "tag": "processing" },
+        { "id": "gpu",   "label": "GPU DevBuf",  "sub": "PTX kernels",  "tag": "infra" }
+      ]
+    },
+    { "id": "models",    "label": "Model inference",    "sub": "",                         "tag": "output",     "column": 3, "row": 0,
+      "children": [
+        { "id": "llama", "label": "LLaMA",    "sub": "decoder",     "tag": "output" },
+        { "id": "bert",  "label": "BERT",      "sub": "encoder",     "tag": "output" }
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "weights",  "to": "dag",      "accent": true },
+    { "from": "dag",      "to": "backends" },
+    { "from": "backends", "to": "models",   "accent": true }
+  ]
+}
