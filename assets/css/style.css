@@ -511,6 +511,10 @@ code {
   .hero-row { align-items: center; }
   .card-grid:not(.card-grid-featured) { grid-template-columns: repeat(2, minmax(0, 1fr)); }
   .card-grid-featured { grid-template-columns: 1fr; }
+  .card { flex-direction: column; align-items: center; text-align: center; padding: 1.1rem; gap: 0.75rem; }
+  .card-logo { width: 72px; height: 72px; }
+  .card-name { font-size: 0.85rem; }
+  .card-tagline { font-size: 0.75rem; }
 }
 @media (max-width: 768px) {
   .topnav { padding-left: 1.25rem; padding-right: 1.25rem; }
@@ -522,7 +526,7 @@ code {
   .hero-stat { min-width: unset; }
   .index-main { padding-left: 1.25rem; padding-right: 1.25rem; }
   .card-grid { grid-template-columns: 1fr; }
-  .card, .card-featured { padding: 1rem; gap: 1rem; }
+  .card, .card-featured { padding: 1rem; gap: 1rem; flex-direction: column; align-items: center; text-align: center; }
   .card-logo { width: 88px; height: 88px; }
   .card-logo-lg { width: 112px; height: 112px; }
   .hero-inner { flex-direction: column; align-items: center; text-align: center; }
