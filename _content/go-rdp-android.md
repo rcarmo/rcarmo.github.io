@@ -107,3 +107,6 @@ Includes a standalone Go mock for testing RDP clients without an Android device.
 
   <text x="484" y="174" text-anchor="middle" class="sub">Native Android RDP server — Kotlin + Go via gomobile</text>
 </svg>
+
+## Posts
+- [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03

@@ -93,3 +93,6 @@ Demonstrates a repeatable pattern: write spec → review with AI → implement �
 
 
 </svg>
+
+## Posts
+- [App Notes: Web App Viewer](https://taoofmac.com/space/notes/2026/04/29/1730) — 2026-04-29

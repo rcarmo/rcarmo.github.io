@@ -103,3 +103,6 @@ One command; app bundle at `.build/WebAppViewer.app`.
 
   <text x="364" y="174" text-anchor="middle" class="sub">Native macOS shell for site-specific browsers — no Safari chrome</text>
 </svg>
+
+## Posts
+- [App Notes: Web App Viewer](https://taoofmac.com/space/notes/2026/04/29/1730) — 2026-04-29

@@ -121,3 +121,6 @@ Pure Go + assembly. No Python, no cgo, no ONNX runtime.
 
   <text x="492" y="174" text-anchor="middle" class="sub">Pure Go tensor framework — lazy DAG, SIMD + GPU kernels, LLM inference</text>
 </svg>
+
+## Posts
+- [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03

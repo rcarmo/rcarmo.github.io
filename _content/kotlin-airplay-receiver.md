@@ -92,3 +92,6 @@ Native Playfair component retains GPLv3; all vendored code documented in `docs/v
 
   <text x="240" y="110" text-anchor="middle" class="sub">No UI — full-screen only</text>
 </svg>
+
+## Posts
+- [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03

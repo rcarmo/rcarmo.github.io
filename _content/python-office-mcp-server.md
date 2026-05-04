@@ -102,3 +102,6 @@ Implements the Model Context Protocol tool interface over stdio, compatible with
 
   <text x="360" y="286" text-anchor="middle" class="sub">pure Python · no Office install · OOXML format directly</text>
 </svg>
+
+## Posts
+- [Lessons on Building MCP Servers](https://taoofmac.com/space/blog/2026/04/29/2341) — 2026-04-30
