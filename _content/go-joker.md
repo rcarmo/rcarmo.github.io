@@ -7,30 +7,39 @@ tagline: Performance-optimised Clojure-like Lisp interpreter — IR bytecode, WA
 ---
 
 ## About
-An optimised fork of [Joker](https://github.com/candid82/joker) (Clojure-like Lisp interpreter in Go), built for embedding in [gi](https://github.com/rcarmo/gi). Adds an IR bytecode interpreter (26 opcodes), a WASM/wazero native compilation backend, generic tail-call optimisation, transient vector support, and evaluator fast-paths for arithmetic and binding lookup.
+An optimized fork of [Joker](https://github.com/candid82/joker) (Clojure-like Lisp interpreter) for inclusion in [gi](gi), a self-hosted coding agent. Four execution tiers — WASM native via wazero JIT, typed IR with zero-boxing, boxed IR for collections, and tree-walker for full Clojure semantics — selected automatically per expression. Mandelbrot runs ~4200× faster than upstream; general Clojure code 10–500× faster.
 
 ## How it works
-Hot functions are compiled to a compact 26-opcode IR and executed by a tight bytecode loop instead of the original tree-walker. Pure numeric workloads can be further compiled to WASM via wazero, running in the same process with near-native speed. A runtime trampoline handles tail calls; parse-time rewriting eliminates stack growth for self-recursive functions.
+The compiler analyses each expression and emits to the fastest viable tier: pure numeric loops compile to WASM bytecode executed by wazero's JIT (~0.2ms), primitive/string/cursor loops use a typed IR stack with zero boxing (~2–8ms), collection-heavy code uses a boxed IR interpreter (~10–40ms), and everything else falls through to the tree-walker for full macro/special-form/I/O support. Generic tail-call optimization, transient vectors/maps, and a native StringCursor type round out the runtime.
 
 ## Features
-### ⚡ IR bytecode interpreter
-26-opcode IR replaces the tree-walker for hot loops — up to **40× faster** on word-frequency benchmarks.
+### ⚡ 4-tier execution
+WASM → Typed IR → Boxed IR → Tree-walker — automatic tier selection per expression.
 
-### 🦀 WASM native backend
-wazero compiles pure numeric functions to WebAssembly — **527×** faster on arithmetic loops, matching Bun/JSC.
+### 🧮 WASM/wazero JIT
+Pure integer/float loops compile to native code via wazero. ~0.2ms for Mandelbrot.
 
-### 🔁 Tail-call optimisation
-Runtime trampoline + parse-time rewriting — arbitrary recursion depth without stack growth.
+### 📦 Typed IR (zero-boxing)
+Primitive, string, and cursor loops on an irValue stack — no interface{} boxing overhead.
 
-### 🔄 Transient vectors
-In-place mutation for loop-local data structures; persistent semantics preserved externally.
+### 🔄 Generic tail-call optimization
+Recursive functions optimized across all tiers.
 
-### 🔌 Embeddable in Go
-Designed to be embedded in gi as the Clojure scripting engine; same process, minimal overhead.
+### 🗃 Transient vectors and maps
+O(1) append/assoc for builder patterns — auto-promoted from persistent collections.
+
+### 🔬 Runtime introspection
+`disassemble`, `analyze`, `wasm-diagnostic`, `escape-analysis`, `profile`, `benchmark`, `mem-stats`, `gc` — all from Joker scripts.
+
+### 🎨 Additional namespaces
+`joker.imaging` (image processing), `joker.svg` (SVG generation + raster), `joker.pdf` (PDF documents).
 
 ## Gallery
-- [Benchmark improvements](assets/screenshots/go-joker/benchmark-improvements.svg) — IR vs original tree-walker across workloads
-- [Cross-language comparison](assets/screenshots/go-joker/benchmark-cross-language.svg) — Joker vs Goja, Bun/JSC, Python 3.13
+- [Cross-language benchmark](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/benchmark-cross-language.svg) — Joker vs Python vs Goja on CLBG benchmarks
+- [Speedup vs upstream](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/benchmark-improvements.svg) — improvement factors over original Joker
+- [4-way comparison](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/benchmark-4way-bars.svg) — bar chart across all tiers
+- [4-way heatmap](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/benchmark-4way-heatmap.svg) — heatmap view of tier performance
+- [Architecture](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/architecture.svg) — execution tier pipeline diagram
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 202">
