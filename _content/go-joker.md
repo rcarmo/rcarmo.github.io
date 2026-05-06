@@ -35,8 +35,8 @@ O(1) append/assoc for builder patterns — auto-promoted from persistent collect
 `joker.imaging` (image processing), `joker.svg` (SVG generation + raster), `joker.pdf` (PDF documents).
 
 ## Gallery
-- [Joker vs Python vs Goja](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/benchmark-transposed.svg) — CLBG benchmark comparison across languages
-- [Speedup vs upstream](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/benchmark-improvements.svg) — improvement factors over original Joker
+- [Joker vs Python vs Goja](assets/screenshots/go-joker/benchmark-transposed.svg) — CLBG benchmark comparison across languages
+- [Speedup vs upstream](assets/screenshots/go-joker/benchmark-improvements.svg) — improvement factors over original Joker
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 378">

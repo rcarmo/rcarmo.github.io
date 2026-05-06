@@ -35,8 +35,8 @@ View menu, Option-Command-I, context menu, or Safari Develop menu — embedded v
 File downloads to `~/Downloads`; accepts `.webloc`, `public.url`, and text URL drops on the Dock icon.
 
 ## Gallery
-- [Startup window](https://raw.githubusercontent.com/rcarmo/swift-webapp-viewer/main/docs/startup-window.svg) — URL drop/paste window
-- [User Scripts](https://raw.githubusercontent.com/rcarmo/swift-webapp-viewer/main/docs/user-scripts.svg) — Preferences pane with script editor
+- [Startup window](assets/screenshots/swift-webapp-viewer/startup-window.svg) — URL drop/paste window
+- [User Scripts](assets/screenshots/swift-webapp-viewer/user-scripts.svg) — Preferences pane with script editor
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 728 178">
