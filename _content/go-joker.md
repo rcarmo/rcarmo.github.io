@@ -22,8 +22,6 @@ Pure integer/float loops compile to native code via wazero. ~0.2ms for Mandelbro
 ### 📦 Typed IR (zero-boxing)
 Primitive, string, and cursor loops on an irValue stack — no interface{} boxing overhead.
 
-### 🔄 Generic tail-call optimization
-Recursive functions optimized across all tiers.
 
 ### 🗃 Transient vectors and maps
 O(1) append/assoc for builder patterns — auto-promoted from persistent collections.
