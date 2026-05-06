@@ -120,6 +120,11 @@ function parsePosts(body: string): { title: string; url: string; date: string }[
   return posts;
 }
 
+function gallerySrc(src: string): string {
+  // Absolute URLs stay as-is; relative paths get / prefix
+  return /^https?:\/\//.test(src) ? src : `/${src}`;
+}
+
 function parseGallery(body: string): { title: string; src: string; caption: string }[] {
   const items: { title: string; src: string; caption: string }[] = [];
   const lines = body.split("\n").filter(l => l.trim().startsWith("- ") || l.trim().startsWith("* "));
@@ -633,10 +638,10 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
           ${gallery.map((item, index) => {
             const isSvg = item.src.endsWith('.svg');
             const mediaEl = isSvg
-              ? `<object type="image/svg+xml" data="/${esc(item.src)}" class="gallery-svg" aria-label="${esc(item.title)}"></object>`
-              : `<img src="/${esc(item.src)}" alt="${esc(item.title)}" loading="lazy">`;
+              ? `<object type="image/svg+xml" data="${esc(gallerySrc(item.src))}" class="gallery-svg" aria-label="${esc(item.title)}"></object>`
+              : `<img src="${esc(gallerySrc(item.src))}" alt="${esc(item.title)}" loading="lazy">`;
             return `
-          <figure class="hero-gallery-slide${index === 0 ? ' is-active' : ''}" data-gallery-slide data-fullsrc="/${esc(item.src)}">
+          <figure class="hero-gallery-slide${index === 0 ? ' is-active' : ''}" data-gallery-slide data-fullsrc="${esc(gallerySrc(item.src))}">
             ${mediaEl}
           </figure>`;
           }).join("")}
@@ -657,14 +662,14 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
               <div class="hero-gallery-caption-title">${esc(item.title)}</div>
               ${item.caption ? `<div class="hero-gallery-caption-body">${esc(item.caption)}</div>` : ""}
               <div class="hero-gallery-caption-actions">
-                <a class="btn btn-sm" href="/${esc(item.src)}" target="_blank" rel="noopener">View full size ↗</a>
+                <a class="btn btn-sm" href="${esc(gallerySrc(item.src))}" target="_blank" rel="noopener">View full size ↗</a>
               </div>
             </div>`).join("")}
           </div>
           <div class="hero-gallery-thumbs" role="tablist" aria-label="Gallery thumbnails">
             ${gallery.map((item, index) => `
             <button type="button" class="hero-gallery-thumb${index === 0 ? ' is-active' : ''}" data-gallery-thumb aria-label="Show image ${index + 1}: ${esc(item.title)}">
-              <img src="/${esc(item.src)}" alt="" loading="lazy">
+              <img src="${esc(gallerySrc(item.src))}" alt="" loading="lazy">
             </button>`).join("")}
           </div>
           ${(() => {
