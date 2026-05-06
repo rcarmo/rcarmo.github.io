@@ -35,14 +35,11 @@ O(1) append/assoc for builder patterns — auto-promoted from persistent collect
 `joker.imaging` (image processing), `joker.svg` (SVG generation + raster), `joker.pdf` (PDF documents).
 
 ## Gallery
-- [Cross-language benchmark](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/benchmark-cross-language.svg) — Joker vs Python vs Goja on CLBG benchmarks
+- [Joker vs Python vs Goja](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/benchmark-transposed.svg) — CLBG benchmark comparison across languages
 - [Speedup vs upstream](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/benchmark-improvements.svg) — improvement factors over original Joker
-- [4-way comparison](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/benchmark-4way-bars.svg) — bar chart across all tiers
-- [4-way heatmap](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/benchmark-4way-heatmap.svg) — heatmap view of tier performance
-- [Architecture](https://raw.githubusercontent.com/rcarmo/go-joker/master/benchmarks/architecture.svg) — execution tier pipeline diagram
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 202">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 378">
   <style>
     /* Default: light mode (for rsvg-convert and non-media-query agents) */
     .bg { fill: transparent; }
@@ -87,11 +84,11 @@ O(1) append/assoc for builder patterns — auto-promoted from persistent collect
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="960" height="202" class="bg" rx="8"/>
+  <rect width="1200" height="378" class="bg" rx="8"/>
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
-  <text x="120" y="56" text-anchor="middle" class="label">Joker source</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">Clojure-like syntax</text>
+  <text x="120" y="56" text-anchor="middle" class="label">Clojure Source</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">s-expressions</text>
 
   <rect x="270" y="30" width="180" height="60" rx="8" class="box-purple"/>
   <text x="360" y="56" text-anchor="middle" class="label">Reader + Parser</text>
@@ -99,26 +96,38 @@ O(1) append/assoc for builder patterns — auto-promoted from persistent collect
 
   <rect x="510" y="30" width="180" height="60" rx="8" class="box-purple"/>
   <text x="600" y="56" text-anchor="middle" class="label">IR Compiler</text>
-  <text x="600" y="74" text-anchor="middle" class="sub">tco + optimizations</text>
-
-  <rect x="510" y="118" width="180" height="60" rx="8" class="box-warm"/>
-  <text x="600" y="144" text-anchor="middle" class="label">WASM target</text>
-  <text x="600" y="162" text-anchor="middle" class="sub">browser / wazero</text>
+  <text x="600" y="74" text-anchor="middle" class="sub">tier selection + TCO</text>
 
   <rect x="750" y="30" width="180" height="60" rx="8" class="box-green"/>
-  <text x="840" y="56" text-anchor="middle" class="label">Bytecode VM</text>
-  <text x="840" y="74" text-anchor="middle" class="sub">register-based dispatch</text>
+  <text x="840" y="56" text-anchor="middle" class="label">WASM / wazero</text>
+  <text x="840" y="74" text-anchor="middle" class="sub">native JIT ~0.2ms</text>
 
-  <rect x="750" y="118" width="180" height="60" rx="8" class="box-teal"/>
-  <text x="840" y="144" text-anchor="middle" class="label">Go interop</text>
-  <text x="840" y="162" text-anchor="middle" class="sub">host function bridge</text>
+  <rect x="750" y="118" width="180" height="60" rx="8" class="box-green"/>
+  <text x="840" y="144" text-anchor="middle" class="label">Typed IR</text>
+  <text x="840" y="162" text-anchor="middle" class="sub">zero-boxing ~2–8ms</text>
+
+  <rect x="750" y="206" width="180" height="60" rx="8" class="box"/>
+  <text x="840" y="232" text-anchor="middle" class="label">Boxed IR</text>
+  <text x="840" y="250" text-anchor="middle" class="sub">collections ~10–40ms</text>
+
+  <rect x="750" y="294" width="180" height="60" rx="8" class="box-teal"/>
+  <text x="840" y="320" text-anchor="middle" class="label">Tree-walker</text>
+  <text x="840" y="338" text-anchor="middle" class="sub">full Clojure semantics</text>
+
+  <rect x="990" y="30" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="1080" y="56" text-anchor="middle" class="label">Result</text>
+  <text x="1080" y="74" text-anchor="middle" class="sub">value / side-effect</text>
 
   <path d="M210,60 L270,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M450,60 L510,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M690,60 L750,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
-  <text x="720" y="54" text-anchor="middle" class="sub">IR</text>
-  <path d="M600,90 L600,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-  <path d="M840,90 L840,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M690,60 L706,60 Q720,60 720,74 L720,134 Q720,148 734,148 L750,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M690,60 L706,60 Q720,60 720,74 L720,222 Q720,236 734,236 L750,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M690,60 L706,60 Q720,60 720,74 L720,310 Q720,324 734,324 L750,324" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M930,60 L990,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M930,148 L946,148 Q960,148 960,134 L960,74 Q960,60 974,60 L990,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M930,236 L946,236 Q960,236 960,222 L960,74 Q960,60 974,60 L990,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M930,324 L946,324 Q960,324 960,310 L960,74 Q960,60 974,60 L990,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <text x="480" y="198" text-anchor="middle" class="sub">Clojure-like interpreter with IR bytecode compiler — 527× faster than tree-walking</text>
+  <text x="600" y="374" text-anchor="middle" class="sub">4-tier execution: WASM → Typed IR → Boxed IR → Tree-walker</text>
 </svg>

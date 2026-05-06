@@ -1,18 +1,25 @@
 {
-  "title": "Clojure-like interpreter with IR bytecode compiler — 527× faster than tree-walking",
+  "title": "4-tier execution: WASM → Typed IR → Boxed IR → Tree-walker",
   "nodes": [
-    { "id": "source",   "label": "Joker source",    "sub": "Clojure-like syntax",      "tag": "input",      "column": 0, "row": 0 },
-    { "id": "reader",   "label": "Reader + Parser",  "sub": "AST generation",           "tag": "processing", "column": 1, "row": 0 },
-    { "id": "compiler", "label": "IR Compiler",      "sub": "tco + optimizations",      "tag": "processing", "column": 2, "row": 0 },
-    { "id": "vm",       "label": "Bytecode VM",      "sub": "register-based dispatch",  "tag": "backend",    "column": 3, "row": 0 },
-    { "id": "interop",  "label": "Go interop",       "sub": "host function bridge",     "tag": "scripting",  "column": 3, "row": 1 },
-    { "id": "wasm",     "label": "WASM target",      "sub": "browser / wazero",         "tag": "artifacts",  "column": 2, "row": 1 }
+    { "id": "source",   "label": "Clojure Source",  "sub": "s-expressions",           "tag": "input",      "column": 0, "row": 0 },
+    { "id": "reader",   "label": "Reader + Parser",   "sub": "AST generation",          "tag": "processing", "column": 1, "row": 0 },
+    { "id": "compiler", "label": "IR Compiler",        "sub": "tier selection + TCO",     "tag": "processing", "column": 2, "row": 0 },
+    { "id": "wasm",     "label": "WASM / wazero",      "sub": "native JIT ~0.2ms",        "tag": "backend",    "column": 3, "row": 0 },
+    { "id": "typed",    "label": "Typed IR",            "sub": "zero-boxing ~2–8ms",       "tag": "backend",    "column": 3, "row": 1 },
+    { "id": "boxed",    "label": "Boxed IR",            "sub": "collections ~10–40ms",     "tag": "state",      "column": 3, "row": 2 },
+    { "id": "tree",     "label": "Tree-walker",         "sub": "full Clojure semantics",   "tag": "scripting",  "column": 3, "row": 3 },
+    { "id": "result",   "label": "Result",              "sub": "value / side-effect",      "tag": "output",     "column": 4, "row": 0 }
   ],
   "edges": [
     { "from": "source",   "to": "reader",   "accent": true },
     { "from": "reader",   "to": "compiler" },
-    { "from": "compiler", "to": "vm",       "label": "IR", "accent": true },
-    { "from": "compiler", "to": "wasm" },
-    { "from": "vm",       "to": "interop" }
+    { "from": "compiler", "to": "wasm",     "accent": true },
+    { "from": "compiler", "to": "typed" },
+    { "from": "compiler", "to": "boxed" },
+    { "from": "compiler", "to": "tree" },
+    { "from": "wasm",     "to": "result",   "accent": true },
+    { "from": "typed",    "to": "result" },
+    { "from": "boxed",    "to": "result" },
+    { "from": "tree",     "to": "result" }
   ]
 }
