@@ -1,0 +1,48 @@
+name: Build and deploy portfolio site
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: oven-sh/setup-bun@v2
+        with:
+          bun-version: latest
+
+      - name: Install rsvg-convert and fonts
+        run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq librsvg2-bin fonts-inter
+
+      - name: Build site
+        run: bun run build.ts
+
+      - name: Audit links
+        run: bun audit-links.ts
+
+      - name: Deploy to gh-pages
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: .
+          publish_branch: gh-pages
+          force_orphan: true
+          exclude_assets: >-
+            .gitignore,.gitattributes,
+            .github,
+            _content,
+            build.ts,audit-links.ts,package.json,bun.lockb,bun.lock,
+            AUDIT.md,AGENTS.md,
+            workitems,
+            node_modules,
+            .pi
+          commit_message: "Deploy ${{ github.ref_name }} [skip ci]"

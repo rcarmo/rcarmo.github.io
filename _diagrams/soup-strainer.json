@@ -1,0 +1,19 @@
+{
+  "title": "Readability decruft — extract article content from any web page",
+  "nodes": [
+    { "id": "html",     "label": "Raw HTML",           "sub": "web page / email",          "tag": "input",      "column": 0, "row": 0 },
+    { "id": "parser",   "label": "html5lib parser",     "sub": "spec-compliant DOM",        "tag": "processing", "column": 1, "row": 0 },
+    { "id": "scorer",   "label": "Block scorer",        "sub": "text density · link ratio", "tag": "processing", "column": 2, "row": 0,
+      "children": [
+        { "id": "strip",  "label": "Strip",      "sub": "ads · nav · junk",  "tag": "processing" },
+        { "id": "norm",   "label": "Normalize",   "sub": "whitespace · tags", "tag": "processing" }
+      ]
+    },
+    { "id": "article",  "label": "Clean article",       "sub": "sanitized HTML",            "tag": "output",     "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "html",   "to": "parser",  "accent": true },
+    { "from": "parser", "to": "scorer" },
+    { "from": "scorer", "to": "article", "accent": true }
+  ]
+}

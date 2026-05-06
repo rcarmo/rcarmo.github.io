@@ -1,0 +1,128 @@
+---
+section: ai-ml
+status: experimental
+created: 2026-04-22
+tagline: Unified LLM API for Go — streaming, tool calling, model registry, and multi-provider support.
+logo: assets/logos-opt/go-ai.png
+---
+
+## About
+go-ai is a Go port of `@mariozechner/pi-ai`: a unified LLM library that exposes the same high-level `Stream()`/`Complete()` API across multiple providers. It supports streaming deltas, typed tool calling, cross-provider message/context types, automatic model discovery, cost tracking, and provider-specific OAuth flows.
+
+## How it works
+At the center is a registry-driven core: API providers register streaming implementations, models are registered in a global model registry, and callers invoke `Stream()` or `Complete()` with a `Context`, `Model`, and optional tool definitions. Provider packages translate the common Go types into each provider's wire protocol and emit a unified event stream (`TextDelta`, `ThinkingDelta`, `ToolCallStart`, `Done`, etc.). OAuth helpers and generated model metadata sit alongside the core so the same library can drive OpenAI, Anthropic, Google, Mistral, Bedrock, Codex, and compatible APIs without changing the calling code.
+
+## Features
+### 🔄 Unified streaming API
+Same `Stream()` / `Complete()` surface across providers.
+
+### 🧰 Tool calling
+Typed tools with JSON Schema parameters and streamed tool-call deltas.
+
+### 🌐 Multi-provider
+OpenAI, Anthropic, Google, Mistral, Bedrock, Codex, Azure/OpenAI-compatible APIs.
+
+### 🧠 Cross-language compatible context
+JSON-compatible with `pi-ai` types for Go ↔ TypeScript hand-off.
+
+### 💵 Cost tracking
+Per-request token usage and USD cost breakdown.
+
+### 🔐 OAuth support
+Built-in device flow / PKCE helpers for supported providers.
+
+## Posts
+- [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
+
+## Diagram
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1066 202">
+  <style>
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #707070; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #74a7ff; stroke: #012f7b; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #adadad; stroke: #000000; stroke-width: 1.5; }
+    .box-teal { fill: #ebebeb; stroke: #474747; stroke-width: 1.5; }
+    .box-slate { fill: #a7c6ff; stroke: #0042a9; stroke-width: 1.5; }
+    .box-indigo { fill: #dfeed4; stroke: #4e7a27; stroke-width: 1.5; }
+    .box-rose { fill: #dfeed4; stroke: #76bb40; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #d9c9fe; stroke: #5e30eb; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #505050; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0a1a3a; stroke: #4a80d0; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #222222; stroke: #666666; }
+      .box-teal { fill: #1e1e1e; stroke: #666666; }
+      .box-slate { fill: #0d1a38; stroke: #4a7ad0; }
+      .box-indigo { fill: #1a2810; stroke: #5a8a30; }
+      .box-rose { fill: #1a2810; stroke: #5aaa30; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #1a1030; stroke: #7040d0; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
+  </defs>
+  <rect width="1066" height="202" class="bg" rx="8"/>
+
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Your Go app</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">Stream() / Complete()</text>
+
+  <rect x="30" y="118" width="180" height="60" rx="8" class="box"/>
+  <text x="120" y="144" text-anchor="middle" class="label">Config</text>
+  <text x="120" y="162" text-anchor="middle" class="sub">auth.json · env vars</text>
+
+  <rect x="262" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <rect x="274" y="30" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="364" y="56" text-anchor="middle" class="label">Registry</text>
+  <text x="364" y="74" text-anchor="middle" class="sub">provider + model discovery</text>
+  <rect x="278" y="98" width="82" height="48" rx="6" class="box-teal"/>
+  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Tool calling</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">auto-dispatch</text>
+  <rect x="368" y="98" width="82" height="48" rx="6" class="box"/>
+  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Context mgmt</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">overflow/trim</text>
+
+  <rect x="510" y="22" width="294" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
+  <rect x="567" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="657" y="64" text-anchor="middle" class="label">Providers</text>
+  <rect x="526" y="98" width="82" height="48" rx="6" class="box-indigo"/>
+  <text x="567" y="119" text-anchor="middle" class="label" style="font-size:11px">OpenAI</text>
+  <text x="567" y="133" text-anchor="middle" class="sub" style="font-size:9px">Chat + Responses</text>
+  <rect x="616" y="98" width="82" height="48" rx="6" class="box-indigo"/>
+  <text x="657" y="119" text-anchor="middle" class="label" style="font-size:11px">Anthropic</text>
+  <text x="657" y="133" text-anchor="middle" class="sub" style="font-size:9px">Messages API</text>
+  <rect x="706" y="98" width="82" height="48" rx="6" class="box-indigo"/>
+  <text x="747" y="119" text-anchor="middle" class="label" style="font-size:11px">Copilot</text>
+  <text x="747" y="133" text-anchor="middle" class="sub" style="font-size:9px">OAuth + token</text>
+
+  <rect x="856" y="30" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="946" y="56" text-anchor="middle" class="label">Event stream</text>
+  <text x="946" y="74" text-anchor="middle" class="sub">SSE deltas · tool calls</text>
+
+  <path d="M210,60 L274,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M210,148 L228,148 Q242,148 242,134 L242,74 Q242,60 256,60 L274,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M454,60 L567,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <text x="511" y="54" text-anchor="middle" class="sub">SSE</text>
+  <path d="M747,60 L856,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+
+  <text x="533" y="198" text-anchor="middle" class="sub">Unified Go inference library — multi-provider streaming with tool calling</text>
+</svg>

@@ -1,0 +1,39 @@
+{
+  "nodes": [
+    {
+      "id": "68k-ppc",
+      "label": "68K / PPC",
+      "sub": "guest Mac code",
+      "column": 0,
+      "row": 0,
+      "tag": "artifacts"
+    },
+    {
+      "id": "arm64-jits",
+      "label": "ARM64 JITs",
+      "sub": "BasiliskII + SheepShaver",
+      "column": 1,
+      "row": 0,
+      "tag": "processing"
+    },
+    {
+      "id": "arm64-host",
+      "label": "ARM64 host",
+      "sub": "Apple Silicon / Raspberry Pi",
+      "column": 2,
+      "row": 0,
+      "tag": "infra"
+    }
+  ],
+  "edges": [
+    {
+      "from": "68k-ppc",
+      "to": "arm64-jits"
+    },
+    {
+      "from": "arm64-jits",
+      "to": "arm64-host"
+    }
+  ],
+  "title": "68K via BasiliskII JIT \u00b7 PPC via SheepShaver JIT on ARM64"
+}

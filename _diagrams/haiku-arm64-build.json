@@ -1,0 +1,16 @@
+{
+  "title": "Cross-compiling Haiku OS for ARM64 with QEMU validation",
+  "nodes": [
+    { "id": "source",   "label": "Haiku source",     "sub": "hrev + patches",           "tag": "input",      "column": 0, "row": 0 },
+    { "id": "cross",    "label": "Cross-compiler",    "sub": "aarch64 GCC toolchain",    "tag": "processing", "column": 1, "row": 0 },
+    { "id": "image",    "label": "Disk image",         "sub": "anyboot ARM64",            "tag": "artifacts",  "column": 2, "row": 0 },
+    { "id": "qemu",     "label": "QEMU",               "sub": "virt machine test",        "tag": "infra",      "column": 3, "row": 0 },
+    { "id": "hw",       "label": "Real hardware",      "sub": "RPi4 / Orange Pi",         "tag": "external",   "column": 3, "row": 1 }
+  ],
+  "edges": [
+    { "from": "source", "to": "cross",  "accent": true },
+    { "from": "cross",  "to": "image" },
+    { "from": "image",  "to": "qemu",   "accent": true },
+    { "from": "image",  "to": "hw" }
+  ]
+}

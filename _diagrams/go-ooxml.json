@@ -1,0 +1,17 @@
+{
+  "title": "Pure Go OOXML parser — read and write .docx and .xlsx",
+  "nodes": [
+    { "id": "input",   "label": ".docx / .xlsx",    "sub": "Office documents",         "tag": "input",      "column": 0, "row": 0 },
+    { "id": "parser",  "label": "OOXML parser",      "sub": "ZIP + XML extraction",     "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "doc",   "label": "Document",  "sub": "paragraphs",  "tag": "state" },
+        { "id": "sheet", "label": "Spreadsheet", "sub": "rows/cells", "tag": "state" }
+      ]
+    },
+    { "id": "output",  "label": "Go structs",        "sub": "read · modify · write",    "tag": "output",     "column": 2, "row": 0 }
+  ],
+  "edges": [
+    { "from": "input",  "to": "parser", "accent": true },
+    { "from": "parser", "to": "output" }
+  ]
+}

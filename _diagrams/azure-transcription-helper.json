@@ -1,0 +1,63 @@
+{
+  "nodes": [
+    {
+      "id": "media-file",
+      "label": "Media file",
+      "sub": "MP4 / MOV / MP3 / MKV",
+      "column": 0,
+      "row": 0,
+      "tag": "output"
+    },
+    {
+      "id": "ffmpeg",
+      "label": "ffmpeg",
+      "sub": "extract 16 kHz mono WAV",
+      "column": 1,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "azure-speech",
+      "label": "Azure Speech",
+      "sub": "continuous recognition",
+      "column": 2,
+      "row": 0,
+      "tag": "infra"
+    },
+    {
+      "id": "transcript",
+      "label": "Transcript",
+      "sub": "plain text",
+      "column": 3,
+      "row": 0,
+      "tag": "scripting"
+    },
+    {
+      "id": "subtitles",
+      "label": "Subtitles",
+      "sub": "SRT output",
+      "column": 3,
+      "row": 1,
+      "tag": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "media-file",
+      "to": "ffmpeg"
+    },
+    {
+      "from": "ffmpeg",
+      "to": "azure-speech"
+    },
+    {
+      "from": "azure-speech",
+      "to": "transcript"
+    },
+    {
+      "from": "azure-speech",
+      "to": "subtitles"
+    }
+  ],
+  "title": "timestamped phrases become a readable transcript and a subtitle file ready for upload"
+}
