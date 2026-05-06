@@ -38,9 +38,8 @@
     <!-- Title -->
     <text x="468" y="275" font-family="Inter,system-ui,sans-serif" font-size="60" font-weight="700" fill="#0f172a">9front</text>
     <!-- Description -->
-    <text x="468" y="342" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">Porting 9front to ARM64 —</text>
-    <text x="468" y="390" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">Orange Pi 4 Pro (Allwinner</text>
-    <text x="468" y="438" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">A733)</text>
+    <text x="468" y="342" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">Personal Plan 9/9front ports</text>
+    <text x="468" y="390" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">to oddball ARM SBCs</text>
     <!-- Site -->
     <text x="1176" y="532" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="600" fill="#64748b">rcarmo.github.io</text>
   </g>
