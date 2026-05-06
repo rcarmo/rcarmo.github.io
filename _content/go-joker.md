@@ -34,7 +34,7 @@ O(1) append/assoc for builder patterns — auto-promoted from persistent collect
 
 ## Gallery
 - [Joker vs Python vs Goja](assets/screenshots/go-joker/benchmark-transposed.svg) — CLBG benchmark comparison across languages
-- [Speedup vs upstream](assets/screenshots/go-joker/benchmark-improvements.svg) — improvement factors over original Joker
+- [Speedup vs upstream](assets/screenshots/go-joker/benchmark-speedup.svg) — improvement factors over original Joker
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 378">
