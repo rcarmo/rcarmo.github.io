@@ -7,29 +7,36 @@ tagline: Chromeless macOS web app viewer — one URL, one native WebKit window, 
 ---
 
 ## About
-The missing macOS web app wrapper: a tiny native Swift shell that opens a specific URL in a WebKit window with as little visible chrome as macOS will allow. No address bar, no tab strip, no bookmark bar — just the page in a native window. Safari Web Apps bring too much browser furniture; Web App Viewer brings none.
+The missing macOS web app wrapper: a tiny native Swift shell that opens a specific URL in a WebKit window with as little visible chrome as macOS will allow. No address bar, no tab strip, no bookmark bar — just the page in a native window. Safari Web Apps bring too much browser furniture; Web App Viewer brings none. Can install any URL as a standalone app in `~/Applications` with its own icon, bundle identifier, and preference store.
 
 ## How it works
-Each window is a `WKWebView` that fills the frame. An invisible draggable strip at the top (right of the traffic lights) lets you move the window even with the titlebar suppressed. Traffic-light controls hide when the window isn't active. The default URL comes from `DefaultWebAppURL` in `Info.plist` — change it and rebuild. A Share Extension, a macOS Service, and a `webappviewer://open?url=` URI scheme round out the integration surface.
+Each window is a `WKWebView` that fills the frame. An invisible draggable strip at the top (right of the traffic lights) lets you move the window even with the titlebar suppressed. Traffic-light controls and scrollbars appear only while the pointer is over the window. Same-origin links stay inside the app, new-window links open another app window, and external links go to Safari. The app installs itself as a standalone per-URL app via a drop/paste window with icon and name customization.
 
 ## Features
 ### 🪟 Chromeless WebKit window
 No toolbar, no address bar, no fullscreen frame — just the page.
 
-### 🎯 Opinionated single-URL default
-Set `DefaultWebAppURL` in `Info.plist` once; it opens on launch.
+### 📦 App installer
+Installs any URL as its own macOS app in `~/Applications` with manifest/favicon icon selection and custom naming.
 
-### 📤 Share Extension + macOS Service
-"Open in Web App Viewer" appears in the Services menu and the system Share sheet.
+### 📜 User Scripts
+Per-URL JavaScript injection from Preferences — regex URL matching, syntax-highlighted editor, enable/disable per script.
 
-### 🔗 URI scheme
-`webappviewer://open?url=…` for external integrations and scripts.
+### 🔔 Foreground notifications
+Supports the standard Web `Notification` API while the app is running.
 
-### 🖱 Invisible drag strip
-Narrow draggable area lets you move the window without visible titlebar chrome.
+### 📲 Share Extension + macOS Service
+"Open in Web App Viewer" in the Services menu, Share sheet, and `webappviewer://open?url=…` URI scheme.
 
-### 📦 Single `make` build
-One command; app bundle at `.build/WebAppViewer.app`.
+### 🔍 Web Inspector
+View menu, Option-Command-I, context menu, or Safari Develop menu — embedded views are inspectable.
+
+### 📁 Downloads + drops
+File downloads to `~/Downloads`; accepts `.webloc`, `public.url`, and text URL drops on the Dock icon.
+
+## Gallery
+- [Startup window](https://raw.githubusercontent.com/rcarmo/swift-webapp-viewer/main/docs/startup-window.svg) — URL drop/paste window
+- [User Scripts](https://raw.githubusercontent.com/rcarmo/swift-webapp-viewer/main/docs/user-scripts.svg) — Preferences pane with script editor
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 728 178">
