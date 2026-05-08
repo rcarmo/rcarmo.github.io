@@ -25,11 +25,14 @@ Primitive, string, and cursor loops on an irValue stack — no interface{} boxin
 ### 🗃 Transient vectors and maps
 O(1) append/assoc for builder patterns — auto-promoted from persistent collections.
 
+### 🌐 Web runtime
+Ring-style HTTP server with WebSocket and SSE/streaming extensions. Bottle-style router with path params, middleware, and CORS.
+
 ### 🔬 Clojure parity surface
 Protocols, records, hierarchies, tagged literals, sorted collections, atom watchers, chunked seqs, unchecked arithmetic.
 
 ### 🎨 Additional namespaces
-`joker.imaging` (image processing), `joker.svg` (SVG generation + raster), `joker.pdf` (PDF documents).
+`joker.imaging` (image processing), `joker.svg` (SVG + raster), `joker.pdf` (PDF), `joker.random`, `joker.log`, `joker.http`, `joker.http.router`.
 
 ### 🔧 Runtime introspection
 `disassemble`, `analyze`, `wasm-diagnostic`, `escape-analysis`, `profile`, `benchmark`, `mem-stats`, `gc` — all from Joker scripts.
@@ -37,6 +40,8 @@ Protocols, records, hierarchies, tagged literals, sorted collections, atom watch
 ## Gallery
 - [Joker vs Python vs Goja](assets/screenshots/go-joker/benchmark-transposed.svg) — CLBG benchmark comparison across languages
 - [Speedup vs upstream](assets/screenshots/go-joker/benchmark-speedup.svg) — improvement factors over original Joker
+- [Architecture](assets/screenshots/go-joker/architecture.svg) — 5-tier execution pipeline diagram
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 378">
   <style>
