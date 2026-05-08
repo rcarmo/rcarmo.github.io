@@ -7,14 +7,14 @@ tagline: Performance-optimised Clojure-like Lisp interpreter — IR bytecode, WA
 ---
 
 ## About
-An optimized fork of [Joker](https://github.com/candid82/joker) (Clojure-like Lisp interpreter) for inclusion in [gi](gi), a self-hosted coding agent. Four execution tiers — WASM native via wazero JIT, typed IR with zero-boxing, boxed IR for collections, and tree-walker for full Clojure semantics — selected automatically per expression. Mandelbrot runs ~4200× faster than upstream; general Clojure code 10–500× faster.
+An optimized fork of [Joker](https://github.com/candid82/joker) (Clojure-like Lisp interpreter) for inclusion in [gi](gi), a self-hosted coding agent. Five execution tiers — native integer codegen, WASM native via wazero JIT, typed IR with zero-boxing, boxed IR for collections, and tree-walker for full Clojure semantics — selected automatically per expression. Mandelbrot runs ~4200× faster than upstream; fib(35) in 0.5s via native codegen.
 
 ## How it works
-The compiler analyses each expression and emits to the fastest viable tier: pure numeric loops compile to WASM bytecode executed by wazero's JIT (~0.2ms), primitive/string/cursor loops use a typed IR stack with zero boxing (~2–8ms), collection-heavy code uses a boxed IR interpreter (~10–40ms), and everything else falls through to the tree-walker for full macro/special-form/I/O support. Generic tail-call optimization, transient vectors/maps, and a native StringCursor type round out the runtime.
+The compiler analyses each expression and emits to the fastest viable tier: pure-integer recursive functions compile to native Go closures (53× faster, zero boxing), pure numeric loops compile to WASM bytecode executed by wazero's JIT (~0.2ms), primitive/string/cursor loops use a typed IR stack with zero boxing (~2–8ms), collection-heavy code uses a boxed IR interpreter (~10–40ms), and everything else falls through to the tree-walker for full macro/special-form/I/O support.
 
 ## Features
-### ⚡ 4-tier execution
-WASM → Typed IR → Boxed IR → Tree-walker — automatic tier selection per expression.
+### ⚡ Native integer codegen
+Pure-integer recursive `defn` bodies compile to fixed-arity native Go closures. fib(35) in 0.5s (53× faster).
 
 ### 🧮 WASM/wazero JIT
 Pure integer/float loops compile to native code via wazero. ~0.2ms for Mandelbrot.
@@ -22,20 +22,21 @@ Pure integer/float loops compile to native code via wazero. ~0.2ms for Mandelbro
 ### 📦 Typed IR (zero-boxing)
 Primitive, string, and cursor loops on an irValue stack — no interface{} boxing overhead.
 
-
 ### 🗃 Transient vectors and maps
 O(1) append/assoc for builder patterns — auto-promoted from persistent collections.
 
-### 🔬 Runtime introspection
-`disassemble`, `analyze`, `wasm-diagnostic`, `escape-analysis`, `profile`, `benchmark`, `mem-stats`, `gc` — all from Joker scripts.
+### 🔬 Clojure parity surface
+Protocols, records, hierarchies, tagged literals, sorted collections, atom watchers, chunked seqs, unchecked arithmetic.
 
 ### 🎨 Additional namespaces
 `joker.imaging` (image processing), `joker.svg` (SVG generation + raster), `joker.pdf` (PDF documents).
 
+### 🔧 Runtime introspection
+`disassemble`, `analyze`, `wasm-diagnostic`, `escape-analysis`, `profile`, `benchmark`, `mem-stats`, `gc` — all from Joker scripts.
+
 ## Gallery
 - [Joker vs Python vs Goja](assets/screenshots/go-joker/benchmark-transposed.svg) — CLBG benchmark comparison across languages
 - [Speedup vs upstream](assets/screenshots/go-joker/benchmark-speedup.svg) — improvement factors over original Joker
-
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 378">
   <style>
