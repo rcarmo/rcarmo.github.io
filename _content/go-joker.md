@@ -1,7 +1,7 @@
 ---
 section: libraries
 status: active
-created: 2019-08-23
+created: 2026-04-22
 logo: assets/logos-opt/go-joker.png
 tagline: Performance-optimised Clojure-like Lisp interpreter — IR bytecode, WASM backend, 527× faster arithmetic.
 ---
