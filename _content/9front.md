@@ -1,7 +1,7 @@
 ---
 section: retro-embedded
 status: experimental
-created: 2025-01-01
+created: 2026-04-25
 tagline: Personal Plan 9/9front ports to oddball ARM SBCs
 logo: assets/logos-opt/9front.png
 ---

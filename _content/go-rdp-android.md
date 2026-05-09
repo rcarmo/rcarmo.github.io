@@ -2,6 +2,7 @@
 id: go-rdp-android
 repo: rcarmo/go-rdp-android
 section: remote-access
+created: 2026-04-30
 tagline: Native Android RDP server — screen sharing without ADB, built on go-rdp
 logo: assets/logos-opt/go-rdp-android.png
 ---
