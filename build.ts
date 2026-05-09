@@ -812,6 +812,7 @@ ${posts.length ? `      <section class="sec" id="s-posts">
     import { mountTypeahead } from '/assets/js/typeahead.js?v=${ASSET_VERSION}';
     mount({
       fullName: '${fullName}',
+      createdYear: '${fm.created?.slice(0, 4) || ''}',
       heroMetaEl: document.getElementById('hero-meta-island-${id}'),
       statsEl:    document.getElementById('stats-island-${id}'),
       releasesEl: document.getElementById('rel-island-${id}'),

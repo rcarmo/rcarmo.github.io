@@ -151,8 +151,9 @@ function renderHeroMeta(el, repo) {
   `;
 }
 
-function renderStatsBar(el, repo, fullName) {
+function renderStatsBar(el, repo, fullName, createdYear) {
   if (!el) return;
+  const yearDisplay = createdYear || (repo ? repo.created_at?.slice(0, 4) : '—');
   el.innerHTML = `
     <div class="stat">
       <div class="stat-label">Stars</div>
@@ -168,7 +169,7 @@ function renderStatsBar(el, repo, fullName) {
     </div>
     <div class="stat">
       <div class="stat-label">Created</div>
-      <div class="stat-value stat-value-sm">${repo ? repo.created_at?.slice(0, 4) : '—'}</div>
+      <div class="stat-value stat-value-sm">${yearDisplay}</div>
     </div>
     <div class="stat stat-release" id="stat-release" style="display:none">
       <div class="stat-label">Release</div>
@@ -305,16 +306,16 @@ async function renderReleaseList(el, fullName) {
   }
 }
 
-export function mount({ fullName, heroMetaEl, statsEl, releasesEl, relatedEl, relatedCandidates = [] }) {
+export function mount({ fullName, createdYear, heroMetaEl, statsEl, releasesEl, relatedEl, relatedCandidates = [] }) {
   const fetchNames = [fullName, ...relatedCandidates.map((candidate) => candidate.fullName)];
   fetchAllRepos(fetchNames).then((repoMap) => {
     const repo = repoMap[fullName] || null;
     renderHeroMeta(heroMetaEl, repo);
-    renderStatsBar(statsEl, repo, fullName);
+    renderStatsBar(statsEl, repo, fullName, createdYear);
     renderHeroRelated(relatedEl, fullName, relatedCandidates, repoMap);
   }).catch(() => {
     renderHeroMeta(heroMetaEl, null);
-    renderStatsBar(statsEl, null, fullName);
+    renderStatsBar(statsEl, null, fullName, createdYear);
     renderHeroRelated(relatedEl, fullName, relatedCandidates, {});
   });
 
