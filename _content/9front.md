@@ -17,7 +17,7 @@ I've set things up so that a cross-compilation harness builds the kernel inside 
 
 The harness talks to it via automated `expect` scripts so that port files in `port/a733/` are packed into a FAT image, mounted inside the VM, compiled against the 9front kernel tree, and the resulting kernel is then extracted and placed into a bootable SD card image into which I've (also mostly automatically) packed the Allwinner SPL and `uboot`.
 
-It's hard going since a) there is a lot of SD card swapping involved and b) most of the process is setting markers to get some sort of progress out of the board via a serial console, and there isn't really a lot of documentation about how to do this kind of thing (or if there is, it is locked away in some obscure mailint-list). And, as extra fun, the order in which things like the MMU and interrupts are set up is all over the place (possibly because of `uboot` Linux-centric assumptions).
+It's hard going since a) there is a lot of SD card swapping involved and b) most of the process is setting markers to get some sort of progress out of the board via a serial console, and there isn't really a lot of documentation about how to do this kind of thing (or if there is, it is locked away in some obscure mailing list). And, as extra fun, the order in which things like the MMU and interrupts are set up is all over the place (possibly because of `uboot` Linux-centric assumptions).
 
 ## Features
 ### 🔧 QEMU-first development
