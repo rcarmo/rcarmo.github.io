@@ -11,14 +11,14 @@ logo: assets/logos-opt/piclaw.png
 PiClaw stuffs the [Pi Coding Agent](https://pi.dev) runtime into a Docker container, throws on a streaming web UI, and calls it a day. Multi-provider LLM support, built-in Ghostty terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access — all behind one `docker run` command. The tool surface is effectively infinite thanks to a growing catalog of [community add-ons](https://rcarmo.github.io/piclaw-addons) covering Proxmox, Portainer, SSH, and whatever else someone felt like wiring up.
 
 ## Motivation
-After creating [webterm](webterm) and [vibes](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting. But when I stumbled upon [Pi](https://pi.dev) and its amazing extensibility, I knew I had found a great way to explore how to build an extensible web-based IDE that I could access from my iPhone and iPad.
+After creating [`webterm`](webterm) and [`vibes`](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting. But when I stumbled upon [Pi](https://pi.dev) and its amazing extensibility, I knew I had found a great way to explore how to build an extensible web-based IDE that I could access from my iPhone and iPad.
 
 ## How it works
 A Bun process embeds the [`pi`](https://pi.dev) agent runtime and manages all agent interactions, settings, etc. All `pi` extensions and skills work, and the runtime extends the extension contract in such a way that almost _everything_ inside the workspace is, essentially, a plugin. State is managed with `pi`'s JSONL files, but primarily using a SQLite database that tracks all sessions and can store some media for easy retrieval later via FTS.
 
 The web UI communicates with the agent over SSE for real-time indicators, and the agent tool surface, although larger than `pi`'s, is layered: a small always-active baseline, with additional tools activated on demand via `list_tools` and `activate_tools` — keeping token usage low by both limiting the tool surface and compressing their outputs, which enables the use of literally hundreds of tools with very little context overhead.
 
-As creature comforts, you get a workspace tree, pluggable viewers, a [ghostty-web](ghostty-web) terminal and a VNC viewer (which I typically need to access SBCs and X apps inside the `piclaw` host, plus a nice `vim`-capable editor with Obsidian-like Markdown rendering, plus an encrypted keychain stores secrets encrypted with AES-GCM. 
+As creature comforts, you get a workspace tree, pluggable viewers, a [`ghostty-web`](ghostty-web) terminal and a VNC viewer (which I typically need to access SBCs and X apps inside the `piclaw` host, plus a nice `vim`-capable editor with Obsidian-like Markdown rendering, plus an encrypted keychain stores secrets encrypted with AES-GCM. 
 
 Memory management leverages dream memory consolidation (which runs nightly) to synthesise notes from all sessions and keep long-running workflows coherent.
 
@@ -40,6 +40,16 @@ SSH, Proxmox, Portainer profiles. CDP browser automation. Sharp image processing
 
 ### 📦 Single container
 docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
+
+## Gallery
+- [iPad PWA with star trends](assets/screenshots/piclaw/00002piclaw.jpeg) — Clean mobile-first chat with GitHub digest
+- [Agent implementing a feature](assets/screenshots/piclaw/00003piclaw.jpeg) — Issue resolution with validation and CI
+- [Workspace tree + disk usage](assets/screenshots/piclaw/00004piclaw.jpeg) — File browser with storage sunburst
+- [Gruvbox terminal + git log](assets/screenshots/piclaw/00005piclaw.jpeg) — Ghostty terminal with workspace tree
+- [Agent session picker](assets/screenshots/piclaw/00010piclaw.jpeg) — Multiple named agent sessions
+- [Theme picker](assets/screenshots/piclaw/00020piclaw.jpeg) — 16 built-in themes with live preview
+- [Add-on catalog](assets/screenshots/piclaw/00025piclaw.jpeg) — In-app add-on browser and installer
+- [Portainer settings](assets/screenshots/piclaw/00030piclaw.jpeg) — Add-on configuration with keychain integration
 
 ## Posts
 - [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
