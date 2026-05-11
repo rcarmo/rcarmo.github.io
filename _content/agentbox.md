@@ -10,9 +10,12 @@ logo: assets/logos-opt/agentbox.png
 Agentbox is a Debian Trixie container with Copilot CLI, Claude, Codex, and Pi preinstalled alongside `git`, `gh`, `bun`, `uv`, and `brew`. 
 
 It provides Docker, `ssh`, and a GUI image with RDP (disabled by default, enabled via env vars) and an XFCE desktop environment, as well as a workspace skeleton with `SKILL.md` templates to help coding harnesses feel at home.
+## Motivation
+Since I never run agents on my personal machines and spend a lot of time on an iPad (as well as switching to and from desktop/laptop/other OSes), I needed something that would work remotely _and_ from whatever I was using at the time. And since I can survive most places with `vim` and `tmux`, this seemed like a good way to have persistent sandboxes (both TUI and graphical) I could get at over [Tailscale](https://tailscale.com). 
 
+Together with [webterm](webterm), this proved to be a very effective environment until I built [piclaw](piclaw), and I still use and maintain it for other purposes.
 ## How it works
-The entrypoint checks `ENABLE_DOCKER`, `ENABLE_SSH`, and `ENABLE_RDP` and starts only what you asked for — all three default to off. The agent user gets passwordless sudo, and the workspace skeleton at `/home/agent/workspace-skel` copies into `/workspace` on first use without overwriting files.
+The entrypoint checks `ENABLE_DOCKER`, `ENABLE_SSH`, and `ENABLE_RDP` and starts only what you asked for — all three default to off. The agent user gets passwordless `sudo`, and the workspace skeleton at `/home/agent/workspace-skel` copies into `/workspace` on first use without overwriting files.
 
 ## Features
 ### 🤖 Agents preinstalled
