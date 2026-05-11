@@ -13,7 +13,7 @@ A port of [9front](http://9front.org) — the community fork of Plan 9 from Bell
 I needed a refresher on `uboot` as a stepping stone to get [Haiku](haiku-arm64-build) running that board, and Plan9/9front is a kernel simple enough to wrap my head around while doing hardware bringup. And being who I am, I decided to be systematic about it.
 
 ## How it works
-I've set things up so that a cross-compilation harness builds the kernel inside a running 9front QEMU instance (which also acts as a control to port and trace the vanilla ARM kernel, even though I am still very much stuck on `uboot`). 
+I've set things up so that a cross-compilation harness builds the kernel inside a running 9front QEMU instance (which also acts as a control to trace the vanilla ARM kernel, even though I am still very much stuck on `uboot`). 
 
 The harness talks to it via automated `expect` scripts so that port files in `port/a733/` are packed into a FAT image, mounted inside the VM, compiled against the 9front kernel tree, and the resulting kernel is then extracted and placed into a bootable SD card image into which I've (also mostly automatically) packed the Allwinner SPL and `uboot`.
 
