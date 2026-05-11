@@ -125,3 +125,5 @@ Pure Go + assembly. No Python, no cgo, no ONNX runtime.
 
 ## Posts
 - [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03
+- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
+- [The Local AI Moat](https://taoofmac.com/space/blog/2026/05/09/2130) — 2026-05-09

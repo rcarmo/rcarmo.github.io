@@ -118,3 +118,4 @@ Default `make` produces a fully self-contained static binary with no C dependenc
 
 ## Posts
 - [GTE-Small in Go](https://taoofmac.com/space/blog/2025/03/22/1900) — 2025-03-22
+- [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03

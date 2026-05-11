@@ -42,6 +42,9 @@ Protocols, records, hierarchies, tagged literals, sorted collections, atom watch
 - [Speedup vs upstream](assets/screenshots/go-joker/benchmark-speedup.svg) — improvement factors over original Joker
 - [Architecture](assets/screenshots/go-joker/architecture.svg) — 5-tier execution pipeline diagram
 
+## Posts
+- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 378">
   <style>

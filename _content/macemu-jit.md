@@ -34,6 +34,9 @@ Lower latency than X11.
 - [Notes for March 23-29](https://taoofmac.com/space/notes/2026/03/29/1300) — 2026-03-29
 - [Notes for December 25-31](https://taoofmac.com/space/notes/2025/12/31/1830) — 2025-12-31
 - [Notes for July 15-21](https://taoofmac.com/space/notes/2024/07/21/1800) — 2024-07-21
+- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
+- [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03
+- [macintosh-mini](https://taoofmac.com/space/links/2026/05/03/1430) — 2026-05-03
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 114">

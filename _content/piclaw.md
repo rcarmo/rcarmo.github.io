@@ -45,6 +45,10 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
 - [OpenClaw Ecosystem](https://taoofmac.com/space/ai/agentic/openclaw) — 2026-04-18
 - [So You Want To Do Agentic Development](https://taoofmac.com/space/blog/2026/03/08/2130) — 2026-03-08
 - [Vibing with the Agent Control Protocol](https://taoofmac.com/space/notes/2026/02/01/2100) — 2026-02-01
+- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
+- [Notes on GPT 5.x Model Regressions](https://taoofmac.com/space/notes/2026/05/07/0600) — 2026-05-07
+- [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03
+- [App Notes: Web App Viewer](https://taoofmac.com/space/notes/2026/04/29/1730) — 2026-04-29
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 276">

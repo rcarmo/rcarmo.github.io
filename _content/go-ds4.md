@@ -33,6 +33,10 @@ No Python, no cgo, no ONNX — `go build` and run.
 ### 🗺 mmap model loading
 128 GB Q2 model served directly from disk — no loading step.
 
+## Posts
+- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
+- [The Local AI Moat](https://taoofmac.com/space/blog/2026/05/09/2130) — 2026-05-09
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1066 178">
   <style>

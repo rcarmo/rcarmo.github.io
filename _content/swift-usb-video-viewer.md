@@ -27,6 +27,7 @@ Single `make` command builds the app bundle at `.build/USBVideoViewer.app`; icon
 
 ## Posts
 - [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
+- [App Notes: Web App Viewer](https://taoofmac.com/space/notes/2026/04/29/1730) — 2026-04-29
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 114">

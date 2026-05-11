@@ -23,6 +23,9 @@ Existing xterm.js tooling works unchanged.
 ### 🔗 Shared engine
 go-te used by webterm, go-rdp, and ghostty-web.
 
+## Posts
+- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 100">
   <style>
