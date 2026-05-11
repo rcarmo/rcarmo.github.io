@@ -9,6 +9,9 @@ logo: assets/logos-opt/apfelstrudel.png
 ## About
 Apfelstrudel wraps the [`strudel`](https://strudel.cc) live-coding music environment with an embedded AI agent chat panel. You write and perform generative music patterns in Strudel's mini-language while an agent watches your code and answers questions, suggests variations, or helps you understand what a pattern does — all in real time without breaking your flow.
 
+## Motivation
+I feel guilty aboiut neglecting my music hobby and thought this would be a neat way to use my limited free time to cover two or three of my interests. It ended up being an off-beat (ha!) precursor to [`piclaw`](piclaw) instead.
+
 ## How it works
 A Bun-based server hosts the Strudel editor and exposes a WebSocket channel to the AI backend. The agent receives the current code buffer as context on each message so it can reason about what's running. Changes the agent suggests can be applied directly to the editor with a single click. Audio runs entirely in the browser via the Web Audio API.
 

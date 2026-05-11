@@ -9,8 +9,13 @@ logo: assets/logos-opt/asterisk-embedding-model.png
 ## About
 Asterisk is a compact sentence embedding model designed to run inference on low-resource hardware — Raspberry Pi, older x86 machines, or anything without a GPU. Trained on a curated corpus with efficiency as the primary constraint, it produces dense vector representations suitable for semantic search, clustering, and RAG retrieval pipelines at a fraction of the cost of larger models.
 
+## Motivation
+I wanted to try using vector search for the [`feed-summarizer`](feed-summarizer) de-dupe/grouping logic in useful time, as well as build a vector index for my ArchiveBox and Obsidian data without making millions of calls to an external provider with all of my personal data on it.
+
+And I wanted it _fast_ and able to run on one of the low-power ARM SBCs I have around. I ended up going down a rabbit hole that preceded [`go-gte`](go-gte). Partway during the training process on my potato RTX3060, I decided that Go would be a great choice for both portability and maintainability (even if ARM NEON is still much slower than Intel chips).
+
 ## How it works
-The model architecture is a distilled transformer encoder, trained with a contrastive objective on sentence pairs. Weights are exported to ONNX for portable, runtime-agnostic inference. The repository includes training scripts, evaluation harnesses against standard STS benchmarks, and example inference code in Python and via the ONNX Runtime.
+The model architecture is a distilled transformer encoder, trained with a contrastive objective on sentence pairs. It is not very smart or sophisticated (I chose it _precisely_ because I could understand it over lunch), but it works. I decided to use ONNX for portable, runtime-agnostic inference, and the repository includes training scripts, evaluation harnesses against standard STS benchmarks, and example inference code in Python via the ONNX Runtime.
 
 ## Features
 ### 🥧 Raspberry Pi capable

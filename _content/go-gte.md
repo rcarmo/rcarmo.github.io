@@ -10,8 +10,14 @@ Forked from [antirez/gte-pure-C](https://github.com/antirez/gte-pure-C). A pure 
 
 Single static binary. 1 allocation per embed. Predictable flat latency. All matrix operations use hand-written SIMD assembly (AVX2+FMA on amd64, NEON on arm64) — no gonum, no goroutine churn, no CGo in the default build.
 
+## Motivation
+This seemed like a great follow-up to [`asterisk`](asterisk-embedding-model) and drove me to try out Go assembly. I'm not overly pleased with non-GPU performance, but I did learn a lot from contrasting SIMD and NVIDIA support that eventually led to [`go-pherence`](go-pherence), even if my potato RTX3060 provides barely any speedup.
+
+I'm pretty happy with it, and it was a great learning experience even if I haven't yet sorted out the vector database I will be using it with.
+
 ## How it works
-Loads a converted GTE-Small model at startup, tokenises input with a bundled WordPiece tokeniser, runs matrix multiplications through hand-tuned SIMD kernels, and returns mean-pooled L2-normalized embeddings as a Go slice. The hot path has zero goroutine overhead and generates ~700 bytes/s of GC pressure at 100 qps — 10,000× less than a gonum BLAS equivalent.
+Like Salvatore's original, it loads a converted GTE-Small model at startup, tokenises input with a bundled WordPiece tokeniser, runs matrix multiplications (through hand-tuned SIMD kernels), and returns mean-pooled L2-normalized embeddings as a Go slice. After banging on the profiler for a few days, the hot path has zero goroutine overhead and generates ~700 bytes/s of GC pressure at 100 qps — 10,000× less than a `gonum` BLAS equivalent (which was what AI suggested I use, without considering all the angles).
+
 
 ## Features
 ### 🔢 384-dim embeddings
