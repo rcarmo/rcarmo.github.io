@@ -2,16 +2,16 @@
 id: piclaw-addons
 repo: rcarmo/piclaw-addons
 section: agents
-tagline: Community extensions and add-ons for PiClaw — Proxmox, Portainer, SSH, and more
+tagline: The add-on buffet for PiClaw — browse the full menu at [rcarmo.github.io/piclaw-addons](https://rcarmo.github.io/piclaw-addons)
 featured: true
 created: 2026-04-21
 ---
 
 ## About
 
-A growing catalog of extensions, tools and add-ons for [PiClaw](piclaw). Each add-on is a self-contained npm package that plugs into the PiClaw runtime, adding new tools, workflows, and integrations without touching the core agent.
+A growing catalog of extensions, tools and add-ons for [PiClaw](piclaw) — browse the full collection at **[rcarmo.github.io/piclaw-addons](https://rcarmo.github.io/piclaw-addons)**. Each add-on is a self-contained npm package that plugs into the PiClaw runtime, adding new tools, workflows, and integrations without touching the core agent.
 
-Current add-ons include Proxmox cluster management, Portainer container orchestration, and SSH remote access — with more contributed by the community.
+Current add-ons include Proxmox cluster management, Portainer container orchestration, SSH remote access, and whatever else seemed like a good idea at 2 AM.
 
 ## Features
 

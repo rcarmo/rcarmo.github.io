@@ -3,12 +3,12 @@ section: agents
 featured: true
 status: active
 created: 2026-02-17
-tagline: A self-hosted AI agent workspace — mobile-first streaming UI, [infinite tools](https://rcarmo.github.io/piclaw-addons)
+tagline: The Pi coding agent in a technicolor web trenchcoat — [infinite tools](https://rcarmo.github.io/piclaw-addons)
 logo: assets/logos-opt/piclaw.png
 ---
 
 ## About
-PiClaw packages the [Pi Coding Agent](https://pi.dev) runtime into a Docker container with a streaming web UI, multi-provider LLM support, and built-in tools including a Ghostty terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access. Its tool surface is effectively infinite thanks to a growing catalog of [community extensions and add-ons](https://github.com/rcarmo/piclaw-addons) covering Proxmox, Portainer, SSH, and more. One `docker run` command, one live workspace.
+PiClaw stuffs the [Pi Coding Agent](https://pi.dev) runtime into a Docker container, throws on a streaming web UI, and calls it a day. Multi-provider LLM support, built-in Ghostty terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access — all behind one `docker run` command. The tool surface is effectively infinite thanks to a growing catalog of [community add-ons](https://rcarmo.github.io/piclaw-addons) covering Proxmox, Portainer, SSH, and whatever else someone felt like wiring up.
 
 ## Motivation
 After creating [Vibes](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting, so when I stumbled upon [Pi](https://pi.dev) and its amazing extensibility, I knew I had found a great way to explore how to build an agent-based IDE that I could run from my iPad.
