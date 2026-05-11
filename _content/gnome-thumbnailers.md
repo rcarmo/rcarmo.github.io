@@ -26,8 +26,8 @@ FBX, OBJ, STL thumbnail renders.
 make install, thumbnails appear immediately.
 
 ## Posts
-- [You Can Leave Your Hat On](https://taoofmac.com/space/blog/2022/04/02/2130) — 2022-04-02
 - [Homelab Update](https://taoofmac.com/space/blog/2022/10/28/1900) — 2022-10-28
+- [You Can Leave Your Hat On](https://taoofmac.com/space/blog/2022/04/02/2130) — 2022-04-02
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 188">

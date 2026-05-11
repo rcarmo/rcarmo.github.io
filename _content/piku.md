@@ -34,11 +34,11 @@ ps:scale web=3 and config:set KEY=val — no redeploy needed.
 Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016.
 
 ## Posts
-- [Some Breakage May Ensue](https://taoofmac.com/space/blog/2016/04/25/1400) — 2016-04-25
-- [Third Python's The Charm](https://taoofmac.com/space/blog/2016/12/04/1351) — 2016-12-04
-- [The Third Python](https://taoofmac.com/space/blog/2018/07/08/1330) — 2018-07-08
-- [Deployment Pains](https://taoofmac.com/space/blog/2019/10/13/1630) — 2019-10-13
 - [Getting Takahē to run on Piku](https://taoofmac.com/space/blog/2022/12/21/0900) — 2022-12-21
+- [Deployment Pains](https://taoofmac.com/space/blog/2019/10/13/1630) — 2019-10-13
+- [The Third Python](https://taoofmac.com/space/blog/2018/07/08/1330) — 2018-07-08
+- [Third Python's The Charm](https://taoofmac.com/space/blog/2016/12/04/1351) — 2016-12-04
+- [Some Breakage May Ensue](https://taoofmac.com/space/blog/2016/04/25/1400) — 2016-04-25
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 290">

@@ -22,8 +22,8 @@ NC6s_v3: typically under $0.10/hour.
 CUDA, the web UI, and helper scripts are installed automatically on first boot.
 
 ## Posts
-- [Very Stable Diffusion](https://taoofmac.com/space/blog/2022/09/03/1400) — 2022-09-03
 - [A Diffuse Return](https://taoofmac.com/space/blog/2022/11/27/1800) — 2022-11-27
+- [Very Stable Diffusion](https://taoofmac.com/space/blog/2022/09/03/1400) — 2022-09-03
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 290">

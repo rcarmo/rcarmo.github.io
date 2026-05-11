@@ -26,8 +26,8 @@ JSON sidecar preserving album, smart album, and folder structure.
 Nothing fails silently — export_errors.log for every failure.
 
 ## Posts
-- [We Can't Remember It For You Wholesale](https://taoofmac.com/space/blog/2016/09/25/1050) — 2016-09-25
 - [Renaming and Filing Photos and Videos in the HEIC/HEIF era](https://taoofmac.com/space/blog/2023/01/14/1745) — 2023-01-14
+- [We Can't Remember It For You Wholesale](https://taoofmac.com/space/blog/2016/09/25/1050) — 2016-09-25
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 728 178">

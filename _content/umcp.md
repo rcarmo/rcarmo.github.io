@@ -32,8 +32,8 @@ Name a method `tool_<name>` or `prompt_<name>` — discovery, schema generation,
 
 ## Posts
 - [Lessons on Building MCP Servers](https://taoofmac.com/space/blog/2026/04/29/2341) — 2026-04-30
-- [Creating Per-Project MCP Servers](https://taoofmac.com/space/blog/2025/10/04/1111) — 2025-10-04
 - [Notes on SKILL.md vs MCP](https://taoofmac.com/space/notes/2026/01/14/0830) — 2026-01-14
+- [Creating Per-Project MCP Servers](https://taoofmac.com/space/blog/2025/10/04/1111) — 2025-10-04
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 968 178">
