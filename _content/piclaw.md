@@ -11,14 +11,16 @@ logo: assets/logos-opt/piclaw.png
 PiClaw stuffs the [Pi Coding Agent](https://pi.dev) runtime into a Docker container, throws on a streaming web UI, and calls it a day. Multi-provider LLM support, built-in Ghostty terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access — all behind one `docker run` command. The tool surface is effectively infinite thanks to a growing catalog of [community add-ons](https://rcarmo.github.io/piclaw-addons) covering Proxmox, Portainer, SSH, and whatever else someone felt like wiring up.
 
 ## Motivation
-After creating [Vibes](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting, so when I stumbled upon [Pi](https://pi.dev) and its amazing extensibility, I knew I had found a great way to explore how to build an agent-based IDE that I could run from my iPad.
+After creating [webterm](webterm) and [vibes](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting. But when I stumbled upon [Pi](https://pi.dev) and its amazing extensibility, I knew I had found a great way to explore how to build an extensible web-based IDE that I could access from my iPhone and iPad.
 
 ## How it works
-Supervisor runs as PID 1 inside the container, managing the Bun-based Pi agent runtime, an optional Ghostty-backed web terminal, and an optional VNC display. All persistent state lives on a bind-mounted /workspace volume — the container is stateless and replaceable.
+A Bun process embeds the [`pi`](https://pi.dev) agent runtime and manages all agent interactions, settings, etc. All `pi` extensions and skills work, and the runtime extends the extension contract in such a way that almost _everything_ inside the workspace is, essentially, a plugin. State is managed with `pi`'s JSONL files, but primarily using a SQLite database that tracks all sessions and can store some media for easy retrieval later via FTS.
 
-The web UI communicates with the agent over SSE for streaming and WebSocket for real-time indicators. The tool surface is layered: a small always-active baseline, with additional tools activated on demand via list_tools and activate_tools — keeping token usage low while hundreds of capabilities remain available. Skills are TypeScript modules discovered at runtime from SKILL.md files.
+The web UI communicates with the agent over SSE for real-time indicators, and the agent tool surface, although larger than `pi`'s, is layered: a small always-active baseline, with additional tools activated on demand via `list_tools` and `activate_tools` — keeping token usage low by both limiting the tool surface and compressing their outputs, which enables the use of literally hundreds of tools with very little context overhead.
 
-Sessions branch as git-like conversation trees in SQLite. The keychain stores secrets encrypted with AES-GCM. Dream memory consolidation runs nightly to synthesise notes from all sessions and keep long-running workflows coherent.
+As creature comforts, you get a workspace tree, pluggable viewers, a [ghostty-web](ghostty-web) terminal and a VNC viewer (which I typically need to access SBCs and X apps inside the `piclaw` host, plus a nice `vim`-capable editor with Obsidian-like Markdown rendering, plus an encrypted keychain stores secrets encrypted with AES-GCM. 
+
+Memory management leverages dream memory consolidation (which runs nightly) to synthesise notes from all sessions and keep long-running workflows coherent.
 
 ## Features
 ### 💬 Streaming chat
