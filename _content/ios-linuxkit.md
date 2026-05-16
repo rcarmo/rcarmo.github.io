@@ -1,7 +1,7 @@
 ---
 id: ios-linuxkit
 repo: rcarmo/ios-linuxkit
-section: apple
+section: retro-embedded
 status: active
 created: 2026-04-30
 logo: assets/logos-opt/ios-linuxkit.png
