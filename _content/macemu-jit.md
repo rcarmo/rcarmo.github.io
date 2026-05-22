@@ -29,6 +29,8 @@ Native ARM64 JIT backend for emulating PowerPC Macs.
 Lower latency than X11.
 
 ## Posts
+- [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-19
+- [Notes for May 10-17](https://taoofmac.com/space/notes/2026/05/17/2120) — 2026-05-17
 - [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
 - [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03
 - [macintosh-mini](https://taoofmac.com/space/links/2026/05/03/1430) — 2026-05-03

@@ -7,10 +7,13 @@ logo: assets/logos-opt/go-te.png
 ---
 
 ## About
-Faithful Go port of the Python pyte library, validated against pyte's full test suite and ESCTest2 conformance tests. Multiple screen variants: base, diff (dirty tracking), history, debug. Powers webterm, go-rdp, and ghostty-web.
+Faithful Go port of the Python `pyte` library, validated against `pyte`'s full test suite and `ESCTest2` conformance tests. Multiple screen variants: base, diff (dirty tracking), history, debug. Powers [`webterm`](webterm) and a few other of my projects.
+
+## Motivation
+It all started because I wanted to show "live" screenshots in [`webterm`](webterm) when I ported it to Go, and sort of escalated from there because I realized that there was _nothing_ out there that came close to `pyte` for Go.
 
 ## How it works
-Follows pyte's Stream + Screen architecture. The port reproduces pyte's exact semantics in Go — edge cases handled identically. DiffScreen tracks dirty cells for efficient WebSocket updates. SVG export snapshots any screen state for screenshots or test reports.
+Follows `pyte`'s architecture where feasible, aiming for a very close match to `pyte` exact semantics in Go — edge cases handled identically.  The notable addition is`DiffScreen`, which tracks dirty cells for efficient WebSocket updates because I needed that, and the SVG export feature snapshots any screen state for screenshots or test reports.
 
 ## Features
 ### 🔣 Pyte-faithful, VT100–VT520

@@ -9,8 +9,13 @@ logo: assets/logos-opt/kata.png
 ## About
 kata is a lightweight deployment wrapper for Docker that sits somewhere between a hand-written `docker-compose.yml` and a full platform. It reads a `kata-compose.yaml`, generates the final `.docker-compose.yaml`, and deploys the app either via Docker Compose or Docker Swarm. The current implementation focuses on simple per-app layouts, predictable directory structure, and optional HTTP routing through Traefik.
 
+## Motivation
+I wanted something like [`piku`](piku) but to help me manage _only_ Docker containers, and there was nothing out there that was simple enough to read in 30m.
+
 ## How it works
-For each app, kata parses a `kata-compose.yaml`, expands runtime helpers, merges environment variables from config files and service definitions, and writes a generated `.docker-compose.yaml` into the app directory. It can then launch the stack using Compose or Swarm, attach the routed service to a shared Traefik network, and inject the labels needed for host-based routing. It also manages the standard per-app directories for code, data, config, logs, virtualenv/runtime state, and git bare repositories.
+For each app, `kata` parses a `kata-compose.yaml`, expands runtime helpers, merges environment variables from config files and service definitions, and writes a generated `.docker-compose.yaml` into the app directory. 
+
+It can then launch the stack using Compose or Swarm, attach the routed service to a shared Traefik network, and inject the labels needed for host-based routing. It also manages the standard per-app directories for code, data, config, logs, virtualenv/runtime state, and `git` bare repositories.
 
 ## Features
 ### 🐳 Compose or Swarm deploys

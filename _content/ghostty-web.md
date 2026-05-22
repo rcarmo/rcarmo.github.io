@@ -24,6 +24,7 @@ Existing xterm.js tooling works unchanged.
 go-te used by webterm, go-rdp, and ghostty-web.
 
 ## Posts
+- [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-19
 - [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
 
 ## Diagram

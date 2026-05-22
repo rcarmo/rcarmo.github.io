@@ -30,6 +30,9 @@ Interactive web UI for uploading an image and previewing depth and synthesised v
 ### 📦 pip-installable
 Standard Python package with pinned dependencies — `pip install -r requirements.txt` and it runs.
 
+## Posts
+- [AI Image Generation](https://taoofmac.com/space/ai/image) — 2026-05-20
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 728 202">
   <style>

@@ -33,6 +33,11 @@ Integrated terminal frontend with themes, hardened ObjC/JS bridge, and async lif
 ### 🧪 Reproducible test matrix
 CI validates 15+ language runtimes against every kernel change.
 
+## Posts
+- [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-19
+- [Apple Papercuts](https://taoofmac.com/space/blog/2026/05/18/1320) — 2026-05-18
+- [Notes for May 10-17](https://taoofmac.com/space/notes/2026/05/17/2120) — 2026-05-17
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 968 202">
   <style>
