@@ -37,6 +37,9 @@ Protocols, records, hierarchies, tagged literals, sorted collections, atom watch
 ### 🔧 Runtime introspection
 `disassemble`, `analyze`, `wasm-diagnostic`, `escape-analysis`, `profile`, `benchmark`, `mem-stats`, `gc` — all from Joker scripts.
 
+### 📓 Web notebooks
+Mathematica-style EDN notebooks with Observable-style dependency metadata. Local browser UI (CodeMirror + ECharts + Mermaid, no CDN), headless execution, Markdown export, and self-contained inline outputs for agent/debug reports.
+
 ## Gallery
 - [Joker vs Python vs Goja](assets/screenshots/go-joker/benchmark-transposed.svg) — CLBG benchmark comparison across languages
 - [Speedup vs upstream](assets/screenshots/go-joker/benchmark-speedup.svg) — improvement factors over original Joker
