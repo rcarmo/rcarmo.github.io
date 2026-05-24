@@ -44,6 +44,7 @@ Mathematica-style EDN notebooks with Observable-style dependency metadata. Local
 - [Joker vs Python vs Goja](assets/screenshots/go-joker/benchmark-transposed.svg) — CLBG benchmark comparison across languages
 - [Speedup vs upstream](assets/screenshots/go-joker/benchmark-speedup.svg) — improvement factors over original Joker
 - [Architecture](assets/screenshots/go-joker/architecture.svg) — 5-tier execution pipeline diagram
+- [Web notebook demo](assets/screenshots/go-joker/notebook-rich-demo.png) — EDN notebook with charts and Mermaid diagrams
 
 ## Posts
 - [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
