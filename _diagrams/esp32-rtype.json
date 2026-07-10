@@ -1,68 +1,52 @@
 {
-  "title": "R-Type ROM layout and video path on ESP32-S3",
+  "title": "R-Type ROM and display path on ESP32-S3",
   "nodes": [
     {
-      "id": "cpurom",
-      "label": "Main CPU ROM",
-      "sub": "flash partition",
+      "id": "roms",
+      "label": "ROMs in flash",
+      "sub": "main CPU partition · graphics files",
       "tag": "input",
       "column": 0,
       "row": 0
     },
     {
-      "id": "gfxrom",
-      "label": "Graphics ROMs",
-      "sub": "SPI flash",
-      "tag": "input",
-      "column": 0,
-      "row": 1
-    },
-    {
       "id": "m72",
       "label": "V30 / M72 path",
-      "sub": "CPU + memory map",
+      "sub": "execution · sparse PSRAM map",
       "tag": "processing",
       "column": 1,
       "row": 0
     },
     {
-      "id": "psram",
-      "label": "M72 RAM",
-      "sub": "sparse PSRAM regions",
-      "tag": "state",
-      "column": 1,
-      "row": 1
-    },
-    {
       "id": "render",
       "label": "M72 renderer",
-      "sub": "tiles \u00b7 sprites \u00b7 palette",
+      "sub": "tiles · sprites · palette",
       "tag": "backend",
       "column": 2,
       "row": 0
     },
     {
+      "id": "snapshot",
+      "label": "Frame snapshot",
+      "sub": "queue drain · triple buffers",
+      "tag": "state",
+      "column": 3,
+      "row": 0
+    },
+    {
       "id": "panel",
       "label": "RGB panel",
-      "sub": "scaled 720x480 at 40,0",
+      "sub": "720x480 image at 40,0",
       "tag": "output",
-      "column": 3,
+      "column": 4,
       "row": 0
     }
   ],
   "edges": [
     {
-      "from": "cpurom",
+      "from": "roms",
       "to": "m72",
       "accent": true
-    },
-    {
-      "from": "gfxrom",
-      "to": "render"
-    },
-    {
-      "from": "psram",
-      "to": "m72"
     },
     {
       "from": "m72",
@@ -71,6 +55,10 @@
     },
     {
       "from": "render",
+      "to": "snapshot"
+    },
+    {
+      "from": "snapshot",
       "to": "panel",
       "accent": true
     }
