@@ -1,0 +1,78 @@
+{
+  "title": "Saved article URL to offline EPUB",
+  "nodes": [
+    {
+      "id": "safari",
+      "label": "Safari bookmarklet",
+      "sub": "URL + shared token",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "server",
+      "label": "Bun service",
+      "sub": "HTTP + SQLite queue",
+      "tag": "web",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "fetch",
+      "label": "Fetch + extract",
+      "sub": "clean HTML \u00b7 local images",
+      "tag": "processing",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "epub",
+      "label": "EPUB packager",
+      "sub": "self-contained article",
+      "tag": "backend",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "calibre",
+      "label": "Calibre library",
+      "sub": "files + metadata.db",
+      "tag": "state",
+      "column": 4,
+      "row": 0
+    },
+    {
+      "id": "reader",
+      "label": "OPDS / KOReader",
+      "sub": "delivery + offline reading",
+      "tag": "output",
+      "column": 4,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "safari",
+      "to": "server",
+      "accent": true
+    },
+    {
+      "from": "server",
+      "to": "fetch"
+    },
+    {
+      "from": "fetch",
+      "to": "epub",
+      "accent": true
+    },
+    {
+      "from": "epub",
+      "to": "calibre"
+    },
+    {
+      "from": "calibre",
+      "to": "reader",
+      "accent": true
+    }
+  ]
+}

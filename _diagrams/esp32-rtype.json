@@ -1,0 +1,78 @@
+{
+  "title": "R-Type ROM layout and video path on ESP32-S3",
+  "nodes": [
+    {
+      "id": "cpurom",
+      "label": "Main CPU ROM",
+      "sub": "flash partition",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "gfxrom",
+      "label": "Graphics ROMs",
+      "sub": "SPI flash",
+      "tag": "input",
+      "column": 0,
+      "row": 1
+    },
+    {
+      "id": "m72",
+      "label": "V30 / M72 path",
+      "sub": "CPU + memory map",
+      "tag": "processing",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "psram",
+      "label": "M72 RAM",
+      "sub": "sparse PSRAM regions",
+      "tag": "state",
+      "column": 1,
+      "row": 1
+    },
+    {
+      "id": "render",
+      "label": "M72 renderer",
+      "sub": "tiles \u00b7 sprites \u00b7 palette",
+      "tag": "backend",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "panel",
+      "label": "RGB panel",
+      "sub": "scaled 720x480 at 40,0",
+      "tag": "output",
+      "column": 3,
+      "row": 0
+    }
+  ],
+  "edges": [
+    {
+      "from": "cpurom",
+      "to": "m72",
+      "accent": true
+    },
+    {
+      "from": "gfxrom",
+      "to": "render"
+    },
+    {
+      "from": "psram",
+      "to": "m72"
+    },
+    {
+      "from": "m72",
+      "to": "render",
+      "accent": true
+    },
+    {
+      "from": "render",
+      "to": "panel",
+      "accent": true
+    }
+  ]
+}

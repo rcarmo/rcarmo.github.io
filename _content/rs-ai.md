@@ -1,0 +1,113 @@
+---
+id: rs-ai
+repo: rcarmo/rs-ai
+section: ai-ml
+status: experimental
+created: 2026-06-08
+tagline: Rust port of @earendil-works/pi-ai with a shared streaming event protocol and provider-neutral registry.
+---
+
+## About
+`rs-ai` is a Rust port of `@earendil-works/pi-ai`, built around the same model registry, message types and streaming event protocol as the TypeScript original. It targets native Rust applications that need provider switching, tools and streaming without maintaining a separate integration for each API, but it remains an early port rather than full upstream parity.
+
+It tracks `pi-ai` 0.80.2 and remains an early port. The core runtime and several providers work, but behavioural parity is not complete.
+
+## How it works
+The registry resolves a model and provider, reads credentials from the process environment and selects the appropriate compatibility settings. Provider implementations issue HTTP, WebSocket or AWS SDK requests and convert their responses into a shared Rust event stream.
+
+The common layer handles retries, diagnostics, prompt-cache metadata, message transformation, partial tool-call JSON and context-overflow checks. Dropping the returned stream cancels HTTP work; this differs from the upstream abort-signal model.
+
+## Features
+### Shared runtime types
+Messages, tools, usage, model metadata and stream events use a single provider-neutral type system.
+
+### Streaming providers
+Implemented paths include OpenAI, OpenAI Responses, Anthropic, Gemini, Mistral, Codex, Bedrock and Gemini CLI, but the crate still describes itself as an early port.
+
+### Native transports
+Bedrock uses the AWS SDK; Codex supports WebSocket and SSE transports.
+
+### OAuth framework
+Includes a PKCE-based OAuth framework and the provider-specific paths needed by supported sign-in flows.
+
+### Runtime helpers
+Retry handling, logging, diagnostics, session resources, validation, prompt-cache helpers and partial JSON parsing.
+
+### Known gaps
+Google Vertex AI is not functional, scoped per-request `options.env` overlays are intentionally absent, and cancellation uses Rust stream dropping rather than upstream abort signals.
+
+## Diagram
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 114">
+  <style>
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #707070; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #74a7ff; stroke: #012f7b; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #adadad; stroke: #000000; stroke-width: 1.5; }
+    .box-teal { fill: #ebebeb; stroke: #474747; stroke-width: 1.5; }
+    .box-slate { fill: #a7c6ff; stroke: #0042a9; stroke-width: 1.5; }
+    .box-indigo { fill: #dfeed4; stroke: #4e7a27; stroke-width: 1.5; }
+    .box-rose { fill: #dfeed4; stroke: #76bb40; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #d9c9fe; stroke: #5e30eb; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #5070a0; }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #505050; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0a1a3a; stroke: #4a80d0; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #222222; stroke: #666666; }
+      .box-teal { fill: #1e1e1e; stroke: #666666; }
+      .box-slate { fill: #0d1a38; stroke: #4a7ad0; }
+      .box-indigo { fill: #1a2810; stroke: #5a8a30; }
+      .box-rose { fill: #1a2810; stroke: #5aaa30; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #1a1030; stroke: #7040d0; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #5070a0; }
+    }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
+  </defs>
+  <rect width="1200" height="114" class="bg" rx="8"/>
+
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">Rust application</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">stream · complete · tools</text>
+
+  <rect x="270" y="30" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="360" y="56" text-anchor="middle" class="label">rs-ai registry</text>
+  <text x="360" y="74" text-anchor="middle" class="sub">models + providers</text>
+
+  <rect x="510" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="600" y="56" text-anchor="middle" class="label">Runtime layer</text>
+  <text x="600" y="74" text-anchor="middle" class="sub">env · compat · retries</text>
+
+  <rect x="750" y="30" width="180" height="60" rx="8" class="box-indigo"/>
+  <text x="840" y="56" text-anchor="middle" class="label">Provider transport</text>
+  <text x="840" y="74" text-anchor="middle" class="sub">HTTP · WebSocket · AWS SDK</text>
+
+  <rect x="990" y="30" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="1080" y="56" text-anchor="middle" class="label">Shared event stream</text>
+  <text x="1080" y="74" text-anchor="middle" class="sub">text · reasoning · tools · usage</text>
+
+  <path d="M210,60 L270,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M450,60 L510,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M690,60 L750,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M930,60 L990,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+
+  <text x="600" y="110" text-anchor="middle" class="sub">Provider-neutral LLM streaming API for Rust</text>
+</svg>
