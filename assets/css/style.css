@@ -351,13 +351,18 @@ code {
 .hero-gallery-slide.is-active {
   display: block;
 }
-.hero-gallery-slide img {
+.hero-gallery-slide img,
+.hero-gallery-slide video {
   display: block;
   width: 100%;
   max-width: 100%;
   height: auto;
   max-height: none;
   margin: 0 auto;
+}
+.hero-gallery-slide video {
+  background: #000;
+  aspect-ratio: 16 / 9;
 }
 .hero-gallery-meta {
   display: flex;

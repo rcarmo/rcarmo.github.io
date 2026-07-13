@@ -636,12 +636,17 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
       <div class="hero-gallery" data-gallery tabindex="0" aria-label="Project gallery">
         <div class="hero-gallery-stage">
           ${gallery.map((item, index) => {
-            const isSvg = item.src.endsWith('.svg');
+            const isSvg = /\.svg$/i.test(item.src);
+            const isVideo = /\.(mp4|webm|mov)$/i.test(item.src);
+            const src = gallerySrc(item.src);
+            const poster = gallerySrc(item.src.replace(/\.[^.]+$/, '-poster.jpg'));
             const mediaEl = isSvg
-              ? `<object type="image/svg+xml" data="${esc(gallerySrc(item.src))}" class="gallery-svg" aria-label="${esc(item.title)}"></object>`
-              : `<img src="${esc(gallerySrc(item.src))}" alt="${esc(item.title)}" loading="lazy">`;
+              ? `<object type="image/svg+xml" data="${esc(src)}" class="gallery-svg" aria-label="${esc(item.title)}"></object>`
+              : isVideo
+                ? `<video controls playsinline preload="metadata" poster="${esc(poster)}" aria-label="${esc(item.title)}"><source src="${esc(src)}" type="video/${item.src.toLowerCase().endsWith('.webm') ? 'webm' : 'mp4'}"></video>`
+                : `<img src="${esc(src)}" alt="${esc(item.title)}" loading="lazy">`;
             return `
-          <figure class="hero-gallery-slide${index === 0 ? ' is-active' : ''}" data-gallery-slide data-fullsrc="${esc(gallerySrc(item.src))}">
+          <figure class="hero-gallery-slide${index === 0 ? ' is-active' : ''}" data-gallery-slide data-fullsrc="${esc(src)}">
             ${mediaEl}
           </figure>`;
           }).join("")}
@@ -649,10 +654,10 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
         <div class="hero-gallery-meta">
           <div class="hero-gallery-nav-row">
             <div class="hero-gallery-nav">
-              <button type="button" class="hero-gallery-btn" data-gallery-prev aria-label="Previous image">◀</button>
-              <input class="hero-gallery-goto" data-gallery-goto type="number" min="1" value="1" title="Jump to image">
+              <button type="button" class="hero-gallery-btn" data-gallery-prev aria-label="Previous slide">◀</button>
+              <input class="hero-gallery-goto" data-gallery-goto type="number" min="1" value="1" title="Jump to slide">
               <span class="hero-gallery-status" data-gallery-status>/ ${gallery.length}</span>
-              <button type="button" class="hero-gallery-btn" data-gallery-next aria-label="Next image">▶</button>
+              <button type="button" class="hero-gallery-btn" data-gallery-next aria-label="Next slide">▶</button>
             </div>
             <div class="hero-gallery-hint">←/→ keyboard navigation</div>
           </div>
@@ -662,15 +667,20 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
               <div class="hero-gallery-caption-title">${esc(item.title)}</div>
               ${item.caption ? `<div class="hero-gallery-caption-body">${esc(item.caption)}</div>` : ""}
               <div class="hero-gallery-caption-actions">
-                <a class="btn btn-sm" href="${esc(gallerySrc(item.src))}" target="_blank" rel="noopener">View full size ↗</a>
+                <a class="btn btn-sm" href="${esc(gallerySrc(item.src))}" target="_blank" rel="noopener">${/\.(mp4|webm|mov)$/i.test(item.src) ? 'Open video' : 'View full size'} ↗</a>
               </div>
             </div>`).join("")}
           </div>
           <div class="hero-gallery-thumbs" role="tablist" aria-label="Gallery thumbnails">
-            ${gallery.map((item, index) => `
-            <button type="button" class="hero-gallery-thumb${index === 0 ? ' is-active' : ''}" data-gallery-thumb aria-label="Show image ${index + 1}: ${esc(item.title)}">
-              <img src="${esc(gallerySrc(item.src))}" alt="" loading="lazy">
-            </button>`).join("")}
+            ${gallery.map((item, index) => {
+              const thumbSrc = /\.(mp4|webm|mov)$/i.test(item.src)
+                ? item.src.replace(/\.[^.]+$/, '-poster.jpg')
+                : item.src;
+              return `
+            <button type="button" class="hero-gallery-thumb${index === 0 ? ' is-active' : ''}" data-gallery-thumb aria-label="Show slide ${index + 1}: ${esc(item.title)}">
+              <img src="${esc(gallerySrc(thumbSrc))}" alt="" loading="lazy">
+            </button>`;
+            }).join("")}
           </div>
           ${(() => {
             const candidates = [
