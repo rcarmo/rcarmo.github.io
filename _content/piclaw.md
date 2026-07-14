@@ -42,6 +42,7 @@ SSH, Proxmox, Portainer profiles. CDP browser automation. Sharp image processing
 docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
 
 ## Gallery
+- [a demo of piclaw, created by piclaw itself](assets/screenshots/piclaw/piclaw-demo.mp4)
 - [iPad PWA with star trends](assets/screenshots/piclaw/00002piclaw.jpeg) — Clean mobile-first chat with GitHub digest
 - [Agent implementing a feature](assets/screenshots/piclaw/00003piclaw.jpeg) — Issue resolution with validation and CI
 - [Workspace tree + disk usage](assets/screenshots/piclaw/00004piclaw.jpeg) — File browser with storage sunburst

@@ -18,9 +18,6 @@ The `tau_ai` package provides provider clients and common events. `tau_agent` co
 
 On a-Shell, command execution uses its constrained `sh`; the familiar `bash` tool names remain as compatibility aliases. The interface starts with its sidebar hidden, follows transcript output and polls terminal dimensions when iOS fails to deliver resize events.
 
-## Gallery
-- [a demo of piclaw, created by piclaw itself](assets/screenshots/tau-prime/piclaw-demo.mp4)
-
 ## Features
 ### iOS terminal behaviour
 Mobile defaults, reliable transcript following, sidebar toggle and resize polling for a-Shell.
