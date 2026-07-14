@@ -45,4 +45,4 @@ jobs:
             workitems,
             node_modules,
             .pi
-          commit_message: "Deploy ${{ github.ref_name }} [skip ci]"
+          commit_message: "Deploy ${{ github.ref_name }}"
