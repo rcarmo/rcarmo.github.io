@@ -28,7 +28,7 @@
     {
       "id": "reads",
       "label": "Fine-tuned router",
-      "sub": "6 read actions · UNKNOWN",
+      "sub": "bounded read operations",
       "tag": "processing",
       "column": 2,
       "row": 1
