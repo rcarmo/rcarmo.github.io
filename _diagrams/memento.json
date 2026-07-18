@@ -1,0 +1,82 @@
+{
+  "title": "Shared agent memory with reviewed Git mutations",
+  "nodes": [
+    {
+      "id": "agents",
+      "label": "MCP clients",
+      "sub": "Piclaw · other agents",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "mcp",
+      "label": "Memento MCP",
+      "sub": "auth · roles · tools",
+      "tag": "web",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "reads",
+      "label": "Read path",
+      "sub": "lexical · graph · GTE",
+      "tag": "processing",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "writes",
+      "label": "Write path",
+      "sub": "propose · review · apply",
+      "tag": "processing",
+      "column": 2,
+      "row": 1
+    },
+    {
+      "id": "git",
+      "label": "Git knowledge",
+      "sub": "Markdown · history · LFS",
+      "tag": "output",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "control",
+      "label": "Operational state",
+      "sub": "control.sqlite · journal · lease",
+      "tag": "state",
+      "column": 3,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "agents",
+      "to": "mcp",
+      "accent": true
+    },
+    {
+      "from": "mcp",
+      "to": "reads"
+    },
+    {
+      "from": "mcp",
+      "to": "writes"
+    },
+    {
+      "from": "reads",
+      "to": "git",
+      "accent": true
+    },
+    {
+      "from": "writes",
+      "to": "git",
+      "accent": true
+    },
+    {
+      "from": "writes",
+      "to": "control"
+    }
+  ]
+}
