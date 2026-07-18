@@ -27,8 +27,8 @@
     },
     {
       "id": "reads",
-      "label": "Read path",
-      "sub": "search · read · graph",
+      "label": "Fine-tuned router",
+      "sub": "6 read actions · UNKNOWN",
       "tag": "processing",
       "column": 2,
       "row": 1

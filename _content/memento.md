@@ -16,11 +16,16 @@ It was built for several [`piclaw`](piclaw) instances, but any authenticated MCP
 ## How it works
 Concepts are Markdown files with stable IDs, metadata and links. Git owns those files and their history; `control.sqlite` owns proposals, idempotency records, write journals, leases and scheduler state. A separate FTS5, graph and optional vector index is derived from Markdown and can be rebuilt.
 
+A fine-tuned 26.3M-parameter Needle model removes ambiguity from natural-language read requests by choosing one of six shallow actions, including an explicit `UNKNOWN` result. Memento then derives search text, IDs, paths and bounded plans in deterministic code. The shipped checkpoint matched all 360 tool decisions in the untouched family-separated test set; it does not author mutations or bypass normal authorisation.
+
 Writes follow `search -> read -> propose -> review -> apply`. Accepted changes are assembled in temporary worktrees and committed only if the expected repository revision still matches. The readable checkout and indexes advance before success is returned.
 
 ## Features
 ### Authenticated MCP access
 [`umcp`](umcp) supplies Streamable HTTP transport, request context and authentication. Clients receive tools, not filesystem or Git access.
+
+### Fine-tuned ambiguity removal
+A local Needle checkpoint classifies shallow read intent as search, status, read, graph, compound read or `UNKNOWN`. Strict schemas and deterministic expansion turn that decision into an operation; uncertain or invalid output abstains.
 
 ### Search without mandatory models
 Lexical and graph search work locally. GTE-small can add semantic ranking; queries fall back to lexical search if it is unavailable.
@@ -34,8 +39,8 @@ Stable concept IDs survive renames, inbound links update in the same transaction
 ### Recallable asset packs
 Versioned Git LFS ZIPs can attach diagrams, templates, datasets or complete skills to a concept, with manifests and path checks on recall.
 
-### Local routing and drafting
-Needle routes simple read requests. Optional local models can produce cited answers, draft proposals and suggest Dream maintenance work.
+### Optional model assistance
+Separate local models can produce cited answers, draft proposals and suggest Dream maintenance work. They remain advisory and cannot publish.
 
 ### Recovery and backups
 A single-writer lease, operation journal and startup reconciliation cover interrupted mutations. Backups contain the bare repository and a checksummed SQLite copy.
@@ -104,8 +109,8 @@ No chat transcripts, reminders, credentials, hard delete, arbitrary shell execut
   <text x="600" y="74" text-anchor="middle" class="sub">proposal · journal · lease</text>
 
   <rect x="510" y="118" width="180" height="60" rx="8" class="box-purple"/>
-  <text x="600" y="144" text-anchor="middle" class="label">Read path</text>
-  <text x="600" y="162" text-anchor="middle" class="sub">search · read · graph</text>
+  <text x="600" y="144" text-anchor="middle" class="label">Fine-tuned router</text>
+  <text x="600" y="162" text-anchor="middle" class="sub">6 read actions · UNKNOWN</text>
 
   <rect x="750" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="840" y="56" text-anchor="middle" class="label">Git knowledge</text>
