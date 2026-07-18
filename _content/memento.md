@@ -100,27 +100,28 @@ No chat transcripts, reminders, credentials, hard delete, arbitrary shell execut
   <text x="360" y="74" text-anchor="middle" class="sub">auth · roles · tools</text>
 
   <rect x="510" y="30" width="180" height="60" rx="8" class="box-purple"/>
-  <text x="600" y="56" text-anchor="middle" class="label">Read path</text>
-  <text x="600" y="74" text-anchor="middle" class="sub">lexical · graph · GTE</text>
+  <text x="600" y="56" text-anchor="middle" class="label">Reviewed writes</text>
+  <text x="600" y="74" text-anchor="middle" class="sub">proposal · journal · lease</text>
 
   <rect x="510" y="118" width="180" height="60" rx="8" class="box-purple"/>
-  <text x="600" y="144" text-anchor="middle" class="label">Write path</text>
-  <text x="600" y="162" text-anchor="middle" class="sub">propose · review · apply</text>
+  <text x="600" y="144" text-anchor="middle" class="label">Read path</text>
+  <text x="600" y="162" text-anchor="middle" class="sub">search · read · graph</text>
 
   <rect x="750" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="840" y="56" text-anchor="middle" class="label">Git knowledge</text>
   <text x="840" y="74" text-anchor="middle" class="sub">Markdown · history · LFS</text>
 
-  <rect x="750" y="118" width="180" height="60" rx="8" class="box"/>
-  <text x="840" y="144" text-anchor="middle" class="label">Operational state</text>
-  <text x="840" y="162" text-anchor="middle" class="sub">control.sqlite · journal · lease</text>
+  <rect x="750" y="118" width="180" height="60" rx="8" class="box-green"/>
+  <text x="840" y="144" text-anchor="middle" class="label">Derived indexes</text>
+  <text x="840" y="162" text-anchor="middle" class="sub">FTS5 · graph · vectors</text>
 
   <path d="M210,60 L270,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M450,60 L510,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M450,60 L466,60 Q480,60 480,74 L480,134 Q480,148 494,148 L510,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M690,60 L750,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
-  <path d="M690,148 L706,148 Q720,148 720,134 L720,74 Q720,60 734,60 L750,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
-  <path d="M690,148 L750,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M690,148 L750,148" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M840,90 L840,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <text x="852" y="108" class="sub">rebuild</text>
 
-  <text x="480" y="198" text-anchor="middle" class="sub">Shared agent memory with reviewed Git mutations</text>
+  <text x="480" y="198" text-anchor="middle" class="sub">Canonical Git knowledge, rebuildable search and reviewed writes</text>
 </svg>

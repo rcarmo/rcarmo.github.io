@@ -1,5 +1,5 @@
 {
-  "title": "Shared agent memory with reviewed Git mutations",
+  "title": "Canonical Git knowledge, rebuildable search and reviewed writes",
   "nodes": [
     {
       "id": "agents",
@@ -18,17 +18,17 @@
       "row": 0
     },
     {
-      "id": "reads",
-      "label": "Read path",
-      "sub": "lexical · graph · GTE",
+      "id": "writes",
+      "label": "Reviewed writes",
+      "sub": "proposal · journal · lease",
       "tag": "processing",
       "column": 2,
       "row": 0
     },
     {
-      "id": "writes",
-      "label": "Write path",
-      "sub": "propose · review · apply",
+      "id": "reads",
+      "label": "Read path",
+      "sub": "search · read · graph",
       "tag": "processing",
       "column": 2,
       "row": 1
@@ -42,10 +42,10 @@
       "row": 0
     },
     {
-      "id": "control",
-      "label": "Operational state",
-      "sub": "control.sqlite · journal · lease",
-      "tag": "state",
+      "id": "index",
+      "label": "Derived indexes",
+      "sub": "FTS5 · graph · vectors",
+      "tag": "backend",
       "column": 3,
       "row": 1
     }
@@ -58,25 +58,26 @@
     },
     {
       "from": "mcp",
-      "to": "reads"
-    },
-    {
-      "from": "mcp",
       "to": "writes"
     },
     {
+      "from": "mcp",
+      "to": "reads"
+    },
+    {
+      "from": "writes",
+      "to": "git",
+      "accent": true
+    },
+    {
       "from": "reads",
-      "to": "git",
+      "to": "index",
       "accent": true
     },
     {
-      "from": "writes",
-      "to": "git",
-      "accent": true
-    },
-    {
-      "from": "writes",
-      "to": "control"
+      "from": "git",
+      "to": "index",
+      "label": "rebuild"
     }
   ]
 }
