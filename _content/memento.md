@@ -20,6 +20,11 @@ A fine-tuned local Needle model removes ambiguity by classifying natural-languag
 
 Writes follow `search -> read -> propose -> review -> apply`. Accepted changes are assembled in temporary worktrees and committed only if the expected repository revision still matches. The readable checkout and indexes advance before success is returned.
 
+## Gallery
+- [Memory graph overview](assets/screenshots/memento/visual-debugger-overview.png) — Visual debugger showing concepts, services, links, clusters and diagnostics
+- [Memory inspector](assets/screenshots/memento/visual-debugger-inspector.png) — Selected concept metadata, links, assets, proposals and embedding state
+- [Large graph stress view](assets/screenshots/memento/visual-debugger-large-graph.png) — 2,000-node graph with level-of-detail rendering and runtime diagnostics
+
 ## Features
 ### Authenticated MCP access
 [`umcp`](umcp) supplies Streamable HTTP transport, request context and authentication. Clients receive tools, not filesystem or Git access.
