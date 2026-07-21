@@ -53,20 +53,12 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
 - [Portainer settings](assets/screenshots/piclaw/00030piclaw.jpeg) — Add-on configuration with keychain integration
 
 ## Posts
+- [Marked Down](https://taoofmac.com/space/blog/2026/07/21/1840) — 2026-07-21
+- [Notes for July 13-19](https://taoofmac.com/space/notes/2026/07/19/1500) — 2026-07-19
+- [My AI Model Tier List for mid-2026](https://taoofmac.com/space/blog/2026/07/11/1500) — 2026-07-17
 - [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-19
 - [Apple Papercuts](https://taoofmac.com/space/blog/2026/05/18/1320) — 2026-05-18
-- [Notes for May 10-17](https://taoofmac.com/space/notes/2026/05/17/2120) — 2026-05-17
-- [Unexpected Synology Woes](https://taoofmac.com/space/blog/2026/05/15/1330) — 2026-05-15
-- [The Siri For Families Apple Will Never Build](https://taoofmac.com/space/blog/2026/05/14/1220) — 2026-05-14
-- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
-- [Notes on GPT 5.x Model Regressions](https://taoofmac.com/space/notes/2026/05/07/0600) — 2026-05-07
-- [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03
-- [App Notes: Web App Viewer](https://taoofmac.com/space/notes/2026/04/29/1730) — 2026-04-29
-- [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
-- [Notes for April 13-19](https://taoofmac.com/space/notes/2026/04/19/1400) — 2026-04-21
-- [OpenClaw Ecosystem](https://taoofmac.com/space/ai/agentic/openclaw) — 2026-04-18
-- [So You Want To Do Agentic Development](https://taoofmac.com/space/blog/2026/03/08/2130) — 2026-03-08
-- [Vibing with the Agent Control Protocol](https://taoofmac.com/space/notes/2026/02/01/2100) — 2026-02-01
+
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 276">

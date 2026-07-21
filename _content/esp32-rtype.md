@@ -36,6 +36,9 @@ The repository includes host and firmware renderers plus a comparison workflow f
 ### Deliberately limited scope
 No audio output, controls, menus, save states or wider MAME compatibility.
 
+## Posts
+- [The M5Stack Tab5](https://taoofmac.com/space/reviews/2026/07/18/1920) — 2026-07-20
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 114">
   <style>
