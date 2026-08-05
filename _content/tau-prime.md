@@ -29,10 +29,13 @@ Device login, token refresh, live model discovery and the appropriate Copilot en
 Credential-free local provider with persistent LAN URL configuration, loaded-model discovery and `/reload` support.
 
 ### Provider choice
-Also supports OpenAI, Codex subscription login, Anthropic, OpenRouter, Hugging Face, DeepSeek, Nebius and custom OpenAI-compatible endpoints.
+Also supports OpenAI and Codex subscription login, Anthropic, Kimi For Coding, ZAI/GLM, OpenCode Zen and Go, OpenRouter, Hugging Face, DeepSeek, Nebius and custom OpenAI-compatible endpoints. Dynamic providers can refresh their model catalogues at runtime.
 
-### Durable sessions
-Append-only JSONL sessions under `~/.tau/sessions/`, with history, branching, compaction and export commands.
+### Durable sessions and compaction
+Append-only JSONL sessions under `~/.tau/sessions/`, with history, branching and export. Verified OpenAI Responses endpoints can use provider-native compaction; other providers use bounded local summary or pipelined compaction with deterministic fallback.
+
+### Python extensions and skills
+User and project directories can add tools, slash commands, prompt guidelines and input hooks through Python extensions. Skills and prompt templates load from `.tau/` and `.agents/` paths.
 
 ### macOS sandbox
 Restricts writes to the working directory, Tau Prime state, `$TMPDIR` and required terminal devices. It stops if the sandbox cannot be applied.
