@@ -1,7 +1,7 @@
 ---
 id: bun-readlater-epub
 repo: rcarmo/bun-readlater-epub
-section: libraries
+section: networking
 status: active
 created: 2026-04-07
 tagline: Self-hosted read-later service that turns saved article URLs into EPUBs in a Calibre library for OPDS readers.
