@@ -1,7 +1,7 @@
 ---
 id: python-umcp-calibre
 repo: rcarmo/python-umcp-calibre
-section: networking
+section: agents
 status: active
 created: 2026-08-04
 logo: assets/logos-opt/default.png
