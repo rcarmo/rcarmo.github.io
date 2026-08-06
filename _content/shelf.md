@@ -4,7 +4,7 @@ repo: rcarmo/shelf
 section: apple
 status: experimental
 created: 2010-09-08
-logo: assets/logos-opt/default.png
+logo: assets/logos-opt/shelf.png
 tagline: Native macOS context assistant that matches the frontmost app to Contacts and offers relevant actions.
 ---
 
