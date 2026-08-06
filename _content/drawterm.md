@@ -1,5 +1,5 @@
 ---
-section: apple
+section: retro-embedded
 status: stable
 created: 2025-12-18
 tagline: Plan 9 drawterm — HiDPI scaling, Metal rendering, Connect dialog, clipboard bridge.
