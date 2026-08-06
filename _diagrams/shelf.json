@@ -35,8 +35,8 @@
     },
     {
       "id": "mail",
-      "label": "Mail ranking",
-      "sub": "Spotlight · LSM learning",
+      "label": "Local context",
+      "sub": "Safari history · Mail ranking",
       "tag": "state",
       "column": 2,
       "row": 1

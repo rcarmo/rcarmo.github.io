@@ -16,7 +16,7 @@ The project is being migrated from its original Python/PyObjC implementation to 
 ## How it works
 A monitor follows application activation and polls every two seconds. App-specific extractors read the active browser tab, selected Mail message, Finder selection or selected Contacts record. Other apps fall back to the focused window title through Accessibility.
 
-Contacts resolves URLs, e-mail addresses, names and contact identifiers. For Mail, Spotlight and Latent Semantic Mapping rank similar messages and learn likely destination mailboxes. The resulting context determines which automation actions Shelf can offer.
+Contacts resolves URLs, e-mail addresses, names and contact identifiers. Safari context adds Reading List state, previous visits and related pages ranked from local history. For Mail, Spotlight and Latent Semantic Mapping rank similar messages and learn likely destination mailboxes. The resulting context determines which automation actions Shelf can offer.
 
 ## Features
 ### Native Swift app
@@ -27,6 +27,9 @@ Reads active tabs from Safari, Chrome, Edge and Brave; selected messages from Ma
 
 ### Contact matching
 Uses Contacts to resolve e-mail addresses, URLs, names and selected records without maintaining a separate address book.
+
+### Safari context
+Combines the active tab with local Safari Reading List and history data to show previous visits and related pages. History access is local and may require Full Disk Access.
 
 ### Mail assistance
 Ranks similar messages with Spotlight, learns mailbox choices with Latent Semantic Mapping and suggests where the selected message should move.
@@ -107,8 +110,8 @@ The original Python/PyObjC implementation and py2app build remain available unde
   <text x="600" y="74" text-anchor="middle" class="sub">URL · e-mail · name · ID</text>
 
   <rect x="510" y="118" width="180" height="60" rx="8" class="box"/>
-  <text x="600" y="144" text-anchor="middle" class="label">Mail ranking</text>
-  <text x="600" y="162" text-anchor="middle" class="sub">Spotlight · LSM learning</text>
+  <text x="600" y="144" text-anchor="middle" class="label">Local context</text>
+  <text x="600" y="162" text-anchor="middle" class="sub">Safari history · Mail ranking</text>
 
   <rect x="750" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="840" y="56" text-anchor="middle" class="label">Shelf actions</text>
