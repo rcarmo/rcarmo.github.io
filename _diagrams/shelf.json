@@ -1,0 +1,81 @@
+{
+  "title": "Frontmost application context to contact-aware actions",
+  "nodes": [
+    {
+      "id": "apps",
+      "label": "Frontmost app",
+      "sub": "browser · Mail · Finder · Contacts",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "extract",
+      "label": "Context extractors",
+      "sub": "Apple Events · Accessibility",
+      "tag": "processing",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "contacts",
+      "label": "Contacts resolver",
+      "sub": "URL · e-mail · name · ID",
+      "tag": "backend",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "actions",
+      "label": "Shelf actions",
+      "sub": "open · compose · move · reveal",
+      "tag": "output",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "mail",
+      "label": "Mail ranking",
+      "sub": "Spotlight · LSM learning",
+      "tag": "state",
+      "column": 2,
+      "row": 1
+    },
+    {
+      "id": "summary",
+      "label": "Optional summary",
+      "sub": "Apple Intelligence",
+      "tag": "external",
+      "column": 3,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "apps",
+      "to": "extract",
+      "accent": true
+    },
+    {
+      "from": "extract",
+      "to": "contacts"
+    },
+    {
+      "from": "contacts",
+      "to": "actions",
+      "accent": true
+    },
+    {
+      "from": "extract",
+      "to": "mail"
+    },
+    {
+      "from": "mail",
+      "to": "summary"
+    },
+    {
+      "from": "mail",
+      "to": "actions"
+    }
+  ]
+}
