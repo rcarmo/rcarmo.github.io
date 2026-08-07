@@ -10,7 +10,7 @@ tagline: Rust port of @earendil-works/pi-ai with a shared streaming event protoc
 ## About
 `rs-ai` is a Rust port of `@earendil-works/pi-ai`, built around the same model registry, message types and streaming event protocol as the TypeScript original. It targets native Rust applications that need provider switching, tools and streaming without maintaining a separate integration for each API, but it remains an early port rather than full upstream parity.
 
-It tracks `pi-ai` 0.80.2 and remains an early port. The core runtime and several providers work, but behavioural parity is not complete.
+It tracks the bounded `pi-ai` v0.84.0 release surface. Core types, providers, OAuth, deferred response lifecycle, telemetry and generated catalogues have deterministic parity evidence; transport and runtime differences remain explicit.
 
 ## How it works
 The registry resolves a model and provider, reads credentials from the process environment and selects the appropriate compatibility settings. Provider implementations issue HTTP, WebSocket or AWS SDK requests and convert their responses into a shared Rust event stream.
@@ -22,7 +22,7 @@ The common layer handles retries, diagnostics, prompt-cache metadata, message tr
 Messages, tools, usage, model metadata and stream events use a single provider-neutral type system.
 
 ### Streaming providers
-Implemented paths include OpenAI, OpenAI Responses, Anthropic, Gemini, Mistral, Codex, Bedrock and Gemini CLI, but the crate still describes itself as an early port.
+Implemented paths include OpenAI, OpenAI Responses, Anthropic, Gemini, Mistral, Codex, Bedrock, Gemini CLI and Baseten.
 
 ### Native transports
 Bedrock uses the AWS SDK; Codex supports WebSocket and SSE transports.
@@ -33,8 +33,8 @@ Includes a PKCE-based OAuth framework and the provider-specific paths needed by 
 ### Runtime helpers
 Retry handling, logging, diagnostics, session resources, validation, prompt-cache helpers and partial JSON parsing.
 
-### Known gaps
-Google Vertex AI is not functional, scoped per-request `options.env` overlays are intentionally absent, and cancellation uses Rust stream dropping rather than upstream abort signals.
+### Catalogues and runtime differences
+The release-pinned registry contains 1,153 text models across 38 providers and 42 image models. Rust cancels work by dropping the stream; provider transport differences remain documented.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 114">

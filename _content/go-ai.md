@@ -7,10 +7,10 @@ logo: assets/logos-opt/go-ai.png
 ---
 
 ## About
-go-ai is a Go port of `@mariozechner/pi-ai`: a unified LLM library that exposes the same high-level `Stream()`/`Complete()` API across multiple providers. It supports streaming deltas, typed tool calling, cross-provider message/context types, automatic model discovery, cost tracking, and provider-specific OAuth flows.
+go-ai is a Go port of `@earendil-works/pi-ai`: a unified LLM library that exposes the same high-level `Stream()`/`Complete()` API across multiple providers. It supports streaming deltas, typed tool calling, cross-provider message/context types, automatic model discovery, cost tracking, and provider-specific OAuth flows. The current implementation tracks the bounded `pi-ai` v0.84.0 release surface.
 
 ## How it works
-At the center is a registry-driven core: API providers register streaming implementations, models are registered in a global model registry, and callers invoke `Stream()` or `Complete()` with a `Context`, `Model`, and optional tool definitions. Provider packages translate the common Go types into each provider's wire protocol and emit a unified event stream (`TextDelta`, `ThinkingDelta`, `ToolCallStart`, `Done`, etc.). OAuth helpers and generated model metadata sit alongside the core so the same library can drive OpenAI, Anthropic, Google, Mistral, Bedrock, Codex, and compatible APIs without changing the calling code.
+At the centre is a registry-driven core: providers register streaming implementations, models enter a global registry, and callers invoke `Stream()` or `Complete()` with a `Context`, `Model` and optional tools. Provider packages translate the common Go types into each wire protocol and emit one event stream. OAuth helpers, deferred response lifecycle handling, telemetry and generated model metadata sit alongside the core.
 
 ## Features
 ### 🔄 Unified streaming API
@@ -20,10 +20,13 @@ Same `Stream()` / `Complete()` surface across providers.
 Typed tools with JSON Schema parameters and streamed tool-call deltas.
 
 ### 🌐 Multi-provider
-OpenAI, Anthropic, Google, Mistral, Bedrock, Codex, Azure/OpenAI-compatible APIs.
+OpenAI, Anthropic, Google, Mistral, Bedrock, Codex, Azure, Baseten and compatible APIs.
 
-### 🧠 Cross-language compatible context
-JSON-compatible with `pi-ai` types for Go ↔ TypeScript hand-off.
+### 🧠 Release-pinned catalogues
+1,153 text models across 38 providers and 42 image models, generated from the `pi-ai` v0.84.0 release data.
+
+### 🔁 Cross-language context
+JSON-compatible with `pi-ai` types for Go and TypeScript hand-off.
 
 ### 💵 Cost tracking
 Per-request token usage and USD cost breakdown.

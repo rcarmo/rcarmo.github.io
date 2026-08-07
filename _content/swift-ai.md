@@ -10,7 +10,7 @@ tagline: SwiftPM port of @earendil-works/pi-ai with typed streaming, tools and a
 ## About
 `swift-ai` brings the `@earendil-works/pi-ai` API and event model to Swift applications and services. It uses [`go-ai`](go-ai) as the audited reference implementation and exposes parity information both in `STATUS.json` and through `SwiftAIStatus` at runtime.
 
-The package tracks `pi-ai` 0.80.2. Its generated text catalogue contains 999 models from 35 providers, but catalogue presence does not imply that every provider has a bundled native transport.
+The package tracks the bounded `pi-ai` v0.84.0 release surface. Its generated catalogues contain 1,153 text models across 38 providers and 42 image models; catalogue presence does not imply that every provider has a bundled native transport.
 
 ## How it works
 `SwiftAI.bootstrap()` initialises the actor-backed model and provider registry. A request resolves its model, credentials and provider implementation before passing through a common asynchronous `stream` or `complete` API.
@@ -22,7 +22,7 @@ HTTP providers convert SSE responses into shared typed events for text, reasonin
 `Codable` types cover models, providers, messages, tools, usage, diagnostics, stream options and the common event protocol.
 
 ### Provider implementations
-Implemented streaming paths include OpenAI Chat Completions, OpenAI Responses, Azure OpenAI Responses, Codex, Anthropic Messages, Mistral, Gemini and Gemini CLI.
+Implemented streaming paths include OpenAI Chat Completions, OpenAI Responses, Azure OpenAI Responses, Codex, Anthropic Messages, Mistral, Gemini, Gemini CLI and Baseten.
 
 ### OAuth support
 OAuth support includes GitHub Copilot, OpenAI Codex, Anthropic, Gemini CLI and Antigravity.
@@ -31,10 +31,10 @@ OAuth support includes GitHub Copilot, OpenAI Codex, Anthropic, Gemini CLI and A
 SSE parsing, partial tool-argument JSON, JSON Schema validation, retry handling and request or response interception hooks.
 
 ### Generated catalogues
-Includes the audited upstream text catalogue plus 34 OpenRouter image models.
+Includes release-pinned `pi-ai` v0.84.0 text and OpenRouter image catalogues.
 
 ### Lightweight core
-Bedrock request building and Codex transport surfaces are present, but heavyweight vendor SDK and WebSocket transports are pluggable rather than bundled.
+Bedrock request building and Codex transport surfaces are present, but heavyweight vendor SDK and WebSocket transports remain pluggable rather than bundled.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 114">

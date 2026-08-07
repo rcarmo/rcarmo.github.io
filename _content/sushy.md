@@ -36,6 +36,9 @@ Includes Atom feeds, sitemap, OpenSearch and blog navigation alongside wiki page
 ### Deliberate omissions
 No web editor, revision history or comments; site thumbnailing was moved into a separate application.
 
+## Posts
+- [Python](https://taoofmac.com/space/dev/python) — 2026-07-29
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 202">
   <style>
