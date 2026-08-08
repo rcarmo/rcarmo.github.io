@@ -3,39 +3,49 @@ section: retro-embedded
 status: stable
 created: 2025-11-08
 logo: assets/logos-opt/zmk-config-totem.png
-tagline: ZMK keymap for the Totem — home row mods, combos, ZMK Studio.
+tagline: ZMK configuration for the GEIST Totem split keyboard, with four layers, pointer controls and Studio editing.
 ---
 
 ## About
-Production-ready ZMK config for the 34-key Totem split keyboard with ZMK Studio support for GUI keymap editing without reflashing. Home row mods tuned over months of daily use. 7:2 forks-to-stars — used as a template.
+This repository builds custom ZMK firmware for the [GEIST Totem](https://github.com/GEIGEIGEIST/TOTEM) split keyboard with Seeeduino XIAO BLE controllers. The active user layout is `config/totem.keymap`; the larger keymap under `boards/shields/totem/` is the shield default.
+
+The configuration provides four layers, mouse controls, sticky modifiers, Caps Word, NKRO, Bluetooth profile management and ZMK Studio support.
 
 ## How it works
-ZMK Studio enables GUI keymap editing over USB without a firmware rebuild. Home row mod timing was tuned over months: long enough to avoid false triggers, short enough to avoid latency. Combo timing works reliably on the Totem's aggressive column stagger.
+`config/totem.keymap` defines Base, Symbol, Navigation and Adjust layers. Pressing the Symbol and Navigation layer keys together activates Adjust through a conditional layer.
+
+GitHub Actions builds left, right and settings-reset UF2 images from `build.yaml`. Studio RPC is enabled on the left half, allowing live keymap changes over USB; the configuration keeps Studio locking enabled.
 
 ## Features
-### 🖥 ZMK Studio
-GUI keymap editing without reflashing.
+### Four-layer layout
+Base uses QWERTY. Symbol contains brackets and operators, Navigation combines arrows, numbers and mouse controls, and Adjust contains media, Bluetooth and function keys.
 
-### ✋ Tuned home row mods
-Per-key timing from months of use.
+### Mouse controls
+Navigation provides pointer movement, buttons and scrolling through ZMK's pointing support.
 
-### ⌨ 34-key layout
-Combos for all punctuation.
+### Sticky modifiers and Caps Word
+One-shot modifiers use quick release and a one-second timeout. Caps Word continues through underscore, minus and backspace.
 
-### 🍴 Template-ready
-7:2 forks-to-stars tells the story.
+### ZMK Studio
+The left-half build includes Studio RPC over USB UART. Studio locking remains enabled in `config/totem.conf`.
+
+### NKRO and Bluetooth
+NKRO is enabled, with commands for Bluetooth profile selection, clearing pairings and switching output between USB and Bluetooth.
+
+### Reproducible firmware
+The build matrix produces separate left/right UF2 files plus settings-reset firmware for recovery.
 
 ## Gallery
-- [Base layer](assets/screenshots/zmk-config-totem/layer-base.png) — QWERTY, home row mods, thumb cluster
-- [Sym layer](assets/screenshots/zmk-config-totem/layer-sym.png) — Symbols, brackets, sticky mods
-- [Nav layer](assets/screenshots/zmk-config-totem/layer-nav.png) — Arrows, mouse, numbers
-- [Adjust layer](assets/screenshots/zmk-config-totem/layer-adjust.png) — Bluetooth, media, function keys
+- [Base layer](assets/screenshots/zmk-config-totem/layer-base.png) — QWERTY, modifiers and thumb keys
+- [Symbol layer](assets/screenshots/zmk-config-totem/layer-sym.png) — Brackets, operators and punctuation
+- [Navigation layer](assets/screenshots/zmk-config-totem/layer-nav.png) — Arrows, numbers, pointer and scrolling controls
+- [Adjust layer](assets/screenshots/zmk-config-totem/layer-adjust.png) — Bluetooth, media, output and function keys
 
 ## Posts
 - [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 100">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 202">
   <style>
     /* Default: light mode (for rsvg-convert and non-media-query agents) */
     .bg { fill: transparent; }
@@ -69,7 +79,7 @@ Combos for all punctuation.
       .box-orange { fill: #2a1a08; stroke: #f97316; }
       .box-cyan { fill: #1a1030; stroke: #7040d0; }
       .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
+      .sub { fill: #90a8c0; }
     }
   </style>
   <defs>
@@ -80,22 +90,37 @@ Combos for all punctuation.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="720" height="100" class="bg" rx="8"/>
+  <rect width="960" height="202" class="bg" rx="8"/>
 
-  <rect x="30" y="30" width="180" height="60" rx="8" class="box"/>
-  <text x="120" y="56" text-anchor="middle" class="label">keymap.c</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">ZMK config</text>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
+  <text x="120" y="56" text-anchor="middle" class="label">User keymap</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">Base · Sym · Nav · Adjust</text>
 
-  <rect x="270" y="30" width="180" height="60" rx="8" class="box-accent"/>
-  <text x="360" y="56" text-anchor="middle" class="label">GitHub CI</text>
-  <text x="360" y="74" text-anchor="middle" class="sub">ZMK build action</text>
+  <rect x="270" y="30" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="360" y="56" text-anchor="middle" class="label">Build matrix</text>
+  <text x="360" y="74" text-anchor="middle" class="sub">left · right · settings reset</text>
 
   <rect x="510" y="30" width="180" height="60" rx="8" class="box-green"/>
-  <text x="600" y="56" text-anchor="middle" class="label">.uf2 firmware</text>
-  <text x="600" y="74" text-anchor="middle" class="sub">Totem keyboard</text>
+  <text x="600" y="56" text-anchor="middle" class="label">GitHub Actions</text>
+  <text x="600" y="74" text-anchor="middle" class="sub">ZMK firmware build</text>
 
-  <path d="M210,60 L270,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <rect x="510" y="118" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="600" y="144" text-anchor="middle" class="label">ZMK Studio</text>
+  <text x="600" y="162" text-anchor="middle" class="sub">USB RPC · locked</text>
+
+  <rect x="750" y="30" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="840" y="56" text-anchor="middle" class="label">UF2 firmware</text>
+  <text x="840" y="74" text-anchor="middle" class="sub">XIAO BLE halves</text>
+
+  <rect x="750" y="118" width="180" height="60" rx="8" class="box"/>
+  <text x="840" y="144" text-anchor="middle" class="label">Live keymap</text>
+  <text x="840" y="162" text-anchor="middle" class="sub">layer edits without reflashing</text>
+
+  <path d="M210,60 L270,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M450,60 L510,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M690,60 L750,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M840,90 L840,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M690,148 L750,148" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
 
-
+  <text x="480" y="198" text-anchor="middle" class="sub">Totem keymap build and live Studio editing</text>
 </svg>
