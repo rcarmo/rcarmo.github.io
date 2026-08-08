@@ -1,0 +1,19 @@
+{
+  "title": "Miniflux feed processing with embedded SQLite storage",
+  "nodes": [
+    { "id": "feeds", "label": "RSS / Atom feeds", "sub": "scheduled refresh", "tag": "input", "column": 0, "row": 0 },
+    { "id": "fetch", "label": "Miniflux services", "sub": "fetch · parse · scrape", "tag": "processing", "column": 1, "row": 0 },
+    { "id": "db", "label": "SQLite database", "sub": "WAL · foreign keys", "tag": "state", "column": 2, "row": 0 },
+    { "id": "fts", "label": "FTS5 search", "sub": "triggers · BM25 · recency", "tag": "backend", "column": 2, "row": 1 },
+    { "id": "api", "label": "Picoflux server", "sub": "web · REST · Fever · GReader", "tag": "web", "column": 3, "row": 0 },
+    { "id": "clients", "label": "Readers", "sub": "browser · mobile clients", "tag": "output", "column": 4, "row": 0 }
+  ],
+  "edges": [
+    { "from": "feeds", "to": "fetch", "accent": true },
+    { "from": "fetch", "to": "db" },
+    { "from": "db", "to": "fts" },
+    { "from": "db", "to": "api", "accent": true },
+    { "from": "fts", "to": "api" },
+    { "from": "api", "to": "clients", "accent": true }
+  ]
+}
