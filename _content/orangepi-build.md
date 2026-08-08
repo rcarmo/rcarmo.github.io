@@ -14,7 +14,7 @@ The build system runs on Ubuntu 22.04 and cross-compiles a full Debian image for
 
 ## Features
 ### 🍊 Orange Pi 6 Plus
-Board-specific patches for the Cix P1 SoC — a powerful ARM SoC for SBC workloads.
+Board-specific patches for the Cix P1 ARM SoC.
 
 ### 📦 Full Debian images
 Produces ready-to-flash SD card or eMMC images with a working Debian userland.

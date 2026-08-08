@@ -11,7 +11,7 @@ Forked from [antirez/gte-pure-C](https://github.com/antirez/gte-pure-C). A pure 
 Single static binary. 1 allocation per embed. Predictable flat latency. All matrix operations use hand-written SIMD assembly (AVX2+FMA on amd64, NEON on arm64) — no gonum, no goroutine churn, no CGo in the default build.
 
 ## Motivation
-This seemed like a great follow-up to [`asterisk`](asterisk-embedding-model) and drove me to try out Go assembly. I'm not overly pleased with non-GPU performance, but I did learn a lot from contrasting SIMD and NVIDIA support that eventually led to [`go-pherence`](go-pherence), even if my potato RTX3060 provides barely any speedup.
+This followed [`asterisk`](asterisk-embedding-model) and gave me a reason to work with Go assembly. Non-GPU performance still falls short of what I wanted. Comparing SIMD and NVIDIA execution taught me enough to start [`go-pherence`](go-pherence), even though my potato RTX3060 provides barely any speedup.
 
 I'm pretty happy with it, and it was a great learning experience even if I haven't yet sorted out the vector database I will be using it with.
 

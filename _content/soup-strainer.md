@@ -6,7 +6,7 @@ tagline: Readability/Decruft article extraction reimplemented with BeautifulSoup
 ---
 
 ## About
-soup-strainer is a Python reimplementation of the Readability "decruft" algorithm — the same technique Firefox Reader View and Pocket use to strip navigation, ads, and boilerplate from web pages and extract just the article body. Built on BeautifulSoup and html5lib for robust HTML5 parsing. Feed it a raw HTML string, get back clean readable content. ★34, predates most of the current readability-py ecosystem.
+soup-strainer is a Python implementation of the Readability "decruft" algorithm used to remove navigation, advertising and boilerplate from web pages. It uses BeautifulSoup and html5lib to parse malformed HTML5, then returns the article body from a raw HTML string. The project predates most current Python Readability implementations.
 
 ## How it works
 The algorithm scores candidate block elements by analysing their text density, link density, class names, and tag types — high text density with low link density signals article content. The top-scoring candidate and its siblings are kept; everything else is stripped. html5lib parses even malformed HTML correctly, so it handles the full range of real-world pages that trip up lxml-based parsers.

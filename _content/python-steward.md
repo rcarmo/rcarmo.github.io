@@ -2,12 +2,12 @@
 section: agents
 status: experimental
 created: 2025-12-20
-tagline: The simplest coding agent harness that could possibly work — Python, tool use, done.
+tagline: Small Python coding agent with streaming tool use and a readable conversation loop.
 logo: assets/logos-opt/python-steward.png
 ---
 
 ## About
-Steward is the simplest coding agent harness that could possibly work. A Python CLI that connects to an LLM, gives it tools (files, shell, web search), and runs a conversation loop. That's it. No framework, no plugin system, no abstractions — just a streaming tool-use loop in readable Python. Bootstrapped from an earlier Bun prototype, then rewritten in Python because sometimes you just want `pip install` and go.
+Steward is a small Python CLI that connects to an LLM, exposes file, shell and web-search tools, and runs a streaming conversation loop. The implementation stays in ordinary Python without a plugin framework. It began as a Bun prototype and moved to Python for straightforward installation with `pip`.
 
 ## How it works
 One conversation loop: the user types a prompt, Steward sends it to the LLM with a list of available tools, the model calls tools, Steward executes them and feeds results back. Repeat until the model is done. Tools are plain Python functions with type annotations — the JSON schema the model sees is generated automatically. Configuration is a `.env` file. The whole thing fits in your head.

@@ -16,10 +16,10 @@ The transplanted `uae_cpu_2026` JIT/compiler subtree is vendored under `src/cpu/
 ### 🏗 Transplanted JIT runtime
 `uae_cpu_2026` vendored; bridge and runtime scaffolding complete.
 
-### 🔬 Opcode equivalence harness
+### 🔬 Opcode equivalence tests
 Interpreter vs JIT comparison across risky and missing opcode families.
 
-### 💨 Headless boot harness
+### 💨 Headless boot tests
 Fresh disk image per run — clean, reproducible bring-up tests.
 
 ### 🖥 Full NeXT hardware emulation

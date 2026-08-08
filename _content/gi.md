@@ -2,12 +2,12 @@
 section: agents
 status: experimental
 created: 2026-04-22
-tagline: Go coding agent harness with Piclaw-compatible web UI, append-only turn engine, and go-ai inference.
+tagline: Go coding agent with Piclaw-compatible web UI, append-only turn engine, and go-ai inference.
 logo: assets/logos-opt/gi.png
 ---
 
 ## About
-Gi is a coding agent built on `go-ai`, shaped by lessons learned from Pi, Piclaw, and Vibes. It combines a Go turn engine, SQLite-backed state, a Piclaw-compatible web UI, and provider-backed inference into a single workspace-centric agent harness. Extensibility comes from two embedded scripting engines: [go-joker](go-joker) for Clojure and [goja](https://github.com/dop251/goja) for JavaScript, allowing tools and workflows to be written in either language without recompiling.
+Gi is a coding agent built on `go-ai`, shaped by lessons learned from Pi, Piclaw, and Vibes. It combines a Go turn engine, SQLite-backed state, a Piclaw-compatible web UI, and provider-backed inference in one workspace-centric runtime. Two embedded scripting engines provide extensions: [go-joker](go-joker) for Clojure and [goja](https://github.com/dop251/goja) for JavaScript. Tools and workflows can use either language without recompiling Gi.
 
 ## How it works
 The core is an append-only turn engine backed by SQLite: turns, messages, and events are stored in a local database, then streamed to the frontend over SSE. Inference goes through `go-ai`, with auth loaded from Pi-compatible config and prompts sourced from `AGENTS.md`. The web UI reuses Piclaw's TypeScript source verbatim, with Gi-specific `api.ts` and `app.ts` adapters wiring the existing component tree into Gi's REST and SSE endpoints. Scripting extensions are loaded at startup from the workspace — Clojure scripts run through an embedded [go-joker](go-joker) interpreter (with full interop to Go host functions), while JavaScript scripts run through goja.

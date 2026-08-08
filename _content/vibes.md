@@ -11,7 +11,7 @@ Vibes is a lightweight Python web app for talking to AI coding agents from a pho
 
 ## Motivation
 I wanted something I could use on my iPhone and iPad, but I found the idea of using OpenClaw and 
-After creating [Vibes](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting, so when I stumbled upon [Pi](https://pi.dev) and its amazing extensibility, I knew I had found a great way to explore how to build an agent-based IDE that I could run from my iPad. I am now converting it to Go, original Python code in the `python` branch.
+After creating [Vibes](vibes), using GitHub Copilot and Codex through ACP felt limiting. [Pi](https://pi.dev) exposed the extension points I needed to explore an agent-based IDE that could run from my iPad. The Go port is in progress; the original Python code remains on the `python` branch.
 
 
 ## How it works
