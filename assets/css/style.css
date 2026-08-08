@@ -659,12 +659,23 @@ code {
 .feature-body p { margin-bottom: 0.3rem; }
 
 /* ── Diagram ──────────────────────────────────────────────────────────────── */
-.diagram-wrap { overflow-x: auto; padding: 0.5rem 0; }
+.diagram-wrap {
+  overflow-x: auto;
+  padding: 0.5rem 0;
+  overscroll-behavior-inline: contain;
+  scrollbar-gutter: stable;
+}
 .diagram-wrap svg {
   display: block;
   width: auto;
   max-width: 100%;
   height: auto;
+}
+@media (max-width: 768px) {
+  .diagram-wrap svg {
+    min-width: 960px;
+    max-width: none;
+  }
 }
 
 /* ── Releases ─────────────────────────────────────────────────────────────── */
