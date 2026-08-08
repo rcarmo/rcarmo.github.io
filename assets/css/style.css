@@ -358,13 +358,14 @@ code {
 .hero-gallery-slide img,
 .hero-gallery-slide video {
   display: block;
-  width: 100%;
   max-width: 100%;
   height: auto;
   max-height: none;
   margin: 0 auto;
 }
+.hero-gallery-slide img { width: auto; }
 .hero-gallery-slide video {
+  width: 100%;
   background: #000;
   aspect-ratio: 16 / 9;
 }
