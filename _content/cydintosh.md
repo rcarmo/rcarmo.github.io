@@ -9,9 +9,9 @@ tagline: Macintosh Plus emulator firmware for ESP32 display boards, with reprodu
 ---
 
 ## About
-`cydintosh` runs a Macintosh Plus emulator on small ESP32 display boards. This fork concentrates on repeatable board profiles, browser-flashable artefacts and reliable bring-up for CYD2USB and the Sunton ESP32-8048S043C.
+`cydintosh` runs a Macintosh Plus emulator on small ESP32 display boards. It is a fork of [`likeablob/cydintosh`](https://github.com/likeablob/cydintosh).
 
-The emulator combines `umac` with the Musashi 68000 core. Users supply a Mac Plus ROM v3 and a bootable HFS disk image.
+This fork adds repeatable board profiles, browser-flashable artefacts and hardware bring-up for CYD2USB and the Sunton ESP32-8048S043C. The emulator combines `umac` with the Musashi 68000 core; users supply a Mac Plus ROM v3 and a bootable HFS disk image.
 
 ## How it works
 A board profile selects display, touch, memory and storage settings. The ESP32-S3 profile loads a patched Mac ROM from flash and mounts the guest disk from LittleFS before starting the 68000 runtime.
