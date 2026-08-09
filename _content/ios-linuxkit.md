@@ -57,7 +57,7 @@ CI validates 15+ language runtimes against every kernel change.
     .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
     .box-cyan { fill: #d9c9fe; stroke: #5e30eb; stroke-width: 1.5; }
     .label { fill: #1a2a40; }
-    .sub { fill: #5070a0; }
+    .sub { fill: #243b53; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }
@@ -98,7 +98,7 @@ CI validates 15+ language runtimes against every kernel change.
   <text x="364" y="74" text-anchor="middle" class="sub">threaded-code ARM64</text>
   <rect x="278" y="98" width="82" height="48" rx="6" class="box-purple"/>
   <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Syscall layer</text>
-  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">signals · futex · mmap</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">signals · futex</text>
   <rect x="368" y="98" width="82" height="48" rx="6" class="box"/>
   <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">48-bit VM</text>
   <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">large runtimes</text>

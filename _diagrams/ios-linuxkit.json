@@ -4,7 +4,7 @@
     { "id": "ios",       "label": "iOS app",            "sub": "App Store compatible",      "tag": "web",        "column": 0, "row": 0 },
     { "id": "interp",   "label": "Asbestos interpreter","sub": "threaded-code ARM64",       "tag": "processing", "column": 1, "row": 0,
       "children": [
-        { "id": "syscall", "label": "Syscall layer", "sub": "signals · futex · mmap", "tag": "processing" },
+        { "id": "syscall", "label": "Syscall layer", "sub": "signals · futex", "tag": "processing" },
         { "id": "addr",    "label": "48-bit VM",      "sub": "large runtimes",        "tag": "state" }
       ]
     },

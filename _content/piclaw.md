@@ -77,7 +77,7 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
     .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
     .box-cyan { fill: #d9c9fe; stroke: #5e30eb; stroke-width: 1.5; }
     .label { fill: #1a2a40; }
-    .sub { fill: #5070a0; }
+    .sub { fill: #243b53; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: 13px; font-weight: 600; }
     .sub { font-size: 11px; }

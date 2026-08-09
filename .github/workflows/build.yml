@@ -29,6 +29,12 @@ jobs:
       - name: Audit links
         run: bun audit-links.ts
 
+      - name: Test diagram audit
+        run: bun test audit-diagrams.test.ts
+
+      - name: Audit diagram graphs and geometry
+        run: bun audit-diagrams.ts > /tmp/diagram-audit.json
+
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
@@ -40,7 +46,7 @@ jobs:
             .gitignore,.gitattributes,
             .github,
             _content,
-            build.ts,audit-links.ts,package.json,bun.lockb,bun.lock,
+            build.ts,audit-links.ts,audit-diagrams.ts,audit-diagrams.test.ts,package.json,bun.lockb,bun.lock,
             AUDIT.md,AGENTS.md,
             workitems,
             node_modules,

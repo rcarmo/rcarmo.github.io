@@ -284,7 +284,7 @@ const THEME_CSS = `
     .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
     .box-cyan { fill: #d9c9fe; stroke: #5e30eb; stroke-width: 1.5; }
     .label { fill: #1a2a40; }
-    .sub { fill: #5070a0; }
+    .sub { fill: #243b53; }
     text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
     .label { font-size: ${FONT_LABEL}px; font-weight: 600; }
     .sub { font-size: ${FONT_SUB}px; }

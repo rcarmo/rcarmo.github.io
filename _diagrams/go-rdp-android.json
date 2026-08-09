@@ -4,7 +4,7 @@
     { "id": "client",   "label": "RDP client",         "sub": "any standard client",      "tag": "input",      "column": 0, "row": 0 },
     { "id": "app",      "label": "Android app",         "sub": "Kotlin foreground service", "tag": "backend",   "column": 1, "row": 0,
       "children": [
-        { "id": "capture", "label": "MediaProjection", "sub": "screen capture",  "tag": "processing" },
+        { "id": "capture", "label": "Media capture", "sub": "MediaProjection",  "tag": "processing" },
         { "id": "a11y",    "label": "Accessibility",    "sub": "input injection", "tag": "processing" }
       ]
     },
