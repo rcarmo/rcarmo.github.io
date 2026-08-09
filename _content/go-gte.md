@@ -76,7 +76,7 @@ Default `make` produces a fully self-contained static binary with no C dependenc
       .box-orange { fill: #2a1a08; stroke: #f97316; }
       .box-cyan { fill: #1a1030; stroke: #7040d0; }
       .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
+      .sub { fill: #90a8c0; }
     }
   </style>
   <defs>

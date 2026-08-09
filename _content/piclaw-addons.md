@@ -2,6 +2,7 @@
 id: piclaw-addons
 repo: rcarmo/piclaw-addons
 section: agents
+status: active
 tagline: The add-on buffet for PiClaw — browse the full menu at [rcarmo.github.io/piclaw-addons](https://rcarmo.github.io/piclaw-addons)
 featured: true
 created: 2026-04-21
@@ -12,6 +13,9 @@ created: 2026-04-21
 A growing catalog of extensions, tools and add-ons for [PiClaw](piclaw) — browse the full collection at **[rcarmo.github.io/piclaw-addons](https://rcarmo.github.io/piclaw-addons)**. Each add-on is a self-contained npm package that plugs into the PiClaw runtime, adding new tools, workflows, and integrations without touching the core agent.
 
 Current add-ons include Proxmox cluster management, Portainer container orchestration, SSH remote access, and whatever else seemed like a good idea at 2 AM.
+
+## How it works
+Each add-on is an npm package loaded by the PiClaw extension runtime. Packages can register tools, settings, UI components and skills without changing the core application. The catalogue site exposes installation details and package metadata for each add-on.
 
 ## Features
 
@@ -68,7 +72,7 @@ Zero-guardrail inter-instance messaging — lets Pi instances post and reply to 
       .box-orange { fill: #2a1a08; stroke: #f97316; }
       .box-cyan { fill: #1a1030; stroke: #7040d0; }
       .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
+      .sub { fill: #90a8c0; }
     }
   </style>
   <defs>

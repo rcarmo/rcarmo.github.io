@@ -1,22 +1,16 @@
 {
+  "title": "WebAuthn gate in front of an HTTP service",
   "nodes": [
-    {
-      "id": "browser",
-      "label": "Browser",
-      "sub": "enrolment token",
-      "column": 0,
-      "row": 0,
-      "tag": "web"
-    },
-    {
-      "id": "local-state",
-      "label": "Local State",
-      "sub": "CA key + cert",
-      "column": 1,
-      "row": 0,
-      "tag": "state"
-    }
+    { "id": "browser", "label": "Browser", "sub": "passkey · enrolment token", "tag": "input", "column": 0, "row": 0 },
+    { "id": "bouncer", "label": "Bouncer", "sub": "WebAuthn · sessions · routing", "tag": "web", "column": 1, "row": 0 },
+    { "id": "state", "label": "Local state", "sub": "CA · credentials · sessions", "tag": "state", "column": 2, "row": 1 },
+    { "id": "backend", "label": "HTTP backend", "sub": "authenticated requests", "tag": "output", "column": 2, "row": 0 },
+    { "id": "cloudflare", "label": "Cloudflare Tunnel", "sub": "optional TLS termination", "tag": "external", "column": 0, "row": 1 }
   ],
-  "edges": [],
-  "title": "any HTTP service"
+  "edges": [
+    { "from": "browser", "to": "bouncer", "accent": true },
+    { "from": "bouncer", "to": "backend", "accent": true },
+    { "from": "bouncer", "to": "state" },
+    { "from": "cloudflare", "to": "bouncer" }
+  ]
 }

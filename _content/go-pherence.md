@@ -2,6 +2,7 @@
 id: go-pherence
 repo: rcarmo/go-pherence
 section: ai-ml
+status: active
 created: 2026-05-01
 tagline: Minimal tensor framework in pure Go — SIMD assembly, GPU compute, runs LLMs
 logo: assets/logos-opt/go-pherence.png
@@ -68,7 +69,7 @@ Pure Go + assembly. No Python, no cgo, no ONNX runtime.
       .box-orange { fill: #2a1a08; stroke: #f97316; }
       .box-cyan { fill: #1a1030; stroke: #7040d0; }
       .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
+      .sub { fill: #90a8c0; }
     }
   </style>
   <defs>

@@ -35,7 +35,7 @@ Multiple backends in a single instance, per-site passkey stores.
 Static Go binary; Docker-ready.
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 114">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 202">
   <style>
     /* Default: light mode (for rsvg-convert and non-media-query agents) */
     .bg { fill: transparent; }
@@ -69,7 +69,7 @@ Static Go binary; Docker-ready.
       .box-orange { fill: #2a1a08; stroke: #f97316; }
       .box-cyan { fill: #1a1030; stroke: #7040d0; }
       .label { fill: #d0daf0; }
-      .sub { fill: #5070a0; }
+      .sub { fill: #90a8c0; }
     }
   </style>
   <defs>
@@ -80,17 +80,32 @@ Static Go binary; Docker-ready.
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="480" height="114" class="bg" rx="8"/>
+  <rect width="720" height="202" class="bg" rx="8"/>
 
-  <rect x="30" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
   <text x="120" y="56" text-anchor="middle" class="label">Browser</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">enrolment token</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">passkey · enrolment token</text>
 
-  <rect x="270" y="30" width="180" height="60" rx="8" class="box"/>
-  <text x="360" y="56" text-anchor="middle" class="label">Local State</text>
-  <text x="360" y="74" text-anchor="middle" class="sub">CA key + cert</text>
+  <rect x="30" y="118" width="180" height="60" rx="8" class="box-indigo"/>
+  <text x="120" y="144" text-anchor="middle" class="label">Cloudflare Tunnel</text>
+  <text x="120" y="162" text-anchor="middle" class="sub">optional TLS termination</text>
 
+  <rect x="270" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="360" y="56" text-anchor="middle" class="label">Bouncer</text>
+  <text x="360" y="74" text-anchor="middle" class="sub">WebAuthn · sessions · routing</text>
 
+  <rect x="510" y="30" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="600" y="56" text-anchor="middle" class="label">HTTP backend</text>
+  <text x="600" y="74" text-anchor="middle" class="sub">authenticated requests</text>
 
-  <text x="240" y="110" text-anchor="middle" class="sub">any HTTP service</text>
+  <rect x="510" y="118" width="180" height="60" rx="8" class="box"/>
+  <text x="600" y="144" text-anchor="middle" class="label">Local state</text>
+  <text x="600" y="162" text-anchor="middle" class="sub">CA · credentials · sessions</text>
+
+  <path d="M210,60 L270,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M450,60 L510,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M450,60 L466,60 Q480,60 480,74 L480,134 Q480,148 494,148 L510,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M210,148 L226,148 Q240,148 240,134 L240,74 Q240,60 254,60 L270,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+
+  <text x="360" y="198" text-anchor="middle" class="sub">WebAuthn gate in front of an HTTP service</text>
 </svg>
