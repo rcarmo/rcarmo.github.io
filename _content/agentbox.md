@@ -2,7 +2,7 @@
 section: agents
 status: active
 created: 2026-01-11
-tagline: Docker sandbox for coding agents — preinstalled runtimes, opt-in services, DinD.
+tagline: Docker sandbox for coding agents -- preinstalled runtimes, opt-in services, DinD.
 logo: assets/logos-opt/agentbox.png
 ---
 
@@ -15,7 +15,7 @@ Since I never run agents on my personal machines and spend a lot of time on an i
 
 Together with [`webterm`](webterm), this proved to be a very effective environment until I built [`piclaw`](piclaw), and I still use and maintain it for other purposes.
 ## How it works
-The entrypoint checks `ENABLE_DOCKER`, `ENABLE_SSH`, and `ENABLE_RDP` and starts only what you asked for — all three default to off. The agent user gets passwordless `sudo`, and the workspace skeleton at `/home/agent/workspace-skel` copies into `/workspace` on first use without overwriting files.
+The entrypoint checks `ENABLE_DOCKER`, `ENABLE_SSH`, and `ENABLE_RDP` and starts only what you asked for -- all three default to off. The agent user gets passwordless `sudo`, and the workspace skeleton at `/home/agent/workspace-skel` copies into `/workspace` on first use without overwriting files.
 
 ## Features
 ### 🤖 Agents preinstalled

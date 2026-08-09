@@ -3,11 +3,11 @@ section: libraries
 status: active
 created: 2026-04-22
 logo: assets/logos-opt/go-joker.png
-tagline: Performance-optimised Clojure-like Lisp interpreter — IR bytecode, WASM backend, 527× faster arithmetic.
+tagline: Performance-optimised Clojure-like Lisp interpreter -- IR bytecode, WASM backend, 527× faster arithmetic.
 ---
 
 ## About
-An optimized fork of [Joker](https://github.com/candid82/joker) (Clojure-like Lisp interpreter) for inclusion in [gi](gi), a self-hosted coding agent. Five execution tiers — native integer codegen, WASM native via wazero JIT, typed IR with zero-boxing, boxed IR for collections, and tree-walker for full Clojure semantics — selected automatically per expression. Mandelbrot runs ~4200× faster than upstream; fib(35) in 0.5s via native codegen.
+An optimised fork of [Joker](https://github.com/candid82/joker) (Clojure-like Lisp interpreter) for inclusion in [gi](gi), a self-hosted coding agent. Five execution tiers -- native integer codegen, WASM native via wazero JIT, typed IR with zero-boxing, boxed IR for collections, and tree-walker for full Clojure semantics -- selected automatically per expression. Mandelbrot runs ~4200× faster than upstream; fib(35) in 0.5s via native codegen.
 
 ## How it works
 The compiler analyses each expression and emits to the fastest viable tier: pure-integer recursive functions compile to native Go closures (53× faster, zero boxing), pure numeric loops compile to WASM bytecode executed by wazero's JIT (~0.2ms), primitive/string/cursor loops use a typed IR stack with zero boxing (~2–8ms), collection-heavy code uses a boxed IR interpreter (~10–40ms), and everything else falls through to the tree-walker for full macro/special-form/I/O support.
@@ -20,10 +20,10 @@ Pure-integer recursive `defn` bodies compile to fixed-arity native Go closures. 
 Pure integer/float loops compile to native code via wazero. ~0.2ms for Mandelbrot.
 
 ### 📦 Typed IR (zero-boxing)
-Primitive, string, and cursor loops on an irValue stack — no interface{} boxing overhead.
+Primitive, string, and cursor loops on an irValue stack -- no interface{} boxing overhead.
 
 ### 🗃 Transient vectors and maps
-O(1) append/assoc for builder patterns — auto-promoted from persistent collections.
+O(1) append/assoc for builder patterns -- auto-promoted from persistent collections.
 
 ### 🌐 Web runtime
 Ring-style HTTP server with WebSocket and SSE/streaming extensions. Bottle-style router with path params, middleware, and CORS.
@@ -35,7 +35,7 @@ Protocols, records, hierarchies, tagged literals, sorted collections, atom watch
 `joker.imaging` (image processing), `joker.svg` (SVG + raster), `joker.pdf` (PDF), `joker.random`, `joker.log`, `joker.http`, `joker.http.router`.
 
 ### 🔧 Runtime introspection
-`disassemble`, `analyze`, `wasm-diagnostic`, `escape-analysis`, `profile`, `benchmark`, `mem-stats`, `gc` — all from Joker scripts.
+`disassemble`, `analyze`, `wasm-diagnostic`, `escape-analysis`, `profile`, `benchmark`, `mem-stats`, `gc` -- all from Joker scripts.
 
 ### 📓 Web notebooks
 Mathematica-style EDN notebooks with Observable-style dependency metadata. Local browser UI (CodeMirror + ECharts + Mermaid, no CDN), headless execution, Markdown export, and self-contained inline outputs for agent/debug reports.

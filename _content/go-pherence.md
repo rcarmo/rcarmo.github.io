@@ -4,15 +4,15 @@ repo: rcarmo/go-pherence
 section: ai-ml
 status: active
 created: 2026-05-01
-tagline: Minimal tensor framework in pure Go — SIMD assembly, GPU compute, runs LLMs
+tagline: Minimal tensor framework in pure Go -- SIMD assembly, GPU compute, runs LLMs
 logo: assets/logos-opt/go-pherence.png
 ---
 
 ## About
-A minimal tensor computation framework in pure Go with SIMD assembly and GPU compute, inspired by tinygrad. Lazy tensor DAG with elementwise fusion, pattern-matching graph rewrite, and enough infrastructure to run LLaMA and BERT models from safetensors weights — no Python, no cgo, no ONNX.
+A minimal tensor computation framework in pure Go with SIMD assembly and GPU compute, inspired by tinygrad. Lazy tensor DAG with elementwise fusion, pattern-matching graph rewrite, and enough infrastructure to run LLaMA and BERT models from safetensors weights -- no Python, no cgo, no ONNX.
 
 ## How it works
-The core is a lazy tensor DAG: operations build a computation graph that is fused and optimized before execution. A tinygrad-style pattern matcher applies 16 rewrite rules for kernel fusion. SIMD GEMM kernels (AVX2 on x86, NEON on ARM) handle matrix math, with GPU DevBuf providing device-agnostic buffers that lazy-transfer between CPU and GPU. LLaMA decoding uses RoPE, GQA, KV cache, and SiLU MLP; BERT encoding matches [go-gte](go-gte) parity at 10.8ms per embed with zero allocations.
+The core is a lazy tensor DAG: operations build a computation graph that is fused and optimised before execution. A tinygrad-style pattern matcher applies 16 rewrite rules for kernel fusion. SIMD GEMM kernels (AVX2 on x86, NEON on ARM) handle matrix math, with GPU DevBuf providing device-agnostic buffers that lazy-transfer between CPU and GPU. LLaMA decoding uses RoPE, GQA, KV cache, and SiLU MLP; BERT encoding matches [go-gte](go-gte) parity at 10.8ms per embed with zero allocations.
 
 ## Features
 
@@ -20,13 +20,13 @@ The core is a lazy tensor DAG: operations build a computation graph that is fuse
 Elementwise fusion gives 2× throughput for chained ops. Pattern matcher + graph rewrite with 16 rules.
 
 ### ⚡ SIMD GEMM kernels
-AVX2 VGATHERDPS on x86, NEON GEBP on ARM — ported from [go-gte](go-gte).
+AVX2 VGATHERDPS on x86, NEON GEBP on ARM -- ported from [go-gte](go-gte).
 
 ### 🦙 LLaMA decoder
-RoPE, grouped-query attention, KV cache, SiLU MLP, RMS norm — loads safetensors/GPTQ INT4.
+RoPE, grouped-query attention, KV cache, SiLU MLP, RMS norm -- loads safetensors/GPTQ INT4.
 
 ### 🧠 BERT encoder
-GTE-small at go-gte parity — 10.8ms, 0 allocs per embed.
+GTE-small at go-gte parity -- 10.8ms, 0 allocs per embed.
 
 ### 🖥 GPU compute
 Device-agnostic DevBuf with lazy CPU↔GPU transfer. 8 PTX kernels compiled at runtime.

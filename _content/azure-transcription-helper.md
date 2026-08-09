@@ -6,26 +6,26 @@ tagline: Extract audio from media files and build transcripts and subtitles via 
 ---
 
 ## About
-A command-line utility that takes a video or audio file, extracts the audio track with ffmpeg, sends it to Azure Cognitive Services Speech-to-Text, and writes out a transcript and SRT subtitle file. Useful for batch-processing recordings, meeting videos, or podcast archives where a human-quality transcript is needed without running a local model.
+A command-line utility that takes a video or audio file, extracts the audio track with ffmpeg, sends it to Azure Speech-to-Text, and writes a transcript and subtitle file. I use it to batch-process recordings, meeting videos and podcast archives without running a local model.
 
 ## How it works
-ffmpeg extracts the audio stream and resamples it to the format Azure Speech expects (16 kHz mono WAV). The Azure Speech SDK streams the audio through the continuous recognition API, collecting timestamped phrases. The phrases are assembled into a plain-text transcript and an SRT file with accurate per-line timing, ready for upload to YouTube or embedding in a video player.
+ffmpeg extracts the audio stream and resamples it to the format Azure Speech expects (16 kHz mono WAV). The Azure Speech service processes the audio and returns timestamped phrases with speaker attribution. The script assembles these into normalised JSON and an optional WebVTT file for upload or further processing.
 
 ## Features
 ### 🎙️ Media file input
-Accepts any format ffmpeg can decode — MP4, MKV, MOV, MP3, M4A, and more.
+Accepts any format ffmpeg can decode -- MP4, MKV, MOV, MP3, M4A, and more.
 
 ### 📝 Transcript output
-Produces a clean plain-text transcript with speaker diacritisation where the Azure model supports it.
+Produces normalised transcript data with speaker attribution where the Azure model supports it.
 
-### 🎬 SRT subtitle export
-Generates an SRT file with per-phrase timestamps — import directly into video editors or subtitle tools.
+### 🎬 WebVTT subtitle export
+Generates WebVTT subtitles with per-phrase timestamps for video players and editing tools.
 
 ### ☁️ Azure Speech backend
-Uses Azure Cognitive Services continuous recognition for high accuracy across accents and technical vocabulary.
+Uses Azure Speech batch transcription for longer recordings and server-side speaker metadata.
 
 ### 📦 Simple CLI
-Single Python script with minimal dependencies — `python transcribe.py input.mp4` and you're done.
+Single Python script with minimal dependencies -- `python transcribe.py input.mp4` and you're done.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 202">
@@ -85,20 +85,20 @@ Single Python script with minimal dependencies — `python transcribe.py input.m
 
   <rect x="510" y="30" width="180" height="60" rx="8" class="box-slate"/>
   <text x="600" y="56" text-anchor="middle" class="label">Azure Speech</text>
-  <text x="600" y="74" text-anchor="middle" class="sub">continuous recognition</text>
+  <text x="600" y="74" text-anchor="middle" class="sub">batch transcription</text>
 
   <rect x="750" y="30" width="180" height="60" rx="8" class="box-teal"/>
-  <text x="840" y="56" text-anchor="middle" class="label">Transcript</text>
-  <text x="840" y="74" text-anchor="middle" class="sub">plain text</text>
+  <text x="840" y="56" text-anchor="middle" class="label">Transcript data</text>
+  <text x="840" y="74" text-anchor="middle" class="sub">normalised JSON</text>
 
   <rect x="750" y="118" width="180" height="60" rx="8" class="box-orange"/>
   <text x="840" y="144" text-anchor="middle" class="label">Subtitles</text>
-  <text x="840" y="162" text-anchor="middle" class="sub">SRT output</text>
+  <text x="840" y="162" text-anchor="middle" class="sub">optional WebVTT</text>
 
   <path d="M210,60 L270,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M450,60 L510,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M690,60 L750,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M690,60 L706,60 Q720,60 720,74 L720,134 Q720,148 734,148 L750,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <text x="480" y="198" text-anchor="middle" class="sub">timestamped phrases become a readable transcript and a subtitle file ready for upload</text>
+  <text x="480" y="198" text-anchor="middle" class="sub">batch transcription returns speaker-attributed JSON and optional WebVTT</text>
 </svg>

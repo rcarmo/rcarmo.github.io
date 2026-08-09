@@ -3,7 +3,7 @@ repo: piku/piku
 section: cloud-infra
 status: stable
 created: 2016-03-26
-tagline: git push deployments to your own server — no Docker, no ops.
+tagline: git push deployments to your own server -- no Docker, no ops.
 logo: assets/logos-opt/piku.png
 ---
 
@@ -15,7 +15,7 @@ piku runs as a git post-receive hook. When you push a commit, it detects your ap
 
 Nginx is reconfigured automatically on each deploy. Virtual hosts, TLS via Let's Encrypt, static file serving, and cache rules are driven by an ENV file you commit alongside your code. Zero-downtime deploys replace workers before stopping the old ones. ps:scale web=3 and config:set KEY=val take effect without touching code.
 
-The implementation stays around 1,500 lines of Python with no external dependencies. That deliberate simplicity is a design goal — piku covers 80% of deployment use cases without becoming a platform.
+The implementation stays around 1,500 lines of Python with no external dependencies. That deliberate simplicity is a design goal -- piku handles small application deployments without growing a separate control plane.
 
 ## Features
 ### ⌥ Heroku-style workflow
@@ -28,7 +28,7 @@ Python, Node, Go, Clojure, Ruby, Java, PHP, static. Detected from lock files and
 Let's Encrypt ACME, virtual host routing, zero-downtime worker replacement.
 
 ### ⬆ Live scaling
-ps:scale web=3 and config:set KEY=val — no redeploy needed.
+ps:scale web=3 and config:set KEY=val -- no redeploy needed.
 
 ### 🐧 Any POSIX host
 Debian, Ubuntu, Alpine, FreeBSD, WSL. ARM and Intel. Stable since 2016.

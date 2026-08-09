@@ -2,7 +2,7 @@
 section: networking
 status: stable
 created: 2025-04-24
-tagline: ZFS pool metrics for Proxmox — exported to Graphite, cron only.
+tagline: ZFS pool metrics for Proxmox -- exported to Graphite, cron only.
 ---
 
 ## About

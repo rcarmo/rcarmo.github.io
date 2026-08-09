@@ -2,12 +2,12 @@
 section: remote-access
 status: active
 created: 2026-01-24
-tagline: Browser-based RDP client — full MS-RDPBCGR spec, Go backend, WASM frontend.
+tagline: Browser-based RDP client with a Go backend and WASM frontend.
 logo: assets/logos-opt/go-rdp.png
 ---
 
 ## About
-go-rdp connects to Windows VMs via RDP from any browser without a native client. Go backend implementing the full MS-RDPBCGR specification as a reference implementation; WASM frontend for rendering.
+go-rdp connects to Windows VMs via RDP from any browser without a native client. The Go backend implements the RDP protocol and the WASM frontend handles rendering.
 
 ## How it works
 The Go backend handles RDP security negotiation, capability exchange, and display updates, streaming JPEG-encoded frames to the browser over WebSocket. Keyboard and mouse events are forwarded as RDP input PDUs. TinyGo compiles the frontend renderer to WASM.
@@ -16,8 +16,8 @@ The Go backend handles RDP security negotiation, capability exchange, and displa
 ### 🌐 No native client
 RDP in a browser canvas via WebAssembly.
 
-### 📋 Full spec
-MS-RDPBCGR reference implementation.
+### 📋 Protocol coverage
+Security negotiation, capability exchange, input and display updates.
 
 ### ⚙ Go + WASM
 Docker image for one-command deployment.

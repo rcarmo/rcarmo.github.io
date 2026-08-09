@@ -2,7 +2,7 @@
 section: networking
 status: maintained
 created: 2026-01-06
-tagline: Force Syncthing to rescan folders on demand — cron-triggered or event-driven rescans via the REST API.
+tagline: Force Syncthing to rescan folders on demand -- cron-triggered or event-driven rescans via the REST API.
 logo: assets/logos-opt/syncthing-kicker.png
 ---
 
@@ -14,19 +14,19 @@ Connects to the local Syncthing REST API using the configured API key, then eith
 
 ## Features
 ### ⏰ Cron-scheduled rescans
-Define per-folder rescan schedules in standard cron syntax — different folders can sync at different intervals.
+Define per-folder rescan schedules in standard cron syntax -- different folders can sync at different intervals.
 
 ### 🔔 Event-driven triggers
-Watch a named pipe or Unix socket for trigger signals — external scripts can kick a rescan without polling.
+Watch a named pipe or Unix socket for trigger signals -- external scripts can kick a rescan without polling.
 
 ### 🐳 Docker sidecar
 Ships as a minimal container image; mounts the Syncthing config dir to read the API key automatically.
 
 ### 🔑 Auto API key discovery
-Reads the Syncthing config XML to find the API key — no manual configuration needed beyond the config path.
+Reads the Syncthing config XML to find the API key -- no manual configuration needed beyond the config path.
 
 ### 📋 Per-folder targeting
-Trigger rescans on specific folder IDs rather than all folders — useful for large libraries where full rescans are expensive.
+Trigger rescans on specific folder IDs rather than all folders -- useful for large libraries where full rescans are expensive.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 114">

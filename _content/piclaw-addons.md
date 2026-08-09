@@ -3,14 +3,14 @@ id: piclaw-addons
 repo: rcarmo/piclaw-addons
 section: agents
 status: active
-tagline: The add-on buffet for PiClaw — browse the full menu at [rcarmo.github.io/piclaw-addons](https://rcarmo.github.io/piclaw-addons)
+tagline: The add-on buffet for PiClaw -- browse the full menu at [rcarmo.github.io/piclaw-addons](https://rcarmo.github.io/piclaw-addons)
 featured: true
 created: 2026-04-21
 ---
 
 ## About
 
-A growing catalog of extensions, tools and add-ons for [PiClaw](piclaw) — browse the full collection at **[rcarmo.github.io/piclaw-addons](https://rcarmo.github.io/piclaw-addons)**. Each add-on is a self-contained npm package that plugs into the PiClaw runtime, adding new tools, workflows, and integrations without touching the core agent.
+A growing catalogue of extensions, tools and add-ons for [PiClaw](piclaw) -- browse the full collection at **[rcarmo.github.io/piclaw-addons](https://rcarmo.github.io/piclaw-addons)**. Each add-on is a self-contained npm package that plugs into the PiClaw runtime, adding new tools, workflows, and integrations without touching the core agent.
 
 Current add-ons include Proxmox cluster management, Portainer container orchestration, SSH remote access, and whatever else seemed like a good idea at 2 AM.
 
@@ -26,7 +26,7 @@ VM/LXC lifecycle, metrics, backup/restore workflows for Proxmox VE clusters.
 Container, stack, image, network, and volume orchestration for Docker/Swarm endpoints.
 
 ### 📧 IMAP
-Email search, fetch, move/copy, flag, draft creation, and STARTTLS — full mailbox management.
+Email search, fetch, move/copy, flag, draft creation, and STARTTLS -- full mailbox management.
 
 ### 🔭 Observability
 OpenTelemetry tracing to Azure Application Insights (with Live Metrics) and local Graphite.
@@ -35,7 +35,7 @@ OpenTelemetry tracing to Azure Application Insights (with Live Metrics) and loca
 ESPHome voice assistant for ThinkSmart/ESP32-Audio devices using Azure STT/TTS.
 
 ### 💬 YoloChat
-Zero-guardrail inter-instance messaging — lets Pi instances post and reply to each other over HTTP.
+Zero-guardrail inter-instance messaging -- lets Pi instances post and reply to each other over HTTP.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1058 178">

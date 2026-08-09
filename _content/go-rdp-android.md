@@ -4,7 +4,7 @@ repo: rcarmo/go-rdp-android
 section: remote-access
 status: experimental
 created: 2026-04-30
-tagline: Native Android RDP server — screen sharing without ADB, built on go-rdp
+tagline: Native Android RDP server -- screen sharing without ADB, built on go-rdp
 logo: assets/logos-opt/go-rdp-android.png
 ---
 
@@ -12,15 +12,15 @@ logo: assets/logos-opt/go-rdp-android.png
 An Android RDP server experiment that explores how far a normal installed app can go toward exposing the Android screen over RDP without relying on ADB as the runtime architecture. Built in Kotlin with a Go core via gomobile, reusing the [go-rdp](go-rdp) protocol stack for the RDP wire format. Screen capture uses MediaProjection; input injection uses the Accessibility Service API.
 
 ## How it works
-The Kotlin app hosts a foreground service that acquires a MediaProjection virtual display for screen capture. Frames are handed to the Go RDP encoder (linked via gomobile) which handles the RDP protocol, bitmap compression, and client sessions. Input events from RDP clients are translated into Android accessibility actions — taps, swipes, and key presses — through a bound AccessibilityService. No root, no ADB tunnel required.
+The Kotlin app hosts a foreground service that acquires a MediaProjection virtual display for screen capture. Frames are handed to the Go RDP encoder (linked via gomobile) which handles the RDP protocol, bitmap compression, and client sessions. Input events from RDP clients are translated into Android accessibility actions -- taps, swipes, and key presses -- through a bound AccessibilityService. No root, no ADB tunnel required.
 
 ## Features
 
 ### 📱 No ADB required
-Runs as a normal installed Android app — no root, no developer mode, no USB tunnel.
+Runs as a normal installed Android app -- no root, no developer mode, no USB tunnel.
 
 ### 🔗 go-rdp core
-Reuses [go-rdp](go-rdp)'s protocol stack via gomobile — RDP encoding, session management, bitmap compression.
+Reuses [go-rdp](go-rdp)'s protocol stack via gomobile -- RDP encoding, session management, bitmap compression.
 
 ### 🖥 MediaProjection capture
 System-level screen capture through Android's MediaProjection API.

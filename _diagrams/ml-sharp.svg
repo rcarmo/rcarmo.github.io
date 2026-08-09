@@ -46,31 +46,31 @@
   <rect width="728" height="202" class="bg" rx="8"/>
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
-  <text x="120" y="56" text-anchor="middle" class="label">Input video</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">low-res frames</text>
+  <text x="120" y="56" text-anchor="middle" class="label">Input image</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">single RGB frame</text>
 
   <rect x="30" y="118" width="180" height="60" rx="8" class="box"/>
-  <text x="120" y="144" text-anchor="middle" class="label">Pretrained weights</text>
-  <text x="120" y="162" text-anchor="middle" class="sub">Apple checkpoints</text>
+  <text x="120" y="144" text-anchor="middle" class="label">SHARP weights</text>
+  <text x="120" y="162" text-anchor="middle" class="sub">Apple checkpoint</text>
 
   <rect x="262" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="274" y="30" width="180" height="60" rx="8" class="box-purple"/>
-  <text x="364" y="56" text-anchor="middle" class="label">SHARP pipeline</text>
+  <text x="364" y="56" text-anchor="middle" class="label">macOS fallback</text>
   <text x="364" y="74" text-anchor="middle" class="sub">PyTorch + MPS</text>
   <rect x="278" y="98" width="82" height="48" rx="6" class="box-purple"/>
-  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Anchor net</text>
-  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">frame align</text>
+  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">SHARP depth</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">monocular map</text>
   <rect x="368" y="98" width="82" height="48" rx="6" class="box-purple"/>
-  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Fusion net</text>
-  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">temporal merge</text>
+  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Parallax warp</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">camera sweep</text>
 
   <rect x="518" y="30" width="180" height="60" rx="8" class="box-orange"/>
-  <text x="608" y="56" text-anchor="middle" class="label">Output video</text>
-  <text x="608" y="74" text-anchor="middle" class="sub">4× super-resolved</text>
+  <text x="608" y="56" text-anchor="middle" class="label">Swipe video</text>
+  <text x="608" y="74" text-anchor="middle" class="sub">depth parallax</text>
 
   <path d="M210,60 L274,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M210,148 L228,148 Q242,148 242,134 L242,74 Q242,60 256,60 L274,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M454,60 L518,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
 
-  <text x="364" y="198" text-anchor="middle" class="sub">Apple SHARP — video super-resolution with MPS acceleration</text>
+  <text x="364" y="198" text-anchor="middle" class="sub">SHARP depth drives a local parallax-video fallback on Apple Silicon</text>
 </svg>

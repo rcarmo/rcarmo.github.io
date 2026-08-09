@@ -2,7 +2,7 @@
 section: remote-access
 status: active
 created: 2026-02-02
-tagline: mDNS bridge — relay Bonjour/Avahi service announcements across network segments.
+tagline: mDNS bridge -- relay Bonjour/Avahi service announcements across network segments.
 logo: assets/logos-opt/mdnsbridge.png
 ---
 
@@ -23,7 +23,7 @@ Works with Docker bridge networks and macvlan setups where mDNS doesn't cross th
 Optionally relay only specific service types (e.g. `_airplay._tcp`, `_http._tcp`) to reduce noise on the target segment.
 
 ### ⚡ Single static binary
-Compiled Go — no runtime, no dependencies, drops into any Linux system or minimal container image.
+Compiled Go -- no runtime, no dependencies, drops into any Linux system or minimal container image.
 
 ### 🔄 Loop prevention
 Tracks recently forwarded records and suppresses re-forwarding to avoid amplification loops in meshed networks.

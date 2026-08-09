@@ -4,18 +4,18 @@ status: active
 created: 2026-04-28
 logo: assets/logos-opt/kotlin-airplay-receiver.png
 repo: rcarmo/kotlin-airplay-receiver
-tagline: AirPlay receiver for the Lenovo ThinkSmart View — Kotlin + native RAOP, no UI, full-screen mirroring.
+tagline: AirPlay receiver for the Lenovo ThinkSmart View -- Kotlin + native RAOP, no UI, full-screen mirroring.
 ---
 
 ## About
-A minimal Android AirPlay receiver built for the Lenovo ThinkSmart View (Android 8.1, 8-inch 1280×800 screen). Advertises itself as an AirPlay/RAOP target over Bonjour, receives H.264 screen mirroring and AAC audio from any Apple device, and renders full-screen with no in-app controls — the device just becomes a dedicated wireless display.
+A minimal Android AirPlay receiver built for the Lenovo ThinkSmart View (Android 8.1, 8-inch 1280×800 screen). Advertises itself as an AirPlay/RAOP target over Bonjour, receives H.264 screen mirroring and AAC audio from any Apple device, and renders full-screen with no in-app controls -- the device just becomes a dedicated wireless display.
 
 ## How it works
 The Kotlin application layer handles lifecycle, surface management, and audio output via `AudioTrack`. The native C/C++ stack underneath handles RAOP/AirPlay signalling, H.264 decryption and demux, AAC decoding, and JNI bridging to the Kotlin surface. DNS-SD registration uses vendored Java Bonjour bindings. The mirrored stream is held at 1280×720 and scaled to fill the screen by Android's surface compositor.
 
 ## Features
 ### 📡 AirPlay / RAOP receiver
-Advertises under the device name — any Apple device sees it as a standard AirPlay target.
+Advertises under the device name -- any Apple device sees it as a standard AirPlay target.
 
 ### 🎬 H.264 screen mirroring
 Native decode pipeline; full-screen `SurfaceView` with no distortion on 1280×800.
@@ -27,7 +27,7 @@ RAOP audio stack decodes AAC and plays PCM through `AudioTrack`.
 Designed for the Lenovo ThinkSmart View's 8.1 Android runtime and display constraints.
 
 ### 📦 CI-built APKs
-GitHub Actions produces `Receiver-release.apk` on every push — no local Android toolchain needed.
+GitHub Actions produces `Receiver-release.apk` on every push -- no local Android toolchain needed.
 
 ### 🔒 GPLv3
 Native Playfair component retains GPLv3; all vendored code documented in `docs/vendor-audit.md`.

@@ -3,14 +3,14 @@ section: cloud-infra
 status: active
 created: 2026-04-27
 logo: assets/logos-opt/go-dance.png
-tagline: Local-first private CA for homelabs — ACME, single binary, step-ca embedded.
+tagline: Local-first private CA for homelabs -- ACME, single binary, step-ca embedded.
 ---
 
 ## About
-`dance` is a dead-simple private certificate authority for LAN and homelab use. A single Go binary wraps an embedded `step-ca` backend and exposes a browser-friendly landing page, a password-protected admin UI, and a fully functional ACME endpoint — so Caddy and other ACME clients enroll without any extra plumbing.
+`dance` is a dead-simple private certificate authority for LAN and homelab use. A single Go binary wraps an embedded `step-ca` backend and exposes a browser-friendly landing page, a password-protected admin UI, and a fully functional ACME endpoint -- so Caddy and other ACME clients enroll without any extra plumbing.
 
 ## How it works
-`step-ca` runs in-process, writing to SQLite. `dance` fronts it with session-authenticated admin routes, a certificate inventory view, passive revocation, and EAB token management. Root certificate onboarding pages handle macOS, iOS, and other platforms. Everything is a single binary launched with environment variables — no daemon config files, no systemd units, no service mesh.
+`step-ca` runs in-process, writing to SQLite. `dance` fronts it with session-authenticated admin routes, a certificate inventory view, passive revocation, and EAB token management. Root certificate onboarding pages handle macOS, iOS, and other platforms. Everything is a single binary launched with environment variables -- no daemon config files, no systemd units, no service mesh.
 
 ## Features
 ### 🔐 Embedded private CA
@@ -20,7 +20,7 @@ tagline: Local-first private CA for homelabs — ACME, single binary, step-ca em
 Compatible with Caddy, certbot, and any RFC 8555 client.
 
 ### 🖥 Admin UI
-Certificate inventory, revocation, EAB token creation — all in-browser.
+Certificate inventory, revocation, EAB token creation -- all in-browser.
 
 ### 📲 Trust onboarding
 Root cert download pages for macOS, iOS, and generic platforms.
@@ -29,7 +29,7 @@ Root cert download pages for macOS, iOS, and generic platforms.
 Audit log and admin state in a single local file.
 
 ### 📦 Single binary
-`go build ./cmd/dance` — one file, no runtime deps.
+`go build ./cmd/dance` -- one file, no runtime deps.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 114">

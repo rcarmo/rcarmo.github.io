@@ -20,7 +20,9 @@ bun audit-links.ts
 |---|---:|
 | Source pages | 78 |
 | Structural errors | 0 |
-| Stale-page prose fixes | 0 |
+| Stale pages reviewed | 46 |
+| Remaining stale-page prose findings | 0 |
+| Recent pages reviewed (report-only) | 32 |
 | Diagram source pairs | 78/78 |
 | Diagram dark-mode failures | 0 |
 | Diagram arrow warnings | 0 |
@@ -29,7 +31,18 @@ bun audit-links.ts
 | Broken internal links | 0 |
 | Intentional fallback-logo warnings | 23 |
 
-One prose detector hit remains on the recently edited Piclaw page (`amazing` in Motivation). The current audit excludes recent prose from automatic rewriting; this is a review note, not a build failure.
+The writing audit uses `2026-07-18` as its prose cutoff and reads page history before the diagram-colour commit (`e8c9c865`), so mechanical SVG edits do not make old prose appear recent.
+
+All 46 stale pages were reviewed. The pass corrected narrative punctuation, British spelling, malformed sentences, unsupported promotional claims and inaccurate technical descriptions. No stale-page prose findings remain.
+
+The 32 recent pages are report-only. Current findings are:
+
+- 65 Unicode punctuation instances across 15 pages;
+- bounded-release or evidence-register wording on `go-ai`, `rs-ai`, `swift-ai` and `tau-prime`;
+- migration or release-process wording on `shelf`, `sushy`, `vibes` and `wrdp`;
+- `amazing` and `catalog` on `piclaw`.
+
+The malformed sentence on `vibes` was corrected despite the cutoff because it was incomplete published text, not a discretionary style rewrite.
 
 ## Rules
 
@@ -60,9 +73,12 @@ Posts are limited to five entries per project and sorted newest-first. Each entr
 - manufactured contrast;
 - vague project-status wording;
 - document-focused meta-commentary;
+- acceptance-report and migration-process vocabulary;
+- Unicode em-dashes, smart quotes and arrows in narrative prose or taglines;
+- common American spellings where the site uses British English;
 - paragraphs over 110 words.
 
-Findings are review triggers rather than blind substitutions. Legitimate technical nouns and literal phrases may be retained after review.
+Findings are review triggers rather than blind substitutions. Legitimate technical nouns and literal phrases may be retained after review. Unicode em-dashes remain valid as the structural separator in Gallery and Posts entries; those sections are deliberately outside the prose scan.
 
 ### Diagrams
 
@@ -81,4 +97,4 @@ A missing `logo:` declaration is a warning. Twenty-three pages intentionally use
 
 ## Build result
 
-The 2026-08-09 audit built 78 project pages, audited 83 HTML files, and checked 678 unique references without errors.
+The 2026-08-09 audit built 78 project pages, audited 83 HTML files, and checked 677 unique references without errors.

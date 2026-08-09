@@ -2,7 +2,7 @@
 section: libraries
 status: active
 created: 2026-02-13
-tagline: VT100/VT520 terminal library for Go — pyte-faithful, ESCTest2, SVG export.
+tagline: VT100/VT520 terminal library for Go -- pyte-faithful, ESCTest2, SVG export.
 logo: assets/logos-opt/go-te.png
 ---
 
@@ -10,10 +10,10 @@ logo: assets/logos-opt/go-te.png
 Faithful Go port of the Python `pyte` library, validated against `pyte`'s full test suite and `ESCTest2` conformance tests. Multiple screen variants: base, diff (dirty tracking), history, debug. Powers [`webterm`](webterm) and a few other of my projects.
 
 ## Motivation
-It all started because I wanted to show "live" screenshots in [`webterm`](webterm) when I ported it to Go, and sort of escalated from there because I realized that there was _nothing_ out there that came close to `pyte` for Go.
+I wanted to show live terminal screenshots in [`webterm`](webterm) when I ported it to Go, and could not find anything for Go that came close to `pyte`.
 
 ## How it works
-Follows `pyte`'s architecture where feasible, aiming for a very close match to `pyte` exact semantics in Go — edge cases handled identically.  The notable addition is`DiffScreen`, which tracks dirty cells for efficient WebSocket updates because I needed that, and the SVG export feature snapshots any screen state for screenshots or test reports.
+Follows `pyte`'s architecture where feasible, aiming for a very close match to `pyte` exact semantics in Go -- edge cases handled identically.  The notable addition is `DiffScreen`, which tracks dirty cells for efficient WebSocket updates; the SVG export feature snapshots any screen state for screenshots or test reports.
 
 ## Features
 ### 🔣 Pyte-faithful, VT100–VT520

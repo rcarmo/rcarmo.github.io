@@ -2,11 +2,11 @@
 section: agents
 status: active
 created: 2025-05-30
-tagline: Micro MCP server — zero deps, stdio / SSE / TCP, sync and async, naming convention over decoration.
+tagline: Micro MCP server -- zero deps, stdio / SSE / TCP, sync and async, naming convention over decoration.
 ---
 
 ## About
-A zero-dependency Python micro-framework for the [Model Context Protocol](https://modelcontextprotocol.io). Two files (`umcp.py` and `aioumcp.py`), no third-party packages, three transports (stdio, SSE, TCP), and a naming convention — functions starting with `tool_` or `prompt_` are discovered and exposed automatically. Type hints become JSON Schema; docstrings become descriptions. Adding MCP to an existing script takes minutes.
+A zero-dependency Python micro-framework for the [Model Context Protocol](https://modelcontextprotocol.io). Two files (`umcp.py` and `aioumcp.py`), no third-party packages, three transports (stdio, SSE, TCP), and a naming convention -- functions starting with `tool_` or `prompt_` are discovered and exposed automatically. Type hints become JSON Schema; docstrings become descriptions. Adding MCP to an existing script takes minutes.
 
 ## How it works
 The protocol layer reads JSON-RPC 2.0 from stdin (stdio mode) or over HTTP/SSE (`--port N`) or raw TCP (`--tcp`). It discovers `tool_*` and `prompt_*` methods on your subclass via introspection, generates `inputSchema` from type hints (including `Literal`, `Union`, `Optional`, `TypedDict`), and infers MCP annotations (`readOnlyHint`, `destructiveHint`) from naming conventions. Return a value and it serialises automatically. Pick `MCPServer` for local-disk and compute work; pick `AsyncMCPServer` when tools are network-bound.
@@ -19,13 +19,13 @@ Pure Python 3.10+ stdlib. Copy one file, run anywhere.
 stdio (default), SSE (`--port N`), and raw TCP (`--tcp`). Same server class, different launch flag.
 
 ### 🔍 Convention over decoration
-Name a method `tool_<name>` or `prompt_<name>` — discovery, schema generation, and MCP wiring happen automatically.
+Name a method `tool_<name>` or `prompt_<name>` -- discovery, schema generation, and MCP wiring happen automatically.
 
 ### ⚡ Sync + async
 `MCPServer` for compute / disk-bound tools; `AsyncMCPServer` for network-bound tools. Same API surface.
 
 ### 📐 Full schema inference
-`Literal`, `Union`, `Optional`, `TypedDict` → JSON Schema. Strict argument validation, type coercion for stringy clients.
+`Literal`, `Union`, `Optional`, `TypedDict` -> JSON Schema. Strict argument validation, type coercion for stringy clients.
 
 ### 📝 Prompt templates
 `prompt_*` methods exposed via `prompts/list` and `prompts/get`. Reusable structured interactions for AI assistants.

@@ -2,12 +2,12 @@
 section: remote-access
 status: active
 created: 2026-01-18
-tagline: Go web terminal with multi-session dashboard mode — built for AI agent workflows.
+tagline: Go web terminal with multi-session dashboard mode -- built for AI agent workflows.
 logo: assets/logos-opt/webterm.png
 ---
 
 ## About
-webterm serves PTY sessions over HTTP/WebSocket with a dashboard that tiles multiple active terminals in a single browser tab — built for monitoring several AI coding agents in parallel. WASM renderer, correct xterm handling, sticky mobile keybar.
+webterm serves PTY sessions over HTTP/WebSocket with a dashboard that tiles multiple active terminals in a single browser tab -- built for monitoring several AI coding agents in parallel. WASM renderer, correct xterm handling, sticky mobile keybar.
 
 ## How it works
 A Go HTTP server accepts WebSocket connections and spawns a PTY for each session. go-te maintains the server-side VT100/xterm screen state for live tile previews in dashboard mode. The frontend renders via WebAssembly for correct escape handling without a JS library. A mobile sticky keybar (Esc, Ctrl, Shift, arrows) makes it usable from a phone.

@@ -2,7 +2,7 @@
 section: networking
 status: stable
 created: 2025-11-21
-tagline: LLM-powered RSS digest — full-text extraction, runs on a Raspberry Pi.
+tagline: LLM-powered RSS digest -- full-text extraction, runs on a Raspberry Pi.
 logo: assets/logos-opt/feed-summarizer.png
 ---
 
@@ -16,8 +16,8 @@ The fetcher pulls feed entries, fetches linked pages when needed, and uses reada
 ### 📰 Full-text extraction
 readability-lxml extracts the article body, not just the RSS description.
 
-### 🤖 Azure OpenAI summarization
-Uses the OpenAI Python client against Azure OpenAI for async summarization.
+### 🤖 Azure OpenAI summarisation
+Uses the OpenAI Python client against Azure OpenAI for async summarisation.
 
 ### ⏰ Cron-friendly
 One Python script, no daemon.

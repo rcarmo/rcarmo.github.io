@@ -2,7 +2,7 @@
 section: networking
 status: active
 created: 2026-01-08
-tagline: Self-contained OTel collector — SQLite storage, built-in trace viewer.
+tagline: Self-contained OTel collector -- SQLite storage, built-in trace viewer.
 logo: assets/logos-opt/gotel.png
 ---
 
@@ -10,7 +10,7 @@ logo: assets/logos-opt/gotel.png
 Single-binary OpenTelemetry Collector storing traces and metrics in SQLite with a built-in web trace viewer. OTLP gRPC 4317, HTTP 4318, query API 3200, viewer 3000. No Jaeger, no Tempo, no Grafana needed.
 
 ## How it works
-A complete OTel Collector pipeline in one binary: OTLP endpoints → memory_limiter → batch processor → SQLite. The built-in query server exposes trace data as REST; the web viewer provides a Jaeger-like UI. One binary, one file, zero external storage.
+A complete OTel Collector pipeline in one binary: OTLP endpoints -> memory_limiter -> batch processor -> SQLite. The built-in query server exposes trace data as REST; the web viewer provides a Jaeger-like UI. One binary, one file, zero external storage.
 
 ## Features
 ### 📦 Single binary

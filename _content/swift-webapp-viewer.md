@@ -3,24 +3,24 @@ section: apple
 status: active
 created: 2026-04-28
 logo: assets/logos-opt/swift-webapp-viewer.png
-tagline: Chromeless macOS web app viewer — one URL, one native WebKit window, no browser furniture.
+tagline: Chromeless macOS web app viewer -- one URL, one native WebKit window, no browser furniture.
 ---
 
 ## About
-The missing macOS web app wrapper: a tiny native Swift shell that opens a specific URL in a WebKit window with as little visible chrome as macOS will allow. No address bar, no tab strip, no bookmark bar — just the page in a native window. Safari Web Apps bring too much browser furniture; Web App Viewer brings none. Can install any URL as a standalone app in `~/Applications` with its own icon, bundle identifier, and preference store.
+The missing macOS web app wrapper: a tiny native Swift shell that opens a specific URL in a WebKit window with as little visible chrome as macOS will allow. No address bar, no tab strip, no bookmark bar -- just the page in a native window. Safari Web Apps bring too much browser furniture; Web App Viewer brings none. Can install any URL as a standalone app in `~/Applications` with its own icon, bundle identifier, and preference store.
 
 ## How it works
-Each window is a `WKWebView` that fills the frame. An invisible draggable strip at the top (right of the traffic lights) lets you move the window even with the titlebar suppressed. Traffic-light controls and scrollbars appear only while the pointer is over the window. Same-origin links stay inside the app, new-window links open another app window, and external links go to Safari. The app installs itself as a standalone per-URL app via a drop/paste window with icon and name customization.
+Each window is a `WKWebView` that fills the frame. An invisible draggable strip at the top (right of the traffic lights) lets you move the window even with the titlebar suppressed. Traffic-light controls and scrollbars appear only while the pointer is over the window. Same-origin links stay inside the app, new-window links open another app window, and external links go to Safari. The app installs itself as a standalone per-URL app via a drop/paste window with icon and name customisation.
 
 ## Features
 ### 🪟 Chromeless WebKit window
-No toolbar, no address bar, no fullscreen frame — just the page.
+No toolbar, no address bar, no fullscreen frame -- just the page.
 
 ### 📦 App installer
 Installs any URL as its own macOS app in `~/Applications` with manifest/favicon icon selection and custom naming.
 
 ### 📜 User Scripts
-Per-URL JavaScript injection from Preferences — regex URL matching, syntax-highlighted editor, enable/disable per script.
+Per-URL JavaScript injection from Preferences -- regex URL matching, syntax-highlighted editor, enable/disable per script.
 
 ### 🔔 Foreground notifications
 Supports the standard Web `Notification` API while the app is running.
@@ -29,7 +29,7 @@ Supports the standard Web `Notification` API while the app is running.
 "Open in Web App Viewer" in the Services menu, Share sheet, and `webappviewer://open?url=…` URI scheme.
 
 ### 🔍 Web Inspector
-View menu, Option-Command-I, context menu, or Safari Develop menu — embedded views are inspectable.
+View menu, Option-Command-I, context menu, or Safari Develop menu -- embedded views are inspectable.
 
 ### 📁 Downloads + drops
 File downloads to `~/Downloads`; accepts `.webloc`, `public.url`, and text URL drops on the Dock icon.

@@ -5,18 +5,18 @@ section: remote-access
 status: active
 created: 2026-06-09
 logo: assets/logos-opt/womprat.png
-tagline: Single-binary Windows SSH terminal and browser for your tailnet — tsnet embedded, no VPN client needed
+tagline: Single-binary Windows SSH terminal and browser for your tailnet -- tsnet embedded, no VPN client needed
 ---
 
 ## About
-A portable Windows (ARM64 and Intel) SSH terminal and browser for your tailnet. Embeds Tailscale via `tsnet`, opens SSH sessions in tabbed terminals, and provides native WebView2 browser tabs for tailnet services — all in one executable. No VPN client, no browser, no SSH client, no pile of local credentials. Copy one binary, launch, unlock your config, and go.
+A portable Windows (ARM64 and Intel) SSH terminal and browser for your tailnet. Embeds Tailscale via `tsnet`, opens SSH sessions in tabbed terminals, and provides native WebView2 browser tabs for tailnet services -- all in one executable. No VPN client, no browser, no SSH client, no pile of local credentials. Copy one binary, launch, unlock your config, and go.
 
 ## How it works
-The app embeds a userspace Tailscale node via `tsnet` — no system-level VPN required. SSH connections go directly over the tailnet with host-key pinning on first use. WebView2 browser tabs access tailnet HTTP services through the embedded node. Configuration (hosts, credentials, layouts) is encrypted at rest and unlocked on launch.
+The app embeds a userspace Tailscale node via `tsnet` -- no system-level VPN required. SSH connections go directly over the tailnet with host-key pinning on first use. WebView2 browser tabs access tailnet HTTP services through the embedded node. Configuration (hosts, credentials, layouts) is encrypted at rest and unlocked on launch.
 
 ## Features
 ### 🔑 Embedded tsnet
-Full Tailscale networking in-process — no system VPN client needed.
+Full Tailscale networking in-process -- no system VPN client needed.
 
 ### 💻 Tabbed SSH terminal
 Native terminal tabs with SSH sessions to tailnet hosts. Host keys pinned on first use.
@@ -25,13 +25,13 @@ Native terminal tabs with SSH sessions to tailnet hosts. Host keys pinned on fir
 Access tailnet web services (Proxmox, Grafana, etc.) without exposing them to the public internet.
 
 ### 📦 Single binary
-One `.exe` — copy and run. ARM64 and Intel Windows.
+One `.exe` -- copy and run. ARM64 and Intel Windows.
 
 ### 🔒 Encrypted config
 Saved hosts, credentials, and layouts encrypted at rest.
 
 ### 🖥 Windows native
-WinUI3 / WebView2 — no Electron, no Java, no Python runtime.
+WinUI3 / WebView2 -- no Electron, no Java, no Python runtime.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 968 178">

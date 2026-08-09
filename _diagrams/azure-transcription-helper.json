@@ -19,15 +19,15 @@
     {
       "id": "azure-speech",
       "label": "Azure Speech",
-      "sub": "continuous recognition",
+      "sub": "batch transcription",
       "column": 2,
       "row": 0,
       "tag": "infra"
     },
     {
       "id": "transcript",
-      "label": "Transcript",
-      "sub": "plain text",
+      "label": "Transcript data",
+      "sub": "normalised JSON",
       "column": 3,
       "row": 0,
       "tag": "scripting"
@@ -35,7 +35,7 @@
     {
       "id": "subtitles",
       "label": "Subtitles",
-      "sub": "SRT output",
+      "sub": "optional WebVTT",
       "column": 3,
       "row": 1,
       "tag": "output"
@@ -59,5 +59,5 @@
       "to": "subtitles"
     }
   ],
-  "title": "timestamped phrases become a readable transcript and a subtitle file ready for upload"
+  "title": "batch transcription returns speaker-attributed JSON and optional WebVTT"
 }

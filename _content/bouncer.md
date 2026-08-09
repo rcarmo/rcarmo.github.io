@@ -7,14 +7,14 @@ tagline: Passkey-only reverse proxy with built-in CA, iOS onboarding, and Cloudf
 ---
 
 ## About
-A Go reverse proxy that gates any backend HTTP service behind WebAuthn passkeys — no passwords, no TOTP codes. Ships a built-in CA for zero-config local TLS, generates `.mobileconfig` profiles for iOS/macOS trust installation, and supports Cloudflare Tunnel mode to skip local TLS entirely. A 6-digit one-time enrollment token, optional Pushover alerts with geolocation, and multi-site host routing complete the picture.
+A Go reverse proxy that gates any backend HTTP service behind WebAuthn passkeys -- no passwords, no TOTP codes. Ships a built-in CA for zero-config local TLS, generates `.mobileconfig` profiles for iOS/macOS trust installation, and supports Cloudflare Tunnel mode to skip local TLS entirely. A 6-digit one-time enrolment token, optional Pushover alerts with geolocation, and multi-site host routing complete the picture.
 
 ## How it works
 On startup, Bouncer generates a root CA and server certificate automatically, then listens for HTTPS connections. Unauthenticated requests are redirected to an onboarding flow where a user registers a passkey using a one-time token. Once enrolled, sessions last 7 days (persisted across restarts). Authenticated requests are forwarded transparently to the backend. In Cloudflare Tunnel mode, Cloudflare provides HTTPS and Bouncer skips all local TLS.
 
 ## Features
 ### 🔑 Passkey-only auth
-WebAuthn — no passwords, no TOTP. Same-origin enforced.
+WebAuthn -- no passwords, no TOTP. Same-origin enforced.
 
 ### 🔐 Built-in CA
 Root CA + server cert generated on first run. No mkcert, no Let's Encrypt.
@@ -23,7 +23,7 @@ Root CA + server cert generated on first run. No mkcert, no Let's Encrypt.
 Serves `.mobileconfig` trust profiles; passkey enrolment from Safari.
 
 ### ☁️ Cloudflare Tunnel mode
-Skip local TLS entirely — Cloudflare provides HTTPS.
+Skip local TLS entirely -- Cloudflare provides HTTPS.
 
 ### 🔢 One-time enrolment token
 6-digit token on demand, logged + optional Pushover alert with IP / geo.

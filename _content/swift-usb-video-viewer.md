@@ -3,7 +3,7 @@ section: apple
 status: stable
 created: 2026-04-26
 logo: assets/logos-opt/swift-usb-video-viewer.png
-tagline: Native macOS floating window for USB video capture dongles — no HDMI switcher needed.
+tagline: Native macOS floating window for USB video capture dongles -- no HDMI switcher needed.
 ---
 
 ## About
@@ -14,7 +14,7 @@ Uses AVFoundation to enumerate and capture from the first video device whose nam
 
 ## Features
 ### 📺 Floating utility window
-Transparent titlebar, all-spaces, always-on-top — stays out of the way until you need it.
+Transparent titlebar, all-spaces, always-on-top -- stays out of the way until you need it.
 
 ### 🎛 Auto-source detection
 Defaults to the first `USB Video` device; right-click to restart or switch sources.

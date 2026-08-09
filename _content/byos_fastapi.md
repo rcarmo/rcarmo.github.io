@@ -3,7 +3,7 @@ repo: usetrmnl/byos_fastapi
 section: retro-embedded
 status: active
 created: 2025-12-13
-tagline: TRMNL BYOS — self-hosted FastAPI server for the TRMNL e-ink display, replacing the cloud backend.
+tagline: TRMNL BYOS -- self-hosted FastAPI server for the TRMNL e-ink display, replacing the cloud backend.
 logo: assets/logos-opt/byos_fastapi.png
 ---
 
@@ -11,23 +11,23 @@ logo: assets/logos-opt/byos_fastapi.png
 byos_fastapi is a self-hosted Python FastAPI backend for the TRMNL e-ink display device. TRMNL normally phones home to usetrmnl.com to fetch screen content; this server replaces that cloud dependency entirely, letting you run your own content pipeline on a Raspberry Pi or home server and push custom images to the device over your local network.
 
 ## How it works
-The server implements the TRMNL firmware's HTTP polling protocol — the device wakes on its schedule, calls the configured server endpoint, and receives a pre-rendered 1-bit image to display. byos_fastapi handles device registration, image serving, and refresh scheduling. Plugins generate the images: weather, calendar, dashboards, or arbitrary HTML-to-bitmap renders via a headless browser.
+The server implements the TRMNL firmware's HTTP polling protocol -- the device wakes on its schedule, calls the configured server endpoint, and receives a pre-rendered 1-bit image to display. byos_fastapi handles device registration, image serving, and refresh scheduling. Plugins generate the images: weather, calendar, dashboards, or arbitrary HTML-to-bitmap renders via a headless browser.
 
 ## Features
 ### 🖥️ Replaces TRMNL cloud
-Full drop-in replacement for usetrmnl.com — configure the device's server URL once and it works entirely offline.
+Implements the polling endpoints used by the TRMNL firmware; point the device at the local server to fetch screens without usetrmnl.com.
 
 ### 🔌 Plugin system
-Write plugins as Python functions that return a PIL image — add any data source: RSS, Home Assistant, Grafana, custom APIs.
+Write plugins as Python functions that return a PIL image -- add any data source: RSS, Home Assistant, Grafana, custom APIs.
 
 ### 📅 Refresh scheduling
-Per-device refresh intervals with cron-like scheduling — different screens can update at different rates.
+Per-device refresh intervals with cron-like scheduling -- different screens can update at different rates.
 
 ### 🌐 Local-only operation
-No internet connection required after initial setup — works on an air-gapped home network.
+No internet connection required after initial setup -- works on an air-gapped home network.
 
 ### 🧩 FastAPI foundation
-Clean async REST API with automatic OpenAPI docs — easy to extend, inspect, and integrate with other services.
+The asynchronous REST API exposes OpenAPI documentation for inspection and integration.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 202">
