@@ -539,8 +539,11 @@ code {
   .hero-stats, .hero-stats-centered { gap: 1.6rem; justify-content: center; }
   .hero-stat { min-width: unset; }
   .index-main { padding-left: 1.25rem; padding-right: 1.25rem; }
-  .card-grid { grid-template-columns: 1fr; }
+  .card-grid:not(.card-grid-featured) { grid-template-columns: minmax(0, 1fr); }
   .card-grid:not(.card-grid-featured) > .card,
+  .card-grid:not(.card-grid-featured) > .card:nth-last-child(2):nth-child(3n + 1),
+  .card-grid:not(.card-grid-featured) > .card:last-child:nth-child(3n + 2),
+  .card-grid:not(.card-grid-featured) > .card:last-child:nth-child(3n + 1),
   .card-grid:not(.card-grid-featured) > .card:last-child:nth-child(odd) { grid-column: 1 / -1; }
   .card, .card-featured { padding: 1rem; gap: 1rem; flex-direction: column; align-items: center; text-align: center; }
   .card-logo { width: 88px; height: 88px; }

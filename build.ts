@@ -459,6 +459,7 @@ function mdToHtml(md: string, resolveProjectLinks = false): string {
         .replace(/`([^`]+)`/g, "<code>$1</code>")
         .replace(/\*\*([^*]+)\*\*/g, "<strong>$1</strong>")
         .replace(/\*([^*]+)\*/g, "<em>$1</em>")
+        .replace(/(^|[\s(])_([^_\n]+)_(?=$|[\s).,!?;:])/g, "$1<em>$2</em>")
         .replace(/\[([^\]]+)\]\(([^)]+)\)/g, (_m, label, href) => {
           // Local project link: bare name with no slash/protocol → /projects/{name}/
           const isLocal = resolveProjectLinks &&
