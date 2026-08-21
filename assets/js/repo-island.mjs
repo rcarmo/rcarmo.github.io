@@ -151,6 +151,29 @@ function renderHeroMeta(el, repo) {
   `;
 }
 
+async function fetchLatestVersion(fullName) {
+  const releasesRes = await fetch(`https://api.github.com/repos/${fullName}/releases?per_page=1`);
+  if (releasesRes.ok) {
+    const releases = await releasesRes.json();
+    const release = Array.isArray(releases) ? releases[0] : null;
+    if (release?.tag_name) {
+      return {
+        tag: release.tag_name,
+        url: release.html_url || `https://github.com/${fullName}/releases/tag/${encodeURIComponent(release.tag_name)}`,
+      };
+    }
+  }
+
+  const tagsRes = await fetch(`https://api.github.com/repos/${fullName}/tags?per_page=1`);
+  if (!tagsRes.ok) return null;
+  const tags = await tagsRes.json();
+  const tag = Array.isArray(tags) ? tags[0]?.name : null;
+  return tag ? {
+    tag,
+    url: `https://github.com/${fullName}/tree/${encodeURIComponent(tag)}`,
+  } : null;
+}
+
 function renderStatsBar(el, repo, fullName, createdYear) {
   if (!el) return;
   const yearDisplay = createdYear || (repo ? repo.created_at?.slice(0, 4) : '—');
@@ -172,27 +195,22 @@ function renderStatsBar(el, repo, fullName, createdYear) {
       <div class="stat-value stat-value-sm">${yearDisplay}</div>
     </div>
     <div class="stat stat-release" id="stat-release" style="display:none">
-      <div class="stat-label">Release</div>
+      <div class="stat-label">Version</div>
       <div class="stat-value stat-value-sm"><a id="stat-release-link" href="#"></a></div>
     </div>
   `;
-  // Fetch latest release and append inline
   if (fullName) {
-    fetch(`https://api.github.com/repos/${fullName}/releases?per_page=1`)
-      .then(r => r.ok ? r.json() : [])
-      .then(releases => {
-        if (Array.isArray(releases) && releases.length && releases[0].tag_name) {
-          const tag = releases[0].tag_name;
-          const url = `https://github.com/${fullName}/releases/tag/${encodeURIComponent(tag)}`;
-          const stat = el.querySelector('#stat-release');
-          const link = el.querySelector('#stat-release-link');
-          if (stat && link) {
-            link.href = url;
-            link.target = '_blank';
-            link.rel = 'noopener';
-            link.textContent = tag;
-            stat.style.display = '';
-          }
+    fetchLatestVersion(fullName)
+      .then(version => {
+        if (!version) return;
+        const stat = el.querySelector('#stat-release');
+        const link = el.querySelector('#stat-release-link');
+        if (stat && link) {
+          link.href = version.url;
+          link.target = '_blank';
+          link.rel = 'noopener';
+          link.textContent = version.tag;
+          stat.style.display = '';
         }
       })
       .catch(() => {});
