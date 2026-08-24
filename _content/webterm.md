@@ -26,6 +26,7 @@ Sticky Esc/Ctrl/Shift/Tab/arrows with sticky combos.
 Powers the terminal in agentbox, piclaw, and ghostty-web.
 
 ## Posts
+- [Building Piclaw on Top of an Opinionated Coding Agent](https://taoofmac.com/space/blog/2026/08/21/2218) — 2026-08-21
 - [Notes for February 8-15](https://taoofmac.com/space/notes/2026/02/15/1530) — 2026-02-15
 - [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
 

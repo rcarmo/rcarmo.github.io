@@ -54,6 +54,7 @@ A single-writer lease, operation journal and startup reconciliation cover interr
 No chat transcripts, reminders, credentials, hard delete, arbitrary shell execution or direct model writes.
 
 ## Posts
+- [Building Piclaw on Top of an Opinionated Coding Agent](https://taoofmac.com/space/blog/2026/08/21/2218) — 2026-08-21
 - [Marked Down](https://taoofmac.com/space/blog/2026/07/21/1840) — 2026-07-21
 - [Notes for July 13-19](https://taoofmac.com/space/notes/2026/07/19/1500) — 2026-07-19
 

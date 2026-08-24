@@ -34,6 +34,7 @@ Docker, SSH, RDP all off by default. Enable explicitly.
 Run privileged and agents get their own Docker daemon.
 
 ## Posts
+- [Building Piclaw on Top of an Opinionated Coding Agent](https://taoofmac.com/space/blog/2026/08/21/2218) — 2026-08-21
 - [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
 - [Thoughts on AI-Assisted Software Development in 2026](https://taoofmac.com/space/notes/2026/02/01/2130) — 2026-02-01
 

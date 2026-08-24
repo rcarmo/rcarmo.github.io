@@ -53,12 +53,11 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
 - [Portainer settings](assets/screenshots/piclaw/00030piclaw.jpeg) — Add-on configuration with keychain integration
 
 ## Posts
+- [Notes for August 17–23](https://taoofmac.com/space/notes/2026/08/23/1519) — 2026-08-23
+- [Building Piclaw on Top of an Opinionated Coding Agent](https://taoofmac.com/space/blog/2026/08/21/2218) — 2026-08-21
 - [The Chuwi MiniBook X N150, One Year Later](https://taoofmac.com/space/reviews/2026/07/25/1700) — 2026-07-25
 - [Marked Down](https://taoofmac.com/space/blog/2026/07/21/1840) — 2026-07-21
 - [Notes for July 13-19](https://taoofmac.com/space/notes/2026/07/19/1500) — 2026-07-19
-- [My AI Model Tier List for mid-2026](https://taoofmac.com/space/blog/2026/07/11/1500) — 2026-07-17
-- [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-19
-
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 276">
