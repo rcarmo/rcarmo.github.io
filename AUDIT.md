@@ -1,6 +1,6 @@
 # Portfolio audit
 
-Last full audit: 2026-08-24
+Last full audit: 2026-08-31
 
 ## Scope
 
@@ -21,12 +21,12 @@ bun audit-links.ts
 
 | Check | Result |
 |---|---:|
-| Source pages | 79 |
+| Source pages | 80 |
 | Structural errors | 0 |
 | Stale pages reviewed | 46 |
 | Remaining stale-page prose findings | 0 |
-| Recent pages reviewed (report-only) | 33 |
-| Diagram source pairs | 79/79 |
+| Recent pages reviewed (report-only) | 34 |
+| Diagram source pairs | 80/80 |
 | Diagram deterministic errors | 0 |
 | Diagram deterministic warnings/review items | 0 |
 | Browser text-overflow warnings | 0 |
@@ -42,7 +42,7 @@ The writing audit uses `2026-07-18` as its prose cutoff and reads page history b
 
 All 46 stale pages were reviewed. The pass corrected narrative punctuation, British spelling, malformed sentences, unsupported promotional claims and inaccurate technical descriptions. No stale-page prose findings remain.
 
-The 33 recent pages are report-only. Current findings are:
+The 34 recent pages are report-only. Current findings are:
 
 - 65 Unicode punctuation instances across 15 pages;
 - bounded-release or evidence-register wording on `go-ai`, `rs-ai`, `swift-ai` and `tau-prime`;
@@ -122,4 +122,4 @@ A missing `logo:` declaration is a warning. Twenty-three pages intentionally use
 
 ## Build result
 
-The 2026-08-24 audit built 79 project pages, audited 84 HTML files, checked 685 unique references, and validated 79 diagrams in deterministic and browser modes without errors, warnings or review candidates.
+The 2026-08-31 audit built 80 project pages, audited 85 HTML files, checked 693 unique references, and validated 80 diagrams in deterministic and browser modes without errors, warnings or review candidates.
