@@ -1,25 +1,91 @@
 {
-  "title": "4-tier execution: WASM → Typed IR → Boxed IR → Tree-walker",
+  "title": "go-joker — five execution tiers selected per expression",
   "nodes": [
-    { "id": "source",   "label": "Clojure Source",  "sub": "s-expressions",           "tag": "input",      "column": 0, "row": 0 },
-    { "id": "reader",   "label": "Reader + Parser",   "sub": "AST generation",          "tag": "processing", "column": 1, "row": 0 },
-    { "id": "compiler", "label": "IR Compiler",        "sub": "tier selection + TCO",     "tag": "processing", "column": 2, "row": 0 },
-    { "id": "wasm",     "label": "WASM / wazero",      "sub": "native JIT ~0.2ms",        "tag": "backend",    "column": 3, "row": 0 },
-    { "id": "typed",    "label": "Typed IR",            "sub": "zero-boxing ~2–8ms",       "tag": "backend",    "column": 3, "row": 1 },
-    { "id": "boxed",    "label": "Boxed IR",            "sub": "collections ~10–40ms",     "tag": "state",      "column": 3, "row": 2 },
-    { "id": "tree",     "label": "Tree-walker",         "sub": "full Clojure semantics",   "tag": "scripting",  "column": 3, "row": 3 },
-    { "id": "result",   "label": "Result",              "sub": "value / side-effect",      "tag": "output",     "column": 4, "row": 0 }
+    {
+      "id": "source",
+      "label": "Clojure Source",
+      "sub": ".joke scripts",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "parser",
+      "label": "Reader + Parser",
+      "sub": "AST · TCO rewrite",
+      "tag": "processing",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "compiler",
+      "label": "IR Compiler",
+      "sub": "45+ opcodes",
+      "tag": "processing",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "native",
+      "label": "Native integer",
+      "sub": "fib(35) · 0.5s",
+      "tag": "backend",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "wasm",
+      "label": "WASM / wazero",
+      "sub": "numeric loop JIT",
+      "tag": "backend",
+      "column": 3,
+      "row": 1
+    },
+    {
+      "id": "typed",
+      "label": "Typed IR",
+      "sub": "primitive loops",
+      "tag": "backend",
+      "column": 3,
+      "row": 2
+    },
+    {
+      "id": "boxed",
+      "label": "Boxed IR",
+      "sub": "collections · transients",
+      "tag": "state",
+      "column": 3,
+      "row": 3
+    },
+    {
+      "id": "tree",
+      "label": "Tree-walker",
+      "sub": "full semantics",
+      "tag": "infra",
+      "column": 3,
+      "row": 4
+    },
+    {
+      "id": "output",
+      "label": "Result",
+      "sub": "Object value",
+      "tag": "output",
+      "column": 4,
+      "row": 2
+    }
   ],
   "edges": [
-    { "from": "source",   "to": "reader",   "accent": true },
-    { "from": "reader",   "to": "compiler" },
-    { "from": "compiler", "to": "wasm",     "accent": true },
+    { "from": "source", "to": "parser" },
+    { "from": "parser", "to": "compiler" },
+    { "from": "compiler", "to": "native" },
+    { "from": "compiler", "to": "wasm" },
     { "from": "compiler", "to": "typed" },
     { "from": "compiler", "to": "boxed" },
-    { "from": "compiler", "to": "tree" },
-    { "from": "wasm",     "to": "result",   "accent": true },
-    { "from": "typed",    "to": "result" },
-    { "from": "boxed",    "to": "result" },
-    { "from": "tree",     "to": "result" }
+    { "from": "compiler", "to": "tree", "label": "fallback" },
+    { "from": "native", "to": "output" },
+    { "from": "wasm", "to": "output" },
+    { "from": "typed", "to": "output" },
+    { "from": "boxed", "to": "output" },
+    { "from": "tree", "to": "output" }
   ]
 }

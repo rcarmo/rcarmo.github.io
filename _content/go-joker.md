@@ -3,21 +3,21 @@ section: libraries
 status: active
 created: 2026-04-22
 logo: assets/logos-opt/go-joker.png
-tagline: Performance-optimised Clojure-like Lisp interpreter -- IR bytecode, WASM backend, 527× faster arithmetic.
+tagline: Performance-optimised Clojure-like Lisp interpreter -- five execution tiers and 677× faster arithmetic loops.
 ---
 
 ## About
-An optimised fork of [Joker](https://github.com/candid82/joker) (Clojure-like Lisp interpreter) for inclusion in [gi](gi), a self-hosted coding agent. Five execution tiers -- native integer codegen, WASM native via wazero JIT, typed IR with zero-boxing, boxed IR for collections, and tree-walker for full Clojure semantics -- selected automatically per expression. Mandelbrot runs ~4200× faster than upstream; fib(35) in 0.5s via native codegen.
+An optimised fork of [Joker](https://github.com/candid82/joker) (Clojure-like Lisp interpreter) for inclusion in [gi](gi), a self-hosted coding agent. Five execution tiers -- native integer codegen, WASM native via wazero JIT, typed IR with zero-boxing, boxed IR for collections, and tree-walker for full Clojure semantics -- selected automatically per expression. The 22 May 2026 benchmark snapshot puts Mandelbrot at 1667× faster than upstream; fib(35) runs in 0.5s via native codegen.
 
 ## How it works
-The compiler analyses each expression and emits to the fastest viable tier: pure-integer recursive functions compile to native Go closures (53× faster, zero boxing), pure numeric loops compile to WASM bytecode executed by wazero's JIT (~0.2ms), primitive/string/cursor loops use a typed IR stack with zero boxing (~2–8ms), collection-heavy code uses a boxed IR interpreter (~10–40ms), and everything else falls through to the tree-walker for full macro/special-form/I/O support.
+The compiler analyses each expression and emits to the fastest viable tier: pure-integer recursive functions compile to native Go closures (53× faster, zero boxing), eligible numeric loops compile to WASM bytecode executed by wazero's JIT, primitive/string/cursor loops use a typed IR stack with zero boxing (~2–8ms), collection-heavy code uses a boxed IR interpreter (~10–40ms), and everything else falls through to the tree-walker for full macro/special-form/I/O support.
 
 ## Features
 ### ⚡ Native integer codegen
 Pure-integer recursive `defn` bodies compile to fixed-arity native Go closures. fib(35) in 0.5s (53× faster).
 
 ### 🧮 WASM/wazero JIT
-Pure integer/float loops compile to native code via wazero. ~0.2ms for Mandelbrot.
+Eligible integer and float loops compile to native code through wazero; the 22 May 2026 benchmark snapshot records the separate best-Joker/native Mandelbrot workload at ~0.095ms.
 
 ### 📦 Typed IR (zero-boxing)
 Primitive, string, and cursor loops on an irValue stack -- no interface{} boxing overhead.
@@ -41,16 +41,17 @@ Protocols, records, hierarchies, tagged literals, sorted collections, atom watch
 Mathematica-style EDN notebooks with Observable-style dependency metadata. Local browser UI (CodeMirror + ECharts + Mermaid, no CDN), headless execution, Markdown export, and self-contained inline outputs for agent/debug reports.
 
 ## Gallery
-- [Joker vs Python vs Goja](assets/screenshots/go-joker/benchmark-transposed.svg) — CLBG benchmark comparison across languages
-- [Speedup vs upstream](assets/screenshots/go-joker/benchmark-speedup.svg) — improvement factors over original Joker
+- [Joker vs Python, Bun, Goja and let-go](assets/screenshots/go-joker/benchmark-transposed.svg) — validated 22 May 2026 CLBG and micro-benchmark snapshot
+- [Speedup vs upstream](assets/screenshots/go-joker/benchmark-speedup.svg) — 22 May 2026 improvement factors over original Joker
 - [Architecture](assets/screenshots/go-joker/architecture.svg) — 5-tier execution pipeline diagram
 - [Web notebook demo](assets/screenshots/go-joker/notebook-rich-demo.png) — EDN notebook with charts and Mermaid diagrams
 
 ## Posts
+- [Not a Joke](https://taoofmac.com/space/blog/2026/09/01/2130) — 2026-09-01
 - [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 378">
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="466" viewBox="0 0 1200 466">
   <style>
     /* Default: light mode (for rsvg-convert and non-media-query agents) */
     .bg { fill: transparent; }
@@ -95,50 +96,57 @@ Mathematica-style EDN notebooks with Observable-style dependency metadata. Local
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="1200" height="378" class="bg" rx="8"/>
+  <rect width="1200" height="466" class="bg" rx="8"/>
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
   <text x="120" y="56" text-anchor="middle" class="label">Clojure Source</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">s-expressions</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">.joke scripts</text>
 
   <rect x="270" y="30" width="180" height="60" rx="8" class="box-purple"/>
   <text x="360" y="56" text-anchor="middle" class="label">Reader + Parser</text>
-  <text x="360" y="74" text-anchor="middle" class="sub">AST generation</text>
+  <text x="360" y="74" text-anchor="middle" class="sub">AST · TCO rewrite</text>
 
   <rect x="510" y="30" width="180" height="60" rx="8" class="box-purple"/>
   <text x="600" y="56" text-anchor="middle" class="label">IR Compiler</text>
-  <text x="600" y="74" text-anchor="middle" class="sub">tier selection + TCO</text>
+  <text x="600" y="74" text-anchor="middle" class="sub">45+ opcodes</text>
 
   <rect x="750" y="30" width="180" height="60" rx="8" class="box-green"/>
-  <text x="840" y="56" text-anchor="middle" class="label">WASM / wazero</text>
-  <text x="840" y="74" text-anchor="middle" class="sub">native JIT ~0.2ms</text>
+  <text x="840" y="56" text-anchor="middle" class="label">Native integer</text>
+  <text x="840" y="74" text-anchor="middle" class="sub">fib(35) · 0.5s</text>
 
   <rect x="750" y="118" width="180" height="60" rx="8" class="box-green"/>
-  <text x="840" y="144" text-anchor="middle" class="label">Typed IR</text>
-  <text x="840" y="162" text-anchor="middle" class="sub">zero-boxing ~2–8ms</text>
+  <text x="840" y="144" text-anchor="middle" class="label">WASM / wazero</text>
+  <text x="840" y="162" text-anchor="middle" class="sub">numeric loop JIT</text>
 
-  <rect x="750" y="206" width="180" height="60" rx="8" class="box"/>
-  <text x="840" y="232" text-anchor="middle" class="label">Boxed IR</text>
-  <text x="840" y="250" text-anchor="middle" class="sub">collections ~10–40ms</text>
+  <rect x="750" y="206" width="180" height="60" rx="8" class="box-green"/>
+  <text x="840" y="232" text-anchor="middle" class="label">Typed IR</text>
+  <text x="840" y="250" text-anchor="middle" class="sub">primitive loops</text>
 
-  <rect x="750" y="294" width="180" height="60" rx="8" class="box-teal"/>
-  <text x="840" y="320" text-anchor="middle" class="label">Tree-walker</text>
-  <text x="840" y="338" text-anchor="middle" class="sub">full Clojure semantics</text>
+  <rect x="750" y="294" width="180" height="60" rx="8" class="box"/>
+  <text x="840" y="320" text-anchor="middle" class="label">Boxed IR</text>
+  <text x="840" y="338" text-anchor="middle" class="sub">collections · transients</text>
 
-  <rect x="990" y="30" width="180" height="60" rx="8" class="box-orange"/>
-  <text x="1080" y="56" text-anchor="middle" class="label">Result</text>
-  <text x="1080" y="74" text-anchor="middle" class="sub">value / side-effect</text>
+  <rect x="750" y="382" width="180" height="60" rx="8" class="box-slate"/>
+  <text x="840" y="408" text-anchor="middle" class="label">Tree-walker</text>
+  <text x="840" y="426" text-anchor="middle" class="sub">full semantics</text>
 
-  <path d="M210,60 L270,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <rect x="990" y="206" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="1080" y="232" text-anchor="middle" class="label">Result</text>
+  <text x="1080" y="250" text-anchor="middle" class="sub">Object value</text>
+
+  <path d="M210,60 L270,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M450,60 L510,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-  <path d="M690,60 L750,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
+  <path d="M690,60 L750,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M690,60 L706,60 Q720,60 720,74 L720,134 Q720,148 734,148 L750,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M690,60 L706,60 Q720,60 720,74 L720,222 Q720,236 734,236 L750,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M690,60 L706,60 Q720,60 720,74 L720,310 Q720,324 734,324 L750,324" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-  <path d="M930,60 L990,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
-  <path d="M930,148 L946,148 Q960,148 960,134 L960,74 Q960,60 974,60 L990,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-  <path d="M930,236 L946,236 Q960,236 960,222 L960,74 Q960,60 974,60 L990,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-  <path d="M930,324 L946,324 Q960,324 960,310 L960,74 Q960,60 974,60 L990,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M690,60 L706,60 Q720,60 720,74 L720,398 Q720,412 734,412 L750,412" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <text x="720" y="54" text-anchor="middle" class="sub">fallback</text>
+  <path d="M930,60 L946,60 Q960,60 960,74 L960,222 Q960,236 974,236 L990,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M930,148 L946,148 Q960,148 960,162 L960,222 Q960,236 974,236 L990,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M930,236 L990,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M930,324 L946,324 Q960,324 960,310 L960,250 Q960,236 974,236 L990,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M930,412 L946,412 Q960,412 960,398 L960,250 Q960,236 974,236 L990,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <text x="600" y="374" text-anchor="middle" class="sub">4-tier execution: WASM → Typed IR → Boxed IR → Tree-walker</text>
+  <text x="600" y="462" text-anchor="middle" class="sub">go-joker — five execution tiers selected per expression</text>
 </svg>
