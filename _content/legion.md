@@ -32,7 +32,7 @@ mDNS bootstraps local peers; iroh QUIC, gossip and Raft maintain identity, membe
 
 WASM modules and Bun bundles are uploaded as immutable blobs, registered by CID and promoted through weighted routing.
 
-### 9P namespace
+### 🗂️ 9P namespace
 
 Functions, sessions, peers and cluster state appear under a single filesystem-like namespace for clients, scripts and agents.
 
