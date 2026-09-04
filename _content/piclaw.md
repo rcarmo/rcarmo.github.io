@@ -38,6 +38,9 @@ SQLite-backed history, media, tasks, encrypted keychain. Dream nightly consolida
 ### 🛠 Infrastructure tools
 SSH, Proxmox, Portainer profiles. CDP browser automation. Sharp image processing. MCP.
 
+### 🧩 Add-ons
+Install tools, skills and integrations from the [Piclaw Add-ons catalogue](https://rcarmo.github.io/piclaw-addons/), including Proxmox, Portainer, observability and remote access packages.
+
 ### 📦 Single container
 docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
 

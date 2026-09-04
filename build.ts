@@ -730,7 +730,11 @@ ${CLARITY_SNIPPET}
 <body>
   <nav class="topnav">
     <a href="/" class="nav-home">rcarmo</a>
-    <a href="${ghUrl}" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
+    <div class="nav-links">
+      <a href="https://carmo.io/" class="nav-link">Profile</a>
+      <a href="https://taoofmac.com/" class="nav-link">Writing</a>
+      <a href="${ghUrl}" target="_blank" rel="noopener" class="nav-link">GitHub ↗</a>
+    </div>
   </nav>
 
   <header class="hero hero-project" id="hero" data-section="${esc(fm.section || "")}">
@@ -946,19 +950,19 @@ ${posts.length ? `      <section class="sec" id="s-posts">
 function buildIndex(projects: Project[]): string {
   const indexLogo = assetDataUri('/assets/avatar.png');
   writeOgCard('index', buildOgCardSvg({
-    title: 'rcarmo',
-    description: 'Open source projects by Rui Carmo',
-    kicker: 'OPEN SOURCE',
+    title: 'Rui Carmo',
+    description: 'Personal open-source platforms, tools and experiments built over more than two decades.',
+    kicker: 'PERSONAL OPEN SOURCE',
     imageDataUri: indexLogo,
     accent: '#2563eb',
     meta: `${projects.length} projects`,
   }));
   const metaTags = buildMetaTags({
-    title: 'rcarmo — open source',
-    description: 'Open source projects by Rui Carmo',
+    title: 'Rui Carmo — Personal open-source work',
+    description: 'Personal open-source platforms, tools and experiments by Rui Carmo, built over more than two decades.',
     canonicalUrl: `${SITE_URL}/`,
     imageUrl: ogImageUrl('index'),
-    imageAlt: 'rcarmo open source site card',
+    imageAlt: 'Rui Carmo personal open-source work',
     type: 'website',
   });
   // Group by section, sort by stars (will be re-sorted client-side with live data)
@@ -1007,7 +1011,6 @@ function buildIndex(projects: Project[]): string {
         <a href="/projects/${p.id}/" class="card card-featured" data-repo="${esc(fullName)}">
           ${logoHtml}
           <div class="card-body card-body-featured">
-            <div class="card-kicker">Featured project</div>
             <div class="card-name card-name-featured">${esc(p.id)}</div>
             <div class="card-tagline card-tagline-featured">${esc(taglinePlain(p.fm.tagline || ""))}</div>
             <div id="card-meta-${p.id}" class="card-meta card-meta-featured"></div>
@@ -1054,7 +1057,7 @@ function buildIndex(projects: Project[]): string {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>rcarmo — open source</title>
+<title>Rui Carmo — Personal open-source work</title>
 ${metaTags}
 <link rel="stylesheet" href="/assets/css/style.css">
 <link id="dynamic-favicon" rel="icon" href="/favicon.ico">
@@ -1065,7 +1068,11 @@ ${CLARITY_SNIPPET}
 <body>
   <nav class="topnav">
     <a href="/" class="nav-home">rcarmo</a>
-    <a href="https://github.com/rcarmo" target="_blank" rel="noopener" class="nav-gh">GitHub ↗</a>
+    <div class="nav-links">
+      <a href="https://carmo.io/" class="nav-link">Profile</a>
+      <a href="https://taoofmac.com/" class="nav-link">Writing</a>
+      <a href="https://github.com/rcarmo" target="_blank" rel="noopener" class="nav-link">GitHub ↗</a>
+    </div>
   </nav>
 
   <header class="hero hero-index" id="hero">
@@ -1079,11 +1086,25 @@ ${CLARITY_SNIPPET}
         </div>
       </div>
       <div id="hero-stats-island" class="hero-stats hero-stats-centered"></div>
+      <div class="index-positioning">
+        <p class="index-intro">A personal archive of open-source projects, experiments and useful tools built over more than two decades.<br>Most began as things I thought should exist, so I started making them.</p>
+        <p class="index-context">I spend my working days helping large organisations make sense of AI and delivering difficult technology programmes. This is where I keep the software I build for myself.</p>
+        <div class="index-context-links" aria-label="Rui Carmo links">
+          <a href="https://carmo.io/">Profile</a>
+          <a href="https://linkedin.com/in/ruicarmo" target="_blank" rel="noopener">LinkedIn</a>
+          <a href="https://taoofmac.com/">Writing</a>
+          <a href="https://github.com/rcarmo" target="_blank" rel="noopener">GitHub</a>
+          <a href="https://carmo.io/talks/">Talks</a>
+        </div>
+      </div>
     </div>
   </header>
-  <p class="index-intro">These were things I thought should exist, so I started making them.<br>Turns out there were quite a few&hellip;</p>
 
   <main class="index-main">
+    <section class="workshop-intro" aria-labelledby="workshop-title">
+      <h2 id="workshop-title">The workshop</h2>
+      <p>Below is the full archive--current projects, maintained tools, and older experiments. All of these started as weekend or learning projects, usually because there was a technical problem I wanted to solve or an idea I wanted to explore.</p>
+    </section>
     ${sectionsHtml}
   </main>
 
@@ -1091,7 +1112,7 @@ ${CLARITY_SNIPPET}
 
   <footer>
     <span class="foot-l">rcarmo.github.io</span>
-    <span class="foot-r"><a href="https://carmo.io">Career</a> · <a href="https://taoofmac.com">Blog</a> · <a href="https://github.com/rcarmo">GitHub</a></span>
+    <span class="foot-r"><a href="https://carmo.io/">Profile</a> · <a href="https://taoofmac.com/">Writing</a> · <a href="https://github.com/rcarmo">GitHub</a></span>
   </footer>
 
   <script type="module">

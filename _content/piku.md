@@ -3,6 +3,7 @@ repo: piku/piku
 section: cloud-infra
 status: stable
 created: 2016-03-26
+featured: true
 tagline: git push deployments to your own server -- no Docker, no ops.
 logo: assets/logos-opt/piku.png
 ---

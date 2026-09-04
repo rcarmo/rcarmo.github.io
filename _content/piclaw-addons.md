@@ -4,7 +4,6 @@ repo: rcarmo/piclaw-addons
 section: agents
 status: active
 tagline: The add-on buffet for PiClaw -- browse the full menu at [rcarmo.github.io/piclaw-addons](https://rcarmo.github.io/piclaw-addons)
-featured: true
 created: 2026-04-21
 ---
 
