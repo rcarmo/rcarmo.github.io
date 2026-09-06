@@ -3,21 +3,26 @@ section: libraries
 status: active
 created: 2026-04-22
 logo: assets/logos-opt/go-joker.png
-tagline: Performance-optimised Clojure-like Lisp interpreter -- five execution tiers and 677× faster arithmetic loops.
+tagline: Performance-optimised Clojure-like Lisp interpreter with five execution tiers, native helpers and web notebooks.
 ---
 
 ## About
-An optimised fork of [Joker](https://github.com/candid82/joker) (Clojure-like Lisp interpreter) for inclusion in [gi](gi), a self-hosted coding agent. Five execution tiers -- native integer codegen, WASM native via wazero JIT, typed IR with zero-boxing, boxed IR for collections, and tree-walker for full Clojure semantics -- selected automatically per expression. The 22 May 2026 benchmark snapshot puts Mandelbrot at 1667× faster than upstream; fib(35) runs in 0.5s via native codegen.
+An optimised fork of [Joker](https://github.com/candid82/joker) (Clojure-like Lisp interpreter) for inclusion in [gi](gi), a self-hosted coding agent. Five execution tiers -- native integer codegen, WASM native via wazero JIT, typed IR with zero-boxing, boxed IR for collections, and tree-walker for full Clojure semantics -- selected automatically per expression. The v42.11.0 measurements below mix portable programs and best-Joker/native-helper workloads; they are not a measurement of the WASM tier or a general claim about Clojure performance.
+
+
+The [6 September 2026 measurements](https://github.com/rcarmo/go-joker/blob/v42.11.0/docs/BENCHMARK_RESULTS_2026-09-06.md) use an Intel Core i7-12700 and five one-second Joker samples per benchmark, excluding parsing. Python, Bun/JSC, Goja and let-go were rerun with output validation. Joker wins 9/15 displayed workloads, Bun/JSC wins five and Python wins one. In the separate mirrored let-go suite, Joker wins 2/7.
+
+Mandelbrot measures 0.140ms for the portable program and 0.077ms for the native-helper workload; Binary Trees measures 76.326ms and 3.259ms respectively. These are distinct execution paths, not interchangeable timings. Historical speedups use an older baseline that was not rerun, and exclude pidigits because its integer-quotient correction changed the result to checksum 129, invalidating the old comparison.
 
 ## How it works
-The compiler analyses each expression and emits to the fastest viable tier: pure-integer recursive functions compile to native Go closures (53× faster, zero boxing), eligible numeric loops compile to WASM bytecode executed by wazero's JIT, primitive/string/cursor loops use a typed IR stack with zero boxing (~2–8ms), collection-heavy code uses a boxed IR interpreter (~10–40ms), and everything else falls through to the tree-walker for full macro/special-form/I/O support.
+The compiler analyses each expression and emits to the fastest viable tier: pure-integer recursive functions compile to native Go closures without boxing, eligible numeric loops compile to WASM bytecode executed by wazero's JIT, primitive/string/cursor loops use a typed IR stack with zero boxing, collection-heavy code uses a boxed IR interpreter, and everything else falls through to the tree-walker for full macro/special-form/I/O support.
 
 ## Features
 ### ⚡ Native integer codegen
-Pure-integer recursive `defn` bodies compile to fixed-arity native Go closures. fib(35) in 0.5s (53× faster).
+Pure-integer recursive `defn` bodies compile to fixed-arity native Go closures. Argument counts are checked before native dispatch, preserving normal language-level arity errors.
 
 ### 🧮 WASM/wazero JIT
-Eligible integer and float loops compile to native code through wazero; the 22 May 2026 benchmark snapshot records the separate best-Joker/native Mandelbrot workload at ~0.095ms.
+Eligible integer and float loops compile to native code through wazero. Native benchmark helpers are measured separately from this execution path.
 
 ### 📦 Typed IR (zero-boxing)
 Primitive, string, and cursor loops on an irValue stack -- no interface{} boxing overhead.
@@ -41,8 +46,8 @@ Protocols, records, hierarchies, tagged literals, sorted collections, atom watch
 Mathematica-style EDN notebooks with Observable-style dependency metadata. Local browser UI (CodeMirror + ECharts + Mermaid, no CDN), headless execution, Markdown export, and self-contained inline outputs for agent/debug reports.
 
 ## Gallery
-- [Joker vs Python, Bun, Goja and let-go](assets/screenshots/go-joker/benchmark-transposed.svg) — validated 22 May 2026 CLBG and micro-benchmark snapshot
-- [Speedup vs upstream](assets/screenshots/go-joker/benchmark-speedup.svg) — 22 May 2026 improvement factors over original Joker
+- [Joker vs Python, Bun, Goja and let-go](assets/screenshots/go-joker/benchmark-transposed.svg) — 6 September 2026 snapshot; portable and native-helper workloads
+- [Historical speedups](assets/screenshots/go-joker/benchmark-speedup.svg) — 6 September 2026 results against historical baseline; incompatible pidigits excluded
 - [Architecture](assets/screenshots/go-joker/architecture.svg) — 5-tier execution pipeline diagram
 - [Web notebook demo](assets/screenshots/go-joker/notebook-rich-demo.png) — EDN notebook with charts and Mermaid diagrams
 
