@@ -1100,9 +1100,8 @@ ${CLARITY_SNIPPET}
   </header>
 
   <main class="index-main">
-    <section class="workshop-intro" aria-labelledby="workshop-title">
-      <h2 id="workshop-title">The workshop</h2>
-      <p>Below is the full archive--current projects, maintained tools, and older experiments. All of these started as weekend or learning projects, usually because there was a technical problem I wanted to solve or an idea I wanted to explore.</p>
+    <section class="workshop-intro">
+      <p>All of these started as weekend or learning projects, usually because there was a technical problem I wanted to solve or an idea I wanted to explore.</p>
     </section>
     ${sectionsHtml}
   </main>
