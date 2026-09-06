@@ -1,0 +1,14 @@
+{
+  "title": "Node-RED home automation dashboard in Docker",
+  "nodes": [
+    { "id": "devices", "label": "IoT devices",       "sub": "MQTT · HTTP · serial",    "tag": "input",    "column": 0, "row": 0 },
+    { "id": "nodered", "label": "Node-RED",            "sub": "flow engine in Docker",   "tag": "backend",  "column": 1, "row": 0 },
+    { "id": "dash",    "label": "Dashboard UI",        "sub": "gauges · charts · switches","tag": "web",    "column": 2, "row": 0 },
+    { "id": "actions", "label": "Actions",              "sub": "relays · alerts · API",    "tag": "output",  "column": 2, "row": 1 }
+  ],
+  "edges": [
+    { "from": "devices", "to": "nodered", "accent": true },
+    { "from": "nodered", "to": "dash",    "accent": true },
+    { "from": "nodered", "to": "actions" }
+  ]
+}

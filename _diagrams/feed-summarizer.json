@@ -1,0 +1,20 @@
+{
+  "title": "asyncio pipeline — fetch → summarize → publish → upload",
+  "nodes": [
+    { "id": "sources",    "label": "RSS / Atom / Mastodon", "sub": "OPML + config",              "tag": "input",      "column": 0, "row": 0 },
+    { "id": "fetcher",    "label": "Fetcher",                "sub": "asyncio workers",            "tag": "backend",    "column": 1, "row": 0 },
+    { "id": "store",      "label": "SQLite",                 "sub": "articles + state",           "tag": "state",      "column": 1, "row": 1 },
+    { "id": "summarizer", "label": "Summarizer",             "sub": "LLM-powered",                "tag": "processing", "column": 2, "row": 0 },
+    { "id": "llm",        "label": "LLM provider",           "sub": "OpenAI / Anthropic / local", "tag": "external",   "column": 2, "row": 1 },
+    { "id": "publisher",  "label": "Publisher",              "sub": "Atom feed output",           "tag": "output",     "column": 3, "row": 0 },
+    { "id": "azure",      "label": "Azure Blob",            "sub": "optional upload",            "tag": "infra",      "column": 3, "row": 1 }
+  ],
+  "edges": [
+    { "from": "sources",    "to": "fetcher",    "accent": true },
+    { "from": "fetcher",    "to": "store" },
+    { "from": "fetcher",    "to": "summarizer" },
+    { "from": "summarizer", "to": "llm" },
+    { "from": "summarizer", "to": "publisher",  "accent": true },
+    { "from": "publisher",  "to": "azure" }
+  ]
+}

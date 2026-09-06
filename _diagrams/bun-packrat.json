@@ -1,0 +1,61 @@
+{
+  "title": "Capture once; derive safe views and exports from canonical MHTML",
+  "nodes": [
+    {
+      "id": "clients",
+      "label": "Capture clients",
+      "sub": "Web UI · API · CLI",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "service",
+      "label": "Packrat service",
+      "sub": "Bun HTTP server",
+      "tag": "backend",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "worker",
+      "label": "Capture worker",
+      "sub": "Playwright · Chromium",
+      "tag": "processing",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "source",
+      "label": "Public web page",
+      "sub": "Rendered source",
+      "tag": "external",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "database",
+      "label": "SQLite + FTS5",
+      "sub": "Canonical MHTML",
+      "tag": "state",
+      "column": 2,
+      "row": 1
+    },
+    {
+      "id": "views",
+      "label": "Derived views",
+      "sub": "HTML · Article · exports",
+      "tag": "output",
+      "column": 3,
+      "row": 1
+    }
+  ],
+  "edges": [
+    { "from": "clients", "to": "service", "accent": true },
+    { "from": "service", "to": "worker", "accent": true },
+    { "from": "worker", "to": "source", "accent": true },
+    { "from": "service", "to": "database" },
+    { "from": "worker", "to": "database" },
+    { "from": "database", "to": "views", "accent": true }
+  ]
+}

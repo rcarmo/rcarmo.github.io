@@ -1,0 +1,19 @@
+{
+  "title": "Simplest coding agent harness — Python, tool use, one file",
+  "nodes": [
+    { "id": "prompt",   "label": "User prompt",       "sub": "task description",          "tag": "input",      "column": 0, "row": 0 },
+    { "id": "steward",  "label": "Steward",             "sub": "turn loop + tool dispatch", "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "tools", "label": "Tools",       "sub": "bash · read · edit", "tag": "scripting" },
+        { "id": "state", "label": "Turn state",   "sub": "message history",   "tag": "state" }
+      ]
+    },
+    { "id": "llm",      "label": "LLM provider",       "sub": "OpenAI / Anthropic",        "tag": "external",   "column": 2, "row": 0 },
+    { "id": "workspace","label": "Workspace",           "sub": "files + AGENTS.md",         "tag": "output",     "column": 2, "row": 1 }
+  ],
+  "edges": [
+    { "from": "prompt",  "to": "steward", "accent": true },
+    { "from": "steward", "to": "llm",     "accent": true },
+    { "from": "steward", "to": "workspace" }
+  ]
+}

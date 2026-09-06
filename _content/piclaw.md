@@ -1,0 +1,157 @@
+---
+section: agents
+featured: true
+status: active
+created: 2026-02-17
+tagline: The Pi coding agent in a technicolor web trenchcoat — [infinite tools](https://rcarmo.github.io/piclaw-addons)
+logo: assets/logos-opt/piclaw.png
+---
+
+## About
+PiClaw stuffs the [Pi Coding Agent](https://pi.dev) runtime into a Docker container, throws on a streaming web UI, and calls it a day. Multi-provider LLM support, built-in Ghostty terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access -- all behind one `docker run` command. More tools come from a growing catalogue of [community add-ons](https://rcarmo.github.io/piclaw-addons) covering Proxmox, Portainer, SSH, and whatever else someone felt like wiring up.
+
+## Motivation
+After creating [`webterm`](webterm) and [`vibes`](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting. But when I stumbled upon [Pi](https://pi.dev) and its extensibility, I knew I had found a great way to explore how to build an extensible web-based IDE that I could access from my iPhone and iPad.
+
+## How it works
+A Bun process embeds the [`pi`](https://pi.dev) agent runtime and manages all agent interactions, settings, etc. All `pi` extensions and skills work, and the runtime extends the extension contract in such a way that almost _everything_ inside the workspace is, essentially, a plugin. State is managed with `pi`'s JSONL files, but primarily using a SQLite database that tracks all sessions and can store some media for easy retrieval later via FTS.
+
+The web UI receives live updates over SSE. A small set of tools is always active; the agent discovers and activates others through `list_tools` and `activate_tools`. This avoids sending every tool definition with each request, while bounded tool output limits context use.
+
+The workspace includes a file tree, pluggable viewers, a [`ghostty-web`](ghostty-web) terminal, a VNC viewer and a `vim`-capable editor with Obsidian-like Markdown rendering. I use VNC to access SBCs and X apps inside the `piclaw` host. A keychain stores secrets encrypted with AES-GCM.
+
+Nightly memory consolidation synthesises notes from all sessions so later conversations can recover useful context.
+
+## Features
+### 💬 Streaming chat
+Markdown, KaTeX, Mermaid, Adaptive Cards. Branch with /btw, queue follow-ups.
+
+### 🗂 Workspace tooling
+File browser, CodeMirror 6, Office/PDF viewers, draw.io, kanban, VNC -- no separate apps.
+
+### 🔌 Any LLM
+Anthropic, OpenAI, Azure, Gemini, Ollama, or any OpenAI-compatible endpoint.
+
+### 🧠 Persistent state
+SQLite-backed history, media, tasks, encrypted keychain. Dream nightly consolidation.
+
+### 🛠 Infrastructure tools
+SSH, Proxmox, Portainer profiles. CDP browser automation. Sharp image processing. MCP.
+
+### 🧩 Add-ons
+Install tools, skills and integrations from the [Piclaw Add-ons catalogue](https://rcarmo.github.io/piclaw-addons/), including Proxmox, Portainer, observability and remote access packages.
+
+### 📦 Single container
+docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
+
+## Gallery
+- [a demo of piclaw, created by piclaw itself](assets/screenshots/piclaw/piclaw-demo.mp4)
+- [iPad PWA with star trends](assets/screenshots/piclaw/00002piclaw.jpeg) — Clean mobile-first chat with GitHub digest
+- [Agent implementing a feature](assets/screenshots/piclaw/00003piclaw.jpeg) — Issue resolution with validation and CI
+- [Workspace tree + disk usage](assets/screenshots/piclaw/00004piclaw.jpeg) — File browser with storage sunburst
+- [Gruvbox terminal + git log](assets/screenshots/piclaw/00005piclaw.jpeg) — Ghostty terminal with workspace tree
+- [Agent session picker](assets/screenshots/piclaw/00010piclaw.jpeg) — Multiple named agent sessions
+- [Theme picker](assets/screenshots/piclaw/00020piclaw.jpeg) — 16 built-in themes with live preview
+- [Add-on catalog](assets/screenshots/piclaw/00025piclaw.jpeg) — In-app add-on browser and installer
+- [Portainer settings](assets/screenshots/piclaw/00030piclaw.jpeg) — Add-on configuration with keychain integration
+
+## Posts
+- [Notes for August 17–23](https://taoofmac.com/space/notes/2026/08/23/1519) — 2026-08-23
+- [Building Piclaw on Top of an Opinionated Coding Agent](https://taoofmac.com/space/blog/2026/08/21/2218) — 2026-08-21
+- [The Chuwi MiniBook X N150, One Year Later](https://taoofmac.com/space/reviews/2026/07/25/1700) — 2026-07-25
+- [Marked Down](https://taoofmac.com/space/blog/2026/07/21/1840) — 2026-07-21
+- [Notes for July 13-19](https://taoofmac.com/space/notes/2026/07/19/1500) — 2026-07-19
+
+## Diagram
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 276">
+  <style>
+    /* Default: light mode (for rsvg-convert and non-media-query agents) */
+    .bg { fill: transparent; }
+    .box { fill: #ffffff; stroke: #707070; stroke-width: 1.5; }
+    .box-accent { fill: #dbeafe; stroke: #3b82f6; stroke-width: 1.5; }
+    .box-green { fill: #74a7ff; stroke: #012f7b; stroke-width: 1.5; }
+    .box-warm { fill: #fef3c7; stroke: #d97706; stroke-width: 1.5; }
+    .box-purple { fill: #adadad; stroke: #000000; stroke-width: 1.5; }
+    .box-teal { fill: #ebebeb; stroke: #474747; stroke-width: 1.5; }
+    .box-slate { fill: #a7c6ff; stroke: #0042a9; stroke-width: 1.5; }
+    .box-indigo { fill: #dfeed4; stroke: #4e7a27; stroke-width: 1.5; }
+    .box-rose { fill: #dfeed4; stroke: #76bb40; stroke-width: 1.5; }
+    .box-orange { fill: #ffedd5; stroke: #ea580c; stroke-width: 1.5; }
+    .box-cyan { fill: #d9c9fe; stroke: #5e30eb; stroke-width: 1.5; }
+    .label { fill: #1a2a40; }
+    .sub { fill: #243b53; }
+    text { font-family: -apple-system, "Segoe UI", Helvetica, sans-serif; }
+    .label { font-size: 13px; font-weight: 600; }
+    .sub { font-size: 11px; }
+    @media (prefers-color-scheme: dark) {
+      .bg { fill: transparent; }
+      .box { fill: #1a1e2a; stroke: #505050; }
+      .box-accent { fill: #0d1e38; stroke: #2b5cb0; }
+      .box-green { fill: #0a1a3a; stroke: #4a80d0; }
+      .box-warm { fill: #221a10; stroke: #a06020; }
+      .box-purple { fill: #222222; stroke: #666666; }
+      .box-teal { fill: #1e1e1e; stroke: #666666; }
+      .box-slate { fill: #0d1a38; stroke: #4a7ad0; }
+      .box-indigo { fill: #1a2810; stroke: #5a8a30; }
+      .box-rose { fill: #1a2810; stroke: #5aaa30; }
+      .box-orange { fill: #2a1a08; stroke: #f97316; }
+      .box-cyan { fill: #1a1030; stroke: #7040d0; }
+      .label { fill: #d0daf0; }
+      .sub { fill: #90a8c0; }
+    }
+  </style>
+  <defs>
+    <marker id="ah" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#5070a0" stroke="none"/>
+    </marker>
+    <marker id="ahs" markerWidth="8" markerHeight="8" refX="7" refY="4" orient="auto">
+      <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
+    </marker>
+  </defs>
+  <rect width="960" height="276" class="bg" rx="8"/>
+
+  <rect x="30" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="120" y="56" text-anchor="middle" class="label">User</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">web · mobile</text>
+
+  <rect x="270" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="360" y="56" text-anchor="middle" class="label">Streaming UI</text>
+  <text x="360" y="74" text-anchor="middle" class="sub">attachments · timeline</text>
+
+  <rect x="270" y="118" width="180" height="60" rx="8" class="box-green"/>
+  <text x="360" y="144" text-anchor="middle" class="label">Agent runtime</text>
+  <text x="360" y="162" text-anchor="middle" class="sub">compaction · prompts</text>
+
+  <rect x="510" y="30" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="600" y="56" text-anchor="middle" class="label">Extensions</text>
+  <text x="600" y="74" text-anchor="middle" class="sub">custom tools · UI hooks</text>
+
+  <rect x="510" y="118" width="180" height="60" rx="8" class="box-purple"/>
+  <text x="600" y="144" text-anchor="middle" class="label">Skills</text>
+  <text x="600" y="162" text-anchor="middle" class="sub">on-demand workflows</text>
+
+  <rect x="510" y="206" width="180" height="60" rx="8" class="box"/>
+  <text x="600" y="232" text-anchor="middle" class="label">Workspace</text>
+  <text x="600" y="250" text-anchor="middle" class="sub">SQLite · keychain</text>
+
+  <rect x="750" y="30" width="180" height="60" rx="8" class="box-orange"/>
+  <text x="840" y="56" text-anchor="middle" class="label">Tools</text>
+  <text x="840" y="74" text-anchor="middle" class="sub">images · office · schedule</text>
+
+  <rect x="750" y="118" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="840" y="144" text-anchor="middle" class="label">External</text>
+  <text x="840" y="162" text-anchor="middle" class="sub">GitHub · MCP · browser</text>
+
+  <path d="M210,60 L270,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M210,60 L226,60 Q240,60 240,74 L240,134 Q240,148 254,148 L270,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M360,90 L360,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M450,148 L466,148 Q480,148 480,134 L480,74 Q480,60 494,60 L510,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M450,148 L510,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M450,148 L466,148 Q480,148 480,162 L480,222 Q480,236 494,236 L510,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M690,60 L750,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M690,148 L706,148 Q720,148 720,134 L720,74 Q720,60 734,60 L750,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M690,236 L706,236 Q720,236 720,222 L720,162 Q720,148 734,148 L750,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M840,90 L840,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+
+
+</svg>

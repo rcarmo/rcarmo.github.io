@@ -1,0 +1,66 @@
+{
+  "title": "R-Type ROM and display path on ESP32-S3",
+  "nodes": [
+    {
+      "id": "roms",
+      "label": "ROMs in flash",
+      "sub": "main CPU partition · graphics files",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "m72",
+      "label": "V30 / M72 path",
+      "sub": "execution · sparse PSRAM map",
+      "tag": "processing",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "render",
+      "label": "M72 renderer",
+      "sub": "tiles · sprites · palette",
+      "tag": "backend",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "snapshot",
+      "label": "Frame snapshot",
+      "sub": "queue drain · triple buffers",
+      "tag": "state",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "panel",
+      "label": "RGB panel",
+      "sub": "720x480 image at 40,0",
+      "tag": "output",
+      "column": 4,
+      "row": 0
+    }
+  ],
+  "edges": [
+    {
+      "from": "roms",
+      "to": "m72",
+      "accent": true
+    },
+    {
+      "from": "m72",
+      "to": "render",
+      "accent": true
+    },
+    {
+      "from": "render",
+      "to": "snapshot"
+    },
+    {
+      "from": "snapshot",
+      "to": "panel",
+      "accent": true
+    }
+  ]
+}

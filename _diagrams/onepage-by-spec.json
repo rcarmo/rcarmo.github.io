@@ -1,0 +1,20 @@
+{
+  "title": "Single-page dashboard — LLM-generated from a written spec",
+  "nodes": [
+    { "id": "spec",     "label": "Written spec",       "sub": "plain English rules",      "tag": "input",      "column": 0, "row": 0 },
+    { "id": "llm",      "label": "LLM codegen",         "sub": "iterative refinement",     "tag": "external",   "column": 1, "row": 0 },
+    { "id": "html",     "label": "Single HTML file",    "sub": "self-contained app",       "tag": "artifacts",  "column": 2, "row": 0,
+      "children": [
+        { "id": "grid",   "label": "CSS Grid",    "sub": "dense layout",  "tag": "web" },
+        { "id": "route",  "label": "Hash router",  "sub": "#/tab routing", "tag": "web" },
+        { "id": "fetch",  "label": "Data fetch",   "sub": "live widgets",  "tag": "backend" }
+      ]
+    },
+    { "id": "browser",  "label": "Browser",             "sub": "zero-deploy dashboard",    "tag": "web",        "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "spec",   "to": "llm",    "accent": true },
+    { "from": "llm",    "to": "html" },
+    { "from": "html",   "to": "browser", "accent": true }
+  ]
+}

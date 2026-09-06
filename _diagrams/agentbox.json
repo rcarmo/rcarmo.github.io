@@ -1,0 +1,68 @@
+{
+  "title": "Docker sandbox for coding agents with shared workspace",
+  "nodes": [
+    {
+      "id": "agent",
+      "label": "Agent CLI",
+      "sub": "claude / toad / aider",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "container",
+      "label": "Docker container",
+      "sub": "isolated sandbox",
+      "tag": "infra",
+      "column": 1,
+      "row": 0,
+      "children": [
+        {
+          "id": "tools",
+          "label": "Dev tools",
+          "sub": "git \u00b7 bun \u00b7 python",
+          "tag": "state"
+        },
+        {
+          "id": "shell",
+          "label": "Shell",
+          "sub": "bash + tmux",
+          "tag": "state"
+        }
+      ]
+    },
+    {
+      "id": "workspace",
+      "label": "Shared workspace",
+      "sub": "bind-mounted volume",
+      "tag": "artifacts",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "webterm",
+      "label": "webterm",
+      "sub": "browser terminal UI",
+      "tag": "web",
+      "column": 0,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "agent",
+      "to": "container",
+      "accent": true
+    },
+    {
+      "from": "container",
+      "to": "workspace"
+    },
+    {
+      "from": "webterm",
+      "to": "container",
+      "accent": true,
+      "label": "SSH/exec"
+    }
+  ]
+}

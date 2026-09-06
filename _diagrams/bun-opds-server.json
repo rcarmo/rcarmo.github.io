@@ -1,0 +1,63 @@
+{
+  "nodes": [
+    {
+      "id": "calibre",
+      "label": "Calibre",
+      "sub": "metadata.db",
+      "column": 0,
+      "row": 0,
+      "tag": "state"
+    },
+    {
+      "id": "opds-server",
+      "label": "OPDS server",
+      "sub": "Atom/XML feeds",
+      "column": 1,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "kosync",
+      "label": "kosync",
+      "sub": "progress sync",
+      "column": 1,
+      "row": 1,
+      "tag": "state"
+    },
+    {
+      "id": "e-reader",
+      "label": "e-reader",
+      "sub": "XteInk \u00b7 CrossPoint",
+      "column": 2,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "koreader",
+      "label": "KOReader",
+      "sub": "reading position",
+      "column": 2,
+      "row": 1,
+      "tag": "state"
+    }
+  ],
+  "edges": [
+    {
+      "from": "calibre",
+      "to": "opds-server"
+    },
+    {
+      "from": "calibre",
+      "to": "kosync"
+    },
+    {
+      "from": "opds-server",
+      "to": "e-reader"
+    },
+    {
+      "from": "kosync",
+      "to": "koreader"
+    }
+  ],
+  "title": ""
+}

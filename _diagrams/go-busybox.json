@@ -1,0 +1,16 @@
+{
+  "title": "Busybox utilities in Go, compilable to WASM for sandboxed agent execution",
+  "nodes": [
+    { "id": "source",   "label": "Go applets",     "sub": "cat · grep · wc · ...",     "tag": "input",      "column": 0, "row": 0 },
+    { "id": "compiler", "label": "TinyGo compiler", "sub": "multicall binary",          "tag": "processing", "column": 1, "row": 0 },
+    { "id": "native",   "label": "Native binary",   "sub": "linux/darwin/windows",      "tag": "artifacts",  "column": 2, "row": 0 },
+    { "id": "wasm",     "label": "WASM binary",     "sub": "4.7 MB sandboxed",          "tag": "artifacts",  "column": 2, "row": 1 },
+    { "id": "agent",    "label": "AI agent",         "sub": "wazero runtime",            "tag": "backend",    "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "source",   "to": "compiler", "accent": true },
+    { "from": "compiler", "to": "native" },
+    { "from": "compiler", "to": "wasm" },
+    { "from": "wasm",     "to": "agent",   "label": "sandbox", "accent": true }
+  ]
+}

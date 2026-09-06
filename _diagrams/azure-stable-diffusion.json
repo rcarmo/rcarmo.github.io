@@ -1,0 +1,91 @@
+{
+  "nodes": [
+    {
+      "id": "arm-template",
+      "label": "ARM template",
+      "sub": "compute.json",
+      "column": 0,
+      "row": 0,
+      "tag": "infra"
+    },
+    {
+      "id": "diagnostics-storage",
+      "label": "Diagnostics storage",
+      "sub": "boot diagnostics account",
+      "column": 1,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "gpu-spot-vm",
+      "label": "GPU spot VM",
+      "sub": "Ubuntu + OS disk only",
+      "column": 1,
+      "row": 1,
+      "tag": "backend"
+    },
+    {
+      "id": "network-resources",
+      "label": "Network resources",
+      "sub": "VNet + NIC + PIP + NSG",
+      "column": 1,
+      "row": 2,
+      "tag": "input"
+    },
+    {
+      "id": "cloud-init",
+      "label": "cloud-init",
+      "sub": "CUDA + AUTOMATIC1111",
+      "column": 2,
+      "row": 0,
+      "tag": "infra"
+    },
+    {
+      "id": "spot-helper",
+      "label": "Spot helper",
+      "sub": "preemption + maintenance",
+      "column": 2,
+      "row": 1,
+      "tag": "web"
+    },
+    {
+      "id": "web-ui",
+      "label": "Web UI",
+      "sub": "SSH tunnel \u2192 7860",
+      "column": 3,
+      "row": 0,
+      "tag": "web"
+    }
+  ],
+  "edges": [
+    {
+      "from": "arm-template",
+      "to": "diagnostics-storage"
+    },
+    {
+      "from": "arm-template",
+      "to": "gpu-spot-vm"
+    },
+    {
+      "from": "arm-template",
+      "to": "network-resources"
+    },
+    {
+      "from": "gpu-spot-vm",
+      "to": "cloud-init"
+    },
+    {
+      "from": "gpu-spot-vm",
+      "to": "spot-helper"
+    },
+    {
+      "from": "cloud-init",
+      "to": "web-ui"
+    },
+    {
+      "from": "spot-helper",
+      "to": "web-ui"
+    }
+  ],
+  "title": "actual compute.json layout: diagnostics account, one spot VM, one network stack, and VM bootstrap scripts feeding the web UI"
+}

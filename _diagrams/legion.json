@@ -1,0 +1,79 @@
+{
+  "title": "Durable agents and functions on a self-forming Raft cluster",
+  "nodes": [
+    {
+      "id": "clients",
+      "label": "Clients",
+      "sub": "CLI · REST · Bun workers",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "namespace",
+      "label": "9P namespace",
+      "sub": "functions · sessions · cluster",
+      "tag": "web",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "execution",
+      "label": "Durable execution",
+      "sub": "event-sourced workloads",
+      "tag": "processing",
+      "column": 2,
+      "row": 0,
+      "children": [
+        {
+          "id": "agents",
+          "label": "Agent loop",
+          "sub": "resume turns",
+          "tag": "processing"
+        },
+        {
+          "id": "functions",
+          "label": "Functions",
+          "sub": "WASM · Bun",
+          "tag": "processing"
+        }
+      ]
+    },
+    {
+      "id": "store",
+      "label": "Event store",
+      "sub": "SQLite · fjall · blob CAS",
+      "tag": "state",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "cluster",
+      "label": "Legion cluster",
+      "sub": "Raft · iroh QUIC · mDNS",
+      "tag": "infra",
+      "column": 3,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "clients",
+      "to": "namespace",
+      "accent": true
+    },
+    {
+      "from": "namespace",
+      "to": "execution",
+      "accent": true
+    },
+    {
+      "from": "execution",
+      "to": "store"
+    },
+    {
+      "from": "store",
+      "to": "cluster"
+    }
+  ]
+}

@@ -1,0 +1,27 @@
+{
+  "title": "Unified Go inference library — multi-provider streaming with tool calling",
+  "nodes": [
+    { "id": "app",       "label": "Your Go app",        "sub": "Stream() / Complete()",     "tag": "input",      "column": 0, "row": 0 },
+    { "id": "registry",  "label": "Registry",            "sub": "provider + model discovery", "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "tools",  "label": "Tool calling",  "sub": "auto-dispatch",  "tag": "scripting" },
+        { "id": "ctx",    "label": "Context mgmt",  "sub": "overflow/trim",  "tag": "state" }
+      ]
+    },
+    { "id": "providers", "label": "Providers",           "sub": "",                          "tag": "backend",    "column": 2, "row": 0,
+      "children": [
+        { "id": "openai",    "label": "OpenAI",      "sub": "Chat + Responses", "tag": "external" },
+        { "id": "anthropic", "label": "Anthropic",    "sub": "Messages API",     "tag": "external" },
+        { "id": "copilot",   "label": "Copilot",      "sub": "OAuth + token",    "tag": "external" }
+      ]
+    },
+    { "id": "config",   "label": "Config",              "sub": "auth.json · env vars",      "tag": "state",      "column": 0, "row": 1 },
+    { "id": "events",   "label": "Event stream",        "sub": "SSE deltas · tool calls",   "tag": "output",     "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "app",       "to": "registry",  "accent": true },
+    { "from": "config",    "to": "registry" },
+    { "from": "registry",  "to": "providers", "label": "SSE" },
+    { "from": "providers", "to": "events" }
+  ]
+}

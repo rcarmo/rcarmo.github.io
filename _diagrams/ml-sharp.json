@@ -1,0 +1,19 @@
+{
+  "title": "SHARP depth drives a local parallax-video fallback on Apple Silicon",
+  "nodes": [
+    { "id": "input",    "label": "Input image",      "sub": "single RGB frame",          "tag": "input",      "column": 0, "row": 0 },
+    { "id": "pipeline", "label": "macOS fallback",    "sub": "PyTorch + MPS",           "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "anchor", "label": "SHARP depth",  "sub": "monocular map",   "tag": "processing" },
+        { "id": "fuse",   "label": "Parallax warp",   "sub": "camera sweep", "tag": "processing" }
+      ]
+    },
+    { "id": "weights",  "label": "SHARP weights", "sub": "Apple checkpoint",       "tag": "state",      "column": 0, "row": 1 },
+    { "id": "output",   "label": "Swipe video",       "sub": "depth parallax",       "tag": "output",     "column": 2, "row": 0 }
+  ],
+  "edges": [
+    { "from": "input",   "to": "pipeline", "accent": true },
+    { "from": "weights", "to": "pipeline" },
+    { "from": "pipeline","to": "output",   "accent": true }
+  ]
+}
