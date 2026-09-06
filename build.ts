@@ -1088,7 +1088,6 @@ ${CLARITY_SNIPPET}
       <div id="hero-stats-island" class="hero-stats hero-stats-centered"></div>
       <div class="index-positioning">
         <p class="index-intro">A personal archive of open-source projects, experiments and useful tools built over more than two decades.<br>Most began as things I thought should exist, so I started making them.</p>
-        <p class="index-context">I spend my working days helping large organisations make sense of AI and delivering difficult technology programmes. This is where I keep the software I build for myself.</p>
         <div class="index-context-links" aria-label="Rui Carmo links">
           <a href="https://carmo.io/">Profile</a>
           <a href="https://linkedin.com/in/ruicarmo" target="_blank" rel="noopener">LinkedIn</a>
