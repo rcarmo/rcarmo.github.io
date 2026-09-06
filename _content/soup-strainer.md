@@ -2,30 +2,30 @@
 section: libraries
 status: archived
 created: 2013-03-17
-tagline: Readability/Decruft article extraction reimplemented with BeautifulSoup and html5lib — clean text from any page.
+tagline: Readability/Decruft article extraction reimplemented with BeautifulSoup and html5lib — article extraction from HTML.
 ---
 
 ## About
 soup-strainer is a Python implementation of the Readability "decruft" algorithm used to remove navigation, advertising and boilerplate from web pages. It uses BeautifulSoup and html5lib to parse malformed HTML5, then returns the article body from a raw HTML string. The project predates most current Python Readability implementations.
 
 ## How it works
-The algorithm scores candidate block elements by analysing their text density, link density, class names, and tag types — high text density with low link density signals article content. The top-scoring candidate and its siblings are kept; everything else is stripped. html5lib parses even malformed HTML correctly, so it handles the full range of real-world pages that trip up lxml-based parsers.
+The algorithm scores candidate block elements by analysing their text density, link density, class names, and tag types -- high text density with low link density signals article content. The top-scoring candidate and its siblings are kept; everything else is stripped. html5lib applies HTML5 parsing rules to malformed markup, which helps with pages that lxml-based parsers interpret differently.
 
 ## Features
 ### 📰 Article body extraction
-Strips nav, ads, headers, and footers — returns the main readable content block as clean HTML.
+Strips nav, ads, headers, and footers -- returns the main readable content block as clean HTML.
 
 ### 🧹 html5lib parsing
-Uses html5lib for spec-compliant HTML5 parsing — handles broken markup, missing closing tags, and encoding issues gracefully.
+Uses html5lib for spec-compliant HTML5 parsing -- handles broken markup, missing closing tags, and encoding issues gracefully.
 
 ### 🔗 Link density scoring
-Scores candidate elements by text-to-link ratio — correctly identifies navigation blocks that look like content.
+Scores candidate elements by text-to-link ratio -- correctly identifies navigation blocks that look like content.
 
 ### 🐍 Pure Python
-No native extensions, no headless browser — runs anywhere Python and BeautifulSoup are available.
+No native extensions, no headless browser -- runs anywhere Python and BeautifulSoup are available.
 
 ### 📦 Single module
-The entire algorithm fits in one importable Python file — drop it into any scraping or content pipeline.
+The entire algorithm fits in one importable Python file -- drop it into any scraping or content pipeline.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 968 178">

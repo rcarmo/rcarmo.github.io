@@ -9,10 +9,10 @@ tagline: Single-binary Windows SSH terminal and browser for your tailnet -- tsne
 ---
 
 ## About
-A portable Windows (ARM64 and Intel) SSH terminal and browser for your tailnet. Embeds Tailscale via `tsnet`, opens SSH sessions in tabbed terminals, and provides native WebView2 browser tabs for tailnet services -- all in one executable. No VPN client, no browser, no SSH client, no pile of local credentials. Copy one binary, launch, unlock your config, and go.
+A portable Windows (ARM64 and Intel) SSH terminal and browser for your tailnet. Embeds Tailscale via `tsnet`, opens SSH sessions in tabbed terminals, and provides native WebView2 browser tabs for tailnet services -- all in one executable. No separate VPN or SSH client configuration. Browser tabs use the installed Microsoft Edge WebView2 runtime; saved credentials stay in the encrypted local configuration. Copy one binary, launch, unlock your config, and go.
 
 ## How it works
-The app embeds a userspace Tailscale node via `tsnet` -- no system-level VPN required. SSH connections go directly over the tailnet with host-key pinning on first use. WebView2 browser tabs access tailnet HTTP services through the embedded node. Configuration (hosts, credentials, layouts) is encrypted at rest and unlocked on launch.
+The app embeds a userspace Tailscale node via `tsnet` -- no system-level VPN required. SSH connections go directly over the tailnet with host-key pinning on first use. WebView2 browser tabs access tailnet HTTP services through the embedded node. Configuration, including hosts, credentials and layouts, is protected at rest using Windows DPAPI.
 
 ## Features
 ### 🔑 Embedded tsnet

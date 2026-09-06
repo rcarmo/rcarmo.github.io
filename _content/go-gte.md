@@ -2,13 +2,13 @@
 section: ai-ml
 status: active
 created: 2026-01-15
-tagline: Pure Go GTE-Small text embeddings — hand-written SIMD, 1 allocation per embed, predictable flat latency.
+tagline: Pure Go GTE-Small text embeddings with hand-written SIMD kernels.
 ---
 
 ## About
 Forked from [antirez/gte-pure-C](https://github.com/antirez/gte-pure-C). A pure Go implementation of the [GTE-Small](https://huggingface.co/thenlper/gte-small) text embedding model. Produces 384-dimensional, L2-normalized embeddings suitable for similarity search and clustering.
 
-Single static binary. 1 allocation per embed. Predictable flat latency. All matrix operations use hand-written SIMD assembly (AVX2+FMA on amd64, NEON on arm64) — no gonum, no goroutine churn, no CGo in the default build.
+A single static binary with little allocation in the inference path. All matrix operations use hand-written SIMD assembly (AVX2+FMA on amd64, NEON on arm64) -- no gonum, no goroutine churn, no CGo in the default build.
 
 ## Motivation
 This followed [`asterisk`](asterisk-embedding-model) and gave me a reason to work with Go assembly. Non-GPU performance still falls short of what I wanted. Comparing SIMD and NVIDIA execution taught me enough to start [`go-pherence`](go-pherence), even though my potato RTX3060 provides barely any speedup.
@@ -16,24 +16,24 @@ This followed [`asterisk`](asterisk-embedding-model) and gave me a reason to wor
 I'm pretty happy with it, and it was a great learning experience even if I haven't yet sorted out the vector database I will be using it with.
 
 ## How it works
-Like Salvatore's original, it loads a converted GTE-Small model at startup, tokenises input with a bundled WordPiece tokeniser, runs matrix multiplications (through hand-tuned SIMD kernels), and returns mean-pooled L2-normalized embeddings as a Go slice. After banging on the profiler for a few days, the hot path has zero goroutine overhead and generates ~700 bytes/s of GC pressure at 100 qps — 10,000× less than a `gonum` BLAS equivalent (which was what AI suggested I use, without considering all the angles).
+Like Salvatore's original, it loads a converted GTE-Small model at startup, tokenises input with a bundled WordPiece tokeniser, runs matrix multiplications (through hand-tuned SIMD kernels), and returns mean-pooled L2-normalized embeddings as a Go slice. Profiling led me away from the `gonum` BLAS implementation AI had suggested and towards kernels that avoid goroutine and allocation overhead.
 
 
 ## Features
 ### 🔢 384-dim embeddings
-Returns L2-normalized 384-dimensional vectors compatible with GTE-Small's training distribution — plug directly into cosine similarity, FAISS, or any vector store.
+Returns L2-normalized 384-dimensional vectors compatible with GTE-Small's training distribution -- plug directly into cosine similarity, FAISS, or any vector store.
 
 ### ⚡ Hand-written SIMD
-AVX2+FMA on amd64, NEON on arm64 — non-temporal matmul, fused dot products, and packed transpose kernels written in Go assembly. No CGo required.
+AVX2+FMA on amd64, NEON on arm64 -- non-temporal matmul, fused dot products, and packed transpose kernels written in Go assembly. No CGo required.
 
 ### 🧊 1 allocation per embed
-The entire inference path allocates once (uppercase→lowercase token lowering). For all-lowercase input: **0 allocations**. GC pressure is ~700 B/s vs 13 MB/s with gonum BLAS.
+The entire inference path allocates once (uppercase→lowercase token lowering). For all-lowercase input: **0 allocations**.
 
 ### 📉 Flat latency
-No goroutine churn means predictable p50/p99. Batching reduces jitter 3–5× further. Remaining spikes are Go runtime background work, not inference code.
+Avoids starting goroutines in the inference path. Batching can further reduce latency variation.
 
 ### 📦 Static binary
-Default `make` produces a fully self-contained static binary with no C dependencies — portable to any amd64 or arm64 target.
+Default `make` produces a fully self-contained static binary with no C dependencies -- portable to any amd64 or arm64 target.
 
 ## Gallery
 - [Optimization results](assets/screenshots/go-gte/optimization-results.svg) — 4-phase optimization from baseline to SIMD

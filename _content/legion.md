@@ -10,7 +10,7 @@ tagline: Self-hosted durable agents and WASM/Bun functions across a self-forming
 
 I started Legion because I wanted Piclaw's backend to survive process and node failures without adopting a cloud control plane. It is a Rust platform for event-sourced AI agent turns and content-addressed WASM or Bun functions, spread across a LAN-first cluster that discovers and reconnects to peers automatically.
 
-The same durable state sits behind a 9P namespace, so functions, sessions and cluster resources are available as paths rather than through a collection of unrelated APIs. The project is deliberately experimental despite having working implementations for its initial milestones; storage and networking dependencies are still settling.
+The same durable state sits behind a 9P namespace, so functions, sessions and cluster resources are available as paths rather than through a collection of unrelated APIs. The project is experimental; storage and networking dependencies are still settling.
 
 ## How it works
 
@@ -42,7 +42,7 @@ Wasmtime and Extism execute portable WASM components, while supervised Bun subpr
 
 ### Operations
 
-OpenTelemetry metrics, restore-tested restic backups, health reporting and load gates cover the first production-hardening milestone.
+OpenTelemetry metrics, restic backups with restore checks, health reporting and load gates help monitor and recover the cluster.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 968 202">

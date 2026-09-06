@@ -5,33 +5,35 @@ section: ai-ml
 status: active
 created: 2026-05-08
 logo: assets/logos-opt/go-ds4.png
-tagline: Pure Go inference engine for DeepSeek V4 Flash — AVX2 + CUDA PTX, single static binary
+tagline: Go inference engine for sparse MoE models, with CPU and GPU backends.
 ---
 
 ## About
-A pure Go inference engine for [DeepSeek V4 Flash](https://huggingface.co/deepseek-ai/DeepSeek-V3), ported from antirez's single-file C implementation. Single static binary, hand-written AVX2 + NEON SIMD kernels, Vulkan SPIR-V and CUDA PTX GPU compute, OpenAI-compatible API server. Runs the full 128 GB Q2-quantized model via mmap — 1.27 tok/s on CPU, 5.5× faster on GPU.
+A Go inference engine for sparse mixture-of-experts models, including DeepSeek V4 Flash, ported from antirez's C implementation. It provides a command-line chat client and an OpenAI-compatible API server, with CPU, CUDA and Vulkan backends. Metal support is experimental.
+
+The default build has no mandatory C/C++ runtime dependency. Model weights are memory-mapped rather than copied into a separate loading buffer.
 
 ## How it works
-The model has 43 layers with 256 routed MoE experts (IQ2_XXS/Q2_K) plus 1 shared expert (Q8_0) per layer. Multi-head Latent Attention with LoRA Q/O projections and compressed KV cache. Hyper-connections provide 4 parallel residual streams with Sinkhorn-normalized mixing. Safetensors weights are mmap'd directly — no conversion step. The inference pipeline: Token → F16 Embed → 43 layers × (HC-pre → Attn → HC-post → MoE → HC-post) → RMSNorm → Logits.
+The inference pipeline reads model weights from disk through memory mapping and runs attention and expert layers using the selected compute backend. CPU execution uses SIMD kernels; GPU backends handle supported operations on the device. The command-line client and HTTP server share this inference engine.
 
 ## Features
-### ⚡ AVX2 + NEON SIMD
-Hand-written assembly GEMM kernels from [go-pherence](go-pherence) — no cgo.
+### ⚡ CPU kernels
+SIMD matrix operations for CPU inference, including work shared with [go-pherence](go-pherence).
 
-### 🖥 CUDA PTX + Vulkan SPIR-V
-GPU compute kernels compiled at runtime. 5.5× CPU throughput on CUDA.
+### 🖥 GPU backends
+CUDA and Vulkan compute paths, with experimental Metal support.
 
-### 🦙 Full DeepSeek V4 Flash
-43 layers, 256 MoE experts, MLA attention, hyper-connections, compressed KV cache.
+### 🦙 Sparse MoE models
+Inference support for mixture-of-experts models, including DeepSeek V4 Flash.
 
 ### 🌐 OpenAI-compatible API
-Drop-in `/v1/chat/completions` server with streaming.
+A `/v1/chat/completions` server with streaming.
 
-### 📦 Single static binary
-No Python, no cgo, no ONNX — `go build` and run.
+### 📦 Go build
+Build the CLI with `go build ./cmd/ds4chat`, without a mandatory C/C++ runtime.
 
-### 🗺 mmap model loading
-128 GB Q2 model served directly from disk — no loading step.
+### 🗺 Memory-mapped weights
+Accesses model weights through memory mapping; inference still needs to read the required pages from storage.
 
 ## Posts
 - [My AI Model Tier List for mid-2026](https://taoofmac.com/space/blog/2026/07/11/1500) — 2026-07-17

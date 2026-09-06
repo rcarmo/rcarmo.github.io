@@ -7,14 +7,14 @@ tagline: Basilisk II and SheepShaver for Raspberry Pi — SDL2 framebuffer, pre-
 ---
 
 ## About
-Fork targeting Raspberry Pi with SDL2 framebuffer/KMS — no X11, no desktop required. It includes ARM64 JIT implementations for both emulators: Basilisk II for 68K Macs and SheepShaver for PowerPC Macs. Pre-built arm64 .deb packages are available in releases.
+Fork targeting Raspberry Pi with SDL2 framebuffer/KMS -- no X11, no desktop required. It includes ARM64 JIT implementations for both emulators: Basilisk II for 68K Macs and SheepShaver for PowerPC Macs. Pre-built arm64 .deb packages are available in releases.
 
 ## How it works
 SDL2 is compiled without OpenGL, Wayland, and X11 to reduce dependencies and startup time. The framebuffer/KMS backend writes directly to the display without a compositor. The key addition is ARM64 JIT support in both emulator cores, translating 68K code in Basilisk II and PowerPC code in SheepShaver to native ARM64 at runtime. Pre-built .deb packages install with dpkg -i. Used as the emulation layer in the Maclock project.
 
 ## Features
 ### 🥧 Raspberry Pi optimised
-SDL2 framebuffer/KMS, no X11. Pi Zero through Pi 5.
+SDL2 framebuffer/KMS without X11, targeting ARM64 Raspberry Pi systems.
 
 ### 📦 Pre-built packages
 arm64 .deb in GitHub Releases. dpkg -i and run.
@@ -26,7 +26,7 @@ Native ARM64 JIT backend for emulating 68K Macs.
 Native ARM64 JIT backend for emulating PowerPC Macs.
 
 ### 🖥 Direct framebuffer
-Lower latency than X11.
+Writes to the display without an X11 desktop or compositor.
 
 ## Posts
 - [Notes for July 13-19](https://taoofmac.com/space/notes/2026/07/19/1500) — 2026-07-19

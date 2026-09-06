@@ -3,18 +3,18 @@ section: cloud-infra
 status: active
 created: 2026-04-18
 featured: true
-tagline: Firecracker-like microVMs for Proxmox VE -- KVM isolation, under 200 ms boot.
+tagline: QEMU microVMs for Proxmox VE -- direct kernel boot and KVM isolation.
 logo: assets/logos-opt/pve-microvm.png
 ---
 
 ## About
-Debian package that adds QEMU `microvm` machine type to the Proxmox UI. microvm VMs boot in under 200 ms, use only `virtio-mmio`, and give full KVM isolation. Uninstall restores original files.
+Debian package that adds QEMU `microvm` machine type to the Proxmox UI. microvm VMs skip BIOS and PCI emulation, use `virtio-mmio` devices and retain KVM isolation. Boot time depends on the guest and host. Uninstall restores original files.
 
 ## How it works
 Patches two `qemu-server` files to add `microvm` as a selectable machine type. A standard Proxmox VM emulates a full x86 PC with PCI bus and BIOS, but a microvm skips all that -- direct kernel load, virtio-mmio only, much smaller attack surface. The result keeps per-VM kernels while cutting out most of the emulated PC hardware.
 
 ## Features
-### ⚡ Under 200 ms boot
+### ⚡ Direct kernel boot
 No emulated PCI, no BIOS. Direct kernel load.
 
 ### 🛡 Full KVM isolation

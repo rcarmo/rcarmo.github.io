@@ -6,22 +6,24 @@ tagline: Ghostty terminal sessions in a browser -- xterm.js compatibility.
 ---
 
 ## About
-Forked from [coder/ghostty-web](https://github.com/coder/ghostty-web). Adapted for integration with webterm and go-te for AI agent terminal workflows.
+Forked from [coder/ghostty-web](https://github.com/coder/ghostty-web). Runs Ghostty's terminal parser in the browser through WebAssembly, with a TypeScript API modelled on xterm.js.
 
-ghostty-web runs Ghostty in server mode, proxies sessions to a browser via WebSocket, and implements an xterm.js-compatible API. Shares go-te with webterm and go-rdp.
+This fork adds renderer fixes and integration work for projects such as [webterm](webterm) and ios-linuxkit.
 
 ## How it works
-Ghostty runs server-mode connected to a Unix socket. The Go server proxies to WebSocket and translates protocols. The TypeScript frontend implements the xterm.js ITerminalAddon interface so existing extensions work unchanged. go-te maintains server-side terminal state for tile previews and copy-on-select.
+The browser loads Ghostty's terminal parser as a WebAssembly module. TypeScript code connects terminal input and output to the host application and renders the screen. The host supplies the session transport; ghostty-web is not a server-side Ghostty process.
+
+In [webterm](webterm), a Go backend manages PTY sessions and [go-te](go-te) produces server-side dashboard previews. Those services sit outside the browser terminal library.
 
 ## Features
-### ⚡ Ghostty in browser
-Server-side Ghostty. Browser gets output over WebSocket.
+### ⚡ Ghostty in the browser
+WebAssembly terminal parsing with a TypeScript frontend.
 
-### 🔌 xterm.js compat
-Existing xterm.js tooling works unchanged.
+### 🔌 Familiar API
+An xterm.js-compatible API for integrating terminal views into web applications.
 
-### 🔗 Shared engine
-go-te used by webterm, go-rdp, and ghostty-web.
+### 🔗 Application integration
+Used by [webterm](webterm) and ios-linuxkit, with rendering fixes maintained in this fork.
 
 ## Posts
 - [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-19

@@ -16,7 +16,7 @@ The process boundary matters because Calibre keeps database, cache and filesyste
 ## How it works
 The released plugin serves Streamable HTTP at `POST /mcp`. Read-only tools expose library aliases, searches, metadata, formats, bounded EPUB inspection, quality assessment, duplicate discovery and bridge job state. Inactive libraries use Calibre secondary handles.
 
-Mutations stay hidden unless Calibre is exactly version 9.12.0, the plugin UI contains a saved bearer token, mutation discovery is enabled and any environment-token override matches. Short operations run on the GUI thread; conversion, import and other long tasks use Calibre's native job machinery.
+Writes must be explicitly enabled and are restricted to the supported Calibre version, currently 9.12.0, with a bearer token saved in the plugin UI. Additional configuration checks prevent accidental enablement. Short operations run on the GUI thread; conversion, import and other long tasks use Calibre's native job machinery.
 
 ## Features
 ### Live Calibre state

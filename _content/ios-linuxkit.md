@@ -9,17 +9,17 @@ tagline: Linux runtime for iOS — ARM64 emulation, Alpine packages, developer r
 ---
 
 ## About
-A Linux runtime for iOS developers, packaging the ARM64 iSH work into a developer-focused environment for running shells, compilers, package managers, language runtimes, and agent CLIs directly on iPhone and iPad — no jailbreak, no `MAP_JIT`, no RWX memory. Built on iSH's Asbestos threaded-code interpreter with precompiled ARM64 gadget dispatch and a 48-bit guest address space for modern runtimes like V8, Go, and JVM.
+A Linux runtime for iOS developers, packaging the ARM64 iSH work into a developer-focused environment for running shells, compilers, package managers, language runtimes, and agent CLIs directly on iPhone and iPad -- no jailbreak, no `MAP_JIT`, no RWX memory. Built on iSH's Asbestos threaded-code interpreter with precompiled ARM64 gadget dispatch and a 48-bit guest address space for modern runtimes like V8, Go, and JVM.
 
 ## How it works
-The interpreter translates AArch64 instructions through a threaded-code dispatch mechanism — no runtime code generation, so it passes App Store review. A 48-bit virtual address space lets large runtimes (V8, Go, Rust, JVM) allocate as they expect. The Alpine Linux userland runs on top, with `apk` for package management. Stabilized syscall paths cover signals/ucontext, futex/threads, vector I/O, socket control messages, and enough filesystem semantics for real developer workflows.
+The interpreter translates AArch64 instructions through a threaded-code dispatch mechanism -- without runtime code generation. A 48-bit virtual address space lets large runtimes (V8, Go, Rust, JVM) allocate as they expect. The Alpine Linux userland runs on top, with `apk` for package management. Implemented syscall paths cover signals/ucontext, futex/threads, vector I/O, socket control messages, and enough filesystem semantics for real developer workflows.
 
 ## Features
 ### 🐧 Full Alpine Linux userland
 Shell, `apk`, C/C++, Go, Rust/Cargo, Bun, Node/npm, Python, Lua, Java/OpenJDK, Clojure, Erlang, Zig.
 
-### 📱 App Store compatible
-No JIT, no `MAP_JIT`, no RWX pages — passes review with pure interpreter dispatch.
+### 📱 No JIT required
+Uses interpreter dispatch without `MAP_JIT` or RWX pages. The project is not intended for App Store distribution.
 
 ### 🧠 48-bit address space
 V8, JavaScriptCore, Go, Rust, and JVM all work with full virtual memory reservations.
@@ -30,8 +30,8 @@ Claude CLI, Codex, and agent harnesses can bootstrap directly on iOS.
 ### 🖥 Ghostty-Web terminal
 Integrated terminal frontend with themes, hardened ObjC/JS bridge, and async lifecycle management.
 
-### 🧪 Reproducible test matrix
-CI validates 15+ language runtimes against every kernel change.
+### 🧪 Runtime checks
+Automated tests cover language runtimes and developer tools; support varies by runtime.
 
 ## Posts
 - [Open Minis Is the iOS Agent I Wish Siri AI Could Be](https://taoofmac.com/space/links/2026/07/20/2213) — 2026-07-20

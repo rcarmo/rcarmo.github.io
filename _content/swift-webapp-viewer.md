@@ -7,7 +7,7 @@ tagline: Chromeless macOS web app viewer -- one URL, one native WebKit window, n
 ---
 
 ## About
-The missing macOS web app wrapper: a tiny native Swift shell that opens a specific URL in a WebKit window with as little visible chrome as macOS will allow. No address bar, no tab strip, no bookmark bar -- just the page in a native window. Safari Web Apps bring too much browser furniture; Web App Viewer brings none. Can install any URL as a standalone app in `~/Applications` with its own icon, bundle identifier, and preference store.
+A small native Swift shell that opens a specific URL in a WebKit window with as little visible chrome as macOS will allow. No address bar, no tab strip, no bookmark bar -- just the page in a native window. Can install any URL as a standalone app in `~/Applications` with its own icon, bundle identifier, and preference store.
 
 ## How it works
 Each window is a `WKWebView` that fills the frame. An invisible draggable strip at the top (right of the traffic lights) lets you move the window even with the titlebar suppressed. Traffic-light controls and scrollbars appear only while the pointer is over the window. Same-origin links stay inside the app, new-window links open another app window, and external links go to Safari. The app installs itself as a standalone per-URL app via a drop/paste window with icon and name customisation.

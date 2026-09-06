@@ -2,19 +2,19 @@
 section: agents
 status: active
 created: 2026-01-30
-tagline: Mobile-first web UI for AI agents — ACP and Pi over RPC, zero build step.
+tagline: Mobile-first Go web UI for AI agents -- ACP and Pi over RPC.
 logo: assets/logos-opt/vibes.png
 ---
 
 ## About
-Vibes is a lightweight Python web app for talking to AI coding agents from a phone. Supports ACP (GitHub Copilot CLI, OpenAI Codex) and Pi agents via RPC. Single Python file server, single HTML UI, no build step.
+Vibes is a Go web app for talking to AI coding agents from a phone. It supports ACP agents and Pi via RPC, with an embedded frontend and SQLite storage in a single binary.
 
 ## Motivation
-I wanted something I could use on my iPhone and iPad without adopting OpenClaw. GitHub Copilot and Codex through ACP worked, but felt limiting. [Pi](https://pi.dev) exposed the extension points I needed to explore an agent-based IDE that could run from my iPad. The Go port is in progress; the original Python code remains on the `python` branch.
+I wanted something I could use on my iPhone and iPad without adopting OpenClaw. GitHub Copilot and Codex through ACP worked, but felt limiting. [Pi](https://pi.dev) exposed the extension points I needed to explore an agent-based IDE that could run from my iPad. The server is now written in Go; the original Python code remains on the `python` branch.
 
 
 ## How it works
-The server uses aiohttp with server-sent events for streaming. When a message arrives from the browser, it forwards to the configured agent backend and streams tokens back via SSE. The UI is a single HTML file — no bundler, no npm. Fork it and make it yours in an afternoon. PiClaw and Vibes share the same web UI codebase.
+The Go server forwards browser messages to the configured agent backend and streams responses back over SSE. The frontend is embedded in the binary, so deployment does not require a separate web server or JavaScript runtime. The original Python implementation remains available on the `python` branch.
 
 ## Features
 ### 📱 Phone-first

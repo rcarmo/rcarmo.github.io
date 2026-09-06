@@ -10,17 +10,17 @@ logo: assets/logos-opt/python-steward.png
 Steward is a small Python CLI that connects to an LLM, exposes file, shell and web-search tools, and runs a streaming conversation loop. The implementation stays in ordinary Python without a plugin framework. It began as a Bun prototype and moved to Python for straightforward installation with `pip`.
 
 ## How it works
-One conversation loop: the user types a prompt, Steward sends it to the LLM with a list of available tools, the model calls tools, Steward executes them and feeds results back. Repeat until the model is done. Tools are plain Python functions with type annotations — the JSON schema the model sees is generated automatically. Configuration is a `.env` file. The whole thing fits in your head.
+One conversation loop: the user types a prompt, Steward sends it to the LLM with a list of available tools, the model calls tools, Steward executes them and feeds results back. Repeat until the model is done. Tools are plain Python functions with type annotations -- the JSON schema the model sees is generated automatically. Configuration is a `.env` file.
 
 ## Features
 ### 🧠 The simplest thing that works
-No framework, no plugin system, no abstractions. One file, one loop, readable Python. The whole agent fits in your head.
+Plain Python functions, no framework or plugin system. One file and one readable conversation loop.
 
 ### 🤖 Multi-provider
 Azure OpenAI, OpenAI, any OpenAI-compatible host, and a local echo provider for testing.
 
 ### 🔧 Copilot-style tools
-File read/write, shell execution, web search, code running — the practical toolset for a coding agent.
+File read/write, shell execution, web search, code running -- the practical toolset for a coding agent.
 
 ### 📦 pip installable
 No build step, no Node.js, no separate install beyond Python.

@@ -6,7 +6,7 @@ tagline: Incremental IMAP mailbox backup to local mbox files -- works with Gmail
 ---
 
 ## About
-imapbackup is a single-file Python script that connects to any IMAP server and downloads your email to local mbox files, incrementally. It only fetches messages it hasn't seen before, making subsequent runs fast even on large mailboxes. Works with Gmail (via app passwords), Exchange, Fastmail, and any standard IMAP server. The repository has 343 stars and 68 forks.
+imapbackup is a single-file Python script that connects to any IMAP server and downloads your email to local mbox files, incrementally. It only fetches messages it hasn't seen before, making subsequent runs fast even on large mailboxes. Works with Gmail (via app passwords), Exchange, Fastmail, and any standard IMAP server.
 
 ## How it works
 Connects over IMAP (SSL/TLS or STARTTLS), lists all folders, and for each folder downloads any message UIDs not already present in the local mbox. Messages are written to one mbox file per folder in a directory of your choosing. A simple status file tracks the last seen UID per folder so re-runs are fast and safe -- interrupted backups resume from the tracked UID.

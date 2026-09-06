@@ -9,33 +9,33 @@ tagline: Measured llama.cpp fork for long-context local inference on Intel and S
 ---
 
 ## About
-This [`llama.cpp`](https://github.com/ggml-org/llama.cpp) fork is a measured inference stack for two constrained machines: a LattePanda Sigma with an Intel Core i5-1340P, and SpaceMIT K3 boards with RVV and IME acceleration.
+This [`llama.cpp`](https://github.com/ggml-org/llama.cpp) fork focuses on long-context local inference on two hardware platforms: a LattePanda Sigma with an Intel Core i5-1340P, and SpaceMIT K3 boards with RVV and IME acceleration.
 
-Optimisations are promoted only when complete model and service workloads improve. The repository records rejected kernels, offload paths and cache designs alongside the selected profiles.
+The work includes CPU tuning, model loading and platform-specific kernels. Changes are compared using complete model workloads, since faster individual kernels do not always make inference faster.
 
 ## How it works
-On the Sigma, a native Clang CPU build runs mmap-backed target and assistant GGUFs on eight pinned P-core threads. The deployed Gemma service exposes an OpenAI-compatible loopback endpoint to Pi, with two independent KV streams, prompt reuse and bounded checkpoint storage.
+On the Sigma, a native Clang CPU build runs memory-mapped GGUF models on pinned P-core threads. A local OpenAI-compatible endpoint serves Pi, with prompt reuse, separate KV streams and checkpoint storage.
 
-The K3 backend adds RVV kernels, IME1/IME2 dispatch, TCM staging, AI-core affinity and load-time weight repacking. Platform-specific paths remain gated by output checks, complete-model throughput and service behaviour.
+The K3 backend adds RVV kernels, IME1/IME2 dispatch, TCM staging, AI-core affinity and load-time weight repacking. These paths are checked for output correctness and complete-model throughput.
 
 ## Features
 ### Intel local provider
 Gemma 4 E4B is the primary local model, with Qwen retained for repository-grounded work and Maple for fast prompt ingestion.
 
 ### Long-context validation
-Gemma and Ornith completed near-capacity 128K requests. The Qwen rollback profile accepted an uninterrupted 99,104-token input.
+Tests cover long prompts and KV-cache reuse with Gemma, Ornith and Qwen.
 
 ### Expert I/O
 Router-aware prefetching maps selected GGUF expert ranges, checks page residency and advises only nonresident data under bounded policy.
 
 ### Speculative decoding
-Target and assistant models use deterministic checkpoint restoration, model-shaped fixtures, semantic replay and per-phase telemetry.
+An assistant model proposes tokens for the target model to verify, with checkpoint restoration for rejected proposals.
 
 ### SpaceMIT backend
 Adds RVV, IME and TCM paths, quantised-weight repacking, routed-MoE handling and optional compact-IQ tile caching.
 
-### Measured rejection
-Iris Xe Vulkan and SYCL remain validation targets; their local kernel wins did not survive end-to-end promotion gates.
+### GPU limits
+Iris Xe Vulkan and SYCL remain experimental: faster individual kernels did not improve end-to-end inference on the Sigma.
 
 ## Posts
 - [My AI Model Tier List for mid-2026](https://taoofmac.com/space/blog/2026/07/11/1500) — 2026-07-17

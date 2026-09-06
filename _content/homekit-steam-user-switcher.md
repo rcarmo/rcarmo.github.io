@@ -6,20 +6,22 @@ tagline: Switch Steam accounts on a shared PC via HomeKit.
 ---
 
 ## About
-HAP-python service exposing each Steam account as a HomeKit Switch. Uses Steam's local --login flag -- no Steam API, no Valve servers.
+A Python service that exposes Steam account selection as a HomeKit Television accessory on Linux. Each configured Steam user appears as an input, so an automation can select the account for a shared gaming PC.
 
 ## How it works
-HAP-python advertises a HomeKit bridge on the local network. When you flip a switch, on_set_value runs subprocess with Steam's --login flag. Steam's local CLI handles the account switch without any Web API calls. The service reads the current active account from the Steam registry file on startup.
+The service uses HAP-python to advertise a HomeKit accessory. Selecting an input changes Steam's local `AutoLoginUser` setting; turning the accessory off restarts Steam so the change takes effect. This does not require Steam's Web API.
+
+It runs as a systemd user service and keeps HomeKit pairing state under `~/.local/state/homekit-steam-user-switcher/`.
 
 ## Features
-### 🏠 HomeKit native
-Siri, Shortcuts, automations all work.
+### 🏠 HomeKit accessory
+Steam users appear as inputs on a virtual Television accessory.
 
-### 🎮 No Steam API
-Local --login flag only. No Valve network calls.
+### 🎮 Local account selection
+Changes Steam's `AutoLoginUser` setting and restarts the client to apply it.
 
-### 🐧 macOS and Linux
-Runs as systemd service.
+### 🐧 Linux user service
+Runs under systemd in the desktop user's session.
 
 ## Posts
 - [Notes for December 9-24](https://taoofmac.com/space/notes/2025/12/24/1400) — 2025-12-24

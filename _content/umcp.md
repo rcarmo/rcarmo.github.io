@@ -2,21 +2,21 @@
 section: agents
 status: active
 created: 2025-05-30
-tagline: Micro MCP server -- zero deps, stdio / SSE / TCP, sync and async, naming convention over decoration.
+tagline: Micro MCP server -- zero dependencies, stdio and HTTP transports, sync and async.
 ---
 
 ## About
-A zero-dependency Python micro-framework for the [Model Context Protocol](https://modelcontextprotocol.io). Two files (`umcp.py` and `aioumcp.py`), no third-party packages, three transports (stdio, SSE, TCP), and a naming convention -- functions starting with `tool_` or `prompt_` are discovered and exposed automatically. Type hints become JSON Schema; docstrings become descriptions. Adding MCP to an existing script takes minutes.
+A zero-dependency Python micro-framework for the [Model Context Protocol](https://modelcontextprotocol.io). Sync and async implementations (`umcp.py` and `aioumcp.py`) with a shared `umcp_shared.py` module, no third-party packages, stdio, Streamable HTTP, legacy HTTP+SSE and TCP transports, and a naming convention -- functions starting with `tool_` or `prompt_` are discovered and exposed automatically. Type hints become JSON Schema; docstrings become descriptions. Adding MCP to an existing script takes minutes.
 
 ## How it works
-The protocol layer reads JSON-RPC 2.0 from stdin (stdio mode) or over HTTP/SSE (`--port N`) or raw TCP (`--tcp`). It discovers `tool_*` and `prompt_*` methods on your subclass via introspection, generates `inputSchema` from type hints (including `Literal`, `Union`, `Optional`, `TypedDict`), and infers MCP annotations (`readOnlyHint`, `destructiveHint`) from naming conventions. Return a value and it serialises automatically. Pick `MCPServer` for local-disk and compute work; pick `AsyncMCPServer` when tools are network-bound.
+The protocol layer reads JSON-RPC 2.0 over stdio, Streamable HTTP, legacy HTTP+SSE or raw TCP. It discovers `tool_*` and `prompt_*` methods on your subclass via introspection, generates `inputSchema` from type hints (including `Literal`, `Union`, `Optional`, `TypedDict`), and infers MCP annotations (`readOnlyHint`, `destructiveHint`) from naming conventions. Return a value and it serialises automatically. Pick `MCPServer` for local-disk and compute work; pick `AsyncMCPServer` when tools are network-bound.
 
 ## Features
 ### 🪶 Zero dependencies
-Pure Python 3.10+ stdlib. Copy one file, run anywhere.
+Pure Python 3.10+ standard library; no third-party packages.
 
-### 📡 Three transports
-stdio (default), SSE (`--port N`), and raw TCP (`--tcp`). Same server class, different launch flag.
+### 📡 Local and network transports
+stdio, Streamable HTTP, legacy HTTP+SSE and raw TCP.
 
 ### 🔍 Convention over decoration
 Name a method `tool_<name>` or `prompt_<name>` -- discovery, schema generation, and MCP wiring happen automatically.

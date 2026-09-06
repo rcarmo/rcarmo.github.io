@@ -6,7 +6,7 @@ tagline: Pure-Python PNG rendering with zero dependencies -- draw lines, rectang
 ---
 
 ## About
-pngcanvas is a minimalist Python library for generating PNG images from scratch without Pillow, ImageMagick, or any other dependency. Draw lines, filled rectangles, text, and basic shapes using a simple canvas API, then write the result to a PNG file. Originally built for constrained environments -- embedded systems, serverless functions, CGI scripts -- where pulling in a full imaging library is impractical. The repository has 44 stars and 9 forks.
+pngcanvas is a minimalist Python library for generating PNG images from scratch without Pillow, ImageMagick, or any other dependency. Draw lines, filled rectangles, text, and basic shapes using a simple canvas API, then write the result to a PNG file. Originally built for constrained environments -- embedded systems, serverless functions, CGI scripts -- where pulling in a full imaging library is impractical.
 
 ## How it works
 The library implements the PNG format spec directly: an IHDR chunk, IDAT chunk (with raw pixel data compressed via the Python standard library's zlib), and IEND chunk. Drawing operations modify an in-memory RGBA pixel array. Text rendering uses a bundled bitmap font. The resulting PNG is written to any file-like object -- no temp files, no external processes.

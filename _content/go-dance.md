@@ -7,10 +7,10 @@ tagline: Local-first private CA for homelabs -- ACME, single binary, step-ca emb
 ---
 
 ## About
-`dance` is a dead-simple private certificate authority for LAN and homelab use. A single Go binary wraps an embedded `step-ca` backend and exposes a browser-friendly landing page, a password-protected admin UI, and a fully functional ACME endpoint -- so Caddy and other ACME clients enroll without any extra plumbing.
+`dance` is a small private certificate authority for LAN and homelab use. A single Go binary wraps an embedded `step-ca` backend and exposes a browser-friendly landing page, a password-protected admin UI, and an ACME endpoint -- so Caddy and other ACME clients enrol without any extra plumbing.
 
 ## How it works
-`step-ca` runs in-process, writing to SQLite. `dance` fronts it with session-authenticated admin routes, a certificate inventory view, passive revocation, and EAB token management. Root certificate onboarding pages handle macOS, iOS, and other platforms. Everything is a single binary launched with environment variables -- no daemon config files, no systemd units, no service mesh.
+`step-ca` runs in-process, writing to SQLite. `dance` fronts it with session-authenticated admin routes, a certificate inventory view, passive revocation, and EAB token management. Root certificate onboarding pages handle macOS, iOS, and other platforms. Everything is a single binary launched with environment variables.
 
 ## Features
 ### 🔐 Embedded private CA

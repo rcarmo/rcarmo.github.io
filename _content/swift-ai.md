@@ -8,9 +8,9 @@ tagline: SwiftPM port of @earendil-works/pi-ai with typed streaming, tools and a
 ---
 
 ## About
-`swift-ai` brings the `@earendil-works/pi-ai` API and event model to Swift applications and services. It uses [`go-ai`](go-ai) as the audited reference implementation and exposes parity information both in `STATUS.json` and through `SwiftAIStatus` at runtime.
+`swift-ai` brings the `@earendil-works/pi-ai` API and event model to Swift applications and services. It provides typed streaming, tool calls and a shared model registry, using [`go-ai`](go-ai) as its reference implementation.
 
-The package tracks the bounded `pi-ai` v0.84.0 release surface. Its generated catalogues contain 1,153 text models across 38 providers and 42 image models; catalogue presence does not imply that every provider has a bundled native transport.
+The package tracks the `pi-ai` v0.84.0 API. Its generated catalogues include providers whose native transports are not bundled; applications can supply those separately.
 
 ## How it works
 `SwiftAI.bootstrap()` initialises the actor-backed model and provider registry. A request resolves its model, credentials and provider implementation before passing through a common asynchronous `stream` or `complete` API.

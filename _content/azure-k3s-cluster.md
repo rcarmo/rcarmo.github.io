@@ -6,7 +6,7 @@ tagline: Azure ARM template to deploy a lightweight Kubernetes cluster using k3s
 ---
 
 ## About
-azure-k3s-cluster provisions a full k3s Kubernetes cluster on Azure using a parameterised ARM template, orchestrated by a Makefile. One command spins up a resource group, VMs, networking, and a working k3s cluster with a server node and configurable number of agents. It was built to run a small Kubernetes cluster on ordinary Azure VMs without using AKS. ★57 with 15 forks.
+azure-k3s-cluster provisions a full k3s Kubernetes cluster on Azure using a parameterised ARM template, orchestrated by a Makefile. One command spins up a resource group, VMs, networking, and a working k3s cluster with a server node and configurable number of agents. It was built to run a small Kubernetes cluster on ordinary Azure VMs without using AKS.
 
 ## How it works
 The Makefile wraps `az deployment group create` with the ARM template and a parameter file, then polls until all nodes are Ready. Cloud-init on each VM downloads and installs k3s, joins agent nodes to the server, and exports the kubeconfig. A teardown target deletes the entire resource group cleanly. The ARM template is parameterised for VM size, node count, OS disk, and k3s version.

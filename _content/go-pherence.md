@@ -12,12 +12,12 @@ logo: assets/logos-opt/go-pherence.png
 A minimal tensor computation framework in pure Go with SIMD assembly and GPU compute, inspired by tinygrad. Lazy tensor DAG with elementwise fusion, pattern-matching graph rewrite, and enough infrastructure to run LLaMA and BERT models from safetensors weights -- no Python, no cgo, no ONNX.
 
 ## How it works
-The core is a lazy tensor DAG: operations build a computation graph that is fused and optimised before execution. A tinygrad-style pattern matcher applies 16 rewrite rules for kernel fusion. SIMD GEMM kernels (AVX2 on x86, NEON on ARM) handle matrix math, with GPU DevBuf providing device-agnostic buffers that lazy-transfer between CPU and GPU. LLaMA decoding uses RoPE, GQA, KV cache, and SiLU MLP; BERT encoding matches [go-gte](go-gte) parity at 10.8ms per embed with zero allocations.
+The core is a lazy tensor DAG: operations build a computation graph that is fused and optimised before execution. A tinygrad-style pattern matcher rewrites the graph for kernel fusion. SIMD GEMM kernels (AVX2 on x86, NEON on ARM) handle matrix math, with GPU DevBuf providing device-agnostic buffers that lazy-transfer between CPU and GPU. LLaMA decoding uses RoPE, GQA, KV cache, and SiLU MLP; BERT encoding uses the GTE-small model also supported by [go-gte](go-gte).
 
 ## Features
 
 ### 🧮 Lazy tensor DAG
-Elementwise fusion gives 2× throughput for chained ops. Pattern matcher + graph rewrite with 16 rules.
+Combines chained elementwise operations before execution using pattern matching and graph rewriting.
 
 ### ⚡ SIMD GEMM kernels
 AVX2 VGATHERDPS on x86, NEON GEBP on ARM -- ported from [go-gte](go-gte).
@@ -26,10 +26,10 @@ AVX2 VGATHERDPS on x86, NEON GEBP on ARM -- ported from [go-gte](go-gte).
 RoPE, grouped-query attention, KV cache, SiLU MLP, RMS norm -- loads safetensors/GPTQ INT4.
 
 ### 🧠 BERT encoder
-GTE-small at go-gte parity -- 10.8ms, 0 allocs per embed.
+GTE-small text embeddings, with output compared against go-gte.
 
 ### 🖥 GPU compute
-Device-agnostic DevBuf with lazy CPU↔GPU transfer. 8 PTX kernels compiled at runtime.
+Device-agnostic DevBuf with lazy CPU↔GPU transfer. PTX kernels compiled at runtime.
 
 ### 📦 Zero dependencies
 Pure Go + assembly. No Python, no cgo, no ONNX runtime.

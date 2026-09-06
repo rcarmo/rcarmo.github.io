@@ -10,7 +10,7 @@ tagline: Rust port of @earendil-works/pi-ai with a shared streaming event protoc
 ## About
 `rs-ai` is a Rust port of `@earendil-works/pi-ai`, built around the same model registry, message types and streaming event protocol as the TypeScript original. It targets native Rust applications that need provider switching, tools and streaming without maintaining a separate integration for each API, but it remains an early port rather than full upstream parity.
 
-It tracks the bounded `pi-ai` v0.84.0 release surface. Core types, providers, OAuth, deferred response lifecycle, telemetry and generated catalogues have deterministic parity evidence; transport and runtime differences remain explicit.
+It tracks the `pi-ai` v0.84.0 API, with Rust-specific transport and cancellation behaviour.
 
 ## How it works
 The registry resolves a model and provider, reads credentials from the process environment and selects the appropriate compatibility settings. Provider implementations issue HTTP, WebSocket or AWS SDK requests and convert their responses into a shared Rust event stream.
@@ -34,7 +34,7 @@ Includes a PKCE-based OAuth framework and the provider-specific paths needed by 
 Retry handling, logging, diagnostics, session resources, validation, prompt-cache helpers and partial JSON parsing.
 
 ### Catalogues and runtime differences
-The release-pinned registry contains 1,153 text models across 38 providers and 42 image models. Rust cancels work by dropping the stream; provider transport differences remain documented.
+Model catalogues come from the upstream release. Rust cancels work by dropping the stream; provider transport differences remain documented.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 114">

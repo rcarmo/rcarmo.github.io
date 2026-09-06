@@ -8,26 +8,26 @@ logo: assets/logos-opt/piclaw.png
 ---
 
 ## About
-PiClaw stuffs the [Pi Coding Agent](https://pi.dev) runtime into a Docker container, throws on a streaming web UI, and calls it a day. Multi-provider LLM support, built-in Ghostty terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access — all behind one `docker run` command. The tool surface is effectively infinite thanks to a growing catalog of [community add-ons](https://rcarmo.github.io/piclaw-addons) covering Proxmox, Portainer, SSH, and whatever else someone felt like wiring up.
+PiClaw stuffs the [Pi Coding Agent](https://pi.dev) runtime into a Docker container, throws on a streaming web UI, and calls it a day. Multi-provider LLM support, built-in Ghostty terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access -- all behind one `docker run` command. More tools come from a growing catalogue of [community add-ons](https://rcarmo.github.io/piclaw-addons) covering Proxmox, Portainer, SSH, and whatever else someone felt like wiring up.
 
 ## Motivation
-After creating [`webterm`](webterm) and [`vibes`](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting. But when I stumbled upon [Pi](https://pi.dev) and its amazing extensibility, I knew I had found a great way to explore how to build an extensible web-based IDE that I could access from my iPhone and iPad.
+After creating [`webterm`](webterm) and [`vibes`](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting. But when I stumbled upon [Pi](https://pi.dev) and its extensibility, I knew I had found a great way to explore how to build an extensible web-based IDE that I could access from my iPhone and iPad.
 
 ## How it works
 A Bun process embeds the [`pi`](https://pi.dev) agent runtime and manages all agent interactions, settings, etc. All `pi` extensions and skills work, and the runtime extends the extension contract in such a way that almost _everything_ inside the workspace is, essentially, a plugin. State is managed with `pi`'s JSONL files, but primarily using a SQLite database that tracks all sessions and can store some media for easy retrieval later via FTS.
 
-The web UI communicates with the agent over SSE for real-time indicators, and the agent tool surface, although larger than `pi`'s, is layered: a small always-active baseline, with additional tools activated on demand via `list_tools` and `activate_tools` — keeping token usage low by both limiting the tool surface and compressing their outputs, which enables the use of literally hundreds of tools with very little context overhead.
+The web UI receives live updates over SSE. A small set of tools is always active; the agent discovers and activates others through `list_tools` and `activate_tools`. This avoids sending every tool definition with each request, while bounded tool output limits context use.
 
-As creature comforts, you get a workspace tree, pluggable viewers, a [`ghostty-web`](ghostty-web) terminal and a VNC viewer (which I typically need to access SBCs and X apps inside the `piclaw` host, plus a nice `vim`-capable editor with Obsidian-like Markdown rendering, plus an encrypted keychain stores secrets encrypted with AES-GCM. 
+The workspace includes a file tree, pluggable viewers, a [`ghostty-web`](ghostty-web) terminal, a VNC viewer and a `vim`-capable editor with Obsidian-like Markdown rendering. I use VNC to access SBCs and X apps inside the `piclaw` host. A keychain stores secrets encrypted with AES-GCM.
 
-Memory management leverages dream memory consolidation (which runs nightly) to synthesise notes from all sessions and keep long-running workflows coherent.
+Nightly memory consolidation synthesises notes from all sessions so later conversations can recover useful context.
 
 ## Features
 ### 💬 Streaming chat
 Markdown, KaTeX, Mermaid, Adaptive Cards. Branch with /btw, queue follow-ups.
 
 ### 🗂 Workspace tooling
-File browser, CodeMirror 6, Office/PDF viewers, draw.io, kanban, VNC — no separate apps.
+File browser, CodeMirror 6, Office/PDF viewers, draw.io, kanban, VNC -- no separate apps.
 
 ### 🔌 Any LLM
 Anthropic, OpenAI, Azure, Gemini, Ollama, or any OpenAI-compatible endpoint.

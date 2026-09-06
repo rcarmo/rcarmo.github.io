@@ -7,10 +7,12 @@ tagline: ARM64 JIT-enabled fork of the Previous NeXT emulator — transplanting 
 ---
 
 ## About
-An ARM64 JIT-focused fork of [Previous](https://previous.alternative-system.com/), the NeXT Computer emulator. Doing for Previous what `macemu-jit` did for Basilisk II and SheepShaver: bring over a newer AArch64-capable JIT toolchain, wire it into the emulator cleanly, and build a fast validation loop around it.
+An ARM64 JIT-focused fork of [Previous](https://previous.alternative-system.com/), the NeXT Computer emulator. Doing for Previous what `macemu-jit` did for Basilisk II and SheepShaver: bring over a newer AArch64-capable JIT toolchain, connect it to the emulator, and compare its behaviour with the interpreter.
 
 ## How it works
-The transplanted `uae_cpu_2026` JIT/compiler subtree is vendored under `src/cpu/uae_cpu_2026/`. A bridge layer initialises the compiler inside Previous's CPU loop. A suite of shell harnesses runs interpreter vs JIT opcode equivalence checks and headless boot smoke tests against a fresh-copied disk image per run. Host ASLR is disabled for deterministic JIT mappings.
+The fork brings the `uae_cpu_2026` JIT/compiler into Previous through a bridge in the CPU loop. It translates emulated instructions to native ARM64 code, while retaining the interpreter for comparison.
+
+Opcode comparisons and headless boot tests check the new path. The JIT remains behind an experimental build flag so the upstream interpreter can still be used.
 
 ## Features
 ### 🏗 Transplanted JIT runtime
@@ -20,13 +22,13 @@ The transplanted `uae_cpu_2026` JIT/compiler subtree is vendored under `src/cpu/
 Interpreter vs JIT comparison across risky and missing opcode families.
 
 ### 💨 Headless boot tests
-Fresh disk image per run — clean, reproducible bring-up tests.
+Checks guest startup without requiring an interactive display.
 
 ### 🖥 Full NeXT hardware emulation
 Original 68030 Cube, NeXTcube/station variants, NeXTdimension board.
 
 ### 🔩 Experimental build flag
-`-DENABLE_EXPERIMENTAL_UAE2026_JIT=ON` — keeps upstream usable in parallel.
+`-DENABLE_EXPERIMENTAL_UAE2026_JIT=ON` -- keeps upstream usable in parallel.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 114">

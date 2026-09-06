@@ -6,7 +6,7 @@ tagline: Auto-scaling Docker Swarm cluster for Azure -- ARM template plus Makefi
 ---
 
 ## About
-azure-docker-swarm-cluster provisions a Docker Swarm cluster on Azure using ARM templates, with 1–5 master VMs plus a worker VM Scale Set. Auto-scaling rules on the worker VMSS respond to CPU load, expanding and shrinking the cluster automatically. A Makefile wraps the Azure CLI for storage and compute deployment. ★47 with 11 forks -- a reference template from the pre-Kubernetes container era that still gets cited.
+azure-docker-swarm-cluster provisions a Docker Swarm cluster on Azure using ARM templates, with 1–5 master VMs plus a worker VM Scale Set. Auto-scaling rules on the worker VMSS respond to CPU load, expanding and shrinking the cluster automatically. A Makefile wraps the Azure CLI for storage and compute deployment. A reference template from the pre-Kubernetes container era.
 
 ## How it works
 The ARM template creates master VMs in an availability set, a worker VM Scale Set, shared storage, and the required network resources. Cloud-init on the master nodes initialises the Swarm and runs a small helper service on `master0` that hands out join tokens to workers as they boot. A public load balancer fronts the worker nodes for application traffic, and autoscale settings resize the worker VMSS under load.

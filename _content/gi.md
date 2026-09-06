@@ -10,20 +10,20 @@ logo: assets/logos-opt/gi.png
 Gi is a coding agent built on `go-ai`, shaped by lessons learned from Pi, Piclaw, and Vibes. It combines a Go turn engine, SQLite-backed state, a Piclaw-compatible web UI, and provider-backed inference in one workspace-centric runtime. Two embedded scripting engines provide extensions: [go-joker](go-joker) for Clojure and [goja](https://github.com/dop251/goja) for JavaScript. Tools and workflows can use either language without recompiling Gi.
 
 ## How it works
-The core is an append-only turn engine backed by SQLite: turns, messages, and events are stored in a local database, then streamed to the frontend over SSE. Inference goes through `go-ai`, with auth loaded from Pi-compatible config and prompts sourced from `AGENTS.md`. The web UI reuses Piclaw's TypeScript source verbatim, with Gi-specific `api.ts` and `app.ts` adapters wiring the existing component tree into Gi's REST and SSE endpoints. Scripting extensions are loaded at startup from the workspace — Clojure scripts run through an embedded [go-joker](go-joker) interpreter (with full interop to Go host functions), while JavaScript scripts run through goja.
+The core is an append-only turn engine backed by SQLite: turns, messages, and events are stored in a local database, then streamed to the frontend over SSE. Inference goes through `go-ai`, with auth loaded from Pi-compatible config and prompts sourced from `AGENTS.md`. The web UI reuses Piclaw's TypeScript source verbatim, with Gi-specific `api.ts` and `app.ts` adapters wiring the existing component tree into Gi's REST and SSE endpoints. Scripting extensions are loaded at startup from the workspace -- Clojure scripts run through an embedded [go-joker](go-joker) interpreter (with full interop to Go host functions), while JavaScript scripts run through goja.
 
 ## Features
 ### 🧠 go-ai inference
 Unified provider layer with streaming and GitHub Copilot enterprise token exchange.
 
 ### 🗃 SQLite-backed turn engine
-Append-only turns, messages, and events with queueing, cancelation, and replayable state.
+Append-only turns, messages, and events with queueing, cancellation, and replayable state.
 
 ### 🖥 Piclaw-compatible web UI
 Piclaw TypeScript source reused verbatim with Gi-specific API/entry adapters.
 
 ### 🧪 Clojure scripting via go-joker
-Embed Clojure scripts as tools and workflows — [go-joker](go-joker)'s IR bytecode interpreter runs 527× faster than tree-walking, with full interop to Go host functions.
+Run Clojure scripts as tools and workflows through [go-joker](go-joker), with access to Go host functions.
 
 ### 📜 JavaScript scripting via goja
 ES5.1+ scripting engine for lightweight tool extensions without a Node dependency.

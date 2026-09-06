@@ -7,23 +7,23 @@ logo: assets/logos-opt/webterm.png
 ---
 
 ## About
-webterm serves PTY sessions over HTTP/WebSocket with a dashboard that tiles multiple active terminals in a single browser tab -- built for monitoring several AI coding agents in parallel. WASM renderer, correct xterm handling, sticky mobile keybar.
+webterm serves PTY sessions over HTTP/WebSocket with a dashboard that tiles multiple active terminals in a single browser tab -- built for monitoring several AI coding agents in parallel. Ghostty-based browser terminal and a sticky mobile keybar.
 
 ## How it works
-A Go HTTP server accepts WebSocket connections and spawns a PTY for each session. go-te maintains the server-side VT100/xterm screen state for live tile previews in dashboard mode. The frontend renders via WebAssembly for correct escape handling without a JS library. A mobile sticky keybar (Esc, Ctrl, Shift, arrows) makes it usable from a phone.
+A Go HTTP server accepts WebSocket connections and spawns a PTY for each session. go-te maintains the server-side VT100/xterm screen state for live tile previews in dashboard mode. The frontend uses [ghostty-web](ghostty-web), combining Ghostty's WebAssembly terminal parser with TypeScript rendering code. A mobile sticky keybar (Esc, Ctrl, Shift, arrows) makes it usable from a phone.
 
 ## Features
 ### 🖥 Multi-session dashboard
 Tile N agent terminals side-by-side. Watch them run in parallel.
 
 ### ⚡ WASM renderer
-Correct xterm/VT100 handling via WebAssembly.
+Ghostty terminal parsing through WebAssembly, with a browser rendering layer.
 
 ### 📱 Mobile keybar
 Sticky Esc/Ctrl/Shift/Tab/arrows with sticky combos.
 
 ### 🔌 Library-first
-Powers the terminal in agentbox, piclaw, and ghostty-web.
+Uses [ghostty-web](ghostty-web) for browser terminals and [go-te](go-te) for server-side previews.
 
 ## Posts
 - [Building Piclaw on Top of an Opinionated Coding Agent](https://taoofmac.com/space/blog/2026/08/21/2218) — 2026-08-21

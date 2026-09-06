@@ -7,7 +7,7 @@ logo: assets/logos-opt/go-ai.png
 ---
 
 ## About
-go-ai is a Go port of `@earendil-works/pi-ai`: a unified LLM library that exposes the same high-level `Stream()`/`Complete()` API across multiple providers. It supports streaming deltas, typed tool calling, cross-provider message/context types, automatic model discovery, cost tracking, and provider-specific OAuth flows. The current implementation tracks the bounded `pi-ai` v0.84.0 release surface.
+go-ai is a Go port of `@earendil-works/pi-ai`: a unified LLM library that exposes the same high-level `Stream()`/`Complete()` API across multiple providers. It supports streaming deltas, typed tool calling, cross-provider message/context types, automatic model discovery, cost tracking, and provider-specific OAuth flows. It tracks the `pi-ai` v0.84.0 API.
 
 ## How it works
 At the centre is a registry-driven core: providers register streaming implementations, models enter a global registry, and callers invoke `Stream()` or `Complete()` with a `Context`, `Model` and optional tools. Provider packages translate the common Go types into each wire protocol and emit one event stream. OAuth helpers, deferred response lifecycle handling, telemetry and generated model metadata sit alongside the core.
@@ -23,7 +23,7 @@ Typed tools with JSON Schema parameters and streamed tool-call deltas.
 OpenAI, Anthropic, Google, Mistral, Bedrock, Codex, Azure, Baseten and compatible APIs.
 
 ### 🧠 Release-pinned catalogues
-1,153 text models across 38 providers and 42 image models, generated from the `pi-ai` v0.84.0 release data.
+Text and image model catalogues generated from the upstream release data.
 
 ### 🔁 Cross-language context
 JSON-compatible with `pi-ai` types for Go and TypeScript hand-off.
