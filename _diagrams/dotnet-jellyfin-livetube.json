@@ -1,0 +1,19 @@
+{
+  "title": "Library and Invidious sources to live and catch-up playback",
+  "nodes": [
+    { "id": "library", "label": "Jellyfin library", "sub": "media · metadata · filters", "tag": "input", "column": 0, "row": 0 },
+    { "id": "invidious", "label": "Invidious feed", "sub": "authenticated subscriptions", "tag": "external", "column": 0, "row": 1 },
+    { "id": "schedule", "label": "LiveTube schedule", "sub": "channels · guide · artwork", "tag": "processing", "column": 1, "row": 0 },
+    { "id": "live", "label": "Live TV", "sub": "rolling MPEG-TS window", "tag": "backend", "column": 2, "row": 0 },
+    { "id": "catchup", "label": "Catch-up catalogue", "sub": "local files · rewritten MPD", "tag": "backend", "column": 2, "row": 1 },
+    { "id": "client", "label": "Jellyfin client", "sub": "Android TV · browser", "tag": "output", "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "library", "to": "schedule", "accent": true },
+    { "from": "invidious", "to": "schedule" },
+    { "from": "schedule", "to": "live", "accent": true },
+    { "from": "schedule", "to": "catchup" },
+    { "from": "live", "to": "client", "accent": true },
+    { "from": "catchup", "to": "client" }
+  ]
+}

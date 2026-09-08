@@ -1,0 +1,54 @@
+{
+  "title": "Export Photos.app library into a date-based folder hierarchy",
+  "nodes": [
+    {
+      "id": "photos",
+      "label": "Photos.app",
+      "sub": "macOS library",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "cli",
+      "label": "PhotosExport CLI",
+      "sub": "Swift command-line tool",
+      "tag": "processing",
+      "column": 1,
+      "row": 0,
+      "children": [
+        {
+          "id": "meta",
+          "label": "Metadata",
+          "sub": "EXIF + albums",
+          "tag": "state"
+        },
+        {
+          "id": "dedup",
+          "label": "Dedup",
+          "sub": "hash-based",
+          "tag": "processing"
+        }
+      ]
+    },
+    {
+      "id": "output",
+      "label": "Output folders",
+      "sub": "YYYY/MM/DD hierarchy",
+      "tag": "output",
+      "column": 2,
+      "row": 0
+    }
+  ],
+  "edges": [
+    {
+      "from": "photos",
+      "to": "cli",
+      "accent": true
+    },
+    {
+      "from": "cli",
+      "to": "output"
+    }
+  ]
+}

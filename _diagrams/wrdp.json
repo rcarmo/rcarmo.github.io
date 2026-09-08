@@ -1,0 +1,78 @@
+{
+  "title": "Authenticated RDP connection to an isolated Wayland desktop",
+  "nodes": [
+    {
+      "id": "client",
+      "label": "RDP client",
+      "sub": "TLS · capabilities · channels",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "server",
+      "label": "wrdp",
+      "sub": "IronRDP · auth · binding",
+      "tag": "web",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "session",
+      "label": "Session manager",
+      "sub": "start · reuse · supervise",
+      "tag": "processing",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "compositor",
+      "label": "User compositor",
+      "sub": "headless Wayland output",
+      "tag": "backend",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "display",
+      "label": "Display path",
+      "sub": "DMA-BUF/SHM · H.264/bitmap",
+      "tag": "output",
+      "column": 4,
+      "row": 0
+    },
+    {
+      "id": "channels",
+      "label": "Desktop channels",
+      "sub": "input · clipboard · audio",
+      "tag": "state",
+      "column": 3,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "client",
+      "to": "server",
+      "accent": true
+    },
+    {
+      "from": "server",
+      "to": "session"
+    },
+    {
+      "from": "session",
+      "to": "compositor",
+      "accent": true
+    },
+    {
+      "from": "compositor",
+      "to": "display",
+      "accent": true
+    },
+    {
+      "from": "compositor",
+      "to": "channels"
+    }
+  ]
+}

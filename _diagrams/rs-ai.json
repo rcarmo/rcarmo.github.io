@@ -1,0 +1,66 @@
+{
+  "title": "Provider-neutral LLM streaming API for Rust",
+  "nodes": [
+    {
+      "id": "app",
+      "label": "Rust application",
+      "sub": "stream \u00b7 complete \u00b7 tools",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "registry",
+      "label": "rs-ai registry",
+      "sub": "models + providers",
+      "tag": "processing",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "compat",
+      "label": "Runtime layer",
+      "sub": "env \u00b7 compat \u00b7 retries",
+      "tag": "backend",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "provider",
+      "label": "Provider transport",
+      "sub": "HTTP \u00b7 WebSocket \u00b7 AWS SDK",
+      "tag": "external",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "events",
+      "label": "Shared event stream",
+      "sub": "text \u00b7 reasoning \u00b7 tools \u00b7 usage",
+      "tag": "output",
+      "column": 4,
+      "row": 0
+    }
+  ],
+  "edges": [
+    {
+      "from": "app",
+      "to": "registry",
+      "accent": true
+    },
+    {
+      "from": "registry",
+      "to": "compat"
+    },
+    {
+      "from": "compat",
+      "to": "provider",
+      "accent": true
+    },
+    {
+      "from": "provider",
+      "to": "events",
+      "accent": true
+    }
+  ]
+}

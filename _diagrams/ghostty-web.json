@@ -1,0 +1,39 @@
+{
+  "nodes": [
+    {
+      "id": "browser",
+      "label": "Browser",
+      "sub": "xterm.js",
+      "column": 0,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "typescript",
+      "label": "TypeScript",
+      "sub": "WS bridge",
+      "column": 1,
+      "row": 0,
+      "tag": "scripting"
+    },
+    {
+      "id": "ghostty-pty",
+      "label": "Ghostty PTY",
+      "sub": "native process",
+      "column": 2,
+      "row": 0,
+      "tag": "processing"
+    }
+  ],
+  "edges": [
+    {
+      "from": "browser",
+      "to": "typescript"
+    },
+    {
+      "from": "typescript",
+      "to": "ghostty-pty"
+    }
+  ],
+  "title": ""
+}

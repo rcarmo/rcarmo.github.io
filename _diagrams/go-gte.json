@@ -1,0 +1,20 @@
+{
+  "title": "Pure Go GTE-small — single binary, 1 alloc per embed, flat latency",
+  "nodes": [
+    { "id": "text",       "label": "Input text",        "sub": "query or document",        "tag": "input",      "column": 0, "row": 0 },
+    { "id": "pipeline",   "label": "Embed pipeline",    "sub": "single static binary",     "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "tok",    "label": "Tokenizer",  "sub": "WordPiece",     "tag": "processing" },
+        { "id": "attn",   "label": "6L Attention", "sub": "BERT encoder", "tag": "processing" },
+        { "id": "pool",   "label": "Mean pool",   "sub": "L2 normalize",  "tag": "processing" }
+      ]
+    },
+    { "id": "weights",    "label": "GGUF weights",      "sub": "23 MB model file",         "tag": "state",      "column": 0, "row": 1 },
+    { "id": "embedding",  "label": "384-dim vector",     "sub": "similarity · clustering",  "tag": "output",     "column": 2, "row": 0 }
+  ],
+  "edges": [
+    { "from": "text",     "to": "pipeline",  "accent": true },
+    { "from": "weights",  "to": "pipeline" },
+    { "from": "pipeline", "to": "embedding", "accent": true }
+  ]
+}

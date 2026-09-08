@@ -1,0 +1,66 @@
+{
+  "title": "Provider-neutral LLM streaming API for Swift",
+  "nodes": [
+    {
+      "id": "app",
+      "label": "Swift application",
+      "sub": "stream \u00b7 complete \u00b7 tools",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "registry",
+      "label": "SwiftAI registry",
+      "sub": "actor-backed models + providers",
+      "tag": "processing",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "resolver",
+      "label": "Request resolver",
+      "sub": "model \u00b7 credentials \u00b7 options",
+      "tag": "backend",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "provider",
+      "label": "Provider transport",
+      "sub": "HTTP \u00b7 SSE \u00b7 pluggable",
+      "tag": "external",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "events",
+      "label": "Typed event stream",
+      "sub": "text \u00b7 reasoning \u00b7 tools \u00b7 usage",
+      "tag": "output",
+      "column": 4,
+      "row": 0
+    }
+  ],
+  "edges": [
+    {
+      "from": "app",
+      "to": "registry",
+      "accent": true
+    },
+    {
+      "from": "registry",
+      "to": "resolver"
+    },
+    {
+      "from": "resolver",
+      "to": "provider",
+      "accent": true
+    },
+    {
+      "from": "provider",
+      "to": "events",
+      "accent": true
+    }
+  ]
+}

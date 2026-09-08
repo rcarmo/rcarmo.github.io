@@ -1,0 +1,55 @@
+{
+  "nodes": [
+    {
+      "id": "gnome-files",
+      "label": "GNOME Files",
+      "sub": "thumbnailer call",
+      "column": 0,
+      "row": 0,
+      "tag": "output"
+    },
+    {
+      "id": "raw-heic",
+      "label": "RAW/HEIC",
+      "sub": "dcraw \u00b7 libheif",
+      "column": 1,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "3d-stl-obj",
+      "label": "3D (STL/OBJ)",
+      "sub": "blender headless",
+      "column": 1,
+      "row": 1,
+      "tag": "artifacts"
+    },
+    {
+      "id": "png-thumb",
+      "label": "PNG thumb",
+      "sub": "~256px cache",
+      "column": 2,
+      "row": 0,
+      "tag": "state"
+    }
+  ],
+  "edges": [
+    {
+      "from": "gnome-files",
+      "to": "raw-heic"
+    },
+    {
+      "from": "gnome-files",
+      "to": "3d-stl-obj"
+    },
+    {
+      "from": "raw-heic",
+      "to": "png-thumb"
+    },
+    {
+      "from": "3d-stl-obj",
+      "to": "png-thumb"
+    }
+  ],
+  "title": ""
+}

@@ -1,0 +1,78 @@
+{
+  "title": "MCP access inside the Calibre GUI process",
+  "nodes": [
+    {
+      "id": "client",
+      "label": "MCP client",
+      "sub": "Streamable HTTP",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "plugin",
+      "label": "Calibre µMCP plugin",
+      "sub": "auth · policy · dispatch",
+      "tag": "web",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "reads",
+      "label": "Read tools",
+      "sub": "search · inspect · compare",
+      "tag": "processing",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "mutations",
+      "label": "Mutation gate",
+      "sub": "version · token · UI opt-in",
+      "tag": "processing",
+      "column": 2,
+      "row": 1
+    },
+    {
+      "id": "libraries",
+      "label": "Calibre read APIs",
+      "sub": "active · secondary handles",
+      "tag": "output",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "jobs",
+      "label": "Calibre write APIs",
+      "sub": "GUI thread · native jobs",
+      "tag": "state",
+      "column": 3,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "client",
+      "to": "plugin",
+      "accent": true
+    },
+    {
+      "from": "plugin",
+      "to": "reads"
+    },
+    {
+      "from": "plugin",
+      "to": "mutations"
+    },
+    {
+      "from": "reads",
+      "to": "libraries",
+      "accent": true
+    },
+    {
+      "from": "mutations",
+      "to": "jobs",
+      "accent": true
+    }
+  ]
+}

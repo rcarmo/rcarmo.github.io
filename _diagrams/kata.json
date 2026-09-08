@@ -1,0 +1,75 @@
+{
+  "nodes": [
+    {
+      "id": "kata-compose-yaml",
+      "label": "kata-compose.yaml",
+      "sub": "app definition",
+      "column": 0,
+      "row": 0,
+      "tag": "state"
+    },
+    {
+      "id": "kata-wrapper",
+      "label": "kata wrapper",
+      "sub": "expand helpers + merge config",
+      "column": 1,
+      "row": 0,
+      "tag": "state"
+    },
+    {
+      "id": "runtime-helpers",
+      "label": "Runtime helpers",
+      "sub": "Python \u00b7 Node \u00b7 PHP \u00b7 Bun",
+      "column": 2,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "generated-compose",
+      "label": "Generated compose",
+      "sub": ".docker-compose.yaml",
+      "column": 2,
+      "row": 1,
+      "tag": "infra"
+    },
+    {
+      "id": "app-layout",
+      "label": "App layout",
+      "sub": "code \u00b7 data \u00b7 config \u00b7 logs",
+      "column": 2,
+      "row": 2,
+      "tag": "state"
+    },
+    {
+      "id": "deploy",
+      "label": "Deploy",
+      "sub": "Compose / Swarm",
+      "column": 3,
+      "row": 0,
+      "tag": "infra"
+    }
+  ],
+  "edges": [
+    {
+      "from": "kata-compose-yaml",
+      "to": "kata-wrapper"
+    },
+    {
+      "from": "kata-wrapper",
+      "to": "runtime-helpers"
+    },
+    {
+      "from": "kata-wrapper",
+      "to": "generated-compose"
+    },
+    {
+      "from": "kata-wrapper",
+      "to": "app-layout"
+    },
+    {
+      "from": "generated-compose",
+      "to": "deploy"
+    }
+  ],
+  "title": "optional Traefik routing and deploy hooks sit on top of a predictable per-app Docker layout"
+}

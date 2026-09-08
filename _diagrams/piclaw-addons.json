@@ -1,0 +1,20 @@
+{
+  "title": "Drop-in npm add-ons for PiClaw — tools, workflows, settings UI",
+  "nodes": [
+    { "id": "catalog",  "label": "Add-on catalog",     "sub": "npm packages",              "tag": "input",      "column": 0, "row": 0 },
+    { "id": "runtime",  "label": "PiClaw runtime",      "sub": "extension loader",          "tag": "backend",    "column": 1, "row": 0 },
+    { "id": "addons",   "label": "Active add-ons",       "sub": "",                          "tag": "scripting",  "column": 2, "row": 0,
+      "children": [
+        { "id": "proxmox",   "label": "Proxmox",    "sub": "VM/LXC mgmt",    "tag": "infra" },
+        { "id": "portainer", "label": "Portainer",   "sub": "containers",     "tag": "infra" },
+        { "id": "imap",      "label": "IMAP",         "sub": "email tools",    "tag": "external" }
+      ]
+    },
+    { "id": "agent",    "label": "Agent session",        "sub": "tools · skills · settings", "tag": "output",     "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "catalog", "to": "runtime", "accent": true },
+    { "from": "runtime", "to": "addons" },
+    { "from": "addons",  "to": "agent",   "accent": true }
+  ]
+}

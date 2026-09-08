@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "id": "imap-server",
+      "label": "IMAP server",
+      "sub": "Gmail \u00b7 Exchange \u00b7 Fastmail",
+      "column": 0,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "imapbackup",
+      "label": "imapbackup",
+      "sub": "Python script \u00b7 append-only",
+      "column": 1,
+      "row": 0,
+      "tag": "scripting"
+    },
+    {
+      "id": "local-mbox-files",
+      "label": "Local mbox files",
+      "sub": "one file per IMAP folder",
+      "column": 2,
+      "row": 0,
+      "tag": "output"
+    },
+    {
+      "id": "state-file",
+      "label": "State file",
+      "sub": "last UID per folder",
+      "column": 1,
+      "row": 1,
+      "tag": "web"
+    }
+  ],
+  "edges": [
+    {
+      "from": "imap-server",
+      "to": "imapbackup"
+    },
+    {
+      "from": "imapbackup",
+      "to": "local-mbox-files"
+    },
+    {
+      "from": "imapbackup",
+      "to": "state-file"
+    }
+  ],
+  "title": "Incremental runs fetch only unseen message UIDs"
+}

@@ -1,0 +1,111 @@
+{
+  "nodes": [
+    {
+      "id": "user",
+      "label": "User",
+      "sub": "web \u00b7 mobile",
+      "column": 0,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "streaming-ui",
+      "label": "Streaming UI",
+      "sub": "attachments \u00b7 timeline",
+      "column": 1,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "agent-runtime",
+      "label": "Agent runtime",
+      "sub": "compaction \u00b7 prompts",
+      "column": 1,
+      "row": 1,
+      "tag": "backend"
+    },
+    {
+      "id": "extensions",
+      "label": "Extensions",
+      "sub": "custom tools \u00b7 UI hooks",
+      "column": 2,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "skills",
+      "label": "Skills",
+      "sub": "on-demand workflows",
+      "column": 2,
+      "row": 1,
+      "tag": "processing"
+    },
+    {
+      "id": "workspace",
+      "label": "Workspace",
+      "sub": "SQLite \u00b7 keychain",
+      "column": 2,
+      "row": 2,
+      "tag": "state"
+    },
+    {
+      "id": "tools",
+      "label": "Tools",
+      "sub": "images \u00b7 office \u00b7 schedule",
+      "column": 3,
+      "row": 0,
+      "tag": "output"
+    },
+    {
+      "id": "external",
+      "label": "External",
+      "sub": "GitHub \u00b7 MCP \u00b7 browser",
+      "column": 3,
+      "row": 1,
+      "tag": "web"
+    }
+  ],
+  "edges": [
+    {
+      "from": "user",
+      "to": "streaming-ui"
+    },
+    {
+      "from": "user",
+      "to": "agent-runtime"
+    },
+    {
+      "from": "streaming-ui",
+      "to": "agent-runtime"
+    },
+    {
+      "from": "agent-runtime",
+      "to": "extensions"
+    },
+    {
+      "from": "agent-runtime",
+      "to": "skills"
+    },
+    {
+      "from": "agent-runtime",
+      "to": "workspace"
+    },
+    {
+      "from": "extensions",
+      "to": "tools"
+    },
+    {
+      "from": "skills",
+      "to": "tools"
+    },
+    {
+      "from": "workspace",
+      "to": "external"
+    },
+    {
+      "from": "tools",
+      "to": "external"
+    }
+  ],
+  "title": ""
+}

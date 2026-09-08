@@ -1,0 +1,27 @@
+{
+  "nodes": [
+    {
+      "id": "hdmi-source",
+      "label": "HDMI Source",
+      "sub": "/ console",
+      "column": 0,
+      "row": 0,
+      "tag": "input"
+    },
+    {
+      "id": "usb-dongle",
+      "label": "USB Dongle",
+      "sub": "$10 capture card",
+      "column": 1,
+      "row": 0,
+      "tag": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "hdmi-source",
+      "to": "usb-dongle"
+    }
+  ],
+  "title": "all-spaces \u00b7 resizable"
+}

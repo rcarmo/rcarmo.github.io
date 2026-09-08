@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "id": "trmnl-device",
+      "label": "TRMNL device",
+      "sub": "scheduled HTTP poll",
+      "column": 0,
+      "row": 0,
+      "tag": "state"
+    },
+    {
+      "id": "fastapi-backend",
+      "label": "FastAPI backend",
+      "sub": "device API + refresh logic",
+      "column": 1,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "plugins",
+      "label": "Plugins",
+      "sub": "weather \u00b7 calendar \u00b7 dashboards",
+      "column": 2,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "rendered-image",
+      "label": "Rendered image",
+      "sub": "1-bit screen payload",
+      "column": 2,
+      "row": 1,
+      "tag": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "trmnl-device",
+      "to": "fastapi-backend"
+    },
+    {
+      "from": "fastapi-backend",
+      "to": "plugins"
+    },
+    {
+      "from": "fastapi-backend",
+      "to": "rendered-image"
+    }
+  ],
+  "title": "self-hosted replacement for the TRMNL cloud service, serving local plugin-generated e-ink screens"
+}

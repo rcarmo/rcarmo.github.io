@@ -1,0 +1,19 @@
+{
+  "title": "Go terminal emulator library — VT100/VT220/VT520 screen model",
+  "nodes": [
+    { "id": "input",    "label": "Byte stream",       "sub": "PTY / SSH / pipe",         "tag": "input",      "column": 0, "row": 0 },
+    { "id": "parser",   "label": "Escape parser",      "sub": "CSI · OSC · DCS",          "tag": "processing", "column": 1, "row": 0 },
+    { "id": "screen",   "label": "Screen model",       "sub": "cells · cursor · attrs",   "tag": "state",      "column": 2, "row": 0,
+      "children": [
+        { "id": "scroll", "label": "History",   "sub": "scroll buffer", "tag": "state" },
+        { "id": "modes",  "label": "Modes",     "sub": "DEC private",   "tag": "state" }
+      ]
+    },
+    { "id": "consumer", "label": "Consumer",           "sub": "renderer / diff / snapshot","tag": "output",     "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "input",  "to": "parser",  "accent": true },
+    { "from": "parser", "to": "screen" },
+    { "from": "screen", "to": "consumer" }
+  ]
+}

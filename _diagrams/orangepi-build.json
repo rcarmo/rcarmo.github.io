@@ -1,0 +1,19 @@
+{
+  "title": "Orange Pi 6 Plus kernel and U-Boot patches",
+  "nodes": [
+    { "id": "patches",  "label": "Kernel patches",    "sub": "DTS · drivers · defconfig","tag": "input",      "column": 0, "row": 0 },
+    { "id": "builder",  "label": "Build system",       "sub": "cross-compile toolchain",  "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "kernel", "label": "Kernel",    "sub": "6.x aarch64", "tag": "artifacts" },
+        { "id": "uboot",  "label": "U-Boot",     "sub": "bootloader",  "tag": "artifacts" }
+      ]
+    },
+    { "id": "image",    "label": "SD card image",      "sub": "bootable Armbian",         "tag": "output",     "column": 2, "row": 0 },
+    { "id": "board",    "label": "Orange Pi 6 Plus",    "sub": "RK3588 · 16 GB",          "tag": "external",   "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "patches", "to": "builder", "accent": true },
+    { "from": "builder", "to": "image" },
+    { "from": "image",   "to": "board",   "label": "flash" }
+  ]
+}

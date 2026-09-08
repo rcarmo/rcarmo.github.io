@@ -1,0 +1,55 @@
+{
+  "nodes": [
+    {
+      "id": "python-script",
+      "label": "Python script",
+      "sub": "your code",
+      "column": 0,
+      "row": 0,
+      "tag": "scripting"
+    },
+    {
+      "id": "canvas-api",
+      "label": "Canvas API",
+      "sub": "draw \u00b7 fill \u00b7 text",
+      "column": 1,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "png-encoder",
+      "label": "PNG encoder",
+      "sub": "zlib \u00b7 struct",
+      "column": 1,
+      "row": 1,
+      "tag": "artifacts"
+    },
+    {
+      "id": "-png-file",
+      "label": ".png file",
+      "sub": "any fileobj",
+      "column": 2,
+      "row": 0,
+      "tag": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "python-script",
+      "to": "canvas-api"
+    },
+    {
+      "from": "python-script",
+      "to": "png-encoder"
+    },
+    {
+      "from": "canvas-api",
+      "to": "-png-file"
+    },
+    {
+      "from": "png-encoder",
+      "to": "-png-file"
+    }
+  ],
+  "title": ""
+}

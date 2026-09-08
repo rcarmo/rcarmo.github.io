@@ -1,0 +1,91 @@
+{
+  "nodes": [
+    {
+      "id": "arm-template",
+      "label": "ARM template",
+      "sub": "cluster.json",
+      "column": 0,
+      "row": 0,
+      "tag": "infra"
+    },
+    {
+      "id": "storage-resource-group",
+      "label": "Storage resource group",
+      "sub": "Storage account + Azure Files",
+      "column": 1,
+      "row": 0,
+      "tag": "output"
+    },
+    {
+      "id": "master-vm-s",
+      "label": "Master VM(s)",
+      "sub": "availability set + NIC/PIP/NSG",
+      "column": 1,
+      "row": 1,
+      "tag": "infra"
+    },
+    {
+      "id": "agent-vmss",
+      "label": "Agent VMSS",
+      "sub": "autoscale settings",
+      "column": 1,
+      "row": 2,
+      "tag": "infra"
+    },
+    {
+      "id": "managed-identity",
+      "label": "Managed identity",
+      "sub": "role assignment for scale ops",
+      "column": 2,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "cloud-init-bootstrap",
+      "label": "Cloud-init bootstrap",
+      "sub": "k3s install + join/leave helper",
+      "column": 2,
+      "row": 1,
+      "tag": "infra"
+    },
+    {
+      "id": "k3s-cluster",
+      "label": "k3s cluster",
+      "sub": "server, agents, shared /srv",
+      "column": 3,
+      "row": 0,
+      "tag": "backend"
+    }
+  ],
+  "edges": [
+    {
+      "from": "arm-template",
+      "to": "storage-resource-group"
+    },
+    {
+      "from": "arm-template",
+      "to": "master-vm-s"
+    },
+    {
+      "from": "arm-template",
+      "to": "agent-vmss"
+    },
+    {
+      "from": "master-vm-s",
+      "to": "managed-identity"
+    },
+    {
+      "from": "agent-vmss",
+      "to": "cloud-init-bootstrap"
+    },
+    {
+      "from": "managed-identity",
+      "to": "k3s-cluster"
+    },
+    {
+      "from": "cloud-init-bootstrap",
+      "to": "k3s-cluster"
+    }
+  ],
+  "title": "actual template structure: separate storage/compute concerns, master identity, agent VM scale set, and cloud-init managed cluster membership"
+}

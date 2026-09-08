@@ -1,0 +1,80 @@
+{
+  "title": "AI-assisted live coding with Strudel.cc + MCP tools",
+  "nodes": [
+    {
+      "id": "browser",
+      "label": "Browser",
+      "sub": "",
+      "tag": "web",
+      "column": 0,
+      "row": 0,
+      "children": [
+        {
+          "id": "editor",
+          "label": "Strudel editor",
+          "sub": "CodeMirror",
+          "tag": "web"
+        },
+        {
+          "id": "chat",
+          "label": "Chat sidebar",
+          "sub": "AI messages",
+          "tag": "processing"
+        }
+      ]
+    },
+    {
+      "id": "server",
+      "label": "Bun server",
+      "sub": "HTTP + WebSocket",
+      "tag": "backend",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "llm",
+      "label": "LLM provider",
+      "sub": "OpenAI / Anthropic / local",
+      "tag": "external",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "mcp",
+      "label": "MCP tools",
+      "sub": "evaluate \u00b7 set_tempo \u00b7 get",
+      "tag": "scripting",
+      "column": 1,
+      "row": 1
+    },
+    {
+      "id": "audio",
+      "label": "Web Audio",
+      "sub": "SuperDough synthesis",
+      "tag": "output",
+      "column": 2,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "browser",
+      "to": "server",
+      "label": "WebSocket",
+      "accent": true
+    },
+    {
+      "from": "server",
+      "to": "llm",
+      "accent": true
+    },
+    {
+      "from": "server",
+      "to": "mcp"
+    },
+    {
+      "from": "mcp",
+      "to": "audio"
+    }
+  ]
+}
