@@ -2,19 +2,19 @@
 section: agents
 status: active
 created: 2026-01-30
-tagline: Mobile-first Go web UI for AI agents -- ACP and Pi over RPC.
+tagline: Mobile-first Python web UI for AI agents, with a Go port -- ACP and Pi over RPC.
 logo: assets/logos-opt/vibes.png
 ---
 
 ## About
-Vibes is a Go web app for talking to AI coding agents from a phone. It supports ACP agents and Pi via RPC, with an embedded frontend and SQLite storage in a single binary.
+Vibes is a Python web app for talking to AI coding agents from a phone, with a Go port that packages the frontend and SQLite storage in a single binary. Both implementations support ACP agents and Pi via RPC.
 
 ## Motivation
-I wanted something I could use on my iPhone and iPad without adopting OpenClaw. GitHub Copilot and Codex through ACP worked, but felt limiting. [Pi](https://pi.dev) exposed the extension points I needed to explore an agent-based IDE that could run from my iPad. The server is now written in Go; the original Python code remains on the `python` branch.
+I wanted something I could use on my iPhone and iPad without adopting OpenClaw. GitHub Copilot and Codex through ACP worked, but felt limiting. [Pi](https://pi.dev) exposed the extension points I needed to explore an agent-based IDE that could run from my iPad. The Python implementation remains on the `python` branch alongside the Go port.
 
 
 ## How it works
-The Go server forwards browser messages to the configured agent backend and streams responses back over SSE. The frontend is embedded in the binary, so deployment does not require a separate web server or JavaScript runtime. The original Python implementation remains available on the `python` branch.
+The Python and Go servers forward browser messages to the configured agent backend and stream responses back over SSE. The Go port embeds the frontend in its binary, so it does not require a separate web server or JavaScript runtime.
 
 ## Features
 ### 📱 Phone-first
