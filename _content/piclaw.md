@@ -8,7 +8,7 @@ logo: assets/logos-opt/piclaw.png
 ---
 
 ## About
-PiClaw stuffs the [Pi Coding Agent](https://pi.dev) runtime into a Docker container, throws on a streaming web UI, and calls it a day. Multi-provider LLM support, built-in Ghostty terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access -- all behind one `docker run` command. More tools come from a growing catalogue of [community add-ons](https://rcarmo.github.io/piclaw-addons) covering Proxmox, Portainer, SSH, and whatever else someone felt like wiring up.
+PiClaw stuffs the [Pi Coding Agent](https://pi.dev) runtime into a Docker container, throws on a streaming web UI, and calls it a day. Multi-provider LLM support, an `xterm.js` terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access -- all behind one `docker run` command. More tools come from a growing catalogue of [community add-ons](https://rcarmo.github.io/piclaw-addons), including the optional [Ghostty terminal](ghostty-web), Proxmox, Portainer, SSH, and whatever else someone felt like wiring up.
 
 ## Motivation
 After creating [`webterm`](webterm) and [`vibes`](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting. But when I stumbled upon [Pi](https://pi.dev) and its extensibility, I knew I had found a great way to explore how to build an extensible web-based IDE that I could access from my iPhone and iPad.
@@ -18,7 +18,7 @@ A Bun process embeds the [`pi`](https://pi.dev) agent runtime and manages all ag
 
 The web UI receives live updates over SSE. A small set of tools is always active; the agent discovers and activates others through `list_tools` and `activate_tools`. This avoids sending every tool definition with each request, while bounded tool output limits context use.
 
-The workspace includes a file tree, pluggable viewers, a [`ghostty-web`](ghostty-web) terminal, a VNC viewer and a `vim`-capable editor with Obsidian-like Markdown rendering. I use VNC to access SBCs and X apps inside the `piclaw` host. A keychain stores secrets encrypted with AES-GCM.
+The workspace includes a file tree, pluggable viewers, an `xterm.js` terminal, a VNC viewer and a `vim`-capable editor with Obsidian-like Markdown rendering. The optional [`ghostty-web`](ghostty-web) add-on provides a Ghostty-based terminal. I use VNC to access SBCs and X apps inside the `piclaw` host. A keychain stores secrets encrypted with AES-GCM.
 
 Nightly memory consolidation synthesises notes from all sessions so later conversations can recover useful context.
 
