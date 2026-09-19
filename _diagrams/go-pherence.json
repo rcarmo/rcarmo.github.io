@@ -1,23 +1,23 @@
 {
-  "title": "Pure Go tensor framework — lazy DAG, SIMD + GPU kernels, LLM inference",
+  "title": "Shared loaders and kernels for local model inference",
   "nodes": [
-    { "id": "weights",   "label": "Model weights",      "sub": "safetensors / GPTQ INT4",  "tag": "input",      "column": 0, "row": 0 },
-    { "id": "dag",       "label": "Lazy tensor DAG",    "sub": "fusion + graph rewrite",   "tag": "processing", "column": 1, "row": 0,
+    { "id": "weights",   "label": "Model weights",      "sub": "safetensors / GGUF",  "tag": "input",      "column": 0, "row": 0 },
+    { "id": "dag",       "label": "Model execution",    "sub": "model-specific graphs",   "tag": "processing", "column": 1, "row": 0,
       "children": [
-        { "id": "pattern", "label": "Pattern match", "sub": "16 rewrite rules", "tag": "processing" },
-        { "id": "fuse",    "label": "Op fusion",      "sub": "elementwise 2×",  "tag": "processing" }
+        { "id": "pattern", "label": "Model code", "sub": "layers / loops", "tag": "processing" },
+        { "id": "fuse",    "label": "Shared state",      "sub": "tensor / KV",  "tag": "processing" }
       ]
     },
     { "id": "backends",  "label": "Compute backends",   "sub": "",                         "tag": "backend",    "column": 2, "row": 0,
       "children": [
-        { "id": "simd",  "label": "SIMD GEMM",  "sub": "AVX2 / NEON",  "tag": "processing" },
-        { "id": "gpu",   "label": "GPU DevBuf",  "sub": "PTX kernels",  "tag": "infra" }
+        { "id": "simd",  "label": "CPU kernels",  "sub": "Go + assembly",  "tag": "processing" },
+        { "id": "gpu",   "label": "NVIDIA",  "sub": "driver / PTX",  "tag": "infra" }
       ]
     },
-    { "id": "models",    "label": "Model inference",    "sub": "",                         "tag": "output",     "column": 3, "row": 0,
+    { "id": "models",    "label": "Inference tools",    "sub": "",                         "tag": "output",     "column": 3, "row": 0,
       "children": [
-        { "id": "llama", "label": "LLaMA",    "sub": "decoder",     "tag": "output" },
-        { "id": "bert",  "label": "BERT",      "sub": "encoder",     "tag": "output" }
+        { "id": "llama", "label": "Text",    "sub": "LLMs / vectors",     "tag": "output" },
+        { "id": "bert",  "label": "Speech",      "sub": "text / speakers",     "tag": "output" }
       ]
     }
   ],

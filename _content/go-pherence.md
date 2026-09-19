@@ -4,35 +4,47 @@ repo: rcarmo/go-pherence
 section: ai-ml
 status: active
 created: 2026-05-01
-tagline: Minimal tensor framework in pure Go -- SIMD assembly, GPU compute, runs LLMs
+tagline: Local inference in Go -- LLMs, embeddings, speech and experimental vision models on CPU and GPU.
 logo: assets/logos-opt/go-pherence.png
 ---
 
 ## About
-A minimal tensor computation framework in pure Go with SIMD assembly and GPU compute, inspired by tinygrad. Lazy tensor DAG with elementwise fusion, pattern-matching graph rewrite, and enough infrastructure to run LLaMA and BERT models from safetensors weights -- no Python, no cgo, no ONNX.
+`go-pherence` runs language, embedding and speech models on local hardware, with experimental support for vision and image generation. It provides Go libraries, command-line tools and an OpenAI-compatible server, including LLaMA, Qwen and Gemma decoders, BERT/GTE embeddings, Whisper transcription and MOSS transcription with speaker labels.
+
+CPU execution uses Go and hand-written assembly. NVIDIA support loads PTX through the installed driver without cgo or a CUDA toolkit. Vulkan and embedded accelerator support are opt-in and model-dependent.
 
 ## How it works
-The core is a lazy tensor DAG: operations build a computation graph that is fused and optimised before execution. A tinygrad-style pattern matcher rewrites the graph for kernel fusion. SIMD GEMM kernels (AVX2 on x86, NEON on ARM) handle matrix math, with GPU DevBuf providing device-agnostic buffers that lazy-transfer between CPU and GPU. LLaMA decoding uses RoPE, GQA, KV cache, and SiLU MLP; BERT encoding uses the GTE-small model also supported by [go-gte](go-gte).
+Loaders read model configuration, tokenisers and weights from safetensors, selected GGUF layouts and associated files. Model packages implement attention, generation loops, speech processing and image schedulers, sharing kernels and memory management rather than forcing every model through one graph engine.
+
+CPU kernels use AVX2, NEON or RISC-V vector instructions where supported, with scalar Go fallbacks. NVIDIA execution keeps weights and intermediate state on the GPU where the model implementation allows it. Quantised weights retain their packed layout where supported, reducing memory traffic without first expanding the whole checkpoint.
+
+The speech tools can produce transcripts and subtitles with timestamps and speaker labels. Their normal media input uses FFmpeg; library callers can instead select a pure-Go [go-264](go-264) adapter for PCM WAV and a limited AAC-LC MP4/M4A subset.
 
 ## Features
 
-### 🧮 Lazy tensor DAG
-Combines chained elementwise operations before execution using pattern matching and graph rewriting.
+### 🦙 Local LLMs
+Dense and mixture-of-experts LLaMA, Qwen and Gemma-family models, with command-line generation, interactive chat and an OpenAI-compatible server.
 
-### ⚡ SIMD GEMM kernels
-AVX2 VGATHERDPS on x86, NEON GEBP on ARM -- ported from [go-gte](go-gte).
+### 📦 Checkpoint formats
+MLX and GPTQ 4-bit weights, BF16/F16/F32 safetensors and selected GGUF layouts. Supported formats depend on the model architecture.
 
-### 🦙 LLaMA decoder
-RoPE, grouped-query attention, KV cache, SiLU MLP, RMS norm -- loads safetensors/GPTQ INT4.
+### ⚡ CPU and NVIDIA execution
+AVX2, NEON and RVV kernels with scalar fallbacks; runtime-loaded PTX for supported NVIDIA operations. No Python inference runtime required.
 
-### 🧠 BERT encoder
-GTE-small text embeddings, with output compared against go-gte.
+### 🧠 Embeddings and extraction
+BERT/GTE embeddings, including the GTE-small model used by [go-gte](go-gte), and GLiNER 2.5 entity, classification, relation and record extraction.
 
-### 🖥 GPU compute
-Device-agnostic DevBuf with lazy CPU↔GPU transfer. PTX kernels compiled at runtime.
+### 🎙 Speech and speaker labels
+Whisper transcription or translation to WebVTT, with optional diarisation. MOSS provides native transcription with timestamps and speaker labels local to each recording.
 
-### 📦 Zero dependencies
-Pure Go + assembly. No Python, no cgo, no ONNX runtime.
+### 🎨 Experimental generation
+Ideogram 4 has a native CPU/SIMD image-generation implementation. DiffusionGemma has a partial native text-generation implementation; neither offers complete upstream model coverage.
+
+### 🔧 Library use
+Model loaders, tensor operations and execution backends can be used from Go applications. Jevlike adds choice scoring, training and reusable visual adapters.
+
+### 🧪 Model-specific limits
+Some families, including Qwen3-TTS and MiniCPM-V/O, have inspection or preprocessing support without full inference. The [supported-model guide](https://github.com/rcarmo/go-pherence/blob/main/docs/models/supported-models.md) lists the runnable models and their limits.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 984 178">
@@ -84,44 +96,44 @@ Pure Go + assembly. No Python, no cgo, no ONNX runtime.
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
   <text x="120" y="56" text-anchor="middle" class="label">Model weights</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">safetensors / GPTQ INT4</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">safetensors / GGUF</text>
 
   <rect x="262" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="274" y="30" width="180" height="60" rx="8" class="box-purple"/>
-  <text x="364" y="56" text-anchor="middle" class="label">Lazy tensor DAG</text>
-  <text x="364" y="74" text-anchor="middle" class="sub">fusion + graph rewrite</text>
+  <text x="364" y="56" text-anchor="middle" class="label">Model execution</text>
+  <text x="364" y="74" text-anchor="middle" class="sub">model-specific graphs</text>
   <rect x="278" y="98" width="82" height="48" rx="6" class="box-purple"/>
-  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Pattern match</text>
-  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">16 rewrite rules</text>
+  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Model code</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">layers / loops</text>
   <rect x="368" y="98" width="82" height="48" rx="6" class="box-purple"/>
-  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Op fusion</text>
-  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">elementwise 2×</text>
+  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Shared state</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">tensor / KV</text>
 
   <rect x="510" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="522" y="30" width="180" height="60" rx="8" class="box-green"/>
   <text x="612" y="64" text-anchor="middle" class="label">Compute backends</text>
   <rect x="526" y="98" width="82" height="48" rx="6" class="box-purple"/>
-  <text x="567" y="119" text-anchor="middle" class="label" style="font-size:11px">SIMD GEMM</text>
-  <text x="567" y="133" text-anchor="middle" class="sub" style="font-size:9px">AVX2 / NEON</text>
+  <text x="567" y="119" text-anchor="middle" class="label" style="font-size:11px">CPU kernels</text>
+  <text x="567" y="133" text-anchor="middle" class="sub" style="font-size:9px">Go + assembly</text>
   <rect x="616" y="98" width="82" height="48" rx="6" class="box-slate"/>
-  <text x="657" y="119" text-anchor="middle" class="label" style="font-size:11px">GPU DevBuf</text>
-  <text x="657" y="133" text-anchor="middle" class="sub" style="font-size:9px">PTX kernels</text>
+  <text x="657" y="119" text-anchor="middle" class="label" style="font-size:11px">NVIDIA</text>
+  <text x="657" y="133" text-anchor="middle" class="sub" style="font-size:9px">driver / PTX</text>
 
   <rect x="758" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="770" y="30" width="180" height="60" rx="8" class="box-orange"/>
-  <text x="860" y="64" text-anchor="middle" class="label">Model inference</text>
+  <text x="860" y="64" text-anchor="middle" class="label">Inference tools</text>
   <rect x="774" y="98" width="82" height="48" rx="6" class="box-orange"/>
-  <text x="815" y="119" text-anchor="middle" class="label" style="font-size:11px">LLaMA</text>
-  <text x="815" y="133" text-anchor="middle" class="sub" style="font-size:9px">decoder</text>
+  <text x="815" y="119" text-anchor="middle" class="label" style="font-size:11px">Text</text>
+  <text x="815" y="133" text-anchor="middle" class="sub" style="font-size:9px">LLMs / vectors</text>
   <rect x="864" y="98" width="82" height="48" rx="6" class="box-orange"/>
-  <text x="905" y="119" text-anchor="middle" class="label" style="font-size:11px">BERT</text>
-  <text x="905" y="133" text-anchor="middle" class="sub" style="font-size:9px">encoder</text>
+  <text x="905" y="119" text-anchor="middle" class="label" style="font-size:11px">Speech</text>
+  <text x="905" y="133" text-anchor="middle" class="sub" style="font-size:9px">text / speakers</text>
 
   <path d="M210,60 L274,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M454,60 L522,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M702,60 L770,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
 
-  <text x="492" y="174" text-anchor="middle" class="sub">Pure Go tensor framework — lazy DAG, SIMD + GPU kernels, LLM inference</text>
+  <text x="492" y="174" text-anchor="middle" class="sub">Shared loaders and kernels for local model inference</text>
 </svg>
 
 ## Posts

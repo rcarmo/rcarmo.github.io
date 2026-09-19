@@ -47,42 +47,42 @@
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
   <text x="120" y="56" text-anchor="middle" class="label">Model weights</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">safetensors / GPTQ INT4</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">safetensors / GGUF</text>
 
   <rect x="262" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="274" y="30" width="180" height="60" rx="8" class="box-purple"/>
-  <text x="364" y="56" text-anchor="middle" class="label">Lazy tensor DAG</text>
-  <text x="364" y="74" text-anchor="middle" class="sub">fusion + graph rewrite</text>
+  <text x="364" y="56" text-anchor="middle" class="label">Model execution</text>
+  <text x="364" y="74" text-anchor="middle" class="sub">model-specific graphs</text>
   <rect x="278" y="98" width="82" height="48" rx="6" class="box-purple"/>
-  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Pattern match</text>
-  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">16 rewrite rules</text>
+  <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Model code</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">layers / loops</text>
   <rect x="368" y="98" width="82" height="48" rx="6" class="box-purple"/>
-  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Op fusion</text>
-  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">elementwise 2×</text>
+  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Shared state</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">tensor / KV</text>
 
   <rect x="510" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="522" y="30" width="180" height="60" rx="8" class="box-green"/>
   <text x="612" y="64" text-anchor="middle" class="label">Compute backends</text>
   <rect x="526" y="98" width="82" height="48" rx="6" class="box-purple"/>
-  <text x="567" y="119" text-anchor="middle" class="label" style="font-size:11px">SIMD GEMM</text>
-  <text x="567" y="133" text-anchor="middle" class="sub" style="font-size:9px">AVX2 / NEON</text>
+  <text x="567" y="119" text-anchor="middle" class="label" style="font-size:11px">CPU kernels</text>
+  <text x="567" y="133" text-anchor="middle" class="sub" style="font-size:9px">Go + assembly</text>
   <rect x="616" y="98" width="82" height="48" rx="6" class="box-slate"/>
-  <text x="657" y="119" text-anchor="middle" class="label" style="font-size:11px">GPU DevBuf</text>
-  <text x="657" y="133" text-anchor="middle" class="sub" style="font-size:9px">PTX kernels</text>
+  <text x="657" y="119" text-anchor="middle" class="label" style="font-size:11px">NVIDIA</text>
+  <text x="657" y="133" text-anchor="middle" class="sub" style="font-size:9px">driver / PTX</text>
 
   <rect x="758" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="770" y="30" width="180" height="60" rx="8" class="box-orange"/>
-  <text x="860" y="64" text-anchor="middle" class="label">Model inference</text>
+  <text x="860" y="64" text-anchor="middle" class="label">Inference tools</text>
   <rect x="774" y="98" width="82" height="48" rx="6" class="box-orange"/>
-  <text x="815" y="119" text-anchor="middle" class="label" style="font-size:11px">LLaMA</text>
-  <text x="815" y="133" text-anchor="middle" class="sub" style="font-size:9px">decoder</text>
+  <text x="815" y="119" text-anchor="middle" class="label" style="font-size:11px">Text</text>
+  <text x="815" y="133" text-anchor="middle" class="sub" style="font-size:9px">LLMs / vectors</text>
   <rect x="864" y="98" width="82" height="48" rx="6" class="box-orange"/>
-  <text x="905" y="119" text-anchor="middle" class="label" style="font-size:11px">BERT</text>
-  <text x="905" y="133" text-anchor="middle" class="sub" style="font-size:9px">encoder</text>
+  <text x="905" y="119" text-anchor="middle" class="label" style="font-size:11px">Speech</text>
+  <text x="905" y="133" text-anchor="middle" class="sub" style="font-size:9px">text / speakers</text>
 
   <path d="M210,60 L274,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M454,60 L522,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M702,60 L770,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
 
-  <text x="492" y="174" text-anchor="middle" class="sub">Pure Go tensor framework — lazy DAG, SIMD + GPU kernels, LLM inference</text>
+  <text x="492" y="174" text-anchor="middle" class="sub">Shared loaders and kernels for local model inference</text>
 </svg>
