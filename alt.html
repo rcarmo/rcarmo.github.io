@@ -1,0 +1,194 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>rcarmo — scenic mode</title>
+<meta name="description" content="A scenic 3D explorer for browsing Rui Carmo's open source project portfolio.">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="rcarmo.github.io">
+<meta property="og:title" content="rcarmo — scenic mode">
+<meta property="og:description" content="A scenic 3D explorer for browsing Rui Carmo's open source project portfolio.">
+<meta property="og:url" content="https://rcarmo.github.io/alt.html">
+<meta property="og:image" content="https://rcarmo.github.io/assets/og/scenic-mode.png">
+<meta property="og:image:type" content="image/png">
+<meta property="og:image:width" content="1200">
+<meta property="og:image:height" content="630">
+<meta property="og:image:alt" content="rcarmo scenic mode card">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="rcarmo — scenic mode">
+<meta name="twitter:description" content="A scenic 3D explorer for browsing Rui Carmo's open source project portfolio.">
+<meta name="twitter:image" content="https://rcarmo.github.io/assets/og/scenic-mode.png">
+<meta name="twitter:image:alt" content="rcarmo scenic mode card">
+<link rel="canonical" href="https://rcarmo.github.io/alt.html">
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#d8ebff;
+  --ink:#10233a;
+  --ink-dim:rgba(16,35,58,.68);
+  --panel:rgba(255,255,255,.78);
+  --panel-strong:rgba(255,255,255,.92);
+  --border:rgba(27,78,130,.14);
+  --blue:#2563eb;
+  --blue-soft:rgba(37,99,235,.12);
+  --shadow:0 18px 48px rgba(17,37,56,.12);
+}
+html,body{width:100%;height:100%;overflow:hidden;background:linear-gradient(#cfe6ff,#eef7ff);font-family:Inter,system-ui,-apple-system,sans-serif;color:var(--ink)}
+#cv{width:100%;height:100%;display:block}
+
+#hud-top{
+  position:fixed;inset:0 0 auto 0;z-index:30;
+  display:flex;align-items:center;justify-content:space-between;
+  padding:1rem 1.25rem;pointer-events:none;
+}
+#brand,
+#top-actions a,
+#cluster-nav,
+#focus-panel,
+#loading,
+#hint{pointer-events:auto}
+#brand{
+  display:flex;align-items:center;gap:.8rem;
+  padding:.7rem .95rem;border:1px solid var(--border);border-radius:18px;
+  background:var(--panel);backdrop-filter:blur(14px);box-shadow:var(--shadow)
+}
+#brand .dot{width:.7rem;height:.7rem;border-radius:50%;background:linear-gradient(135deg,#5fb2ff,#2563eb);box-shadow:0 0 0 6px rgba(37,99,235,.08)}
+#brand .title{font-weight:800;letter-spacing:-.03em;font-size:.96rem}
+#brand .sub{font-size:.72rem;color:var(--ink-dim)}
+#top-actions{display:flex;gap:.55rem}
+#top-actions a{
+  display:inline-flex;align-items:center;gap:.35rem;padding:.65rem .9rem;border-radius:16px;
+  text-decoration:none;font-size:.78rem;font-weight:700;color:var(--ink);
+  border:1px solid var(--border);background:var(--panel);backdrop-filter:blur(14px);box-shadow:var(--shadow)
+}
+#top-actions a:hover{background:var(--panel-strong)}
+
+#cluster-nav{
+  position:fixed;left:50%;bottom:1.15rem;transform:translateX(-50%);z-index:30;
+  display:flex;gap:.45rem;flex-wrap:wrap;justify-content:center;
+  max-width:min(96vw,1200px);padding:.55rem .7rem;
+  border:1px solid var(--border);border-radius:22px;
+  background:rgba(255,255,255,.8);backdrop-filter:blur(14px);box-shadow:var(--shadow)
+}
+.nav-btn{
+  appearance:none;border:none;background:transparent;color:var(--ink-dim);
+  font:700 .72rem/1 Inter,system-ui,sans-serif;letter-spacing:.08em;text-transform:uppercase;
+  padding:.55rem .82rem;border-radius:14px;cursor:pointer;transition:.18s ease all
+}
+.nav-btn:hover{background:var(--blue-soft);color:var(--ink)}
+.nav-btn.active{background:var(--blue);color:#fff;box-shadow:0 10px 24px rgba(37,99,235,.25)}
+
+#hint{
+  position:fixed;right:1.2rem;bottom:5.4rem;z-index:30;
+  padding:.5rem .75rem;border-radius:14px;border:1px solid var(--border);
+  background:rgba(255,255,255,.72);backdrop-filter:blur(12px);
+  font-size:.7rem;font-weight:700;letter-spacing:.07em;text-transform:uppercase;color:var(--ink-dim)
+}
+
+#loading{
+  position:fixed;inset:50% auto auto 50%;transform:translate(-50%,-50%);z-index:50;
+  padding:1.2rem 1.6rem 1.0rem;border-radius:18px;border:1px solid var(--border);
+  background:var(--panel-strong);box-shadow:var(--shadow);
+  font-size:.9rem;font-weight:700;text-align:center;min-width:220px;
+}
+#loading-label{margin-bottom:.6rem;color:var(--ink)}
+#loading-bar-track{
+  width:100%;height:6px;border-radius:3px;background:var(--border);
+  overflow:hidden;
+}
+#loading-bar-fill{
+  height:100%;width:0%;border-radius:3px;
+  background:var(--blue);transition:width .18s ease;
+}
+#loading.hidden{display:none}
+
+#focus-panel{
+  position:fixed;right:1.25rem;top:5.2rem;z-index:40;
+  width:min(420px,calc(100vw - 2rem));
+  padding:1.1rem 1.15rem 1rem;
+  border:1px solid var(--border);border-radius:24px;
+  background:rgba(255,255,255,.88);backdrop-filter:blur(18px);box-shadow:var(--shadow);
+  transform:translateY(12px);opacity:0;pointer-events:none;transition:.22s ease all
+}
+#focus-panel.open{transform:translateY(0);opacity:1;pointer-events:auto}
+#focus-close{
+  position:absolute;top:.8rem;right:.85rem;border:none;background:transparent;cursor:pointer;
+  color:var(--ink-dim);font-size:1rem;padding:.25rem .4rem;border-radius:10px
+}
+#focus-close:hover{background:rgba(0,0,0,.04);color:var(--ink)}
+#focus-kicker{font-size:.68rem;font-weight:800;letter-spacing:.09em;text-transform:uppercase;color:#2f6bc0;margin-bottom:.55rem}
+#focus-header{display:flex;gap:.8rem;align-items:flex-start;margin-bottom:.7rem;padding-right:2.2rem}
+#focus-logo{width:48px;height:48px;object-fit:contain;display:none;flex-shrink:0;border-radius:12px}
+#focus-name{font-size:1.18rem;line-height:1.05;font-weight:800;letter-spacing:-.03em}
+#focus-meta{font-size:.76rem;color:var(--ink-dim);margin-top:.25rem}
+#focus-desc{font-size:.92rem;line-height:1.6;color:#28425e;margin-bottom:.95rem}
+#focus-actions{display:flex;gap:.6rem;flex-wrap:wrap}
+#focus-link,#focus-jump{
+  display:inline-flex;align-items:center;justify-content:center;gap:.35rem;
+  min-height:2.5rem;padding:0 .95rem;border-radius:14px;border:1px solid var(--border);
+  text-decoration:none;font-size:.82rem;font-weight:800
+}
+#focus-link{background:var(--blue);color:#fff;border-color:transparent}
+#focus-jump{background:#fff;color:var(--ink)}
+#focus-link:hover{filter:brightness(1.05)}
+#focus-jump:hover{background:#f5f9ff}
+
+@media (max-width: 900px){
+  #hud-top{padding:.85rem .9rem;gap:.8rem;flex-direction:column;align-items:stretch}
+  #top-actions{justify-content:space-between}
+  #focus-panel{left:1rem;right:1rem;top:auto;bottom:6.4rem;width:auto}
+  #hint{display:none}
+}
+</style>
+<script src="/assets/js/babylon.js"></script>
+<script type="text/javascript">
+  (function(c,l,a,r,i,t,y){
+    c[a]=c[a]||function(){(c[a].q=c[a].q||[]).push(arguments)};
+    t=l.createElement(r);t.async=1;t.src="https://www.clarity.ms/tag/"+i;
+    y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
+  })(window,document,"clarity","script","wiph32r6h2");
+</script>
+</head>
+<body>
+<canvas id="cv"></canvas>
+
+<div id="loading"><div id="loading-label">Loading scenic mode…</div><div id="loading-bar-track"><div id="loading-bar-fill"></div></div></div>
+
+<div id="hud-top">
+  <div id="brand">
+    <div class="dot"></div>
+    <div>
+      <div class="title">rcarmo.github.io</div>
+      <div class="sub">scenic mode</div>
+    </div>
+  </div>
+  <div id="top-actions">
+    <a href="/">← list view</a>
+    <a href="https://taoofmac.com" target="_blank" rel="noopener">taoofmac.com ↗</a>
+  </div>
+</div>
+
+<nav id="cluster-nav" aria-label="Project sections"></nav>
+<div id="hint">WASD to walk · mouse to look · click signs · nav bar to travel</div>
+
+<aside id="focus-panel" aria-live="polite">
+  <button id="focus-close" type="button" aria-label="Close">✕</button>
+  <div id="focus-kicker">Project</div>
+  <div id="focus-header">
+    <img id="focus-logo" alt="">
+    <div>
+      <div id="focus-name"></div>
+      <div id="focus-meta"></div>
+    </div>
+  </div>
+  <div id="focus-desc"></div>
+  <div id="focus-actions">
+    <a id="focus-link" href="#">Open project →</a>
+    <button id="focus-jump" type="button">Jump cluster</button>
+  </div>
+</aside>
+
+<script type="module" src="/assets/js/alt/main.js"></script>
+</body>
+</html>

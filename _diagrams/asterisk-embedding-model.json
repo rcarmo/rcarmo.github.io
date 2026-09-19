@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "text-input",
+      "label": "Text input",
+      "sub": "sentence / query",
+      "column": 0,
+      "row": 0,
+      "tag": "input"
+    },
+    {
+      "id": "tokenizer",
+      "label": "Tokenizer",
+      "sub": "WordPiece",
+      "column": 1,
+      "row": 0,
+      "tag": "processing"
+    },
+    {
+      "id": "distilled-transformer",
+      "label": "Distilled transformer",
+      "sub": "contrastive encoder",
+      "column": 2,
+      "row": 0,
+      "tag": "processing"
+    },
+    {
+      "id": "256-dim",
+      "label": "256-dim",
+      "sub": "vector",
+      "column": 3,
+      "row": 0,
+      "tag": "backend"
+    }
+  ],
+  "edges": [
+    {
+      "from": "text-input",
+      "to": "tokenizer",
+      "label": "tokens"
+    },
+    {
+      "from": "tokenizer",
+      "to": "distilled-transformer"
+    },
+    {
+      "from": "distilled-transformer",
+      "to": "256-dim",
+      "label": "embed"
+    }
+  ],
+  "title": "small-footprint embeddings for semantic search, clustering, and RAG"
+}

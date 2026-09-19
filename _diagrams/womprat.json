@@ -1,0 +1,19 @@
+{
+  "title": "Single-binary tailnet client — SSH + browser + embedded tsnet",
+  "nodes": [
+    { "id": "user",    "label": "Windows user",       "sub": "ARM64 / Intel",            "tag": "input",     "column": 0, "row": 0 },
+    { "id": "app",     "label": "womprat.exe",         "sub": "WinUI3 + WebView2",        "tag": "web",       "column": 1, "row": 0,
+      "children": [
+        { "id": "ssh",    "label": "SSH tabs",    "sub": "host-key pinning", "tag": "backend" },
+        { "id": "browser","label": "Browser tabs", "sub": "WebView2",         "tag": "web" }
+      ]
+    },
+    { "id": "tsnet",   "label": "tsnet",               "sub": "embedded Tailscale node",  "tag": "backend",   "column": 2, "row": 0 },
+    { "id": "tailnet", "label": "Tailnet",              "sub": "hosts + services",         "tag": "external",  "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "user",  "to": "app",    "accent": true },
+    { "from": "app",   "to": "tsnet" },
+    { "from": "tsnet", "to": "tailnet", "accent": true }
+  ]
+}

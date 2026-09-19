@@ -1,0 +1,77 @@
+{
+  "title": "Noctalia panel backed by a local Pi RPC process",
+  "nodes": [
+    {
+      "id": "user",
+      "label": "Desktop user",
+      "sub": "Noctalia Shell",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "qml",
+      "label": "QML assistant panel",
+      "sub": "chat · settings · sessions",
+      "tag": "web",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "bridge",
+      "label": "Python bridge",
+      "sub": "local Unix socket",
+      "tag": "processing",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "pi",
+      "label": "Pi RPC process",
+      "sub": "models · auth · agent loop",
+      "tag": "backend",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "workspace",
+      "label": "Workspace",
+      "sub": "~/Build or home",
+      "tag": "output",
+      "column": 4,
+      "row": 0
+    },
+    {
+      "id": "tools",
+      "label": "Tool policy",
+      "sub": "off · read-only · full",
+      "tag": "state",
+      "column": 3,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "user",
+      "to": "qml",
+      "accent": true
+    },
+    {
+      "from": "qml",
+      "to": "bridge"
+    },
+    {
+      "from": "bridge",
+      "to": "pi",
+      "accent": true
+    },
+    {
+      "from": "pi",
+      "to": "workspace"
+    },
+    {
+      "from": "pi",
+      "to": "tools"
+    }
+  ]
+}

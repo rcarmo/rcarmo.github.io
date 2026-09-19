@@ -1,0 +1,14 @@
+{
+  "title": "DNS → mDNS bridge for .local hostnames over Tailscale",
+  "nodes": [
+    { "id": "client",  "label": "DNS client",       "sub": "Tailscale / resolver",   "tag": "input",    "column": 0, "row": 0 },
+    { "id": "bridge",  "label": "mdnsbridge",        "sub": "Go DNS server",          "tag": "backend",  "column": 1, "row": 0 },
+    { "id": "avahi",   "label": "avahi-resolve",      "sub": "mDNS / Bonjour",         "tag": "external", "column": 2, "row": 0 },
+    { "id": "host",    "label": ".local host",        "sub": "resolved address",       "tag": "output",   "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "client", "to": "bridge", "label": "DNS", "accent": true },
+    { "from": "bridge", "to": "avahi",  "label": "mDNS" },
+    { "from": "avahi",  "to": "host" }
+  ]
+}

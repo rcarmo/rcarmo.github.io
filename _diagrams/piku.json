@@ -1,0 +1,99 @@
+{
+  "nodes": [
+    {
+      "id": "developer",
+      "label": "Developer",
+      "sub": "git push",
+      "column": 0,
+      "row": 0,
+      "tag": "input"
+    },
+    {
+      "id": "piku-hook",
+      "label": "piku hook",
+      "sub": "post-receive",
+      "column": 1,
+      "row": 0,
+      "tag": "scripting"
+    },
+    {
+      "id": "uwsgi",
+      "label": "uwsgi",
+      "sub": "process manager",
+      "column": 2,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "nginx",
+      "label": "nginx",
+      "sub": "reverse proxy",
+      "column": 2,
+      "row": 1,
+      "tag": "backend"
+    },
+    {
+      "id": "env-deps",
+      "label": "env + deps",
+      "sub": "virtualenv / buildpacks",
+      "column": 2,
+      "row": 2,
+      "tag": "web"
+    },
+    {
+      "id": "workers",
+      "label": "Workers",
+      "sub": "Procfile",
+      "column": 3,
+      "row": 0,
+      "tag": "output"
+    },
+    {
+      "id": "tls-vhosts",
+      "label": "TLS + vhosts",
+      "sub": "Let's Encrypt",
+      "column": 3,
+      "row": 1,
+      "tag": "state"
+    },
+    {
+      "id": "any-language",
+      "label": "Any language",
+      "sub": "Python / Node / Go",
+      "column": 3,
+      "row": 2,
+      "tag": "backend"
+    }
+  ],
+  "edges": [
+    {
+      "from": "developer",
+      "to": "piku-hook"
+    },
+    {
+      "from": "piku-hook",
+      "to": "uwsgi"
+    },
+    {
+      "from": "piku-hook",
+      "to": "nginx"
+    },
+    {
+      "from": "piku-hook",
+      "to": "env-deps"
+    },
+    {
+      "from": "uwsgi",
+      "to": "workers"
+    },
+    {
+      "from": "nginx",
+      "to": "tls-vhosts"
+    },
+    {
+      "from": "env-deps",
+      "to": "any-language"
+    }
+  ],
+  "title": "Any POSIX host \u2014 Raspberry Pi to cloud VM"
+}

@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "id": "go-server",
+      "label": "Go server",
+      "sub": "playlist + ffmpeg",
+      "column": 0,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "udp-multicast",
+      "label": "UDP multicast",
+      "sub": "224.0.0.251",
+      "column": 1,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "screen-1",
+      "label": "Screen 1",
+      "sub": "VLC/ffplay",
+      "column": 2,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "screen-n",
+      "label": "Screen N",
+      "sub": "any receiver",
+      "column": 2,
+      "row": 1,
+      "tag": "state"
+    }
+  ],
+  "edges": [
+    {
+      "from": "go-server",
+      "to": "udp-multicast"
+    },
+    {
+      "from": "udp-multicast",
+      "to": "screen-1"
+    },
+    {
+      "from": "udp-multicast",
+      "to": "screen-n"
+    }
+  ],
+  "title": "HTTP control API"
+}

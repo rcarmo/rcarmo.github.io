@@ -1,0 +1,63 @@
+{
+  "nodes": [
+    {
+      "id": "ai-agent",
+      "label": "AI agent",
+      "sub": "Claude \u00b7 PiClaw",
+      "column": 0,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "mcp-server",
+      "label": "MCP server",
+      "sub": "tool dispatch",
+      "column": 1,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "-word",
+      "label": "\ud83d\udcc4 Word",
+      "sub": "python-docx",
+      "column": 2,
+      "row": 0,
+      "tag": "state"
+    },
+    {
+      "id": "-excel",
+      "label": "\ud83d\udcca Excel",
+      "sub": "openpyxl",
+      "column": 2,
+      "row": 1,
+      "tag": "artifacts"
+    },
+    {
+      "id": "-powerpoint",
+      "label": "\ud83d\udcce PowerPoint",
+      "sub": "python-pptx",
+      "column": 2,
+      "row": 2,
+      "tag": "processing"
+    }
+  ],
+  "edges": [
+    {
+      "from": "ai-agent",
+      "to": "mcp-server"
+    },
+    {
+      "from": "mcp-server",
+      "to": "-word"
+    },
+    {
+      "from": "mcp-server",
+      "to": "-excel"
+    },
+    {
+      "from": "mcp-server",
+      "to": "-powerpoint"
+    }
+  ],
+  "title": "pure Python \u00b7 no Office install \u00b7 OOXML format directly"
+}

@@ -1,0 +1,77 @@
+{
+  "title": "H.264 decode path with trace and validation tools",
+  "nodes": [
+    {
+      "id": "stream",
+      "label": "Annex B stream",
+      "sub": "NAL \u00b7 SPS \u00b7 PPS",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "syntax",
+      "label": "Slice syntax",
+      "sub": "I \u00b7 P \u00b7 B headers",
+      "tag": "processing",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "entropy",
+      "label": "Entropy decode",
+      "sub": "CAVLC \u00b7 partial CABAC",
+      "tag": "processing",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "recon",
+      "label": "Reconstruction",
+      "sub": "predict \u00b7 transform \u00b7 deblock",
+      "tag": "backend",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "frame",
+      "label": "Frame + DPB",
+      "sub": "YUV420 \u00b7 references",
+      "tag": "state",
+      "column": 4,
+      "row": 0
+    },
+    {
+      "id": "tools",
+      "label": "Decode + compare",
+      "sub": "PNG \u00b7 YUV \u00b7 traces \u00b7 PSNR",
+      "tag": "output",
+      "column": 4,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "stream",
+      "to": "syntax",
+      "accent": true
+    },
+    {
+      "from": "syntax",
+      "to": "entropy"
+    },
+    {
+      "from": "entropy",
+      "to": "recon"
+    },
+    {
+      "from": "recon",
+      "to": "frame",
+      "accent": true
+    },
+    {
+      "from": "frame",
+      "to": "tools"
+    }
+  ]
+}
