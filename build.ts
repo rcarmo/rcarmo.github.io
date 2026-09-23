@@ -10,6 +10,7 @@
  */
 import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, rmSync, unlinkSync } from "node:fs";
 import { extname, join } from "node:path";
+import { proseDashes, proseDashesHtml } from "./typography";
 
 // ── Paths ────────────────────────────────────────────────────────────────────
 const ROOT    = import.meta.dir;
@@ -195,7 +196,7 @@ function taglineHtml(raw: string): string {
 
 /** Return plain-text tagline for meta tags / OG cards (strip markdown syntax) */
 function taglinePlain(raw: string): string {
-  return raw.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1');
+  return proseDashes(raw.replace(/\[([^\]]+)\]\([^)]+\)/g, '$1'));
 }
 
 function mimeTypeFor(path: string): string {
@@ -424,12 +425,13 @@ function buildMetaTags(opts: {
   type?: string;
 }): string {
   const type = opts.type || "website";
+  const description = proseDashes(opts.description);
   return [
-    `<meta name="description" content="${esc(opts.description)}">`,
+    `<meta name="description" content="${esc(description)}">`,
     `<meta property="og:type" content="${esc(type)}">`,
     `<meta property="og:site_name" content="rcarmo.github.io">`,
     `<meta property="og:title" content="${esc(opts.title)}">`,
-    `<meta property="og:description" content="${esc(opts.description)}">`,
+    `<meta property="og:description" content="${esc(description)}">`,
     `<meta property="og:url" content="${esc(opts.canonicalUrl)}">`,
     `<meta property="og:image" content="${esc(opts.imageUrl)}">`,
     `<meta property="og:image:type" content="image/png">`,
@@ -438,7 +440,7 @@ function buildMetaTags(opts: {
     `<meta property="og:image:alt" content="${esc(opts.imageAlt)}">`,
     `<meta name="twitter:card" content="summary_large_image">`,
     `<meta name="twitter:title" content="${esc(opts.title)}">`,
-    `<meta name="twitter:description" content="${esc(opts.description)}">`,
+    `<meta name="twitter:description" content="${esc(description)}">`,
     `<meta name="twitter:image" content="${esc(opts.imageUrl)}">`,
     `<meta name="twitter:image:alt" content="${esc(opts.imageAlt)}">`,
   ].join("\n");
@@ -642,10 +644,10 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
             const src = gallerySrc(item.src);
             const poster = gallerySrc(item.src.replace(/\.[^.]+$/, '-poster.jpg'));
             const mediaEl = isSvg
-              ? `<object type="image/svg+xml" data="${esc(src)}" class="gallery-svg" aria-label="${esc(item.title)}"></object>`
+              ? `<object type="image/svg+xml" data="${esc(src)}" class="gallery-svg" aria-label="${esc(proseDashes(item.title))}"></object>`
               : isVideo
-                ? `<video controls playsinline preload="metadata" poster="${esc(poster)}" aria-label="${esc(item.title)}"><source src="${esc(src)}" type="video/${item.src.toLowerCase().endsWith('.webm') ? 'webm' : 'mp4'}"></video>`
-                : `<img src="${esc(src)}" alt="${esc(item.title)}" loading="lazy">`;
+                ? `<video controls playsinline preload="metadata" poster="${esc(poster)}" aria-label="${esc(proseDashes(item.title))}"><source src="${esc(src)}" type="video/${item.src.toLowerCase().endsWith('.webm') ? 'webm' : 'mp4'}"></video>`
+                : `<img src="${esc(src)}" alt="${esc(proseDashes(item.title))}" loading="lazy">`;
             return `
           <figure class="hero-gallery-slide${index === 0 ? ' is-active' : ''}" data-gallery-slide data-fullsrc="${esc(src)}">
             ${mediaEl}
@@ -678,7 +680,7 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
                 ? item.src.replace(/\.[^.]+$/, '-poster.jpg')
                 : item.src;
               return `
-            <button type="button" class="hero-gallery-thumb${index === 0 ? ' is-active' : ''}" data-gallery-thumb aria-label="Show slide ${index + 1}: ${esc(item.title)}">
+            <button type="button" class="hero-gallery-thumb${index === 0 ? ' is-active' : ''}" data-gallery-thumb aria-label="Show slide ${index + 1}: ${esc(proseDashes(item.title))}">
               <img src="${esc(gallerySrc(thumbSrc))}" alt="" loading="lazy">
             </button>`;
             }).join("")}
@@ -707,7 +709,7 @@ function buildProjectPage(project: Project, allProjects: Project[]): string {
     }));
 
   const logoImg = logo
-    ? `<img class="hero-logo" src="${logo}" alt="${esc(fm.tagline || id)} logo">`
+    ? `<img class="hero-logo" src="${logo}" alt="${esc(taglinePlain(fm.tagline || id))} logo">`
     : "";
 
   const statusBadge = fm.status
@@ -1148,7 +1150,7 @@ writeOgCard('scenic-mode', buildOgCardSvg({
 }));
 let built = 0;
 for (const p of projects) {
-  const html = buildProjectPage(p, projects);
+  const html = proseDashesHtml(buildProjectPage(p, projects));
   const projectDir = join(OUT, p.id);
   mkdirSync(projectDir, { recursive: true });
   writeFileSync(join(projectDir, "index.html"), html);
@@ -1157,7 +1159,7 @@ for (const p of projects) {
 }
 
 // Build index
-const indexHtml = buildIndex(projects);
+const indexHtml = proseDashesHtml(buildIndex(projects));
 writeFileSync(join(ROOT, "index.html"), indexHtml);
 console.log(`  ✓ index.html`);
 

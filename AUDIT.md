@@ -87,6 +87,14 @@ Posts are limited to five entries per project and sorted newest-first. Each entr
 
 Findings are review triggers rather than blind substitutions. Legitimate technical nouns and literal phrases may be retained after review. Unicode em-dashes remain valid as the structural separator in Gallery and Posts entries; those sections are deliberately outside the prose scan.
 
+### Rendered typography
+
+Keep `--` in Markdown prose. `build.ts` uses `typography.ts` to display it as an em dash in headings, body text, cards, captions and link labels. Metadata, social-card descriptions and descriptive image labels use the same conversion.
+
+The HTML pass preserves attributes, comments, scripts, styles, code and preformatted blocks, and inline SVG. Command flags, URLs, single hyphens and runs of three or more hyphens are unchanged. Source content is never rewritten.
+
+`bun test typography.test.ts` checks the conversion and builds a small fixture site to verify the different output paths. CI runs these tests alongside the diagram tests.
+
 ### Diagrams
 
 Every diagram must:
