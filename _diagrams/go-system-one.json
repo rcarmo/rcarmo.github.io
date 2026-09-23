@@ -1,0 +1,14 @@
+{
+  "title": "Constrained candidate scoring with Gemma",
+  "nodes": [
+    { "id": "request", "label": "HTTP request", "sub": "State + allowed answers", "tag": "input" },
+    { "id": "candidates", "label": "Candidate tree", "sub": "Validate + tokenise", "tag": "process" },
+    { "id": "scorer", "label": "Gemma scoring", "sub": "CPU/SIMD or NVIDIA PTX", "tag": "backend" },
+    { "id": "answers", "label": "Typed answers", "sub": "Choice, score or P(yes)", "tag": "output" }
+  ],
+  "edges": [
+    { "from": "request", "to": "candidates", "accent": true },
+    { "from": "candidates", "to": "scorer" },
+    { "from": "scorer", "to": "answers", "accent": true }
+  ]
+}
