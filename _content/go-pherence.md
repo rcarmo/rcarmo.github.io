@@ -137,6 +137,7 @@ Some families, including Qwen3-TTS and MiniCPM-V/O, have inspection or preproces
 </svg>
 
 ## Posts
+- [Notes for September 13-20](https://taoofmac.com/space/notes/2026/09/20/1800) — 2026-09-20
 - [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
 - [The Local AI Moat](https://taoofmac.com/space/blog/2026/05/09/2130) — 2026-05-09
 - [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03

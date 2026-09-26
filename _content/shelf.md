@@ -47,6 +47,7 @@ Contacts, Accessibility, Automation and Full Disk Access are requested only for 
 The original Python/PyObjC implementation and py2app build remain available under `legacy/`.
 
 ## Posts
+- [Notes for September 13-20](https://taoofmac.com/space/notes/2026/09/20/1800) — 2026-09-20
 - [The Return of Shelf](https://taoofmac.com/space/blog/2026/07/10/1330) — 2026-07-10
 
 ## Diagram

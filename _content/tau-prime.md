@@ -123,3 +123,6 @@ The Makefile runs tests, builds the source distribution and smoke-tests it throu
 
   <text x="480" y="198" text-anchor="middle" class="sub">Tau Prime package and execution boundaries</text>
 </svg>
+
+## Posts
+- [Notes for September 13-20](https://taoofmac.com/space/notes/2026/09/20/1800) — 2026-09-20
