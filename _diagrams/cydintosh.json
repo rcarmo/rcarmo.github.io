@@ -1,0 +1,19 @@
+{
+  "title": "Macintosh Plus emulation on the ESP32-S3 display board",
+  "nodes": [
+    { "id": "flash", "label": "Flash image", "sub": "bootloader · app · partitions", "tag": "input", "column": 0, "row": 0 },
+    { "id": "profile", "label": "Board profile", "sub": "LCD · touch · memory · storage", "tag": "processing", "column": 1, "row": 0 },
+    { "id": "rom", "label": "Patched Mac ROM", "sub": "Mac Plus v3", "tag": "state", "column": 2, "row": 0 },
+    { "id": "disk", "label": "LittleFS disk", "sub": "HFS disk.img · read-only", "tag": "state", "column": 2, "row": 1 },
+    { "id": "runtime", "label": "umac + Musashi", "sub": "68000 · 1MB Mac RAM", "tag": "backend", "column": 3, "row": 0 },
+    { "id": "panel", "label": "RGB panel", "sub": "rotated framebuffer · GT911", "tag": "output", "column": 4, "row": 0 }
+  ],
+  "edges": [
+    { "from": "flash", "to": "profile", "accent": true },
+    { "from": "profile", "to": "rom" },
+    { "from": "profile", "to": "disk" },
+    { "from": "rom", "to": "runtime", "accent": true },
+    { "from": "disk", "to": "runtime" },
+    { "from": "runtime", "to": "panel", "accent": true }
+  ]
+}

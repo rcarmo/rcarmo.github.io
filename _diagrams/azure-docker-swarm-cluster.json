@@ -1,0 +1,91 @@
+{
+  "nodes": [
+    {
+      "id": "arm-template",
+      "label": "ARM template",
+      "sub": "cluster.json",
+      "column": 0,
+      "row": 0,
+      "tag": "infra"
+    },
+    {
+      "id": "shared-storage",
+      "label": "Shared storage",
+      "sub": "Storage account + Azure Files",
+      "column": 1,
+      "row": 0,
+      "tag": "output"
+    },
+    {
+      "id": "masters",
+      "label": "Masters",
+      "sub": "availability set + NIC/PIP/NSG",
+      "column": 1,
+      "row": 1,
+      "tag": "web"
+    },
+    {
+      "id": "workers",
+      "label": "Workers",
+      "sub": "VM scale set + autoscale",
+      "column": 1,
+      "row": 2,
+      "tag": "processing"
+    },
+    {
+      "id": "network-edge",
+      "label": "Network edge",
+      "sub": "VNet + public LB + inbound NAT",
+      "column": 2,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "cloud-init-helpers",
+      "label": "Cloud-init helpers",
+      "sub": "swarm init / join / leave",
+      "column": 2,
+      "row": 1,
+      "tag": "infra"
+    },
+    {
+      "id": "swarm-cluster",
+      "label": "Swarm cluster",
+      "sub": "masters + agents",
+      "column": 3,
+      "row": 0,
+      "tag": "infra"
+    }
+  ],
+  "edges": [
+    {
+      "from": "arm-template",
+      "to": "shared-storage"
+    },
+    {
+      "from": "arm-template",
+      "to": "masters"
+    },
+    {
+      "from": "arm-template",
+      "to": "workers"
+    },
+    {
+      "from": "masters",
+      "to": "network-edge"
+    },
+    {
+      "from": "workers",
+      "to": "cloud-init-helpers"
+    },
+    {
+      "from": "network-edge",
+      "to": "swarm-cluster"
+    },
+    {
+      "from": "cloud-init-helpers",
+      "to": "swarm-cluster"
+    }
+  ],
+  "title": "actual ARM layout: storage, masters, worker VMSS, load balancer, autoscale, and cloud-init bootstrap scripts"
+}

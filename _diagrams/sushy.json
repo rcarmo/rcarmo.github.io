@@ -1,0 +1,82 @@
+{
+  "title": "Filesystem content with rebuildable SQLite search state",
+  "nodes": [
+    {
+      "id": "content",
+      "label": "Content tree",
+      "sub": "pages \u00b7 front matter \u00b7 assets",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "index",
+      "label": "Indexer",
+      "sub": "content indexing",
+      "tag": "processing",
+      "column": 1,
+      "row": 1
+    },
+    {
+      "id": "sqlite",
+      "label": "SQLite FTS",
+      "sub": "search \u00b7 aliases \u00b7 links",
+      "tag": "state",
+      "column": 2,
+      "row": 1
+    },
+    {
+      "id": "render",
+      "label": "Renderer",
+      "sub": "front matter \u00b7 markup \u00b7 theme",
+      "tag": "backend",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "http",
+      "label": "HTTP server",
+      "sub": "pages \u00b7 feeds \u00b7 sitemap",
+      "tag": "web",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "client",
+      "label": "Browser / reader",
+      "sub": "HTML \u00b7 Atom \u00b7 OpenSearch",
+      "tag": "output",
+      "column": 4,
+      "row": 0
+    }
+  ],
+  "edges": [
+    {
+      "from": "content",
+      "to": "render",
+      "accent": true
+    },
+    {
+      "from": "content",
+      "to": "index"
+    },
+    {
+      "from": "index",
+      "to": "sqlite"
+    },
+    {
+      "from": "render",
+      "to": "http",
+      "accent": true
+    },
+    {
+      "from": "sqlite",
+      "to": "http"
+    },
+    {
+      "from": "http",
+      "to": "client",
+      "accent": true
+    }
+  ]
+}

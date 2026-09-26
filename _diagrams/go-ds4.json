@@ -1,0 +1,25 @@
+{
+  "title": "DeepSeek V4 Flash inference — pure Go, AVX2 + CUDA PTX",
+  "nodes": [
+    { "id": "model",    "label": "Safetensors weights", "sub": "128 GB Q2 via mmap",       "tag": "input",      "column": 0, "row": 0 },
+    { "id": "engine",   "label": "Inference engine",     "sub": "43-layer pipeline",        "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "attn",  "label": "MLA Attention", "sub": "LoRA + KV cache",  "tag": "processing" },
+        { "id": "moe",   "label": "MoE FFN",       "sub": "256 experts top-6", "tag": "processing" },
+        { "id": "hc",    "label": "Hyper-conn",     "sub": "4-stream mixing",   "tag": "processing" }
+      ]
+    },
+    { "id": "compute",  "label": "Compute backends",    "sub": "",                         "tag": "backend",    "column": 2, "row": 0,
+      "children": [
+        { "id": "avx",   "label": "AVX2/NEON",  "sub": "SIMD GEMM",    "tag": "processing" },
+        { "id": "cuda",  "label": "CUDA PTX",    "sub": "GPU kernels",   "tag": "infra" }
+      ]
+    },
+    { "id": "api",      "label": "OpenAI API",           "sub": "/v1/chat/completions",     "tag": "output",     "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "model",   "to": "engine",  "label": "mmap", "accent": true },
+    { "from": "engine",  "to": "compute" },
+    { "from": "compute", "to": "api",     "accent": true }
+  ]
+}

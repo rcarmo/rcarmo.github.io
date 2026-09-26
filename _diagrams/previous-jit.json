@@ -1,0 +1,27 @@
+{
+  "nodes": [
+    {
+      "id": "previous-core",
+      "label": "Previous core",
+      "sub": "68030 / 68040",
+      "column": 0,
+      "row": 0,
+      "tag": "state"
+    },
+    {
+      "id": "arm64-host",
+      "label": "ARM64 Host",
+      "sub": "Orange Pi",
+      "column": 1,
+      "row": 0,
+      "tag": "infra"
+    }
+  ],
+  "edges": [
+    {
+      "from": "previous-core",
+      "to": "arm64-host"
+    }
+  ],
+  "title": "macemu-jit"
+}

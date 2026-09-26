@@ -1,0 +1,14 @@
+{
+  "title": "Browser-based Remote Desktop client via Go + WASM",
+  "nodes": [
+    { "id": "browser",  "label": "Browser",         "sub": "xterm.js + canvas",        "tag": "web",       "column": 0, "row": 0 },
+    { "id": "server",   "label": "Go proxy",         "sub": "WebSocket gateway",        "tag": "backend",   "column": 1, "row": 0 },
+    { "id": "rdp",      "label": "RDP protocol",     "sub": "WASM decoder",             "tag": "processing","column": 2, "row": 0 },
+    { "id": "target",   "label": "Windows host",     "sub": "RDP 3389",                 "tag": "external",  "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "browser", "to": "server",  "label": "WS", "accent": true },
+    { "from": "server",  "to": "rdp" },
+    { "from": "rdp",     "to": "target",  "label": "RDP" }
+  ]
+}

@@ -1,0 +1,21 @@
+{
+  "title": "Web terminal server — tile N agent sessions in one browser tab",
+  "nodes": [
+    { "id": "docker",   "label": "Docker discovery",   "sub": "container labels",          "tag": "infra",      "column": 0, "row": 1 },
+    { "id": "browser",  "label": "Browser",             "sub": "WASM xterm · mobile keybar","tag": "web",       "column": 0, "row": 0 },
+    { "id": "server",   "label": "Go HTTP server",      "sub": "WebSocket multiplexer",     "tag": "backend",   "column": 1, "row": 0 },
+    { "id": "dash",     "label": "Dashboard mode",      "sub": "live tile previews",        "tag": "web",        "column": 2, "row": 0,
+      "children": [
+        { "id": "gote",  "label": "go-te",       "sub": "VT100 state",   "tag": "processing" },
+        { "id": "tiles", "label": "Tile render",  "sub": "N sessions",    "tag": "web" }
+      ]
+    },
+    { "id": "pty",      "label": "PTY sessions",        "sub": "bash / agent shells",       "tag": "processing", "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "browser", "to": "server",  "label": "WS", "accent": true },
+    { "from": "docker",  "to": "server" },
+    { "from": "server",  "to": "dash" },
+    { "from": "dash",    "to": "pty",     "accent": true }
+  ]
+}

@@ -1,0 +1,16 @@
+{
+  "title": "Single-binary OpenTelemetry Collector with SQLite + web visualizer",
+  "nodes": [
+    { "id": "sources",  "label": "OTLP sources",      "sub": "traces · metrics",         "tag": "input",      "column": 0, "row": 0 },
+    { "id": "collector","label": "OTel Collector",      "sub": "gRPC + HTTP receiver",     "tag": "backend",    "column": 1, "row": 0 },
+    { "id": "sqlite",   "label": "SQLite",              "sub": "spans · metrics store",    "tag": "state",      "column": 2, "row": 0 },
+    { "id": "web",      "label": "Web visualizer",      "sub": "trace explorer UI",        "tag": "web",        "column": 3, "row": 0 },
+    { "id": "export",   "label": "Exporters",           "sub": "OTLP · stdout · file",     "tag": "output",     "column": 2, "row": 1 }
+  ],
+  "edges": [
+    { "from": "sources",   "to": "collector", "label": "OTLP", "accent": true },
+    { "from": "collector", "to": "sqlite" },
+    { "from": "collector", "to": "export" },
+    { "from": "sqlite",    "to": "web",       "accent": true }
+  ]
+}

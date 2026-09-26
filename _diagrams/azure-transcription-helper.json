@@ -1,0 +1,63 @@
+{
+  "nodes": [
+    {
+      "id": "media-file",
+      "label": "Media file",
+      "sub": "MP4 / MOV / MP3 / MKV",
+      "column": 0,
+      "row": 0,
+      "tag": "output"
+    },
+    {
+      "id": "ffmpeg",
+      "label": "ffmpeg",
+      "sub": "extract 16 kHz mono WAV",
+      "column": 1,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "azure-speech",
+      "label": "Azure Speech",
+      "sub": "batch transcription",
+      "column": 2,
+      "row": 0,
+      "tag": "infra"
+    },
+    {
+      "id": "transcript",
+      "label": "Transcript data",
+      "sub": "normalised JSON",
+      "column": 3,
+      "row": 0,
+      "tag": "scripting"
+    },
+    {
+      "id": "subtitles",
+      "label": "Subtitles",
+      "sub": "optional WebVTT",
+      "column": 3,
+      "row": 1,
+      "tag": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "media-file",
+      "to": "ffmpeg"
+    },
+    {
+      "from": "ffmpeg",
+      "to": "azure-speech"
+    },
+    {
+      "from": "azure-speech",
+      "to": "transcript"
+    },
+    {
+      "from": "azure-speech",
+      "to": "subtitles"
+    }
+  ],
+  "title": "batch transcription returns speaker-attributed JSON and optional WebVTT"
+}
