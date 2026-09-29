@@ -1,0 +1,18 @@
+{
+  "title": "Declarative VM provisioning — cloud-init alternative for bare metal",
+  "nodes": [
+    { "id": "config",     "label": "YAML config",       "sub": "steps · packages · files", "tag": "input",      "column": 0, "row": 0 },
+    { "id": "provisioner","label": "Provisioner",        "sub": "Python orchestrator",      "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "net",    "label": "Network",     "sub": "interfaces",   "tag": "infra" },
+        { "id": "pkg",    "label": "Packages",    "sub": "apt / pip",    "tag": "infra" },
+        { "id": "files",  "label": "Files",        "sub": "templates",    "tag": "artifacts" }
+      ]
+    },
+    { "id": "vm",         "label": "Target VM",          "sub": "SSH / local exec",         "tag": "infra",      "column": 2, "row": 0 }
+  ],
+  "edges": [
+    { "from": "config",      "to": "provisioner", "accent": true },
+    { "from": "provisioner", "to": "vm" }
+  ]
+}

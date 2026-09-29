@@ -1,0 +1,29 @@
+{
+  "title": "Shared loaders and kernels for local model inference",
+  "nodes": [
+    { "id": "weights",   "label": "Model weights",      "sub": "safetensors / GGUF",  "tag": "input",      "column": 0, "row": 0 },
+    { "id": "dag",       "label": "Model execution",    "sub": "model-specific graphs",   "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "pattern", "label": "Model code", "sub": "layers / loops", "tag": "processing" },
+        { "id": "fuse",    "label": "Shared state",      "sub": "tensor / KV",  "tag": "processing" }
+      ]
+    },
+    { "id": "backends",  "label": "Compute backends",   "sub": "",                         "tag": "backend",    "column": 2, "row": 0,
+      "children": [
+        { "id": "simd",  "label": "CPU kernels",  "sub": "Go + assembly",  "tag": "processing" },
+        { "id": "gpu",   "label": "NVIDIA",  "sub": "driver / PTX",  "tag": "infra" }
+      ]
+    },
+    { "id": "models",    "label": "Inference tools",    "sub": "",                         "tag": "output",     "column": 3, "row": 0,
+      "children": [
+        { "id": "llama", "label": "Text",    "sub": "LLMs / vectors",     "tag": "output" },
+        { "id": "bert",  "label": "Speech",      "sub": "text / speakers",     "tag": "output" }
+      ]
+    }
+  ],
+  "edges": [
+    { "from": "weights",  "to": "dag",      "accent": true },
+    { "from": "dag",      "to": "backends" },
+    { "from": "backends", "to": "models",   "accent": true }
+  ]
+}

@@ -1,0 +1,19 @@
+{
+  "title": "Zero-dependency Python MCP framework — convention over decoration",
+  "nodes": [
+    { "id": "code",      "label": "Your Python code",   "sub": "tool_* / prompt_* methods", "tag": "input",      "column": 0, "row": 0 },
+    { "id": "server",    "label": "MCPServer",            "sub": "introspect + JSON Schema",  "tag": "backend",    "column": 1, "row": 0,
+      "children": [
+        { "id": "disc",   "label": "Discovery",    "sub": "auto naming",    "tag": "processing" },
+        { "id": "schema", "label": "Schema gen",    "sub": "type hints",     "tag": "processing" }
+      ]
+    },
+    { "id": "transport", "label": "Transport",           "sub": "stdio · SSE · TCP",         "tag": "backend",    "column": 2, "row": 0 },
+    { "id": "client",   "label": "MCP client",           "sub": "Claude · Copilot · Pi",     "tag": "external",   "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "code",      "to": "server",    "accent": true },
+    { "from": "server",    "to": "transport", "label": "JSON-RPC" },
+    { "from": "transport", "to": "client",    "accent": true }
+  ]
+}

@@ -1,0 +1,91 @@
+{
+  "title": "go-joker — five execution tiers selected per expression",
+  "nodes": [
+    {
+      "id": "source",
+      "label": "Clojure Source",
+      "sub": ".joke scripts",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "parser",
+      "label": "Reader + Parser",
+      "sub": "AST · TCO rewrite",
+      "tag": "processing",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "compiler",
+      "label": "IR Compiler",
+      "sub": "45+ opcodes",
+      "tag": "processing",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "native",
+      "label": "Native integer",
+      "sub": "fib(35) · 0.5s",
+      "tag": "backend",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "wasm",
+      "label": "WASM / wazero",
+      "sub": "numeric loop JIT",
+      "tag": "backend",
+      "column": 3,
+      "row": 1
+    },
+    {
+      "id": "typed",
+      "label": "Typed IR",
+      "sub": "primitive loops",
+      "tag": "backend",
+      "column": 3,
+      "row": 2
+    },
+    {
+      "id": "boxed",
+      "label": "Boxed IR",
+      "sub": "collections · transients",
+      "tag": "state",
+      "column": 3,
+      "row": 3
+    },
+    {
+      "id": "tree",
+      "label": "Tree-walker",
+      "sub": "full semantics",
+      "tag": "infra",
+      "column": 3,
+      "row": 4
+    },
+    {
+      "id": "output",
+      "label": "Result",
+      "sub": "Object value",
+      "tag": "output",
+      "column": 4,
+      "row": 2
+    }
+  ],
+  "edges": [
+    { "from": "source", "to": "parser" },
+    { "from": "parser", "to": "compiler" },
+    { "from": "compiler", "to": "native" },
+    { "from": "compiler", "to": "wasm" },
+    { "from": "compiler", "to": "typed" },
+    { "from": "compiler", "to": "boxed" },
+    { "from": "compiler", "to": "tree", "label": "fallback" },
+    { "from": "native", "to": "output" },
+    { "from": "wasm", "to": "output" },
+    { "from": "typed", "to": "output" },
+    { "from": "boxed", "to": "output" },
+    { "from": "tree", "to": "output" }
+  ]
+}

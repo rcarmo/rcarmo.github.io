@@ -1,0 +1,53 @@
+{
+  "nodes": [
+    {
+      "id": "host",
+      "label": "Host",
+      "sub": "make sdcard",
+      "column": 0,
+      "row": 0,
+      "tag": "output"
+    },
+    {
+      "id": "qemu-9front",
+      "label": "QEMU 9front",
+      "sub": "\u2192 9a733.u",
+      "column": 1,
+      "row": 0,
+      "tag": "web"
+    },
+    {
+      "id": "sd-card-image",
+      "label": "SD Card Image",
+      "sub": "+ boot.scr",
+      "column": 2,
+      "row": 0,
+      "tag": "output"
+    },
+    {
+      "id": "4-pro",
+      "label": "4 Pro",
+      "sub": "9front kernel",
+      "column": 3,
+      "row": 0,
+      "tag": "backend"
+    }
+  ],
+  "edges": [
+    {
+      "from": "host",
+      "to": "qemu-9front",
+      "label": "QEMU"
+    },
+    {
+      "from": "qemu-9front",
+      "to": "sd-card-image"
+    },
+    {
+      "from": "sd-card-image",
+      "to": "4-pro",
+      "label": "flash"
+    }
+  ],
+  "title": "dd \u2192"
+}

@@ -1,0 +1,18 @@
+{
+  "title": "Totem keymap build and live Studio editing",
+  "nodes": [
+    { "id": "keymap", "label": "User keymap", "sub": "Base · Sym · Nav · Adjust", "tag": "input", "column": 0, "row": 0 },
+    { "id": "matrix", "label": "Build matrix", "sub": "left · right · settings reset", "tag": "processing", "column": 1, "row": 0 },
+    { "id": "ci", "label": "GitHub Actions", "sub": "ZMK firmware build", "tag": "backend", "column": 2, "row": 0 },
+    { "id": "firmware", "label": "UF2 firmware", "sub": "XIAO BLE halves", "tag": "output", "column": 3, "row": 0 },
+    { "id": "studio", "label": "ZMK Studio", "sub": "USB RPC · locked", "tag": "web", "column": 2, "row": 1 },
+    { "id": "runtime", "label": "Live keymap", "sub": "layer edits without reflashing", "tag": "state", "column": 3, "row": 1 }
+  ],
+  "edges": [
+    { "from": "keymap", "to": "matrix", "accent": true },
+    { "from": "matrix", "to": "ci" },
+    { "from": "ci", "to": "firmware", "accent": true },
+    { "from": "firmware", "to": "runtime" },
+    { "from": "studio", "to": "runtime", "accent": true }
+  ]
+}

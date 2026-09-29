@@ -1,0 +1,14 @@
+{
+  "title": "Trigger Syncthing rescan on file changes — inotify / fswatch",
+  "nodes": [
+    { "id": "fs",       "label": "Filesystem events",  "sub": "inotify / fswatch",        "tag": "input",      "column": 0, "row": 0 },
+    { "id": "kicker",   "label": "Kicker",               "sub": "debounce + filter",        "tag": "processing", "column": 1, "row": 0 },
+    { "id": "api",      "label": "Syncthing API",        "sub": "POST /rest/db/scan",       "tag": "backend",    "column": 2, "row": 0 },
+    { "id": "sync",     "label": "Sync",                  "sub": "immediate propagation",    "tag": "output",     "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "fs",     "to": "kicker", "accent": true },
+    { "from": "kicker", "to": "api" },
+    { "from": "api",    "to": "sync",   "accent": true }
+  ]
+}

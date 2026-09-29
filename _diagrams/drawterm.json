@@ -1,0 +1,51 @@
+{
+  "nodes": [
+    {
+      "id": "plan-9",
+      "label": "Plan 9",
+      "sub": "cpu server",
+      "column": 0,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "drawterm",
+      "label": "drawterm",
+      "sub": "macOS arm64",
+      "column": 1,
+      "row": 0,
+      "tag": "infra"
+    },
+    {
+      "id": "metal-gpu",
+      "label": "Metal GPU",
+      "sub": "HiDPI render",
+      "column": 2,
+      "row": 0,
+      "tag": "artifacts"
+    },
+    {
+      "id": "cocoa-ui",
+      "label": "Cocoa UI",
+      "sub": "keyboard/mouse",
+      "column": 2,
+      "row": 1,
+      "tag": "web"
+    }
+  ],
+  "edges": [
+    {
+      "from": "plan-9",
+      "to": "drawterm"
+    },
+    {
+      "from": "drawterm",
+      "to": "metal-gpu"
+    },
+    {
+      "from": "drawterm",
+      "to": "cocoa-ui"
+    }
+  ],
+  "title": ""
+}

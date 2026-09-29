@@ -1,0 +1,78 @@
+{
+  "title": "Tau Prime package and execution boundaries",
+  "nodes": [
+    {
+      "id": "tui",
+      "label": "tau_coding",
+      "sub": "CLI · Textual TUI · sessions",
+      "tag": "web",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "agent",
+      "label": "tau_agent",
+      "sub": "AgentHarness · tools · messages",
+      "tag": "processing",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "ai",
+      "label": "tau_ai",
+      "sub": "providers · common events",
+      "tag": "backend",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "providers",
+      "label": "Model providers",
+      "sub": "Copilot · LM Studio · APIs",
+      "tag": "external",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "shell",
+      "label": "Execution boundary",
+      "sub": "a-Shell sh · macOS sandbox",
+      "tag": "state",
+      "column": 1,
+      "row": 1
+    },
+    {
+      "id": "workspace",
+      "label": "Project workspace",
+      "sub": "files · commands · tests",
+      "tag": "output",
+      "column": 2,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "tui",
+      "to": "agent",
+      "accent": true
+    },
+    {
+      "from": "agent",
+      "to": "ai"
+    },
+    {
+      "from": "ai",
+      "to": "providers",
+      "accent": true
+    },
+    {
+      "from": "agent",
+      "to": "shell"
+    },
+    {
+      "from": "shell",
+      "to": "workspace",
+      "accent": true
+    }
+  ]
+}

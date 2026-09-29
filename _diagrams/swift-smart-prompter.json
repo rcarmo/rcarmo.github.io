@@ -1,0 +1,59 @@
+{
+  "title": "On-device call transcription and meeting prompts",
+  "nodes": [
+    {
+      "id": "audio",
+      "label": "Call audio",
+      "subtitle": "ScreenCaptureKit",
+      "tag": "input",
+      "children": [
+        {
+          "id": "mic",
+          "label": "Microphone",
+          "subtitle": "You",
+          "tag": "neutral"
+        },
+        {
+          "id": "system",
+          "label": "System audio",
+          "subtitle": "Call",
+          "tag": "neutral"
+        }
+      ]
+    },
+    {
+      "id": "speech",
+      "label": "Speech recognition",
+      "subtitle": "On-device transcript",
+      "tag": "process"
+    },
+    {
+      "id": "coverage",
+      "label": "Talking points",
+      "subtitle": "Coverage and manual checks",
+      "tag": "process"
+    },
+    {
+      "id": "cue",
+      "label": "Floating cue",
+      "subtitle": "Next point or AI coaching",
+      "tag": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "audio",
+      "to": "speech",
+      "accent": true
+    },
+    {
+      "from": "speech",
+      "to": "coverage",
+      "accent": true
+    },
+    {
+      "from": "coverage",
+      "to": "cue"
+    }
+  ]
+}

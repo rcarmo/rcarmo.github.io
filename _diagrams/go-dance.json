@@ -1,0 +1,14 @@
+{
+  "title": "Local-first private CA with web enrollment UI",
+  "nodes": [
+    { "id": "browser",  "label": "Browser",         "sub": "enrollment page",          "tag": "web",       "column": 0, "row": 0 },
+    { "id": "server",   "label": "Go HTTP server",   "sub": "embedded step-ca",         "tag": "backend",   "column": 1, "row": 0 },
+    { "id": "ca",       "label": "Private CA",        "sub": "root + intermediate",      "tag": "state",     "column": 2, "row": 0 },
+    { "id": "certs",    "label": "Certificates",      "sub": "TLS · mTLS · ACME",        "tag": "output",    "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "browser", "to": "server",  "label": "HTTPS", "accent": true },
+    { "from": "server",  "to": "ca" },
+    { "from": "ca",      "to": "certs" }
+  ]
+}

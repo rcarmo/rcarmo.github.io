@@ -1,0 +1,55 @@
+{
+  "nodes": [
+    {
+      "id": "proxmox-ve",
+      "label": "Proxmox VE",
+      "sub": "cron job",
+      "column": 0,
+      "row": 0,
+      "tag": "state"
+    },
+    {
+      "id": "zpool-status",
+      "label": "zpool status",
+      "sub": "parse output",
+      "column": 1,
+      "row": 0,
+      "tag": "output"
+    },
+    {
+      "id": "graphite",
+      "label": "Graphite",
+      "sub": "metrics push",
+      "column": 2,
+      "row": 0,
+      "tag": "input"
+    },
+    {
+      "id": "grafana",
+      "label": "Grafana",
+      "sub": "dashboard",
+      "column": 2,
+      "row": 1,
+      "tag": "web"
+    }
+  ],
+  "edges": [
+    {
+      "from": "proxmox-ve",
+      "to": "zpool-status"
+    },
+    {
+      "from": "zpool-status",
+      "to": "graphite"
+    },
+    {
+      "from": "zpool-status",
+      "to": "grafana"
+    },
+    {
+      "from": "graphite",
+      "to": "grafana"
+    }
+  ],
+  "title": ""
+}

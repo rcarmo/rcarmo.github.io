@@ -1,0 +1,19 @@
+{
+  "title": "Deterministic shard planning with gated local execution",
+  "nodes": [
+    { "id": "user", "label": "CLI / dashboard", "sub": "plan · peers · routes · run", "tag": "input", "column": 0, "row": 0 },
+    { "id": "server", "label": "Go service", "sub": "local HTTP API", "tag": "web", "column": 1, "row": 0 },
+    { "id": "planner", "label": "Placement planner", "sub": "memory-weighted layers", "tag": "processing", "column": 2, "row": 0 },
+    { "id": "sim", "label": "Simulator", "sub": "routes · orchestration checks", "tag": "state", "column": 3, "row": 0 },
+    { "id": "runtime", "label": "Local executor", "sub": "go-pherence · opt-in", "tag": "backend", "column": 3, "row": 1 },
+    { "id": "output", "label": "Preview / result", "sub": "JSON · D3 dashboard", "tag": "output", "column": 4, "row": 0 }
+  ],
+  "edges": [
+    { "from": "user", "to": "server", "accent": true },
+    { "from": "server", "to": "planner" },
+    { "from": "planner", "to": "sim", "accent": true },
+    { "from": "planner", "to": "runtime" },
+    { "from": "sim", "to": "output", "accent": true },
+    { "from": "runtime", "to": "output" }
+  ]
+}

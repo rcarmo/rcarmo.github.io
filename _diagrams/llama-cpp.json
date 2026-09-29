@@ -1,0 +1,19 @@
+{
+  "title": "Measured local inference profiles on constrained hardware",
+  "nodes": [
+    { "id": "client", "label": "Pi client", "sub": "OpenAI-compatible API", "tag": "input", "column": 0, "row": 0 },
+    { "id": "service", "label": "Local provider", "sub": "systemd · 2 KV slots", "tag": "web", "column": 1, "row": 0 },
+    { "id": "models", "label": "GGUF models", "sub": "target · assistant · mmap", "tag": "state", "column": 2, "row": 0 },
+    { "id": "sigma", "label": "Intel CPU path", "sub": "8 pinned threads · AVX-VNNI", "tag": "processing", "column": 3, "row": 0 },
+    { "id": "k3", "label": "SpaceMIT path", "sub": "RVV · IME · TCM", "tag": "processing", "column": 3, "row": 1 },
+    { "id": "result", "label": "Measured response", "sub": "telemetry · promotion gates", "tag": "output", "column": 4, "row": 0 }
+  ],
+  "edges": [
+    { "from": "client", "to": "service", "accent": true },
+    { "from": "service", "to": "models" },
+    { "from": "models", "to": "sigma", "accent": true },
+    { "from": "models", "to": "k3" },
+    { "from": "sigma", "to": "result", "accent": true },
+    { "from": "k3", "to": "result" }
+  ]
+}

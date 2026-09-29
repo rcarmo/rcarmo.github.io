@@ -1,0 +1,83 @@
+{
+  "title": "Canonical Git knowledge, rebuildable search and reviewed writes",
+  "nodes": [
+    {
+      "id": "agents",
+      "label": "MCP clients",
+      "sub": "Piclaw · other agents",
+      "tag": "input",
+      "column": 0,
+      "row": 0
+    },
+    {
+      "id": "mcp",
+      "label": "Memento MCP",
+      "sub": "auth · roles · tools",
+      "tag": "web",
+      "column": 1,
+      "row": 0
+    },
+    {
+      "id": "writes",
+      "label": "Reviewed writes",
+      "sub": "proposal · journal · lease",
+      "tag": "processing",
+      "column": 2,
+      "row": 0
+    },
+    {
+      "id": "reads",
+      "label": "Fine-tuned router",
+      "sub": "bounded read operations",
+      "tag": "processing",
+      "column": 2,
+      "row": 1
+    },
+    {
+      "id": "git",
+      "label": "Git knowledge",
+      "sub": "Markdown · history · LFS",
+      "tag": "output",
+      "column": 3,
+      "row": 0
+    },
+    {
+      "id": "index",
+      "label": "Derived indexes",
+      "sub": "FTS5 · graph · vectors",
+      "tag": "backend",
+      "column": 3,
+      "row": 1
+    }
+  ],
+  "edges": [
+    {
+      "from": "agents",
+      "to": "mcp",
+      "accent": true
+    },
+    {
+      "from": "mcp",
+      "to": "writes"
+    },
+    {
+      "from": "mcp",
+      "to": "reads"
+    },
+    {
+      "from": "writes",
+      "to": "git",
+      "accent": true
+    },
+    {
+      "from": "reads",
+      "to": "index",
+      "accent": true
+    },
+    {
+      "from": "git",
+      "to": "index",
+      "label": "rebuild"
+    }
+  ]
+}

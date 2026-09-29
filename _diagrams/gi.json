@@ -1,0 +1,24 @@
+{
+  "title": "Go coding agent — Piclaw UI + go-ai inference + Clojure/JS scripting",
+  "nodes": [
+    { "id": "config",   "label": "Pi-compatible config","sub": "auth.json · AGENTS.md",          "tag": "state",      "column": 0, "row": 1 },
+    { "id": "ui",       "label": "Piclaw web UI",      "sub": "verbatim TS source",              "tag": "web",        "column": 0, "row": 0 },
+    { "id": "api",      "label": "Gi API layer",       "sub": "REST + SSE + files",              "tag": "backend",    "column": 1, "row": 0 },
+    { "id": "engine",   "label": "Turn engine",        "sub": "append-only · cancel · replay",   "tag": "processing", "column": 1, "row": 1,
+      "children": [
+        { "id": "joker",  "label": "go-joker",  "sub": "Clojure",     "tag": "scripting" },
+        { "id": "goja",   "label": "goja",       "sub": "JavaScript",  "tag": "scripting" },
+        { "id": "sqlite", "label": "SQLite",     "sub": "state store", "tag": "state" }
+      ]
+    },
+    { "id": "goai",     "label": "go-ai",              "sub": "multi-provider inference",        "tag": "external",   "column": 2, "row": 0 },
+    { "id": "models",   "label": "Models",             "sub": "Copilot · OpenAI · Anthropic",   "tag": "external",   "column": 3, "row": 0 }
+  ],
+  "edges": [
+    { "from": "ui",     "to": "api",    "label": "SSE",   "accent": true },
+    { "from": "config", "to": "engine" },
+    { "from": "api",    "to": "engine" },
+    { "from": "engine", "to": "goai",   "accent": true },
+    { "from": "goai",   "to": "models" }
+  ]
+}

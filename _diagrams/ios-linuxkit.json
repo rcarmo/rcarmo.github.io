@@ -1,0 +1,21 @@
+{
+  "title": "iOS Linux runtime — ARM64 interpreter + Alpine userland",
+  "nodes": [
+    { "id": "ios",       "label": "iOS app",            "sub": "App Store compatible",      "tag": "web",        "column": 0, "row": 0 },
+    { "id": "interp",   "label": "Asbestos interpreter","sub": "threaded-code ARM64",       "tag": "processing", "column": 1, "row": 0,
+      "children": [
+        { "id": "syscall", "label": "Syscall layer", "sub": "signals · futex", "tag": "processing" },
+        { "id": "addr",    "label": "48-bit VM",      "sub": "large runtimes",        "tag": "state" }
+      ]
+    },
+    { "id": "alpine",   "label": "Alpine Linux",        "sub": "apk + userland",            "tag": "infra",      "column": 2, "row": 0 },
+    { "id": "runtimes", "label": "Developer runtimes",  "sub": "Go · Rust · Node · Python", "tag": "output",     "column": 3, "row": 0 },
+    { "id": "agents",   "label": "Agent CLIs",          "sub": "Claude · Codex · Pi",       "tag": "external",   "column": 3, "row": 1 }
+  ],
+  "edges": [
+    { "from": "ios",     "to": "interp",   "accent": true },
+    { "from": "interp",  "to": "alpine" },
+    { "from": "alpine",  "to": "runtimes", "label": "apk", "accent": true },
+    { "from": "alpine",  "to": "agents" }
+  ]
+}

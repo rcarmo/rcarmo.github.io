@@ -1,0 +1,55 @@
+{
+  "nodes": [
+    {
+      "id": "homekit",
+      "label": "HomeKit",
+      "sub": "virtual switch",
+      "column": 0,
+      "row": 0,
+      "tag": "state"
+    },
+    {
+      "id": "hap-server",
+      "label": "HAP server",
+      "sub": "Python HAP-python",
+      "column": 1,
+      "row": 0,
+      "tag": "backend"
+    },
+    {
+      "id": "steam-config",
+      "label": "Steam config",
+      "sub": "loginusers.vdf",
+      "column": 1,
+      "row": 1,
+      "tag": "state"
+    },
+    {
+      "id": "active-user",
+      "label": "Active user",
+      "sub": "registry write",
+      "column": 2,
+      "row": 0,
+      "tag": "state"
+    }
+  ],
+  "edges": [
+    {
+      "from": "homekit",
+      "to": "hap-server"
+    },
+    {
+      "from": "hap-server",
+      "to": "steam-config"
+    },
+    {
+      "from": "steam-config",
+      "to": "active-user"
+    },
+    {
+      "from": "hap-server",
+      "to": "active-user"
+    }
+  ],
+  "title": ""
+}
