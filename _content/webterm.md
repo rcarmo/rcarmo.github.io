@@ -30,6 +30,9 @@ Uses [ghostty-web](ghostty-web) for browser terminals and [go-te](go-te) for ser
 - [Notes for February 8-15](https://taoofmac.com/space/notes/2026/02/15/1530) — 2026-02-15
 - [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
 
+## Gallery
+- [Webterm demo](assets/screenshots/webterm/webterm-demo.mp4) -- Browser terminal demo
+
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 968 202">
   <style>
