@@ -1,0 +1,14 @@
+{
+  "title": "Self-hosted coding-agent workspaces",
+  "nodes": [
+    { "id": "browser", "label": "Browser workspace", "sub": "Agents, files, Git, Draw.io", "tag": "input" },
+    { "id": "server", "label": "Bun server", "sub": "Modules + live updates", "tag": "process" },
+    { "id": "docker", "label": "Docker host", "sub": "Workspace provisioning", "tag": "backend" },
+    { "id": "workspace", "label": "Agent container", "sub": "Tools + workspace files", "tag": "output" }
+  ],
+  "edges": [
+    { "from": "browser", "to": "server", "accent": true },
+    { "from": "server", "to": "docker" },
+    { "from": "docker", "to": "workspace", "accent": true }
+  ]
+}
