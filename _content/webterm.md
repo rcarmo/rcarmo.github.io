@@ -26,6 +26,7 @@ Sticky Esc/Ctrl/Shift/Tab/arrows with sticky combos.
 Uses [ghostty-web](ghostty-web) for browser terminals and [go-te](go-te) for server-side previews.
 
 ## Posts
+- [We Need To Start Seeing Other Agents](https://taoofmac.com/space/blog/2026/10/10/1200) — 2026-10-10
 - [Building Piclaw on Top of an Opinionated Coding Agent](https://taoofmac.com/space/blog/2026/08/21/2218) — 2026-08-21
 - [Notes for February 8-15](https://taoofmac.com/space/notes/2026/02/15/1530) — 2026-02-15
 - [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01

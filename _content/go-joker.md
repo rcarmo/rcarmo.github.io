@@ -45,8 +45,9 @@ EDN notebooks combine executable cells with charts, diagrams and images. The loc
 - [Web notebook demo](assets/screenshots/go-joker/notebook-rich-demo.png) — EDN notebook with charts and Mermaid diagrams
 
 ## Posts
+- [We Need To Start Seeing Other Agents](https://taoofmac.com/space/blog/2026/10/10/1200) — 2026-10-10
 - [Not a Joke](https://taoofmac.com/space/blog/2026/09/01/2130) — 2026-09-01
-- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
+- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-10
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" width="1200" height="466" viewBox="0 0 1200 466">

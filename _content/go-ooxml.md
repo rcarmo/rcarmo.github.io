@@ -99,3 +99,6 @@ No CGo, no external dependencies. Builds to a static binary on any Go-supported 
 
   <text x="364" y="174" text-anchor="middle" class="sub">Pure Go OOXML parser — read and write .docx and .xlsx</text>
 </svg>
+
+## Posts
+- [Notes For September 27-October 3](https://taoofmac.com/space/notes/2026/10/03/1840) — 2026-10-03

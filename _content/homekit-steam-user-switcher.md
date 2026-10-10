@@ -23,9 +23,6 @@ Changes Steam's `AutoLoginUser` setting and restarts the client to apply it.
 ### 🐧 Linux user service
 Runs under systemd in the desktop user's session.
 
-## Posts
-- [Notes for December 9-24](https://taoofmac.com/space/notes/2025/12/24/1400) — 2025-12-24
-
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 188">
   <style>

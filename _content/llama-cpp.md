@@ -38,7 +38,7 @@ Adds RVV, IME and TCM paths, quantised-weight repacking, routed-MoE handling and
 Iris Xe Vulkan and SYCL remain experimental: faster individual kernels did not improve end-to-end inference on the Sigma.
 
 ## Posts
-- [My AI Model Tier List for mid-2026](https://taoofmac.com/space/blog/2026/07/11/1500) — 2026-07-17
+- [My AI Model Tier List for mid-2026](https://taoofmac.com/space/blog/2026/07/11/1500) — 2026-07-11
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 202">

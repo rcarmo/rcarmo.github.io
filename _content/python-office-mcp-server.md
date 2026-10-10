@@ -104,4 +104,5 @@ Implements the Model Context Protocol tool interface over stdio, compatible with
 </svg>
 
 ## Posts
-- [Lessons on Building MCP Servers](https://taoofmac.com/space/blog/2026/04/29/2341) — 2026-04-30
+- [Notes For September 27-October 3](https://taoofmac.com/space/notes/2026/10/03/1840) — 2026-10-03
+- [Lessons on Building MCP Servers](https://taoofmac.com/space/blog/2026/04/29/2341) — 2026-04-29

@@ -112,3 +112,6 @@ Requires a dedicated Linux server with Docker. The package split and UI are stil
 
   <text x="480" y="110" text-anchor="middle" class="sub">Self-hosted coding-agent workspaces</text>
 </svg>
+
+## Posts
+- [We Need To Start Seeing Other Agents](https://taoofmac.com/space/blog/2026/10/10/1200) — 2026-10-10

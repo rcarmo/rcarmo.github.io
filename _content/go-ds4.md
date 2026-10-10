@@ -36,10 +36,9 @@ Build the CLI with `go build ./cmd/ds4chat`, without a mandatory C/C++ runtime.
 Accesses model weights through memory mapping; inference still needs to read the required pages from storage.
 
 ## Posts
-- [My AI Model Tier List for mid-2026](https://taoofmac.com/space/blog/2026/07/11/1500) — 2026-07-17
-- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
+- [My AI Model Tier List for mid-2026](https://taoofmac.com/space/blog/2026/07/11/1500) — 2026-07-11
+- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-10
 - [The Local AI Moat](https://taoofmac.com/space/blog/2026/05/09/2130) — 2026-05-09
-
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1066 178">

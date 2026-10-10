@@ -58,7 +58,7 @@ No chat transcripts, reminders, credentials, hard delete, arbitrary shell execut
 - [Notes for September 13-20](https://taoofmac.com/space/notes/2026/09/20/1800) — 2026-09-20
 - [Building Piclaw on Top of an Opinionated Coding Agent](https://taoofmac.com/space/blog/2026/08/21/2218) — 2026-08-21
 - [Marked Down](https://taoofmac.com/space/blog/2026/07/21/1840) — 2026-07-21
-- [Notes for July 13-19](https://taoofmac.com/space/notes/2026/07/19/1500) — 2026-07-19
+- [Notes for July 13–19](https://taoofmac.com/space/notes/2026/07/19/1500) — 2026-07-19
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 202">

@@ -35,10 +35,9 @@ Automated tests cover language runtimes and developer tools; support varies by r
 
 ## Posts
 - [Open Minis Is the iOS Agent I Wish Siri AI Could Be](https://taoofmac.com/space/links/2026/07/20/2213) — 2026-07-20
-- [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-19
 - [Apple Papercuts](https://taoofmac.com/space/blog/2026/05/18/1320) — 2026-05-18
 - [Notes for May 10-17](https://taoofmac.com/space/notes/2026/05/17/2120) — 2026-05-17
-
+- [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-16
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 968 202">

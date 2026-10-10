@@ -29,12 +29,11 @@ Native ARM64 JIT backend for emulating PowerPC Macs.
 Writes to the display without an X11 desktop or compositor.
 
 ## Posts
-- [Notes for July 13-19](https://taoofmac.com/space/notes/2026/07/19/1500) — 2026-07-19
-- [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-19
+- [Notes for July 13–19](https://taoofmac.com/space/notes/2026/07/19/1500) — 2026-07-19
 - [Notes for May 10-17](https://taoofmac.com/space/notes/2026/05/17/2120) — 2026-05-17
-- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
+- [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-16
+- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-10
 - [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03
-
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 114">

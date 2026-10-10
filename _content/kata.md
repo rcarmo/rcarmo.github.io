@@ -9,6 +9,8 @@ logo: assets/logos-opt/kata.png
 ## About
 kata is a lightweight deployment wrapper for Docker that sits somewhere between a hand-written `docker-compose.yml` and a full platform. It reads a `kata-compose.yaml`, generates the final `.docker-compose.yaml`, and deploys the app either via Docker Compose or Docker Swarm. The current implementation focuses on simple per-app layouts, predictable directory structure, and optional HTTP routing through Traefik.
 
+Related background: [Go](https://taoofmac.com/space/dev/golang).
+
 ## Motivation
 I wanted something like [`piku`](piku) but to help me manage _only_ Docker containers, and there was nothing out there that was simple enough to read in 30m.
 
@@ -32,9 +34,6 @@ Creates and uses predictable paths for code, data, config, logs, env/runtime sta
 
 ### 🔐 Secrets and deploy helpers
 Includes helper commands for Swarm secrets, Traefik inspection, mode switching, and simple git push deployment hooks.
-
-## Posts
-- [Go (lang)](https://taoofmac.com/space/dev/golang) — 2026-04-25
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 290">
@@ -116,3 +115,6 @@ Includes helper commands for Swarm secrets, Traefik inspection, mode switching, 
 
   <text x="480" y="286" text-anchor="middle" class="sub">optional Traefik routing and deploy hooks sit on top of a predictable per-app Docker layout</text>
 </svg>
+
+## Posts
+- [Notes for December 9-24](https://taoofmac.com/space/notes/2025/12/24/1400) — 2025-12-24

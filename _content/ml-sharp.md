@@ -11,6 +11,8 @@ Forked from [apple/ml-sharp](https://github.com/apple/ml-sharp). Adds Apple Sili
 
 This fork adds an Apple Silicon fallback for the included demo video generator. Feed it a single image and it uses the Sharp monocular-depth network plus a depth-parallax warp to produce a swipe video locally through PyTorch MPS, without an NVIDIA GPU or cloud API.
 
+Related background: [AI image generation](https://taoofmac.com/space/ai/image).
+
 ## How it works
 On macOS, the demo uses Sharp's monocular-depth sub-network and a depth-parallax warp rather than the CUDA rasteriser used by the full 3D Gaussian splatting pipeline. The fork also adds a Gradio interface and can fall back to CPU when MPS is unavailable.
 
@@ -29,9 +31,6 @@ Interactive web UI for uploading an image and previewing depth and synthesised v
 
 ### 📦 pip-installable
 Standard Python package with pinned dependencies -- `pip install -r requirements.txt` and it runs.
-
-## Posts
-- [AI Image Generation](https://taoofmac.com/space/ai/image) — 2026-05-20
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 728 202">

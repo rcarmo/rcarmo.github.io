@@ -12,6 +12,8 @@ tagline: Filesystem-backed wiki and blog engine with SQLite indexing and multipl
 
 The codebase is written largely in Hy and is being brought up to date for current Hy releases. It is a cleaned-up legacy system, not a new publishing platform.
 
+Related background: [Python](https://taoofmac.com/space/dev/python).
+
 ## How it works
 A content tree holds pages and their assets. RFC2822-style front matter carries metadata, while the file extension or an explicit content type selects the renderer for Markdown, Textile, HTML, plain text and legacy ReStructuredText support.
 
@@ -35,9 +37,6 @@ Includes Atom feeds, sitemap, OpenSearch and blog navigation alongside wiki page
 
 ### Deliberate omissions
 No web editor, revision history or comments; site thumbnailing was moved into a separate application.
-
-## Posts
-- [Python](https://taoofmac.com/space/dev/python) — 2026-07-29
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 202">

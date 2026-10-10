@@ -2,7 +2,7 @@
 id: swift-ai
 repo: rcarmo/swift-ai
 section: ai-ml
-status: experimental
+status: maintenance
 created: 2026-07-09
 tagline: SwiftPM port of @earendil-works/pi-ai with typed streaming, tools and a shared multi-provider model catalogue.
 ---
@@ -11,6 +11,8 @@ tagline: SwiftPM port of @earendil-works/pi-ai with typed streaming, tools and a
 `swift-ai` brings the `@earendil-works/pi-ai` API and event model to Swift applications and services. It provides typed streaming, tool calls and a shared model registry, using [`go-ai`](go-ai) as its reference implementation.
 
 The package tracks the `pi-ai` v0.84.0 API. Its generated catalogues include providers whose native transports are not bundled; applications can supply those separately.
+
+Development is paused. The existing port is available, but it is not being updated to follow new Pi releases.
 
 ## How it works
 `SwiftAI.bootstrap()` initialises the actor-backed model and provider registry. A request resolves its model, credentials and provider implementation before passing through a common asynchronous `stream` or `complete` API.
@@ -111,3 +113,6 @@ Bedrock request building and Codex transport surfaces are present, but heavyweig
 
   <text x="600" y="110" text-anchor="middle" class="sub">Provider-neutral LLM streaming API for Swift</text>
 </svg>
+
+## Posts
+- [We Need To Start Seeing Other Agents](https://taoofmac.com/space/blog/2026/10/10/1200) — 2026-10-10

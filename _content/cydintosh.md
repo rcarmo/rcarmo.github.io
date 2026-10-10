@@ -13,6 +13,8 @@ tagline: Macintosh Plus emulator firmware for ESP32 display boards, with reprodu
 
 This fork adds repeatable board profiles, browser-flashable artefacts and hardware bring-up for CYD2USB and the Sunton ESP32-8048S043C. The emulator combines `umac` with the Musashi 68000 core; users supply a Mac Plus ROM v3 and a bootable HFS disk image.
 
+Related background: [Emulation](https://taoofmac.com/space/emulation).
+
 ## How it works
 A board profile selects display, touch, memory and storage settings. The ESP32-S3 profile loads a patched Mac ROM from flash and mounts the guest disk from LittleFS before starting the 68000 runtime.
 
@@ -43,8 +45,7 @@ The validated ESP32-S3 profile mounts its guest disk read-only because the curre
 Wi-Fi setup is skipped when credentials are absent; emulator boot does not depend on network access.
 
 ## Posts
-- [Emulation](https://taoofmac.com/space/emulation) — 2026-07-31
-- [The M5Stack Tab5](https://taoofmac.com/space/reviews/2026/07/18/1920) — 2026-07-20
+- [The M5Stack Tab5](https://taoofmac.com/space/reviews/2026/07/18/1920) — 2026-07-18
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 202">

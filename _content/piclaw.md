@@ -1,7 +1,7 @@
 ---
 section: agents
 featured: true
-status: active
+status: stable
 created: 2026-02-17
 tagline: The Pi coding agent in a technicolor web trenchcoat — [infinite tools](https://rcarmo.github.io/piclaw-addons)
 logo: assets/logos-opt/piclaw.png
@@ -9,6 +9,8 @@ logo: assets/logos-opt/piclaw.png
 
 ## About
 PiClaw stuffs the [Pi Coding Agent](https://pi.dev) runtime into a Docker container, throws on a streaming web UI, and calls it a day. Multi-provider LLM support, an `xterm.js` terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access -- all behind one `docker run` command. More tools come from a growing catalogue of [community add-ons](https://rcarmo.github.io/piclaw-addons), including the optional [Ghostty terminal](ghostty-web), Proxmox, Portainer, SSH, and whatever else someone felt like wiring up.
+
+PiClaw now follows a monthly release cadence, with hotfixes when needed.
 
 ## Motivation
 After creating [`webterm`](webterm) and [`vibes`](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting. But when I stumbled upon [Pi](https://pi.dev) and its extensibility, I knew I had found a great way to explore how to build an extensible web-based IDE that I could access from my iPhone and iPad.
@@ -56,11 +58,11 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
 - [Portainer settings](assets/screenshots/piclaw/00030piclaw.jpeg) — Add-on configuration with keychain integration
 
 ## Posts
+- [We Need To Start Seeing Other Agents](https://taoofmac.com/space/blog/2026/10/10/1200) — 2026-10-10
 - [Notes for September 13-20](https://taoofmac.com/space/notes/2026/09/20/1800) — 2026-09-20
 - [Notes for August 17–23](https://taoofmac.com/space/notes/2026/08/23/1519) — 2026-08-23
 - [Building Piclaw on Top of an Opinionated Coding Agent](https://taoofmac.com/space/blog/2026/08/21/2218) — 2026-08-21
 - [The Chuwi MiniBook X N150, One Year Later](https://taoofmac.com/space/reviews/2026/07/25/1700) — 2026-07-25
-- [Marked Down](https://taoofmac.com/space/blog/2026/07/21/1840) — 2026-07-21
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 276">

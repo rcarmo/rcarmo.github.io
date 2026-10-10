@@ -109,3 +109,6 @@ Static Go binary; Docker-ready.
 
   <text x="360" y="198" text-anchor="middle" class="sub">WebAuthn gate in front of an HTTP service</text>
 </svg>
+
+## Posts
+- [We Need To Start Seeing Other Agents](https://taoofmac.com/space/blog/2026/10/10/1200) — 2026-10-10

@@ -31,7 +31,7 @@ Name a method `tool_<name>` or `prompt_<name>` -- discovery, schema generation, 
 `prompt_*` methods exposed via `prompts/list` and `prompts/get`. Reusable structured interactions for AI assistants.
 
 ## Posts
-- [Lessons on Building MCP Servers](https://taoofmac.com/space/blog/2026/04/29/2341) — 2026-04-30
+- [Lessons on Building MCP Servers](https://taoofmac.com/space/blog/2026/04/29/2341) — 2026-04-29
 - [Notes on SKILL.md vs MCP](https://taoofmac.com/space/notes/2026/01/14/0830) — 2026-01-14
 - [Creating Per-Project MCP Servers](https://taoofmac.com/space/blog/2025/10/04/1111) — 2025-10-04
 

@@ -26,7 +26,6 @@ Command → mod4, pasteboard bridge.
 Host, user, password persist between launches.
 
 ## Posts
-- [Seizing The Means Of Production (Again)](https://taoofmac.com/space/notes/2026/02/01/1940) — 2026-02-01
 - [Notes for December 9-24](https://taoofmac.com/space/notes/2025/12/24/1400) — 2025-12-24
 
 ## Diagram

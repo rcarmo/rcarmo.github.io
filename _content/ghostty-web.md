@@ -26,8 +26,8 @@ An xterm.js-compatible API for integrating terminal views into web applications.
 Used by [webterm](webterm) and ios-linuxkit, with rendering fixes maintained in this fork.
 
 ## Posts
-- [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-19
-- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-11
+- [Announcing ios-linuxkit: Linux on iPad, the Hard Way](https://taoofmac.com/space/blog/2026/05/16/1130) — 2026-05-16
+- [Notes for May 3-10](https://taoofmac.com/space/notes/2026/05/10/1433) — 2026-05-10
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 100">

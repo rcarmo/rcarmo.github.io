@@ -2,7 +2,7 @@
 id: rs-ai
 repo: rcarmo/rs-ai
 section: ai-ml
-status: experimental
+status: maintenance
 created: 2026-06-08
 tagline: Rust port of @earendil-works/pi-ai with a shared streaming event protocol and provider-neutral registry.
 ---
@@ -11,6 +11,8 @@ tagline: Rust port of @earendil-works/pi-ai with a shared streaming event protoc
 `rs-ai` is a Rust port of `@earendil-works/pi-ai`, built around the same model registry, message types and streaming event protocol as the TypeScript original. It targets native Rust applications that need provider switching, tools and streaming without maintaining a separate integration for each API, but it remains an early port rather than full upstream parity.
 
 It tracks the `pi-ai` v0.84.0 API, with Rust-specific transport and cancellation behaviour.
+
+Development is paused. The existing port is available, but it is not being updated to follow new Pi releases.
 
 ## How it works
 The registry resolves a model and provider, reads credentials from the process environment and selects the appropriate compatibility settings. Provider implementations issue HTTP, WebSocket or AWS SDK requests and convert their responses into a shared Rust event stream.
@@ -111,3 +113,6 @@ Model catalogues come from the upstream release. Rust cancels work by dropping t
 
   <text x="600" y="110" text-anchor="middle" class="sub">Provider-neutral LLM streaming API for Rust</text>
 </svg>
+
+## Posts
+- [We Need To Start Seeing Other Agents](https://taoofmac.com/space/blog/2026/10/10/1200) — 2026-10-10

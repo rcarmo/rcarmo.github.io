@@ -32,6 +32,9 @@ ES5.1+ scripting engine for lightweight tool extensions without a Node dependenc
 Reads `AGENTS.md`, operates against a workspace root, and exposes workspace file APIs.
 
 ## Posts
+- [We Need To Start Seeing Other Agents](https://taoofmac.com/space/blog/2026/10/10/1200) — 2026-10-10
+- [The Lenovo Chromebook Plus](https://taoofmac.com/space/reviews/2026/10/04/1800) — 2026-10-04
+- [Notes For September 27-October 3](https://taoofmac.com/space/notes/2026/10/03/1840) — 2026-10-03
 - [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
 
 ## Diagram
