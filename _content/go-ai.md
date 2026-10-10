@@ -2,37 +2,41 @@
 section: ai-ml
 status: experimental
 created: 2026-04-22
-tagline: Unified LLM API for Go — streaming, tool calling, model registry, and multi-provider support.
+tagline: Go port of Pi's AI API -- multi-provider inference, tools, images and a native durable agent runtime.
 logo: assets/logos-opt/go-ai.png
 ---
 
 ## About
-go-ai is a Go port of `@earendil-works/pi-ai`: a unified LLM library that exposes the same high-level `Stream()`/`Complete()` API across multiple providers. It supports streaming deltas, typed tool calling, cross-provider message/context types, automatic model discovery, cost tracking, and provider-specific OAuth flows. It tracks the `pi-ai` v0.84.0 API.
+`go-ai` brings Pi's multi-provider AI API to Go applications. It provides streaming text and reasoning, tool calls, OAuth helpers and image generation, with common message and model types across providers.
+
+The v1.1.0 release follows `pi-ai` and `pi-durable` v1.1.0. Alongside the inference library, it includes a native durable runtime for persisted agent conversations, tasks, tools and recovery.
 
 ## How it works
-At the centre is a registry-driven core: providers register streaming implementations, models enter a global registry, and callers invoke `Stream()` or `Complete()` with a `Context`, `Model` and optional tools. Provider packages translate the common Go types into each wire protocol and emit one event stream. OAuth helpers, deferred response lifecycle handling, telemetry and generated model metadata sit alongside the core.
+Applications register the provider packages they need, select a model and call `Stream()` or `Complete()`. Each provider translates the common Go request types into its API protocol and returns channel-based events for text, reasoning, tools, usage and completion.
+
+Generated registries describe chat, image and classifier models. OAuth and transport helpers handle provider-specific sign-in, SSE and WebSocket connections. The durable runtime adds session state, compaction and recovery using memory, append-journal or SQLite stores.
 
 ## Features
-### 🔄 Unified streaming API
-Same `Stream()` / `Complete()` surface across providers.
+### 🔄 Shared inference API
+Streaming and complete responses across OpenAI, Anthropic, Google, Mistral, Bedrock, GitHub Copilot and compatible services.
 
 ### 🧰 Tool calling
-Typed tools with JSON Schema parameters and streamed tool-call deltas.
+JSON Schema parameters, streamed arguments and partial JSON parsing, with constrained sampling where providers support it.
 
-### 🌐 Multi-provider
-OpenAI, Anthropic, Google, Mistral, Bedrock, Codex, Azure, Baseten and compatible APIs.
+### 🧠 Reasoning and replay
+Provider thinking levels, signed thinking replay, prompt-cache metadata and stop reasons.
 
-### 🧠 Release-pinned catalogues
-Text and image model catalogues generated from the upstream release data.
+### 🎨 Images and model registries
+Image generation through OpenRouter, with generated chat, image and classifier catalogues.
 
-### 🔁 Cross-language context
-JSON-compatible with `pi-ai` types for Go and TypeScript hand-off.
+### 🔐 OAuth and transports
+Provider-specific login helpers, SSE streaming and Codex WebSocket support with connection reuse.
 
-### 💵 Cost tracking
-Per-request token usage and USD cost breakdown.
+### 🗃 Durable agent runtime
+Persisted conversations, owned tasks and tools, subscriptions, compaction and recovery. Earlier journal formats are not an upgrade compatibility guarantee.
 
-### 🔐 OAuth support
-Built-in device flow / PKCE helpers for supported providers.
+### 🔁 Cross-language messages
+JSON-compatible message, context, tool and usage types for supported Go/TypeScript hand-offs. JavaScript-only runtime integrations are adapted rather than copied unchanged.
 
 ## Posts
 - [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26

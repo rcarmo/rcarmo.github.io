@@ -4,39 +4,37 @@ repo: rcarmo/swift-ai
 section: ai-ml
 status: maintenance
 created: 2026-07-09
-tagline: SwiftPM port of @earendil-works/pi-ai with typed streaming, tools and a shared multi-provider model catalogue.
+tagline: SwiftPM port of Pi's AI API -- typed streaming, tools and model registries; development paused at v1.0.1.
 ---
 
 ## About
-`swift-ai` brings the `@earendil-works/pi-ai` API and event model to Swift applications and services. It provides typed streaming, tool calls and a shared model registry, using [`go-ai`](go-ai) as its reference implementation.
+`swift-ai` brings the `@earendil-works/pi-ai` API to Swift applications without requiring the TypeScript runtime. It provides typed streaming, tool calls, OAuth helpers and registries for chat, image and classifier models.
 
-The package tracks the `pi-ai` v0.84.0 API. Its generated catalogues include providers whose native transports are not bundled; applications can supply those separately.
-
-Development is paused. The existing port is available, but it is not being updated to follow new Pi releases.
+Development has stopped. The main branch retains the published v1.0.1 package, following `pi-ai` v1.0.1. Unfinished v1.1.0 work is preserved on the [release branch](https://github.com/rcarmo/swift-ai/tree/release/v1.1.0); pin v1.0.1 for the released package.
 
 ## How it works
-`SwiftAI.bootstrap()` initialises the actor-backed model and provider registry. A request resolves its model, credentials and provider implementation before passing through a common asynchronous `stream` or `complete` API.
+`SwiftAI.bootstrap()` registers models and providers in actor-backed registries. Requests resolve a model, credentials and provider implementation, then use the asynchronous `stream` or `complete` API.
 
-HTTP providers convert SSE responses into shared typed events for text, reasoning, tool calls, usage and completion. Message transformation, partial JSON parsing and JSON Schema-based tool validation help keep provider-specific wire formats out of application code.
+Provider clients translate wire responses into typed events using Swift value types, `Codable` and `AsyncStream`. Shared helpers handle SSE parsing, tool-argument validation, retries and prompt-cache metadata. A model's presence in the catalogue does not mean every transport is bundled.
 
 ## Features
-### Typed Swift surface
-`Codable` types cover models, providers, messages, tools, usage, diagnostics, stream options and the common event protocol.
+### Typed Swift API
+Common chat, image, classifier, message, tool, usage and diagnostic types, with actor-backed registries.
 
-### Provider implementations
-Implemented streaming paths include OpenAI Chat Completions, OpenAI Responses, Azure OpenAI Responses, Codex, Anthropic Messages, Mistral, Gemini, Gemini CLI and Baseten.
+### Streaming providers
+OpenAI Chat Completions and Responses, Azure Responses, Codex SSE, Anthropic, Gemini/Vertex, Gemini CLI, Mistral and Pi Messages implementations.
 
-### OAuth support
-OAuth support includes GitHub Copilot, OpenAI Codex, Anthropic, Gemini CLI and Antigravity.
+### Tools and reasoning
+Streamed tool arguments, JSON Schema validation, reasoning events, prompt-cache helpers and context-overflow handling.
 
-### Streaming tools
-SSE parsing, partial tool-argument JSON, JSON Schema validation, retry handling and request or response interception hooks.
+### Images and catalogues
+OpenRouter image generation and generated chat, image and classifier registries from the pinned upstream release.
 
-### Generated catalogues
-Includes release-pinned `pi-ai` v0.84.0 text and OpenRouter image catalogues.
+### OAuth and request hooks
+Provider-specific sign-in, retry/backoff helpers, diagnostics and request/response interception.
 
-### Lightweight core
-Bedrock request building and Codex transport surfaces are present, but heavyweight vendor SDK and WebSocket transports remain pluggable rather than bundled.
+### Frozen release
+The SwiftPM package is released at v1.0.1. The paused v1.1.0 branch has unfinished, unverified changes and is not a completed upgrade.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 114">

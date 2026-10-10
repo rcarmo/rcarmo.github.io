@@ -4,39 +4,37 @@ repo: rcarmo/rs-ai
 section: ai-ml
 status: maintenance
 created: 2026-06-08
-tagline: Rust port of @earendil-works/pi-ai with a shared streaming event protocol and provider-neutral registry.
+tagline: Rust port of Pi's AI API -- streaming, tools, images and classifiers; development paused at v1.0.1.
 ---
 
 ## About
-`rs-ai` is a Rust port of `@earendil-works/pi-ai`, built around the same model registry, message types and streaming event protocol as the TypeScript original. It targets native Rust applications that need provider switching, tools and streaming without maintaining a separate integration for each API, but it remains an early port rather than full upstream parity.
+`rs-ai` is a Rust port of `@earendil-works/pi-ai` for applications that need provider switching, streaming and tool calls without a separate integration for each API. It also includes image generation and classifier operations.
 
-It tracks the `pi-ai` v0.84.0 API, with Rust-specific transport and cancellation behaviour.
-
-Development is paused. The existing port is available, but it is not being updated to follow new Pi releases.
+Development has stopped. The main branch retains the v1.0.1 runtime; unfinished v1.1.0 work is preserved on the [release branch](https://github.com/rcarmo/rs-ai/tree/release/v1.1.0). Use the v1.0.1 Git tag for the released code; the crate is not published to crates.io.
 
 ## How it works
-The registry resolves a model and provider, reads credentials from the process environment and selects the appropriate compatibility settings. Provider implementations issue HTTP, WebSocket or AWS SDK requests and convert their responses into a shared Rust event stream.
+A model registry selects the provider and request settings. Provider implementations send HTTP, SSE or WebSocket requests and translate responses into a shared Rust event stream for text, reasoning, tools, usage and completion.
 
-The common layer handles retries, diagnostics, prompt-cache metadata, message transformation, partial tool-call JSON and context-overflow checks. Dropping the returned stream cancels HTTP work; this differs from the upstream abort-signal model.
+Common helpers handle OAuth, retries, prompt-cache metadata, streamed tool-argument JSON and context limits. Dropping the returned stream cancels the work. Images and classifiers have separate APIs; Bedrock uses the AWS SDK and can be excluded by disabling default features.
 
 ## Features
-### Shared runtime types
-Messages, tools, usage, model metadata and stream events use a single provider-neutral type system.
+### Shared Rust types
+Provider-neutral messages, tools, usage and events, with JSON-compatible types for cross-language transcript hand-off.
 
-### Streaming providers
-Implemented paths include OpenAI, OpenAI Responses, Anthropic, Gemini, Mistral, Codex, Bedrock, Gemini CLI and Baseten.
+### Streaming and tool calls
+`stream` and `complete` entry points, JSON Schema tools, reasoning events and partial argument parsing.
 
-### Native transports
-Bedrock uses the AWS SDK; Codex supports WebSocket and SSE transports.
+### Native provider transports
+HTTP/SSE clients, Codex WebSocket support and optional Bedrock AWS SDK integration.
 
-### OAuth framework
-Includes a PKCE-based OAuth framework and the provider-specific paths needed by supported sign-in flows.
+### Images and classifiers
+Image generation plus classifier operations for TypeSafe System One, Cloudflare Workers AI and llama.cpp.
 
-### Runtime helpers
-Retry handling, logging, diagnostics, session resources, validation, prompt-cache helpers and partial JSON parsing.
+### OAuth and runtime helpers
+Provider login flows, retry/proxy handling, request/response hooks and cancellation by dropping the stream.
 
-### Catalogues and runtime differences
-Model catalogues come from the upstream release. Rust cancels work by dropping the stream; provider transport differences remain documented.
+### Frozen release
+v1.0.1 is the retained runtime. The paused v1.1.0 branch is incomplete and is not a published upgrade.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 114">
