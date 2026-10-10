@@ -9,12 +9,10 @@ The audit covers all source pages under `_content/` and their generated diagram 
 Run:
 
 ```sh
-bun audit-style.ts > /tmp/portfolio-style-audit.json
-bun test audit-diagrams.test.ts
-bun audit-diagrams.ts --pretty > /tmp/portfolio-diagram-audit.json
-bun audit-diagrams.ts --browser --pretty > /tmp/portfolio-diagram-browser-audit.json
-bun run build.ts
-bun audit-links.ts
+make test
+make build audit
+make browser-install audit-browser
+make paths
 ```
 
 ## Current result
@@ -93,7 +91,7 @@ Keep `--` in Markdown prose. `build.ts` uses `typography.ts` to display it as an
 
 The HTML pass preserves attributes, comments, scripts, styles, code and preformatted blocks, and inline SVG. Command flags, URLs, single hyphens and runs of three or more hyphens are unchanged. Source content is never rewritten.
 
-`bun test typography.test.ts` checks the conversion and builds a small fixture site to verify the different output paths. CI runs these tests alongside the diagram tests.
+`make test` runs development checks; `make test-profile` profiles the full build, typography, diagram and path-isolation suites. CI retains concise conclusions and disposes raw captures after analysis.
 
 ### Diagrams
 
@@ -127,6 +125,25 @@ The shared renderer uses `#243b53` for light secondary text and `#90a8c0` in dar
 ### Logos
 
 A missing `logo:` declaration is a warning. Twenty-three pages intentionally use the generated fallback artwork because no suitable project-specific source has been selected.
+
+## Current commands and paths
+
+```sh
+make test
+make build audit
+make browser-install audit-browser
+make paths
+```
+
+Reports are in the printed project-owned run directory; the staged site is in its checkout-specific build directory. See `AGENTS.md` for portable root resolution, safe cleanup and profiling analysis and disposal. Existing source-tree HTML/OG snapshots are legacy outputs and are no longer updated by builds.
+
+## Kintsugi release verification
+
+The Kintsugi addition and portable build migration passed 43 tests (165 assertions), 83 project builds, 83 clean deterministic/browser diagrams and 727 internal references across 87 staged HTML files. Kintsugi has no style findings; the corpus has 52 existing advisory warnings, zero errors or required fixes.
+
+Bun 1.4.2 pre-release profiling covered the full build, test process, fixture build and direct resolver child. Static copying dominated the initial CPU profile. Replaced repeated generic `cpSync` setup with `copyFileSync` for already-validated regular files; directory/symlink checks are unchanged. Final build capture: 1,346 CPU samples over 283.44 ms; page generation and static copying are the main application hotspots. Short runs do not establish a repeatable speedup. The final build heap is dominated by compiled code (358,296 bytes/100 FunctionCodeBlock objects), runtime structures and modules, not retained page output.
+
+Raw captures and disposable logs are deleted after analysis. Bun's heap profiles are live retained snapshots, not allocation histories; native rsvg/font, Make/shell and browser processes are not sampled. Local `rsvg-convert` is unavailable, so social PNG generation was skipped; CI installs it. The staged site preserves the auxiliary pages and curated assets, and excludes source/tooling.
 
 ## Build result
 

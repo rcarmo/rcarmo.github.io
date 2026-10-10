@@ -8,15 +8,16 @@
  *
  * Usage: bun run build.ts
  */
-import { mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, rmSync, unlinkSync } from "node:fs";
+import { copyFileSync, mkdirSync, writeFileSync, readFileSync, readdirSync, existsSync, lstatSync, rmSync, unlinkSync } from "node:fs";
 import { extname, join } from "node:path";
 import { proseDashes, proseDashesHtml } from "./typography";
+import { prepareSite, sourceRoot, siteRoot } from "./project-paths";
 
 // ── Paths ────────────────────────────────────────────────────────────────────
-const ROOT    = import.meta.dir;
+const ROOT    = sourceRoot;
 const CONTENT = join(ROOT, "_content");
-const OUT     = join(ROOT, "projects");
-const ASSETS  = join(ROOT, "assets");
+const OUT     = join(siteRoot, "projects");
+const ASSETS  = join(siteRoot, "assets");
 const OG_OUT  = join(ASSETS, "og");
 const SITE_URL = "https://rcarmo.github.io";
 const ASSET_VERSION = Date.now().toString(36);
@@ -27,6 +28,7 @@ const CLARITY_SNIPPET = `<script type="text/javascript">
     y=l.getElementsByTagName(r)[0];y.parentNode.insertBefore(t,y);
   })(window,document,"clarity","script","wiph32r6h2");
 <\/script>`;
+prepareSite();
 mkdirSync(OUT, { recursive: true });
 mkdirSync(OG_OUT, { recursive: true });
 
@@ -401,7 +403,7 @@ function buildSocialCardSvg(opts: {
 }
 
 function writeSocialCard(id: string, svg: string): void {
-  const dir = join(ROOT, 'projects', id);
+  const dir = join(OUT, id);
   mkdirSync(dir, { recursive: true });
   const svgPath = join(dir, 'social.svg');
   const pngPath = join(dir, 'social.png');
@@ -1130,6 +1132,21 @@ ${CLARITY_SNIPPET}
 
 // ── Main ─────────────────────────────────────────────────────────────────────
 
+// Publish curated static files, never source/tooling or old generated OG cards.
+function copyStatic(from: string, to: string): void {
+  const st = lstatSync(from);
+  if (st.isSymbolicLink()) throw new Error(`Refusing static asset symlink: ${from}`);
+  if (st.isDirectory()) {
+    mkdirSync(to, { recursive: true });
+    for (const name of readdirSync(from)) {
+      if (from === join(ROOT, "assets") && name === "og") continue;
+      copyStatic(join(from, name), join(to, name));
+    }
+  } else copyFileSync(from, to);
+}
+for (const name of ["assets", "textile", "wisp", "alt.html", "alt-clusters.json", "favicon.ico", "favicon.png", ".nojekyll", "CNAME"]) {
+  if (existsSync(join(ROOT, name))) copyStatic(join(ROOT, name), join(siteRoot, name));
+}
 const projects = readProjects();
 selectRandomFallbackProject(projects);
 console.log(`Read ${projects.length} projects from _content/`);
@@ -1160,7 +1177,7 @@ for (const p of projects) {
 
 // Build index
 const indexHtml = proseDashesHtml(buildIndex(projects));
-writeFileSync(join(ROOT, "index.html"), indexHtml);
+writeFileSync(join(siteRoot, "index.html"), indexHtml);
 console.log(`  ✓ index.html`);
 
 console.log(`\nBuilt ${built} project pages, skipped ${readdirSync(CONTENT).filter(f=>f.endsWith('.md')).length - built}`);

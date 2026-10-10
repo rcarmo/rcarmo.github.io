@@ -8,6 +8,12 @@ distribution: project
 
 Manage the `projects/rcarmo.github.io` portfolio site thoroughly and safely.
 
+## Current build and path policy (supersedes legacy commands below)
+
+Read `AGENTS.md` and use `make build`, `make test`, `make audit` and `make audit-browser`. `make paths` prints the staged site and isolated run paths. The repo-local resolver accepts absolute `PROJECT_TMP_BASE` and compatible `PROJECT_TMP_ROOT` (both must agree). CI uses runner/original-inherited-TMPDIR/system-temp precedence even with a workspace; local runs prefer writable workspace then system temp. It snapshots `TMPDIR`, appends `rcarmo.github.io` and exports the resolved root once. Caches and scratch never go directly in home or bare temporary roots. Pre-release verification uses `make test-profile`; analyse and immediately dispose CPU/heap captures. Ordinary development tests use `make test` without mandatory profiling.
+
+Generated HTML/social cards now live only in the staged site, not root `index.html`, `projects/` or tracked `assets/og`. Inspect the staged files. Never restore/clean OG source assets after builds or commit generated output. Publish only the staged site through CI. Push source/tag via `/workspace/Makefile` with `BRANCH=master` on this host; no ad-hoc credential helpers. See AGENTS.md for portable CI mapping and cleanup scope.
+
 ## Scope
 
 This skill applies when working on:
@@ -165,22 +171,18 @@ Always read `.github/workflows/build.yml` before changing publish assumptions.
 When the user explicitly asks to publish/rebuild/tag/push:
 
 1. Commit source/content changes.
-2. Rebuild with `bun run build.ts`.
-3. Commit generated output if it changed.
+2. Rebuild with `make build`.
+3. Verify the staged output; never commit generated output.
 4. Push `master`.
 5. Create and push a new `v*` tag.
 
 Example pattern:
 
 ```bash
-git add -A
-git commit -m "Apply latest content updates"
-bun run build.ts
-git add index.html projects/*.html
-git commit -m "Rebuild site"
-git push origin master
-git tag -a vYYYY.MM.DD.N -m "Release vYYYY.MM.DD.N"
-git push origin vYYYY.MM.DD.N
+make build audit
+# Commit reviewed source only, then use the shared authenticated helper.
+test -n "$GITHUB_PICLAW_BOT" && make -f /workspace/Makefile github-push REPO="$PWD" BRANCH=master
+# Create an annotated release tag, then publish it with github-push-tag.
 ```
 
 ## Common tasks

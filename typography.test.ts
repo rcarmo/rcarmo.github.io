@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { cpSync, mkdirSync, mkdtempSync, readFileSync, rmSync, writeFileSync } from "node:fs";
-import { tmpdir } from "node:os";
+import { runDir } from "./project-paths";
 import { join } from "node:path";
 import { proseDashes, proseDashesHtml } from "./typography";
 
@@ -65,9 +65,10 @@ describe("HTML output typography", () => {
 });
 
 test("site build renders typography across all prose surfaces", () => {
-  const dir = mkdtempSync(join(tmpdir(), "portfolio-typography-"));
+  const dir = mkdtempSync(join(runDir, "portfolio-typography-"));
+  const output = join(dir, "site");
   try {
-    for (const name of ["build.ts", "typography.ts"]) cpSync(join(import.meta.dir, name), join(dir, name));
+    for (const name of ["build.ts", "typography.ts", "project-paths.ts", "scratch-root.ts"]) cpSync(join(import.meta.dir, name), join(dir, name));
     mkdirSync(join(dir, "_content"));
     mkdirSync(join(dir, "assets/logos-opt"), { recursive: true });
     mkdirSync(join(dir, "assets/screenshots"));
@@ -88,9 +89,11 @@ test("site build renders typography across all prose surfaces", () => {
       "## Diagram", diagram, "",
     ].join("\n");
     writeFileSync(join(dir, "_content/demo.md"), source);
-    const run = Bun.spawnSync([process.execPath, "run", "build.ts"], { cwd: dir, stdout: "pipe", stderr: "pipe" });
+    const profileDir = process.env.PORTFOLIO_PROFILE_DIR;
+    const profileArgs = profileDir ? ["--cpu-prof", "--cpu-prof-interval=100", `--cpu-prof-dir=${profileDir}`, "--cpu-prof-name=fixture-build.cpuprofile", "--heap-prof", "--heap-prof-interval=1024", `--heap-prof-dir=${profileDir}`, "--heap-prof-name=fixture-build.heapprofile"] : [];
+    const run = Bun.spawnSync([process.execPath, ...profileArgs, "run", "build.ts"], { cwd: dir, env: { ...process.env, PORTFOLIO_SITE_DIR: output }, stdout: "pipe", stderr: "pipe" });
     expect(run.exitCode, run.stderr.toString()).toBe(0);
-    const html = readFileSync(join(dir, "projects/demo/index.html"), "utf8");
+    const html = readFileSync(join(output, "projects/demo/index.html"), "utf8");
     for (const text of ["Fast — local", "Before—after", "Why — now", "Docs — details",
       "Feature — body", "Shot — title", "Caption — body", "Post — title", "Release — notes", "Raw — prose"]) {
       expect(html).toContain(text);
@@ -105,8 +108,8 @@ test("site build renders typography across all prose surfaces", () => {
     for (const field of ['name="description"', 'property="og:description"', 'name="twitter:description"']) {
       expect(html).toContain(`${field} content="Fast — local"`);
     }
-    expect(readFileSync(join(dir, "index.html"), "utf8")).toContain("Fast — local");
-    expect(readFileSync(join(dir, "assets/og/demo.svg"), "utf8")).toContain("Fast — local");
+    expect(readFileSync(join(output, "index.html"), "utf8")).toContain("Fast — local");
+    expect(readFileSync(join(output, "assets/og/demo.svg"), "utf8")).toContain("Fast — local");
     expect(readFileSync(join(dir, "_content/demo.md"), "utf8")).toBe(source);
   } finally {
     rmSync(dir, { recursive: true, force: true });

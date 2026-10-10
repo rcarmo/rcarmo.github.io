@@ -20,35 +20,62 @@ jobs:
         with:
           bun-version: latest
 
+      # Resolve using the repo helper; no /workspace host tooling required.
+      - name: Set project-owned paths
+        shell: bash
+        run: |
+          # Preserve the inherited base before exporting per-run TMPDIR.
+          export PROJECT_ORIGINAL_TMPDIR="${PROJECT_ORIGINAL_TMPDIR-${TMPDIR-}}"
+          root=$(bun scratch-root.ts)
+          run="$root/runs/ci/${GITHUB_RUN_ID}-${GITHUB_RUN_ATTEMPT}"
+          key=$(printf '%s' "$GITHUB_WORKSPACE" | od -An -v -tx1 | tr -d ' \n' | fold -w120 | paste -sd/ -)
+          site="$root/build/$key/site"
+          export PROJECT_TMP_ROOT="$root" PORTFOLIO_RUN_DIR="$run" PORTFOLIO_SITE_DIR="$site"
+          bun project-paths.ts
+          {
+            echo "PROJECT_ORIGINAL_TMPDIR=$PROJECT_ORIGINAL_TMPDIR"
+            echo "PROJECT_TMP_ROOT=$root"
+            echo "PORTFOLIO_RUN_DIR=$run"
+            echo "PORTFOLIO_SITE_DIR=$site"
+            echo "TMPDIR=$run"
+            echo "TMP=$run"
+            echo "TEMP=$run"
+            echo "XDG_CACHE_HOME=$root/cache/xdg"
+            echo "BUN_INSTALL_CACHE_DIR=$root/cache/bun"
+            echo "npm_config_cache=$root/cache/npm"
+            echo "PLAYWRIGHT_BROWSERS_PATH=$root/cache/playwright"
+          } >> "$GITHUB_ENV"
+
       - name: Install rsvg-convert and fonts
         run: sudo DEBIAN_FRONTEND=noninteractive apt-get install -y -qq librsvg2-bin fonts-inter
 
-      - name: Build site
-        run: bun run build.ts
+      - name: Profile pre-release tests and dispose captures after analysis
+        run: make test-profile
 
-      - name: Audit links
-        run: bun audit-links.ts
+      - name: Audit staged site and sources
+        run: make audit
 
-      - name: Test typography and diagram audit
-        run: bun test typography.test.ts audit-diagrams.test.ts
-
-      - name: Audit diagram graphs and geometry
-        run: bun audit-diagrams.ts > /tmp/diagram-audit.json
+      - name: Publish concise profile conclusions
+        if: always()
+        shell: bash
+        run: |
+          if [[ -f "$PORTFOLIO_RUN_DIR/profile-conclusions.md" ]]; then
+            cat "$PORTFOLIO_RUN_DIR/profile-conclusions.md" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo 'Profile analysis incomplete; this is not passing profiling evidence.' >> "$GITHUB_STEP_SUMMARY"
+          fi
 
       - name: Deploy to gh-pages
         uses: peaceiris/actions-gh-pages@v4
         with:
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          publish_dir: .
+          publish_dir: ${{ env.PORTFOLIO_SITE_DIR }}
           publish_branch: gh-pages
           force_orphan: true
-          exclude_assets: >-
-            .gitignore,.gitattributes,
-            .github,
-            _content,
-            build.ts,typography.ts,typography.test.ts,audit-links.ts,audit-diagrams.ts,audit-diagrams.test.ts,package.json,bun.lockb,bun.lock,
-            AUDIT.md,AGENTS.md,
-            workitems,
-            node_modules,
-            .pi
           commit_message: "Deploy ${{ github.ref_name }}"
+
+      - name: Dispose completed job scratch
+        if: always()
+        run: |
+          make clean
+          bun scripts/clean-run.ts

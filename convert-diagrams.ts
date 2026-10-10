@@ -6,6 +6,7 @@
  * Usage: bun convert-diagrams.ts [project-id ...]
  *        No args = convert all
  */
+import "./project-paths";
 import { readdirSync, readFileSync, writeFileSync, mkdirSync, existsSync } from "node:fs";
 import { join, basename } from "node:path";
 import { renderDiagram } from "./diagram-render.ts";

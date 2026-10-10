@@ -10,6 +10,10 @@ Use this skill when creating, fixing, or auditing project diagrams in `projects/
 
 This captures the diagram conventions established during the April 2026 portfolio cleanup.
 
+## Current build paths (supersedes legacy output paths below)
+
+Read `AGENTS.md`. Use `make build` and inspect HTML under the staged site printed by `make paths`, not source-tree `projects/`. `make test` runs development checks; pre-release `make test-profile` captures CPU/heap data for immediate analysis and disposal; `make audit` and `make audit-browser` write reports under the resolved project run. CI publishes only the staged site. Do not commit generated HTML or reset curated OG source assets after a build.
+
 ## Scope
 
 Applies to:
@@ -443,7 +447,7 @@ If the user wants the change published:
 
 1. edit `_content/*.md`
 2. run `bun run build.ts`
-3. commit source + generated output
+3. commit source only; generated output stays outside the checkout
 4. push `master`
 5. create and push a new `v*` tag
 

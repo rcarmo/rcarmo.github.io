@@ -1,6 +1,6 @@
 import { describe, expect, test } from "bun:test";
 import { mkdirSync, mkdtempSync, rmSync, writeFileSync } from "fs";
-import { tmpdir } from "os";
+import { runDir } from "./project-paths";
 import { join } from "path";
 import { auditCorpus, auditDiagram } from "./audit-diagrams";
 import { renderDiagram } from "./diagram-render";
@@ -75,7 +75,7 @@ describe("diagram graph audit",()=>{
 
 describe("diagram corpus audit",()=>{
   const fixture = () => {
-    const root=mkdtempSync(join(tmpdir(),"diagram-audit-"));
+    const root=mkdtempSync(join(runDir,"diagram-audit-"));
     mkdirSync(join(root,"_diagrams"));mkdirSync(join(root,"_content"));
     const svg=renderDiagram(base);
     writeFileSync(join(root,"_diagrams","fixture.json"),JSON.stringify(base));

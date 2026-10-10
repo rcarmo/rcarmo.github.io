@@ -422,6 +422,7 @@ function esc(s: string): string {
 // ── CLI ──────────────────────────────────────────────────────────────────────
 
 if (import.meta.main) {
+  await import("./project-paths");
   const [input, output] = Bun.argv.slice(2);
   if (!input) {
     console.log("Usage: bun diagram-render.ts <input.json> [output.svg]");

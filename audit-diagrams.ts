@@ -8,6 +8,7 @@
  * JSON is written to stdout. Confirmed errors produce exit code 1; warnings and
  * manual-review candidates do not. The tool never rewrites diagram sources.
  */
+import "./project-paths";
 import { existsSync, readdirSync, readFileSync } from "fs";
 import { basename, join } from "path";
 

@@ -7,8 +7,10 @@
 import { existsSync, readFileSync } from "node:fs";
 import { join, resolve, dirname } from "node:path";
 import { $ } from "bun";
+import { siteRoot } from "./project-paths";
 
-const ROOT = process.cwd();
+const ROOT = siteRoot;
+if (!existsSync(join(ROOT, "index.html"))) throw new Error("Build the staged site before auditing links");
 const errors: string[] = [];
 const checked = new Set<string>();
 

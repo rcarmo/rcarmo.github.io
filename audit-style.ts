@@ -3,6 +3,7 @@
  * Systematic style/structure audit for portfolio source pages.
  * Reports errors, actionable prose fixes and review-only warnings as JSON.
  */
+import "./project-paths";
 import { readdirSync, readFileSync, existsSync } from "fs";
 import { join, basename } from "path";
 
