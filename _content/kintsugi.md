@@ -5,11 +5,11 @@ section: agents
 status: experimental
 created: 2026-10-09
 logo: assets/logos-opt/kintsugi.png
-tagline: Self-hosted coding-agent workspaces -- an experimental AgentsInTheCloud fork with Draw.io and deployment controls.
+tagline: Self-hosted coding-agent workspaces with VS Code, draw.io and native AMD64/ARM64 support.
 ---
 
 ## About
-Kintsugi is an experimental fork of [AgentsInTheCloud](https://github.com/lucasmeijer/AgentsInTheCloud) for working with coding agents on self-hosted infrastructure. Its web interface brings together agent conversations, workspace files, Git changes and tools, with embedded Draw.io editing and previews.
+Kintsugi is an experimental fork of [AgentsInTheCloud](https://github.com/lucasmeijer/AgentsInTheCloud) for working with coding agents on self-hosted infrastructure. Its web interface brings together agent conversations, workspace files, Git changes and tools, with embedded VS Code and draw.io editing and previews. Native AMD64 and ARM64 builds support both Intel/AMD and ARM servers.
 
 The project is being split into smaller packages for workspace provisioning, agent integration and UI features. The package split and interface are still evolving.
 
@@ -27,8 +27,11 @@ Launch workspaces with agents, files, Git changes and task views in one browser 
 ### Modular implementation
 Bun and TypeScript packages separate workspace lifecycle, agent integration, shared UI and individual workspace features.
 
-### Draw.io integration
-Edit diagrams in the workspace and preview them without opening a separate application.
+### VS Code and draw.io
+Edit code in the embedded VS Code interface, and edit or preview draw.io diagrams without opening a separate application.
+
+### AMD64 and ARM64 support
+Native builds for Intel/AMD and ARM64 Linux hosts.
 
 ### Workspace tools
 Agent helpers are mounted read-only into workspaces, with stale helper files removed when the tool set changes.
