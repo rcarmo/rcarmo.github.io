@@ -1,0 +1,14 @@
+h1. Using this tool
+
+This page lets you create HTML by entering text in a simple format that's easy to read and write.
+
+* Type Textile text in this tab
+* See the HTML in the Preview tab
+
+Textile is a lightweight markup language billed as a "humane web text editor". It originated in the blogging software Textpattern. 
+
+"It is described as":http://textile.thresholdstate.com/:
+
+bq. Textile takes plain text with *simple* markup and produces valid XHTML. It's used in web applications, content management systems, blogging software and online forums. Try it for yourself with the Textile quick reference and preview, accessible from the tabs below.
+
+Textile-js is a JavaScript port of Textile. You can get the full source code from its "GitHub repository":https://github.com/borgar/js-textile, I merely wrapped it up for use on the iPad.

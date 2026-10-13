@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="dotnet-jellyfin-livetube">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f5f9ff"/>
+      <stop offset="100%" stop-color="#eaf1fb"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#0f9f7a"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#8aa3c4" flood-opacity="0.18"/>
+    </filter>
+    <clipPath id="logoClip">
+      <rect x="104" y="160" width="320" height="320" rx="36"/>
+    </clipPath>
+  </defs>
+  <!-- Background -->
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <circle cx="1180" cy="100" r="240" fill="#dbeafe" opacity="0.7"/>
+  <circle cx="110" cy="590" r="200" fill="#eff6ff" opacity="0.85"/>
+  <!-- Card -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="80" width="1120" height="480" rx="20" fill="#ffffff"/>
+    <rect x="80" y="80" width="1120" height="480" rx="20" fill="none" stroke="#d7e3f4"/>
+    <!-- Accent bar: straight, thick -->
+    <rect x="80" y="80" width="1120" height="24" fill="url(#accent)"/>
+    <!-- Repo roundrect — top right, auto-sized -->
+    <rect x="811" y="118" width="369" height="44" rx="8" fill="#eff6ff" stroke="#dbeafe"/>
+    <text x="995.5" y="147" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="18" font-weight="700" fill="#1e3a8a">rcarmo/dotnet-jellyfin-livetube</text>
+    <!-- Logo -->
+    <rect x="104" y="160" width="320" height="320" rx="36" fill="#eff6ff" stroke="#dbe5f1"/>
+    <image href="data:image/png;base64,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" x="114" y="170" width="300" height="300" preserveAspectRatio="xMidYMid meet" clip-path="url(#logoClip)"/>
+    <!-- Kicker -->
+    <text x="468" y="200" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="700" letter-spacing="1.5" fill="#0f9f7a">NETWORKING</text>
+    <!-- Title -->
+    <text x="468" y="275" font-family="Inter,system-ui,sans-serif" font-size="52" font-weight="700" fill="#0f172a">dotnet-jellyfin-livetube</text>
+    <!-- Description -->
+    <text x="468" y="342" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">Jellyfin plugin for virtual</text>
+    <text x="468" y="390" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">live-TV channels and</text>
+    <text x="468" y="438" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">Android-compatible…</text>
+    <!-- Site -->
+    <text x="1176" y="532" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="600" fill="#64748b">rcarmo.github.io</text>
+  </g>
+</svg>
