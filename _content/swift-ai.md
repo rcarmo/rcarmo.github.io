@@ -3,6 +3,7 @@ id: swift-ai
 repo: rcarmo/swift-ai
 section: ai-ml
 status: archived
+hidden: true
 created: 2026-07-09
 tagline: SwiftPM port of Pi's AI API -- typed streaming, tools and model registries; archived at v1.0.1.
 ---

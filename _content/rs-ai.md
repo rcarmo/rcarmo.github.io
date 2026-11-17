@@ -3,6 +3,7 @@ id: rs-ai
 repo: rcarmo/rs-ai
 section: ai-ml
 status: archived
+hidden: true
 created: 2026-06-08
 tagline: Rust port of Pi's AI API -- streaming, tools, images and classifiers; archived at v1.0.1.
 ---
