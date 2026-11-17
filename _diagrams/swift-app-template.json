@@ -1,0 +1,14 @@
+{
+  "title": "SwiftPM build of a native macOS app without an Xcode project",
+  "nodes": [
+    { "id": "core", "label": "AppCore library", "sub": "State · services · views", "tag": "input" },
+    { "id": "app", "label": "Starter executable", "sub": "Scenes · commands", "tag": "process" },
+    { "id": "build", "label": "SwiftPM + scripts", "sub": "Assemble · sign · harden", "tag": "backend" },
+    { "id": "bundle", "label": "macOS app bundle", "sub": "Ad hoc or notarised", "tag": "output" }
+  ],
+  "edges": [
+    { "from": "core", "to": "app", "accent": true },
+    { "from": "app", "to": "build" },
+    { "from": "build", "to": "bundle", "accent": true }
+  ]
+}
