@@ -1,0 +1,45 @@
+{
+  "title": "Hardware enablement for MacBookPro13,2 on Silverblue",
+  "nodes": [
+    {
+      "id": "kit",
+      "label": "Rebuild kit",
+      "sub": "Drivers + configuration",
+      "tag": "input"
+    },
+    {
+      "id": "checks",
+      "label": "Install checks",
+      "sub": "Kernel + recovery",
+      "tag": "process"
+    },
+    {
+      "id": "host",
+      "label": "Silverblue host",
+      "sub": "MacBookPro13,2 / T1",
+      "tag": "backend"
+    },
+    {
+      "id": "devices",
+      "label": "Device setup",
+      "sub": "Touch Bar, audio, S3",
+      "tag": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "kit",
+      "to": "checks",
+      "accent": true
+    },
+    {
+      "from": "checks",
+      "to": "host"
+    },
+    {
+      "from": "host",
+      "to": "devices",
+      "accent": true
+    }
+  ]
+}

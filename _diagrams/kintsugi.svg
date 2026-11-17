@@ -47,7 +47,7 @@
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
   <text x="120" y="56" text-anchor="middle" class="label">Browser workspace</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">Agents, files, Git, Draw.io</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">Agents, files, Git, editors</text>
 
   <rect x="270" y="30" width="180" height="60" rx="8" class="box"/>
   <text x="360" y="56" text-anchor="middle" class="label">Bun server</text>

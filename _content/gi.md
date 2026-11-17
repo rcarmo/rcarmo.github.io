@@ -7,10 +7,12 @@ logo: assets/logos-opt/gi.png
 ---
 
 ## About
-Gi is a Go-native clone of the [Pi coding agent](https://pi.dev), with a bundled web UI. It combines `go-ai` inference, a Go turn engine, SQLite-backed state and a Piclaw-compatible interface in one workspace-centric runtime. Two embedded scripting engines provide extensions: [go-joker](go-joker) for Clojure and [goja](https://github.com/dop251/goja) for JavaScript. Tools and workflows can use either language without recompiling Gi.
+Gi is a Go-native clone of the [Pi coding agent](https://pi.dev), with a terminal UI by default and a bundled web UI started with `gi -web`. One binary includes the browser assets and SQLite-backed sessions; Bun is needed to build those assets, not to run Gi. Two embedded scripting engines provide extensions: [go-joker](go-joker) for Clojure and [goja](https://github.com/dop251/goja) for JavaScript. Tools and workflows can use either language without recompiling Gi.
 
 ## How it works
-The core is an append-only turn engine backed by SQLite: turns, messages, and events are stored in a local database, then streamed to the frontend over SSE. Inference goes through `go-ai`, with auth loaded from Pi-compatible config and prompts sourced from `AGENTS.md`. The web UI reuses Piclaw's TypeScript source verbatim, with Gi-specific `api.ts` and `app.ts` adapters wiring the existing component tree into Gi's REST and SSE endpoints. Scripting extensions are loaded at startup from the workspace -- Clojure scripts run through an embedded [go-joker](go-joker) interpreter (with full interop to Go host functions), while JavaScript scripts run through goja.
+A Go turn engine stores sessions, messages and events in SQLite. The terminal UI uses it directly; the web UI communicates through REST and SSE. Model requests use `go-ai`, credentials come from Pi-compatible configuration, and `AGENTS.md` supplies workspace guidance.
+
+The terminal follows Pi's commands and keybindings. The browser uses pinned Piclaw components with Gi's own backend and adapters. Extensions can also run as configured subprocesses. Interface and extension compatibility has documented limits.
 
 ## Features
 ### 🧠 go-ai inference
@@ -19,8 +21,8 @@ Unified provider layer with streaming and GitHub Copilot enterprise token exchan
 ### 🗃 SQLite-backed turn engine
 Append-only turns, messages, and events with queueing, cancellation, and replayable state.
 
-### 🖥 Bundled web UI
-Piclaw-compatible interface bundled with the Go runtime, using Gi-specific API and entrypoint adapters.
+### 🖥 Terminal and web UI
+Pi-like terminal commands and pinned Piclaw web components with Gi-specific adapters. Both share the Go turn engine.
 
 ### 🧪 Clojure scripting via go-joker
 Run Clojure scripts as tools and workflows through [go-joker](go-joker), with access to Go host functions.
@@ -28,8 +30,8 @@ Run Clojure scripts as tools and workflows through [go-joker](go-joker), with ac
 ### 📜 JavaScript scripting via goja
 ES5.1+ scripting engine for lightweight tool extensions without a Node dependency.
 
-### 📁 Workspace-centric
-Reads `AGENTS.md`, operates against a workspace root, and exposes workspace file APIs.
+### 📁 Workspace tools and MCP
+Reads `AGENTS.md`, manages workspace files and supports stdio/HTTP MCP servers, deferred tools and QuickJS code mode.
 
 ## Posts
 - [We Need To Start Seeing Other Agents](https://taoofmac.com/space/blog/2026/10/10/1200) — 2026-10-10
@@ -86,8 +88,8 @@ Reads `AGENTS.md`, operates against a workspace root, and exposes workspace file
   <rect width="1058" height="266" class="bg" rx="8"/>
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-accent"/>
-  <text x="120" y="56" text-anchor="middle" class="label">Piclaw web UI</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">verbatim TS source</text>
+  <text x="120" y="56" text-anchor="middle" class="label">Bundled web UI</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">Pinned Piclaw components</text>
 
   <rect x="30" y="118" width="180" height="60" rx="8" class="box"/>
   <text x="120" y="144" text-anchor="middle" class="label">Pi-compatible config</text>
@@ -119,12 +121,18 @@ Reads `AGENTS.md`, operates against a workspace root, and exposes workspace file
   <text x="938" y="56" text-anchor="middle" class="label">Models</text>
   <text x="938" y="74" text-anchor="middle" class="sub">Copilot · OpenAI · Anthropic</text>
 
+  <rect x="608" y="190" width="180" height="60" rx="8" class="box-accent"/>
+  <text x="698" y="216" text-anchor="middle" class="label">Terminal UI</text>
+  <text x="698" y="234" text-anchor="middle" class="sub">Pi-like commands</text>
+
   <path d="M210,60 L319,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
-  <text x="265" y="54" text-anchor="middle" class="sub">SSE</text>
+  <text x="265" y="54" text-anchor="middle" class="sub">REST / SSE</text>
   <path d="M210,148 L319,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M409,90 L409,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M499,148 L540,148 Q554,148 554,134 L554,74 Q554,60 568,60 L608,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M788,60 L848,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <text x="529" y="262" text-anchor="middle" class="sub">Go coding agent — Piclaw UI + go-ai inference + Clojure/JS scripting</text>
+  <path d="M608,220 L594,220 Q580,220 580,206 L580,182 Q580,170 568,170 L499,170" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+
+  <text x="529" y="262" text-anchor="middle" class="sub">Go coding agent — native TUI, bundled web UI and scripting</text>
 </svg>

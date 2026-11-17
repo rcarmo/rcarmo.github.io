@@ -2,15 +2,15 @@
 id: rs-ai
 repo: rcarmo/rs-ai
 section: ai-ml
-status: maintenance
+status: archived
 created: 2026-06-08
-tagline: Rust port of Pi's AI API -- streaming, tools, images and classifiers; development paused at v1.0.1.
+tagline: Rust port of Pi's AI API -- streaming, tools, images and classifiers; archived at v1.0.1.
 ---
 
 ## About
 `rs-ai` is a Rust port of `@earendil-works/pi-ai` for applications that need provider switching, streaming and tool calls without a separate integration for each API. It also includes image generation and classifier operations.
 
-Development has stopped. The main branch retains the v1.0.1 runtime; unfinished v1.1.0 work is preserved on the [release branch](https://github.com/rcarmo/rs-ai/tree/release/v1.1.0). Use the v1.0.1 Git tag for the released code; the crate is not published to crates.io.
+The repository is archived and development has stopped. The main branch retains the v1.0.1 runtime; unfinished v1.1.0 work is preserved on the [release branch](https://github.com/rcarmo/rs-ai/tree/release/v1.1.0). Use the v1.0.1 Git tag for the released code; the crate is not published to crates.io.
 
 ## How it works
 A model registry selects the provider and request settings. Provider implementations send HTTP, SSE or WebSocket requests and translate responses into a shared Rust event stream for text, reasoning, tools, usage and completion.
@@ -34,7 +34,7 @@ Image generation plus classifier operations for TypeSafe System One, Cloudflare 
 Provider login flows, retry/proxy handling, request/response hooks and cancellation by dropping the stream.
 
 ### Frozen release
-v1.0.1 is the retained runtime. The paused v1.1.0 branch is incomplete and is not a published upgrade.
+Use the v1.0.1 Git tag; the preserved v1.1.0 branch is incomplete.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 114">

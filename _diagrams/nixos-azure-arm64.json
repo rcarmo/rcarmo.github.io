@@ -1,0 +1,14 @@
+{
+  "title": "NixOS Arm64 image build and Azure provisioning checks",
+  "nodes": [
+    { "id": "flake", "label": "Pinned Nix flake", "sub": "Azure guest modules", "tag": "input" },
+    { "id": "build", "label": "VHD build", "sub": "Local or Azure Arm64", "tag": "process" },
+    { "id": "gallery", "label": "Compute Gallery", "sub": "Versioned image", "tag": "backend" },
+    { "id": "verify", "label": "Verification VM", "sub": "Provision + grow disk", "tag": "output" }
+  ],
+  "edges": [
+    { "from": "flake", "to": "build", "accent": true },
+    { "from": "build", "to": "gallery" },
+    { "from": "gallery", "to": "verify", "accent": true }
+  ]
+}

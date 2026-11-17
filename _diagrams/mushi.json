@@ -1,0 +1,45 @@
+{
+  "title": "On-device Android agent with a private runtime connection",
+  "nodes": [
+    {
+      "id": "web",
+      "label": "Android WebView",
+      "sub": "Chat + settings",
+      "tag": "input"
+    },
+    {
+      "id": "bridge",
+      "label": "Native bridge",
+      "sub": "App-private Unix socket",
+      "tag": "process"
+    },
+    {
+      "id": "agent",
+      "label": "Bun + pi-durable",
+      "sub": "Foreground service",
+      "tag": "backend"
+    },
+    {
+      "id": "state",
+      "label": "Tools and state",
+      "sub": "Shell, files, SQLite",
+      "tag": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "web",
+      "to": "bridge",
+      "accent": true
+    },
+    {
+      "from": "bridge",
+      "to": "agent"
+    },
+    {
+      "from": "agent",
+      "to": "state",
+      "accent": true
+    }
+  ]
+}

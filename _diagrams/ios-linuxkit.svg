@@ -47,12 +47,12 @@
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-accent"/>
   <text x="120" y="56" text-anchor="middle" class="label">iOS app</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">App Store compatible</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">Reference terminal</text>
 
   <rect x="262" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="274" y="30" width="180" height="60" rx="8" class="box-purple"/>
-  <text x="364" y="56" text-anchor="middle" class="label">Asbestos interpreter</text>
-  <text x="364" y="74" text-anchor="middle" class="sub">threaded-code ARM64</text>
+  <text x="364" y="56" text-anchor="middle" class="label">ARM64 execution</text>
+  <text x="364" y="74" text-anchor="middle" class="sub">Interpreter + optional AOT</text>
   <rect x="278" y="98" width="82" height="48" rx="6" class="box-purple"/>
   <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Syscall layer</text>
   <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">signals · futex</text>
@@ -78,5 +78,5 @@
   <text x="728" y="54" text-anchor="middle" class="sub">apk</text>
   <path d="M698,60 L714,60 Q728,60 728,74 L728,134 Q728,148 742,148 L758,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <text x="484" y="198" text-anchor="middle" class="sub">iOS Linux runtime — ARM64 interpreter + Alpine userland</text>
+  <text x="484" y="198" text-anchor="middle" class="sub">ARM64 Linux runtime — interpretation, optional AOT and Alpine userland</text>
 </svg>

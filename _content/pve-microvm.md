@@ -1,6 +1,6 @@
 ---
 section: cloud-infra
-status: active
+status: experimental
 created: 2026-04-18
 featured: true
 tagline: QEMU microVMs for Proxmox VE -- direct kernel boot and KVM isolation.
@@ -8,23 +8,30 @@ logo: assets/logos-opt/pve-microvm.png
 ---
 
 ## About
-Debian package that adds QEMU `microvm` machine type to the Proxmox UI. microvm VMs skip BIOS and PCI emulation, use `virtio-mmio` devices and retain KVM isolation. Boot time depends on the guest and host. Uninstall restores original files.
+`pve-microvm` adds QEMU microVM support to Proxmox VE, keeping hardware-isolated guests within its familiar management tools. It can turn OCI container images into bootable VM templates and import compatible Firecracker root filesystems, alongside supported Linux, BSD, Plan 9 and unikernel guests.
+
+The package patches Proxmox internals and is highly experimental. Uninstalling restores the Proxmox files it patched. Each VM has its own kernel; boot time and device support depend on the guest and host.
 
 ## How it works
-Patches two `qemu-server` files to add `microvm` as a selectable machine type. A standard Proxmox VM emulates a full x86 PC with PCI bus and BIOS, but a microvm skips all that -- direct kernel load, virtio-mmio only, much smaller attack surface. The result keeps per-VM kernels while cutting out most of the emulated PC hardware.
+The package integrates the QEMU `microvm` machine type, guest kernel configuration and management helpers with Proxmox. Image tools build templates from OCI images or specialist guest filesystems; the web UI adds creation controls and a console. Direct kernel loading avoids a conventional PC BIOS.
+
+VM disks use Proxmox storage backends, including local volumes, ZFS and network storage. Optional virtiofs/9p sharing, vsock SSH-agent forwarding and ephemeral run-and-destroy tools support short-lived workspaces. Sharing files or forwarding credentials expands what a guest can access.
 
 ## Features
-### ⚡ Direct kernel boot
-No emulated PCI, no BIOS. Direct kernel load.
+### Container images as VMs
+Convert OCI images into templates with their own kernel and hardware isolation.
 
-### 🛡 Full KVM isolation
-Own kernel per VM. No shared kernel.
+### Guest choices
+Import Firecracker root filesystems and run supported Linux, BSD, Plan 9 and unikernel guests. Compatibility varies by guest.
 
-### 🔌 Proxmox UI
-Appears as a machine type option. Managed like any VM.
+### Proxmox management
+Creation UI, templates, cloning, backups, storage integration and offline migration within Proxmox workflows.
 
-### ↩ Fully reversible
-dpkg -r restores original qemu-server files.
+### Workspace helpers
+Optional host-directory sharing, SSH-agent forwarding over vsock and disposable VM execution.
+
+### Reversible package
+Removal restores patched Proxmox files. Check supported Proxmox versions before installing; this changes host management code.
 
 ## Posts
 - [Notes for April 27 – May 3](https://taoofmac.com/space/notes/2026/05/03/2200) — 2026-05-03
@@ -96,7 +103,7 @@ dpkg -r restores original qemu-server files.
   <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">machine type</text>
   <rect x="368" y="98" width="82" height="48" rx="6" class="box-warm"/>
   <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Kernel overlay</text>
-  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">virtio-only</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">virtio devices</text>
 
   <rect x="518" y="30" width="180" height="60" rx="8" class="box-purple"/>
   <text x="608" y="56" text-anchor="middle" class="label">microvm</text>
@@ -104,12 +111,12 @@ dpkg -r restores original qemu-server files.
 
   <rect x="758" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="848" y="56" text-anchor="middle" class="label">Guest VM</text>
-  <text x="848" y="74" text-anchor="middle" class="sub">&lt; 200 ms boot</text>
+  <text x="848" y="74" text-anchor="middle" class="sub">Direct kernel boot</text>
 
   <path d="M210,60 L274,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M210,148 L228,148 Q242,148 242,134 L242,74 Q242,60 256,60 L274,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M454,60 L518,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M698,60 L758,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
 
-  <text x="484" y="198" text-anchor="middle" class="sub">Firecracker-like microVMs for Proxmox VE — KVM isolation, &lt;200 ms boot</text>
+  <text x="484" y="198" text-anchor="middle" class="sub">QEMU microVMs for Proxmox VE — own-kernel guests and image tools</text>
 </svg>

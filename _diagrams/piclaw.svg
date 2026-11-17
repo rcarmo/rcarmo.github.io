@@ -71,7 +71,7 @@
 
   <rect x="750" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="840" y="56" text-anchor="middle" class="label">Tools</text>
-  <text x="840" y="74" text-anchor="middle" class="sub">images · office · schedule</text>
+  <text x="840" y="74" text-anchor="middle" class="sub">built-in + add-on tools</text>
 
   <rect x="750" y="118" width="180" height="60" rx="8" class="box-accent"/>
   <text x="840" y="144" text-anchor="middle" class="label">External</text>
@@ -85,7 +85,7 @@
   <path d="M450,148 L466,148 Q480,148 480,162 L480,222 Q480,236 494,236 L510,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M690,60 L750,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M690,148 L706,148 Q720,148 720,134 L720,74 Q720,60 734,60 L750,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-  <path d="M690,236 L706,236 Q720,236 720,222 L720,162 Q720,148 734,148 L750,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M360,178 L360,254 Q360,272 378,272 L708,272 Q732,272 732,248 L732,108 Q732,96 744,96 L818,96 Q824,96 824,90" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M840,90 L840,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
 

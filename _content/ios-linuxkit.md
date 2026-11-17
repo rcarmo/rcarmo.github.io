@@ -5,33 +5,37 @@ section: apple
 status: active
 created: 2026-04-30
 logo: assets/logos-opt/ios-linuxkit.png
-tagline: Linux runtime for iOS — ARM64 emulation, Alpine packages, developer runtimes, no jailbreak
+tagline: Local ARM64 Linux runtime for iOS, with a default interpreter, optional AOT and Linux-host builds.
 ---
 
 ## About
-A Linux runtime for iOS developers, packaging the ARM64 iSH work into a developer-focused environment for running shells, compilers, package managers, language runtimes, and agent CLIs directly on iPhone and iPad -- no jailbreak, no `MAP_JIT`, no RWX memory. Built on iSH's Asbestos threaded-code interpreter with precompiled ARM64 gadget dispatch and a 48-bit guest address space for modern runtimes like V8, Go, and JVM.
+`ios-linuxkit` runs an AArch64 Linux userland inside an iOS app, with a native AArch64 Linux-host build for development. Derived from iSH, it combines a userspace kernel and filesystems with the Asbestos threaded-code interpreter.
+
+The default interpreter needs no JIT, RWX memory or `MAP_JIT`. Optional ahead-of-time builds link translated Linux code into the application executable; unmatched code falls back to interpretation. The iOS app is a reference terminal; no App Store distribution is planned.
 
 ## How it works
-The interpreter translates AArch64 instructions through a threaded-code dispatch mechanism -- without runtime code generation. A 48-bit virtual address space lets large runtimes (V8, Go, Rust, JVM) allocate as they expect. The Alpine Linux userland runs on top, with `apk` for package management. Implemented syscall paths cover signals/ucontext, futex/threads, vector I/O, socket control messages, and enough filesystem semantics for real developer workflows.
+An ARM64 decoder and precompiled host gadgets execute guest instructions. A Linux syscall layer and 48-bit guest address space support an Alpine userland with shells, packages and developer runtimes.
+
+AOT translation happens before the application is built. Accelerated iOS builds include selected Bun and Go code, while Linux-host builds support development and regression checks. The outer iOS sandbox provides isolation; guest emulation does not replace that security control.
 
 ## Features
-### 🐧 Full Alpine Linux userland
-Shell, `apk`, C/C++, Go, Rust/Cargo, Bun, Node/npm, Python, Lua, Java/OpenJDK, Clojure, Erlang, Zig.
+### 🐧 Local Linux userland
+Alpine packages, shells, compilers and agent CLIs on the device, with no remote server required.
 
-### 📱 No JIT required
-Uses interpreter dispatch without `MAP_JIT` or RWX pages. The project is not intended for App Store distribution.
+### 📱 Interpreter by default
+Threaded-code dispatch within iOS restrictions, without JIT or runtime executable-code generation.
 
-### 🧠 48-bit address space
-V8, JavaScriptCore, Go, Rust, and JVM all work with full virtual memory reservations.
+### ⚙️ Optional AOT
+Prebuilt translations linked into the app, with interpreter fallback for unmatched code. Linux-host tests do not establish iOS-device behaviour.
 
-### 🤖 AI agent runtimes
-Claude CLI, Codex, and agent harnesses can bootstrap directly on iOS.
+### 🧠 Guest address space
+A 48-bit virtual address space accommodates large runtime reservations; syscall and runtime compatibility still varies by program.
 
-### 🖥 Ghostty-Web terminal
-Integrated terminal frontend with themes, hardened ObjC/JS bridge, and async lifecycle management.
+### 🖥 Terminal choices
+xterm.js is the default reference frontend; Ghostty Web is also available.
 
-### 🧪 Runtime checks
-Automated tests cover language runtimes and developer tools; support varies by runtime.
+### 🧪 Linux-host development
+Native AArch64 builds support instruction, syscall and developer-runtime checks before device testing.
 
 ## Posts
 - [Open Minis Is the iOS Agent I Wish Siri AI Could Be](https://taoofmac.com/space/links/2026/07/20/2213) — 2026-07-20
@@ -89,12 +93,12 @@ Automated tests cover language runtimes and developer tools; support varies by r
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-accent"/>
   <text x="120" y="56" text-anchor="middle" class="label">iOS app</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">App Store compatible</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">Reference terminal</text>
 
   <rect x="262" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="274" y="30" width="180" height="60" rx="8" class="box-purple"/>
-  <text x="364" y="56" text-anchor="middle" class="label">Asbestos interpreter</text>
-  <text x="364" y="74" text-anchor="middle" class="sub">threaded-code ARM64</text>
+  <text x="364" y="56" text-anchor="middle" class="label">ARM64 execution</text>
+  <text x="364" y="74" text-anchor="middle" class="sub">Interpreter + optional AOT</text>
   <rect x="278" y="98" width="82" height="48" rx="6" class="box-purple"/>
   <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Syscall layer</text>
   <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">signals · futex</text>
@@ -120,5 +124,5 @@ Automated tests cover language runtimes and developer tools; support varies by r
   <text x="728" y="54" text-anchor="middle" class="sub">apk</text>
   <path d="M698,60 L714,60 Q728,60 728,74 L728,134 Q728,148 742,148 L758,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <text x="484" y="198" text-anchor="middle" class="sub">iOS Linux runtime — ARM64 interpreter + Alpine userland</text>
+  <text x="484" y="198" text-anchor="middle" class="sub">ARM64 Linux runtime — interpretation, optional AOT and Alpine userland</text>
 </svg>

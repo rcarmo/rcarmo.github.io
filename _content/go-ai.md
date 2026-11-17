@@ -9,12 +9,12 @@ logo: assets/logos-opt/go-ai.png
 ## About
 `go-ai` brings Pi's multi-provider AI API to Go applications. It provides streaming text and reasoning, tool calls, OAuth helpers and image generation, with common message and model types across providers.
 
-The v1.1.0 release follows `pi-ai` and `pi-durable` v1.1.0. Alongside the inference library, it includes a native durable runtime for persisted agent conversations, tasks, tools and recovery.
+The current upstream baseline is v1.4.0. Work towards v1.5.0 spans `pi-ai`, `pi-durable` and `pi-codemode`; full alignment is unverified. Alongside inference, the library includes a native durable runtime for conversations, tasks, tools and recovery.
 
 ## How it works
 Applications register the provider packages they need, select a model and call `Stream()` or `Complete()`. Each provider translates the common Go request types into its API protocol and returns channel-based events for text, reasoning, tools, usage and completion.
 
-Generated registries describe chat, image and classifier models. OAuth and transport helpers handle provider-specific sign-in, SSE and WebSocket connections. The durable runtime adds session state, compaction and recovery using memory, append-journal or SQLite stores.
+Generated registries describe chat, image and classifier models. OAuth and transport helpers handle provider-specific sign-in, SSE and WebSocket connections. The durable runtime adds session state, compaction and recovery through a pure-Go SQLite driver. Existing users of the removed memory and append-journal stores need to migrate.
 
 ## Features
 ### 🔄 Shared inference API
@@ -27,16 +27,16 @@ JSON Schema parameters, streamed arguments and partial JSON parsing, with constr
 Provider thinking levels, signed thinking replay, prompt-cache metadata and stop reasons.
 
 ### 🎨 Images and model registries
-Image generation through OpenRouter, with generated chat, image and classifier catalogues.
+OpenRouter image generation and generated chat, image and classifier catalogues.
 
 ### 🔐 OAuth and transports
 Provider-specific login helpers, SSE streaming and Codex WebSocket support with connection reuse.
 
 ### 🗃 Durable agent runtime
-Persisted conversations, owned tasks and tools, subscriptions, compaction and recovery. Earlier journal formats are not an upgrade compatibility guarantee.
+Persisted conversations, owned tasks and tools, subscriptions, compaction and recovery. Check storage-format compatibility before upgrading.
 
 ### 🔁 Cross-language messages
-JSON-compatible message, context, tool and usage types for supported Go/TypeScript hand-offs. JavaScript-only runtime integrations are adapted rather than copied unchanged.
+JSON-compatible message, context, tool and usage types for supported Go/TypeScript hand-offs. Runtime and provider differences still require adapters.
 
 ## Posts
 - [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
@@ -95,7 +95,7 @@ JSON-compatible message, context, tool and usage types for supported Go/TypeScri
 
   <rect x="30" y="118" width="180" height="60" rx="8" class="box"/>
   <text x="120" y="144" text-anchor="middle" class="label">Config</text>
-  <text x="120" y="162" text-anchor="middle" class="sub">auth.json · env vars</text>
+  <text x="120" y="162" text-anchor="middle" class="sub">API keys · OAuth · env</text>
 
   <rect x="262" y="22" width="204" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="274" y="30" width="180" height="60" rx="8" class="box-purple"/>
@@ -103,10 +103,10 @@ JSON-compatible message, context, tool and usage types for supported Go/TypeScri
   <text x="364" y="74" text-anchor="middle" class="sub">provider + model discovery</text>
   <rect x="278" y="98" width="82" height="48" rx="6" class="box-teal"/>
   <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Tool calling</text>
-  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">auto-dispatch</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">JSON Schema</text>
   <rect x="368" y="98" width="82" height="48" rx="6" class="box"/>
   <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Context mgmt</text>
-  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">overflow/trim</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">cache / limits</text>
 
   <rect x="510" y="22" width="294" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="567" y="30" width="180" height="60" rx="8" class="box-green"/>
@@ -123,12 +123,11 @@ JSON-compatible message, context, tool and usage types for supported Go/TypeScri
 
   <rect x="856" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="946" y="56" text-anchor="middle" class="label">Event stream</text>
-  <text x="946" y="74" text-anchor="middle" class="sub">SSE deltas · tool calls</text>
+  <text x="946" y="74" text-anchor="middle" class="sub">text · tools · usage</text>
 
   <path d="M210,60 L274,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M210,148 L228,148 Q242,148 242,134 L242,74 Q242,60 256,60 L274,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M454,60 L567,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-  <text x="511" y="54" text-anchor="middle" class="sub">SSE</text>
   <path d="M747,60 L856,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
   <text x="533" y="198" text-anchor="middle" class="sub">Unified Go inference library — multi-provider streaming with tool calling</text>

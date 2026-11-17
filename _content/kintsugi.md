@@ -9,41 +9,41 @@ tagline: Self-hosted coding-agent workspaces with VS Code, draw.io and native AM
 ---
 
 ## About
-Kintsugi is an experimental fork of [AgentsInTheCloud](https://github.com/lucasmeijer/AgentsInTheCloud) for working with coding agents on self-hosted infrastructure. Its web interface brings together agent conversations, workspace files, Git changes and tools, with embedded VS Code and draw.io editing and previews. Native AMD64 and ARM64 builds support both Intel/AMD and ARM servers.
+Kintsugi is an experimental fork of [AgentsInTheCloud](https://github.com/lucasmeijer/AgentsInTheCloud) for working with coding agents on self-hosted infrastructure. Its web interface brings together agent conversations, workspace files, Git changes and tools, with embedded VS Code and draw.io editing and previews.
 
-The project is being split into smaller packages for workspace provisioning, agent integration and UI features. The package split and interface are still evolving.
+It adds per-agent plans, delegated work, workspace resource monitoring and controls for reaching private services.
 
 ## How it works
-A Bun server manages workspaces and their agent sessions, provisioning containers through Docker on a dedicated Linux host. Workspace modules supply agent types, tools and views; live updates reach the browser through cable channels and Turbo Stream HTML updates.
+A Bun server manages workspaces and agent sessions on a dedicated Linux Docker host. Workspace modules provide agents, tools and views. WebSocket live updates have a per-browser SSE fallback.
 
-The application keeps settings and workspace state outside the agent containers. GitHub connections and secret values are managed separately from agent sandboxes. Workspace tools are published as a read-only mount, while file and Git operations use the workspace's own environment.
+An instance credential catalogue grants access per workspace template. Agents receive placeholders; an egress proxy substitutes credentials for the configured destination. Private-network access requires exact host and port grants, separately from Git-host credentials. HTTP/OAuth MCP connections can be shared selectively; stdio servers stay bound to a workspace.
 
-Deployment uses separate application and system images. Release sources can be configured, including private GHCR repositories; the installer supports pinned updates and rollback.
+Versioned AMD64 and ARM64 images support pinned updates and host-updater rollback. Updates interrupt running workspaces, so finish active work first.
 
 ## Features
 ### Coding-agent workspaces
-Launch workspaces with agents, files, Git changes and task views in one browser interface.
-
-### Modular implementation
-Bun and TypeScript packages separate workspace lifecycle, agent integration, shared UI and individual workspace features.
+Plans, code mode, subagents, background work and full-text agent-history search.
 
 ### VS Code and draw.io
-Edit code in the embedded VS Code interface, and edit or preview draw.io diagrams without opening a separate application.
+Embedded code editing, diagram editing and previews, tables and read-only Office document views.
 
-### AMD64 and ARM64 support
-Native builds for Intel/AMD and ARM64 Linux hosts.
+### Workspace monitoring
+CPU, RAM, swap and task limits, with resource charts and out-of-memory diagnostics.
 
-### Workspace tools
-Agent helpers are mounted read-only into workspaces, with stale helper files removed when the tool set changes.
+### Credentials and networking
+Per-template credential grants, proxy-side substitution and exact private host/port permissions. GitHub, GitLab, Bitbucket and Gitea connections.
+
+### Optional token optimisation
+Context pruning, learned facts and tool suggestions are off by default. Basic mode adds no model calls; model-assisted cost and quality effects are unmeasured.
+
+### MCP connections
+Shared HTTP/OAuth connections with per-workspace agent restrictions, workspace-bound stdio servers and bounded result recall.
 
 ### Deployment controls
-Configurable Docker image sources, private GHCR authentication, pinned releases and installer rollback.
+Native AMD64/ARM64 images, configurable release sources, version pins and rollback.
 
 ### Optional management API
-A separate, token-authenticated management API, disabled by default. Non-loopback listeners require TLS; management bindings stay outside agent workspaces.
-
-### Experimental fork
-Requires a dedicated Linux server with Docker. The package split and UI are still evolving; the original MIT licence and third-party attributions are preserved.
+Disabled by default, with scoped bearer tokens and TLS for non-loopback listeners. It does not expose agent prompting, terminals or commands.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 114">
@@ -95,7 +95,7 @@ Requires a dedicated Linux server with Docker. The package split and UI are stil
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
   <text x="120" y="56" text-anchor="middle" class="label">Browser workspace</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">Agents, files, Git, Draw.io</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">Agents, files, Git, editors</text>
 
   <rect x="270" y="30" width="180" height="60" rx="8" class="box"/>
   <text x="360" y="56" text-anchor="middle" class="label">Bun server</text>

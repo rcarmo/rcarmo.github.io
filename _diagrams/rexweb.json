@@ -1,0 +1,45 @@
+{
+  "title": "Shared shell sessions for browser and Rex clients",
+  "nodes": [
+    {
+      "id": "clients",
+      "label": "Browser / Rex",
+      "sub": "One viewer per pane",
+      "tag": "input"
+    },
+    {
+      "id": "service",
+      "label": "Go service",
+      "sub": "Sessions + VT state",
+      "tag": "process"
+    },
+    {
+      "id": "pty",
+      "label": "PTYs and shells",
+      "sub": "One service account",
+      "tag": "backend"
+    },
+    {
+      "id": "files",
+      "label": "Workspace files",
+      "sub": "Persist on disk",
+      "tag": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "clients",
+      "to": "service",
+      "accent": true
+    },
+    {
+      "from": "service",
+      "to": "pty"
+    },
+    {
+      "from": "pty",
+      "to": "files",
+      "accent": true
+    }
+  ]
+}

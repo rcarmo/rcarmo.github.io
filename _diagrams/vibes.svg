@@ -47,33 +47,33 @@
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
   <text x="120" y="56" text-anchor="middle" class="label">User</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">pick agent at runtime</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">phone · tablet · desktop</text>
 
   <rect x="262" y="22" width="294" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="319" y="30" width="180" height="60" rx="8" class="box-green"/>
   <text x="409" y="56" text-anchor="middle" class="label">Vibes runtime</text>
-  <text x="409" y="74" text-anchor="middle" class="sub">ACP protocol layer</text>
+  <text x="409" y="74" text-anchor="middle" class="sub">ACP / Pi RPC adapters</text>
   <rect x="278" y="98" width="82" height="48" rx="6" class="box-indigo"/>
   <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Copilot</text>
-  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">GitHub</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">ACP agent</text>
   <rect x="368" y="98" width="82" height="48" rx="6" class="box-indigo"/>
-  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Codex</text>
-  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">OpenAI</text>
+  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">OpenCode</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">ACP agent</text>
   <rect x="458" y="98" width="82" height="48" rx="6" class="box-indigo"/>
-  <text x="499" y="119" text-anchor="middle" class="label" style="font-size:11px">Claude</text>
-  <text x="499" y="133" text-anchor="middle" class="sub" style="font-size:9px">Anthropic</text>
+  <text x="499" y="119" text-anchor="middle" class="label" style="font-size:11px">Pi</text>
+  <text x="499" y="133" text-anchor="middle" class="sub" style="font-size:9px">RPC adapter</text>
 
   <rect x="608" y="30" width="180" height="60" rx="8" class="box-slate"/>
-  <text x="698" y="56" text-anchor="middle" class="label">Docker sandbox</text>
-  <text x="698" y="74" text-anchor="middle" class="sub">isolated execution</text>
+  <text x="698" y="56" text-anchor="middle" class="label">Host processes</text>
+  <text x="698" y="74" text-anchor="middle" class="sub">shared account / files</text>
 
   <rect x="848" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="938" y="56" text-anchor="middle" class="label">Workspace</text>
-  <text x="938" y="74" text-anchor="middle" class="sub">code + AGENTS.md</text>
+  <text x="938" y="74" text-anchor="middle" class="sub">files + editor + shell</text>
 
   <path d="M210,60 L319,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M499,60 L608,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M788,60 L848,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
 
-  <text x="529" y="174" text-anchor="middle" class="sub">Multi-agent coding sandbox — Copilot, Codex, Claude, Pi over ACP</text>
+  <text x="529" y="174" text-anchor="middle" class="sub">Browser coding workspace with ACP and Pi RPC adapters</text>
 </svg>

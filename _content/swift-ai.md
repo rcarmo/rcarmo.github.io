@@ -2,15 +2,15 @@
 id: swift-ai
 repo: rcarmo/swift-ai
 section: ai-ml
-status: maintenance
+status: archived
 created: 2026-07-09
-tagline: SwiftPM port of Pi's AI API -- typed streaming, tools and model registries; development paused at v1.0.1.
+tagline: SwiftPM port of Pi's AI API -- typed streaming, tools and model registries; archived at v1.0.1.
 ---
 
 ## About
 `swift-ai` brings the `@earendil-works/pi-ai` API to Swift applications without requiring the TypeScript runtime. It provides typed streaming, tool calls, OAuth helpers and registries for chat, image and classifier models.
 
-Development has stopped. The main branch retains the published v1.0.1 package, following `pi-ai` v1.0.1. Unfinished v1.1.0 work is preserved on the [release branch](https://github.com/rcarmo/swift-ai/tree/release/v1.1.0); pin v1.0.1 for the released package.
+The repository is archived and development has stopped. The main branch retains the published v1.0.1 package, following `pi-ai` v1.0.1. Unfinished v1.1.0 work is preserved on the [release branch](https://github.com/rcarmo/swift-ai/tree/release/v1.1.0); pin v1.0.1 for the released package.
 
 ## How it works
 `SwiftAI.bootstrap()` registers models and providers in actor-backed registries. Requests resolve a model, credentials and provider implementation, then use the asynchronous `stream` or `complete` API.
@@ -34,7 +34,7 @@ OpenRouter image generation and generated chat, image and classifier registries 
 Provider-specific sign-in, retry/backoff helpers, diagnostics and request/response interception.
 
 ### Frozen release
-The SwiftPM package is released at v1.0.1. The paused v1.1.0 branch has unfinished, unverified changes and is not a completed upgrade.
+Use the v1.0.1 SwiftPM package; the preserved v1.1.0 branch contains unfinished, unverified changes.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 114">

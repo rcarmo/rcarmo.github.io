@@ -1,0 +1,45 @@
+{
+  "title": "Scheduled Docker updates with dependency ordering",
+  "nodes": [
+    {
+      "id": "policy",
+      "label": "Container labels",
+      "sub": "Schedules + dependencies",
+      "tag": "input"
+    },
+    {
+      "id": "service",
+      "label": "Guerite",
+      "sub": "Python scheduler",
+      "tag": "process"
+    },
+    {
+      "id": "docker",
+      "label": "Docker API",
+      "sub": "Pull + replace",
+      "tag": "backend"
+    },
+    {
+      "id": "services",
+      "label": "Managed services",
+      "sub": "Dependency order",
+      "tag": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "policy",
+      "to": "service",
+      "accent": true
+    },
+    {
+      "from": "service",
+      "to": "docker"
+    },
+    {
+      "from": "docker",
+      "to": "services",
+      "accent": true
+    }
+  ]
+}

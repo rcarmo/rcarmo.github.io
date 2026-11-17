@@ -1,5 +1,5 @@
 {
-  "title": "Canonical Git knowledge, rebuildable search and reviewed writes",
+  "title": "Canonical Git knowledge, rebuildable search and authorised writes",
   "nodes": [
     {
       "id": "agents",
@@ -19,15 +19,15 @@
     },
     {
       "id": "writes",
-      "label": "Reviewed writes",
-      "sub": "proposal · journal · lease",
+      "label": "Curator writes",
+      "sub": "review / direct · journal",
       "tag": "processing",
       "column": 2,
       "row": 0
     },
     {
       "id": "reads",
-      "label": "Fine-tuned router",
+      "label": "Search / router",
       "sub": "bounded read operations",
       "tag": "processing",
       "column": 2,
@@ -36,7 +36,7 @@
     {
       "id": "git",
       "label": "Git knowledge",
-      "sub": "Markdown · history · LFS",
+      "sub": "Markdown · history · ZIP",
       "tag": "output",
       "column": 3,
       "row": 0
@@ -44,7 +44,7 @@
     {
       "id": "index",
       "label": "Derived indexes",
-      "sub": "FTS5 · graph · vectors",
+      "sub": "search · graph · embeddings",
       "tag": "backend",
       "column": 3,
       "row": 1

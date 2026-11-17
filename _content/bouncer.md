@@ -3,36 +3,40 @@ section: cloud-infra
 status: experimental
 created: 2026-03-01
 logo: assets/logos-opt/bouncer.png
-tagline: Passkey-only reverse proxy with built-in CA, iOS onboarding, and Cloudflare Tunnel support.
+tagline: Passkey reverse proxy with local HTTPS, trusted-proxy and embedded Funnel ingresses.
 ---
 
 ## About
-A Go reverse proxy that gates any backend HTTP service behind WebAuthn passkeys -- no passwords, no TOTP codes. Ships a built-in CA for zero-config local TLS, generates `.mobileconfig` profiles for iOS/macOS trust installation, and supports Cloudflare Tunnel mode to skip local TLS entirely. A 6-digit one-time enrolment token, optional Pushover alerts with geolocation, and multi-site host routing complete the picture.
+Bouncer protects HTTP backends with WebAuthn passkeys and persistent sessions. A single Go process can serve local HTTPS, trusted external proxies and multiple embedded Tailscale Funnel ingresses, with host-based routing to the right backend.
+
+Its built-in CA and iOS/macOS trust profiles handle local certificate onboarding. Explicit ingress configuration keeps listener addresses and trusted proxy settings separate from backend routing.
 
 ## How it works
-On startup, Bouncer generates a root CA and server certificate automatically, then listens for HTTPS connections. Unauthenticated requests are redirected to an onboarding flow where a user registers a passkey using a one-time token. Once enrolled, sessions last 7 days (persisted across restarts). Authenticated requests are forwarded transparently to the backend. In Cloudflare Tunnel mode, Cloudflare provides HTTPS and Bouncer skips all local TLS.
+Each configured ingress accepts requests for declared sites. Local HTTPS uses certificates from the built-in CA; external TLS proxies must be configured as trusted ingresses. Users enrol passkeys with an on-demand one-time token, then receive persistent sessions before the reverse proxy forwards requests.
+
+Long-lived SSE connections and WebSocket upgrades pass through the proxy. Routing changes can reload with SIGHUP without restarting unchanged listeners.
 
 ## Features
-### 🔑 Passkey-only auth
-WebAuthn -- no passwords, no TOTP. Same-origin enforced.
+### 🔑 Passkey authentication
+WebAuthn sign-in with persistent sessions and one-time enrolment tokens.
 
-### 🔐 Built-in CA
-Root CA + server cert generated on first run. No mkcert, no Let's Encrypt.
+### 🔐 Local HTTPS
+Built-in CA and server certificates, plus trust-onboarding profiles for iOS and macOS.
 
-### 📲 iOS / macOS onboarding
-Serves `.mobileconfig` trust profiles; passkey enrolment from Safari.
+### 🌐 Explicit ingresses
+Local sockets, trusted external proxies and multiple embedded tsnet/Funnel nodes, with optional mDNS discovery.
 
-### ☁️ Cloudflare Tunnel mode
-Skip local TLS entirely -- Cloudflare provides HTTPS.
+### 🔄 Routing reloads
+Host-based backend selection and SIGHUP reloads preserve unchanged listeners.
 
-### 🔢 One-time enrolment token
-6-digit token on demand, logged + optional Pushover alert with IP / geo.
+### 📣 Enrolment alerts
+Optional Pushover notifications with enrolment details and lockout handling.
 
-### 🌐 Multi-site host routing
-Multiple backends in a single instance, per-site passkey stores.
+### ❄️ Nix packaging
+A locked flake supplies packages and a development shell for Linux x86_64 and aarch64. Runtime state stays outside the Nix store.
 
-### 📦 Single binary
-Static Go binary; Docker-ready.
+### 🧪 Experimental Funnel support
+Embedded tsnet/Funnel ingresses are implemented; live tailnet enrolment, certificates and teardown are not yet verified.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 202">
@@ -87,8 +91,8 @@ Static Go binary; Docker-ready.
   <text x="120" y="74" text-anchor="middle" class="sub">passkey · enrolment token</text>
 
   <rect x="30" y="118" width="180" height="60" rx="8" class="box-indigo"/>
-  <text x="120" y="144" text-anchor="middle" class="label">Cloudflare Tunnel</text>
-  <text x="120" y="162" text-anchor="middle" class="sub">optional TLS termination</text>
+  <text x="120" y="144" text-anchor="middle" class="label">Other ingresses</text>
+  <text x="120" y="162" text-anchor="middle" class="sub">Proxy / tsnet / Funnel</text>
 
   <rect x="270" y="30" width="180" height="60" rx="8" class="box-accent"/>
   <text x="360" y="56" text-anchor="middle" class="label">Bouncer</text>
@@ -107,7 +111,7 @@ Static Go binary; Docker-ready.
   <path d="M450,60 L466,60 Q480,60 480,74 L480,134 Q480,148 494,148 L510,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M210,148 L226,148 Q240,148 240,134 L240,74 Q240,60 254,60 L270,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <text x="360" y="198" text-anchor="middle" class="sub">WebAuthn gate in front of an HTTP service</text>
+  <text x="360" y="198" text-anchor="middle" class="sub">Passkey gate with explicit reverse-proxy ingresses</text>
 </svg>
 
 ## Posts

@@ -20,7 +20,7 @@
     {
       "id": "entropy",
       "label": "Entropy decode",
-      "sub": "CAVLC \u00b7 partial CABAC",
+      "sub": "CAVLC / CABAC",
       "tag": "processing",
       "column": 2,
       "row": 0

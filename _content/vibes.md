@@ -10,21 +10,29 @@ logo: assets/logos-opt/vibes.png
 Vibes is a Python web app for talking to AI coding agents from a phone, with a Go port that packages the frontend and SQLite storage in a single binary. Both implementations support ACP agents and Pi via RPC.
 
 ## Motivation
-I wanted something I could use on my iPhone and iPad without adopting OpenClaw. GitHub Copilot and Codex through ACP worked, but felt limiting. [Pi](https://pi.dev) exposed the extension points I needed to explore an agent-based IDE that could run from my iPad. The Python implementation remains on the `python` branch alongside the Go port.
+I wanted something I could use on my iPhone and iPad without adopting OpenClaw. GitHub Copilot and Codex through ACP worked, but felt limiting. [Pi](https://pi.dev) exposed the extension points I needed to explore an agent-based IDE that could run from my iPad.
 
 
 ## How it works
-The Python and Go servers forward browser messages to the configured agent backend and stream responses back over SSE. The Go port embeds the frontend in its binary, so it does not require a separate web server or JavaScript runtime.
+The Python server forwards prompts to an installed ACP agent or Pi RPC backend and streams replies over SSE. Browser assets are packaged with the application, alongside a workspace editor and an optional POSIX terminal.
+
+Vibes binds to localhost and has no built-in login. Anyone who can reach it can operate the agent and workspace tools. Conversations share the server account and workspace; remote use needs authentication and HTTPS in front of it.
 
 ## Features
-### 📱 Phone-first
-Designed and tested on iOS/Android before desktop.
+### 📱 Browser workspace
+Chat, attachments, a tabbed CodeMirror editor, Vim mode and pop-out views for phones, tablets and desktops.
 
-### ⚡ ACP + Pi RPC
-copilot --acp, OpenAI Codex, Pi agents. Protocol adapters are pluggable.
+### ⚡ ACP and Pi RPC
+Connect to separately installed and authenticated coding agents. Vibes includes neither a model nor a provider subscription.
 
-### 🚿 SSE streaming
-Live token streaming. No polling, no spinners.
+### 🗂 Sessions and plans
+Persistent conversations, queued follow-ups, run-bound steering and a shared revision-checked plan drawer.
+
+### 🖥 Optional terminal
+POSIX terminal sessions with reconnect and pop-out support, enabled explicitly.
+
+### 🐍 Python with a Go port
+Python is on `main`; the Go port has its own build and releases on `go`.
 
 ## Posts
 - [Notes for September 13-20](https://taoofmac.com/space/notes/2026/09/20/1800) — 2026-09-20
@@ -83,33 +91,33 @@ Live token streaming. No polling, no spinners.
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
   <text x="120" y="56" text-anchor="middle" class="label">User</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">pick agent at runtime</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">phone · tablet · desktop</text>
 
   <rect x="262" y="22" width="294" height="140" rx="12" fill="none" stroke="#94a3b8" stroke-width="1" stroke-dasharray="4 3" opacity="0.5"/>
   <rect x="319" y="30" width="180" height="60" rx="8" class="box-green"/>
   <text x="409" y="56" text-anchor="middle" class="label">Vibes runtime</text>
-  <text x="409" y="74" text-anchor="middle" class="sub">ACP protocol layer</text>
+  <text x="409" y="74" text-anchor="middle" class="sub">ACP / Pi RPC adapters</text>
   <rect x="278" y="98" width="82" height="48" rx="6" class="box-indigo"/>
   <text x="319" y="119" text-anchor="middle" class="label" style="font-size:11px">Copilot</text>
-  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">GitHub</text>
+  <text x="319" y="133" text-anchor="middle" class="sub" style="font-size:9px">ACP agent</text>
   <rect x="368" y="98" width="82" height="48" rx="6" class="box-indigo"/>
-  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">Codex</text>
-  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">OpenAI</text>
+  <text x="409" y="119" text-anchor="middle" class="label" style="font-size:11px">OpenCode</text>
+  <text x="409" y="133" text-anchor="middle" class="sub" style="font-size:9px">ACP agent</text>
   <rect x="458" y="98" width="82" height="48" rx="6" class="box-indigo"/>
-  <text x="499" y="119" text-anchor="middle" class="label" style="font-size:11px">Claude</text>
-  <text x="499" y="133" text-anchor="middle" class="sub" style="font-size:9px">Anthropic</text>
+  <text x="499" y="119" text-anchor="middle" class="label" style="font-size:11px">Pi</text>
+  <text x="499" y="133" text-anchor="middle" class="sub" style="font-size:9px">RPC adapter</text>
 
   <rect x="608" y="30" width="180" height="60" rx="8" class="box-slate"/>
-  <text x="698" y="56" text-anchor="middle" class="label">Docker sandbox</text>
-  <text x="698" y="74" text-anchor="middle" class="sub">isolated execution</text>
+  <text x="698" y="56" text-anchor="middle" class="label">Host processes</text>
+  <text x="698" y="74" text-anchor="middle" class="sub">shared account / files</text>
 
   <rect x="848" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="938" y="56" text-anchor="middle" class="label">Workspace</text>
-  <text x="938" y="74" text-anchor="middle" class="sub">code + AGENTS.md</text>
+  <text x="938" y="74" text-anchor="middle" class="sub">files + editor + shell</text>
 
   <path d="M210,60 L319,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M499,60 L608,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M788,60 L848,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
 
-  <text x="529" y="174" text-anchor="middle" class="sub">Multi-agent coding sandbox — Copilot, Codex, Claude, Pi over ACP</text>
+  <text x="529" y="174" text-anchor="middle" class="sub">Browser coding workspace with ACP and Pi RPC adapters</text>
 </svg>

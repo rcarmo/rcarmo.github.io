@@ -3,7 +3,7 @@
     {
       "id": "hdmi-source",
       "label": "HDMI Source",
-      "sub": "/ console",
+      "sub": "SBC / console",
       "column": 0,
       "row": 0,
       "tag": "input"
@@ -14,14 +14,26 @@
       "sub": "$10 capture card",
       "column": 1,
       "row": 0,
-      "tag": "output"
+      "tag": "backend"
+    },
+    {
+      "id": "viewer",
+      "label": "macOS viewer",
+      "sub": "AVFoundation · audio",
+      "tag": "output",
+      "column": 2,
+      "row": 0
     }
   ],
   "edges": [
+    {
+      "from": "usb-dongle",
+      "to": "viewer"
+    },
     {
       "from": "hdmi-source",
       "to": "usb-dongle"
     }
   ],
-  "title": "all-spaces \u00b7 resizable"
+  "title": "USB capture preview with optional audio on macOS"
 }

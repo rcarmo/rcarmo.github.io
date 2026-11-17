@@ -1,0 +1,45 @@
+{
+  "title": "Routing diagnostics and separately authorised lab faults",
+  "nodes": [
+    {
+      "id": "clients",
+      "label": "Browser / MCP",
+      "sub": "Workbench + tools",
+      "tag": "input"
+    },
+    {
+      "id": "api",
+      "label": "Python / uMCP",
+      "sub": "Operator / God access",
+      "tag": "process"
+    },
+    {
+      "id": "control",
+      "label": "Restricted control",
+      "sub": "Diagnostics + fixed faults",
+      "tag": "backend"
+    },
+    {
+      "id": "network",
+      "label": "FRRouting lab",
+      "sub": "Routers + endpoints",
+      "tag": "output"
+    }
+  ],
+  "edges": [
+    {
+      "from": "clients",
+      "to": "api",
+      "accent": true
+    },
+    {
+      "from": "api",
+      "to": "control"
+    },
+    {
+      "from": "control",
+      "to": "network",
+      "accent": true
+    }
+  ]
+}

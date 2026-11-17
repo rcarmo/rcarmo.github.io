@@ -5,20 +5,20 @@ section: agents
 status: active
 created: 2026-07-17
 logo: assets/logos-opt/memento.png
-tagline: Shared, durable memory for multiple AI agents, with MCP access, reviewed Git writes and rebuildable search.
+tagline: Shared, durable memory for multiple AI agents, with authenticated MCP access, Git history and rebuildable search.
 ---
 
 ## About
-`memento` stores knowledge that should outlive a conversation and remain available to several agents: people, projects, machines, services, decisions and their relationships. Chats, reminders, credentials and machine-specific state stay with the agent that owns them.
+`memento` stores knowledge that should outlive a conversation and be useful to several agents: people, projects, machines, services and the decisions connecting them. Chats, reminders, provider credentials and machine-specific notes stay with their owners.
 
-It was built for several [`piclaw`](piclaw) instances, but any authenticated MCP client can search, read and propose changes. Curators review writes before they reach the shared repository.
+Built for several [Piclaw](piclaw) instances, it provides authenticated MCP access to Markdown concepts in Git. Agents can search, follow links and propose changes; authorised curators can review proposals or edit concepts directly. The service and local model workers run in Go.
 
 ## How it works
-Concepts are Markdown files with stable IDs, metadata and links. Git owns those files and their history; `control.sqlite` owns proposals, idempotency records, write journals, leases and scheduler state. A separate FTS5, graph and optional vector index is derived from Markdown and can be rebuilt.
+Concepts have stable IDs, metadata and ordinary Markdown links. Git holds their content and history. `control.sqlite` records operations, proposals, principals and access activity; `derived.sqlite` holds rebuildable search, graph and embedding data. Routine updates reuse existing embeddings where content is unchanged.
 
-A fine-tuned local Needle model removes ambiguity by classifying natural-language requests into a small set of read operations. Deterministic code derives search text, IDs, paths and bounded plans, then applies schema validation and normal authorisation. The model cannot author mutations.
+Writes check namespace permissions, the expected revision and idempotency keys before committing and updating indexes. Curators with write access to every affected path may review their own proposals; the audit trail records both author and reviewer. Trash can be restored. Explicitly confirmed purges remove current content and assets while retaining Git history.
 
-Writes follow `search -> read -> propose -> review -> apply`. Accepted changes are assembled in temporary worktrees and committed only if the expected repository revision still matches. The readable checkout and indexes advance before success is returned.
+FTS5 and graph search work without a model. Optional GTE embeddings add semantic ranking, and a local Needle model can propose a read operation that deterministic code validates. Short-lived workers release model memory after use. Optional generated answers draw only on concepts the caller may read.
 
 ## Gallery
 - [Live memory graph](assets/screenshots/memento/live-graph.png) -- Memento 0.5.4 showing the current knowledge graph
@@ -28,31 +28,28 @@ Writes follow `search -> read -> propose -> review -> apply`. Accepted changes a
 
 ## Features
 ### Authenticated MCP access
-[`umcp`](umcp) supplies Streamable HTTP transport, request context and authentication. Clients receive tools, not filesystem or Git access.
+A standalone Go implementation of [uMCP](umcp)'s protocol provides Streamable HTTP. Compact discovery exposes the common operations before less-used schemas.
 
-### Fine-tuned request routing
-A local Needle model classifies natural-language requests into bounded read operations. Strict schemas and deterministic expansion validate each result before execution.
+### Search and inventory
+Lexical search, backlinks, graph neighbourhoods and bounded metadata inventory, with optional semantic ranking.
 
-### Search without mandatory models
-Lexical and graph search work locally. GTE-small can add semantic ranking; queries fall back to lexical search if it is unavailable.
+### Reviewed and direct writes
+Agents propose changes; curators can approve, reject or request revisions, and use direct create, patch or rename tools when exposed. Namespace permissions apply to both routes.
 
-### Proposal-first writes
-Agents draft changes and inspect diffs. Curators approve, reject or request changes; model-authored proposals cannot approve themselves.
+### Trash and recovery
+Restore trashed concepts or purge current content with explicit confirmation. Git history, operation journals and backups support recovery.
 
-### Revision-safe Git history
-Stable concept IDs survive renames, inbound links update in the same transaction and stale writes conflict instead of replacing newer knowledge.
+### Access management
+Administrators manage principals and scoped credentials through the admin UI or role-filtered MCP tools. New credentials are shown once; only verifiers are retained.
 
 ### Recallable asset packs
-Versioned Git LFS ZIPs can attach diagrams, templates, datasets or complete skills to a concept, with manifests and path checks on recall.
+Versioned ZIP packs attach diagrams, datasets or complete skills to concepts. Manifests, digests and path checks protect recall; Memento does not execute recalled skills.
 
 ### Optional model assistance
-Separate local models can produce cited answers, draft proposals and suggest Dream maintenance work. They remain advisory and cannot publish.
+Local routing, semantic ranking, cited answers and proposal drafting are optional. Code validates model output and enforces authorisation.
 
-### Recovery and backups
-A single-writer lease, operation journal and startup reconciliation cover interrupted mutations. Backups contain the bare repository and a checksummed SQLite copy.
-
-### Explicit boundaries
-No chat transcripts, reminders, credentials, hard delete, arbitrary shell execution or direct model writes.
+### Visual debugger
+An optional graph view shows links, provenance and proposals. It is disabled by default and unauthenticated when enabled, so keep it on a trusted development network.
 
 ## Posts
 - [Notes for September 13-20](https://taoofmac.com/space/notes/2026/09/20/1800) — 2026-09-20
@@ -117,20 +114,20 @@ No chat transcripts, reminders, credentials, hard delete, arbitrary shell execut
   <text x="360" y="74" text-anchor="middle" class="sub">auth · roles · tools</text>
 
   <rect x="510" y="30" width="180" height="60" rx="8" class="box-purple"/>
-  <text x="600" y="56" text-anchor="middle" class="label">Reviewed writes</text>
-  <text x="600" y="74" text-anchor="middle" class="sub">proposal · journal · lease</text>
+  <text x="600" y="56" text-anchor="middle" class="label">Curator writes</text>
+  <text x="600" y="74" text-anchor="middle" class="sub">review / direct · journal</text>
 
   <rect x="510" y="118" width="180" height="60" rx="8" class="box-purple"/>
-  <text x="600" y="144" text-anchor="middle" class="label">Fine-tuned router</text>
+  <text x="600" y="144" text-anchor="middle" class="label">Search / router</text>
   <text x="600" y="162" text-anchor="middle" class="sub">bounded read operations</text>
 
   <rect x="750" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="840" y="56" text-anchor="middle" class="label">Git knowledge</text>
-  <text x="840" y="74" text-anchor="middle" class="sub">Markdown · history · LFS</text>
+  <text x="840" y="74" text-anchor="middle" class="sub">Markdown · history · ZIP</text>
 
   <rect x="750" y="118" width="180" height="60" rx="8" class="box-green"/>
   <text x="840" y="144" text-anchor="middle" class="label">Derived indexes</text>
-  <text x="840" y="162" text-anchor="middle" class="sub">FTS5 · graph · vectors</text>
+  <text x="840" y="162" text-anchor="middle" class="sub">search · graph · embeddings</text>
 
   <path d="M210,60 L270,60" fill="none" stroke="#3b82f6" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ahs)"/>
   <path d="M450,60 L510,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
@@ -140,5 +137,5 @@ No chat transcripts, reminders, credentials, hard delete, arbitrary shell execut
   <path d="M840,90 L840,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <text x="852" y="108" class="sub">rebuild</text>
 
-  <text x="480" y="198" text-anchor="middle" class="sub">Canonical Git knowledge, rebuildable search and reviewed writes</text>
+  <text x="480" y="198" text-anchor="middle" class="sub">Canonical Git knowledge, rebuildable search and authorised writes</text>
 </svg>

@@ -11,12 +11,12 @@ tagline: Calibre plugin that exposes live libraries to MCP clients without a sec
 ## About
 `python-umcp-calibre` runs an MCP server inside the Calibre GUI process. Agents can search libraries, inspect books and, when explicitly enabled, perform mutations through Calibre's own APIs and job system.
 
-The process boundary matters because Calibre keeps database, cache and filesystem state in memory. The plugin never opens `metadata.db` independently and does not switch the visible library as a side effect of a read.
+Calibre keeps database, cache and filesystem state in memory. The plugin never opens `metadata.db` independently and does not switch the visible library as a side effect of a read.
 
 ## How it works
 The released plugin serves Streamable HTTP at `POST /mcp`. Read-only tools expose library aliases, searches, metadata, formats, bounded EPUB inspection, quality assessment, duplicate discovery and bridge job state. Inactive libraries use Calibre secondary handles.
 
-Writes must be explicitly enabled and are restricted to the supported Calibre version, currently 9.12.0, with a bearer token saved in the plugin UI. Additional configuration checks prevent accidental enablement. Short operations run on the GUI thread; conversion, import and other long tasks use Calibre's native job machinery.
+Writes must be explicitly enabled and are restricted to the supported Calibre version, currently 9.15.0, with a bearer token saved in the plugin UI. Additional configuration checks prevent accidental enablement. Short operations run on the GUI thread; conversion, import and other long tasks use Calibre's native job machinery.
 
 ## Features
 ### Live Calibre state
@@ -37,8 +37,8 @@ Supports metadata, formats, covers, import, trash, duplicate merge, conversion, 
 ### Policy boundaries
 Import and export roots, destination libraries and recipients are configured in the UI. Non-loopback MCP access requires a bearer token; an environment token alone cannot unlock writes.
 
-### Honest job state
-Long operations appear in Calibre's Jobs UI and in the bridge ledger. Cancellation and cross-library moves report partial work instead of promising atomic behaviour.
+### Native task history
+Persistent, redacted task history includes conversions, scheduled downloads and automatic e-mail jobs. Cancellation and cross-library moves report partial work; a completed task does not establish message delivery.
 
 ### Compatibility paths
 The repository retains an older read-only stdio/HTTP server and JSON-RPC helper, but neither is the released mutation surface.

@@ -3,48 +3,49 @@ section: agents
 featured: true
 status: stable
 created: 2026-02-17
-tagline: The Pi coding agent in a technicolor web trenchcoat — [infinite tools](https://rcarmo.github.io/piclaw-addons)
+tagline: The Pi coding agent in a technicolor web trenchcoat -- [infinite tools](https://rcarmo.github.io/piclaw-addons)
 logo: assets/logos-opt/piclaw.png
 ---
 
 ## About
-PiClaw stuffs the [Pi Coding Agent](https://pi.dev) runtime into a Docker container, throws on a streaming web UI, and calls it a day. Multi-provider LLM support, an `xterm.js` terminal, code editor, document viewers, `draw.io`, kanban boards, VNC client, and MCP access -- all behind one `docker run` command. More tools come from a growing catalogue of [community add-ons](https://rcarmo.github.io/piclaw-addons), including the optional [Ghostty terminal](ghostty-web), Proxmox, Portainer, SSH, and whatever else someone felt like wiring up.
+PiClaw gives the [Pi Coding Agent](https://pi.dev) a technicolor web trenchcoat: streaming chat, a file editor, an `xterm.js` terminal and viewers for inspecting the agent's work in the same browser window. It runs in Docker or from portable Linux and Apple Silicon macOS releases; Windows support is experimental.
 
-PiClaw now follows a monthly release cadence, with hotfixes when needed.
+It is a single-user workspace with persistent conversations, files and scheduled tasks. [Add-ons](https://rcarmo.github.io/piclaw-addons) supply Draw.io, Office tools and rendering, kanban boards, infrastructure integrations and the optional [Ghostty terminal](ghostty-web).
 
 ## Motivation
-After creating [`webterm`](webterm) and [`vibes`](vibes), using GitHub Copilot and Codex through the ACP protocol felt limiting. But when I stumbled upon [Pi](https://pi.dev) and its extensibility, I knew I had found a great way to explore how to build an extensible web-based IDE that I could access from my iPhone and iPad.
+After creating [`webterm`](webterm) and [`vibes`](vibes), using GitHub Copilot and Codex through ACP felt limiting. But when I stumbled upon [Pi](https://pi.dev) and its extensibility, I knew I had found a great way to explore how to build an extensible web-based IDE that I could access from my iPhone and iPad.
 
 ## How it works
-A Bun process embeds the [`pi`](https://pi.dev) agent runtime and manages all agent interactions, settings, etc. All `pi` extensions and skills work, and the runtime extends the extension contract in such a way that almost _everything_ inside the workspace is, essentially, a plugin. State is managed with `pi`'s JSONL files, but primarily using a SQLite database that tracks all sessions and can store some media for easy retrieval later via FTS.
+A Bun process hosts Pi and manages conversations, tools and workspace state. SQLite stores searchable history and task data. The browser receives streaming updates, while nightly Dream consolidation writes file-based notes for later conversations.
 
-The web UI receives live updates over SSE. A small set of tools is always active; the agent discovers and activates others through `list_tools` and `activate_tools`. This avoids sending every tool definition with each request, while bounded tool output limits context use.
+The default terminal uses `xterm.js`. A small tool set is active initially; `list_tools` and `activate_tools` expose more as needed, and bounded output limits context use. Skills, MCP connections and optional add-ons extend the workspace.
 
-The workspace includes a file tree, pluggable viewers, an `xterm.js` terminal, a VNC viewer and a `vim`-capable editor with Obsidian-like Markdown rendering. The optional [`ghostty-web`](ghostty-web) add-on provides a Ghostty-based terminal. I use VNC to access SBCs and X apps inside the `piclaw` host. A keychain stores secrets encrypted with AES-GCM.
-
-Nightly memory consolidation synthesises notes from all sessions so later conversations can recover useful context.
+The agent runs with its process user's permissions. A fresh instance has no browser login gate, so keep it on localhost until authentication is configured. Remote use needs HTTPS and browser sign-in, separately from model-provider login. Containers limit access to their mounts and configured network; a native install uses the host account's access.
 
 ## Features
 ### 💬 Streaming chat
-Markdown, KaTeX, Mermaid, Adaptive Cards. Branch with /btw, queue follow-ups.
+Markdown, maths, attachments, model selection, live steering, queued follow-ups and /btw side conversations.
 
-### 🗂 Workspace tooling
-File browser, CodeMirror 6, Office/PDF viewers, draw.io, kanban, VNC -- no separate apps.
+### 🗂 Workspace tools
+File tree, CodeMirror editor, xterm.js terminal, PDF/image/video/table viewers and VNC panes.
 
-### 🔌 Any LLM
-Anthropic, OpenAI, Azure, Gemini, Ollama, or any OpenAI-compatible endpoint.
+### 🔌 Model providers
+Configured cloud providers and local OpenAI-compatible servers. Self-hosting the workspace does not keep requests to external models on-device.
 
 ### 🧠 Persistent state
-SQLite-backed history, media, tasks, encrypted keychain. Dream nightly consolidation.
-
-### 🛠 Infrastructure tools
-SSH, Proxmox, Portainer profiles. CDP browser automation. Sharp image processing. MCP.
+Searchable history, scheduled tasks and file-based Dream memory. Keep the data directories when upgrading.
 
 ### 🧩 Add-ons
-Install tools, skills and integrations from the [Piclaw Add-ons catalogue](https://rcarmo.github.io/piclaw-addons/), including Proxmox, Portainer, observability and remote access packages.
+Install Office tools, Draw.io, kanban, Ghostty, infrastructure management and paired-instance messaging from the [catalogue](https://rcarmo.github.io/piclaw-addons/).
 
-### 📦 Single container
-docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
+### 📦 Deployment choices
+Docker is recommended; portable releases bundle Bun and dependencies for supported native hosts. Pin a release for repeatable deployment.
+
+### 🔐 Browser access
+TOTP and passkeys protect remote browser access once configured.
+
+### 🌍 Desktop and mobile UI
+English, Simplified Chinese and Japanese interfaces, with layouts for desktop browsers, phones and tablets.
 
 ## Gallery
 - [a demo of piclaw, created by piclaw itself](assets/screenshots/piclaw/piclaw-demo.mp4)
@@ -138,7 +139,7 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
 
   <rect x="750" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="840" y="56" text-anchor="middle" class="label">Tools</text>
-  <text x="840" y="74" text-anchor="middle" class="sub">images · office · schedule</text>
+  <text x="840" y="74" text-anchor="middle" class="sub">built-in + add-on tools</text>
 
   <rect x="750" y="118" width="180" height="60" rx="8" class="box-accent"/>
   <text x="840" y="144" text-anchor="middle" class="label">External</text>
@@ -152,7 +153,7 @@ docker run -p 8080:8080 -v ./workspace:/workspace ghcr.io/rcarmo/piclaw:latest
   <path d="M450,148 L466,148 Q480,148 480,162 L480,222 Q480,236 494,236 L510,236" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M690,60 L750,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M690,148 L706,148 Q720,148 720,134 L720,74 Q720,60 734,60 L750,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
-  <path d="M690,236 L706,236 Q720,236 720,222 L720,162 Q720,148 734,148 L750,148" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
+  <path d="M360,178 L360,254 Q360,272 378,272 L708,272 Q732,272 732,248 L732,108 Q732,96 744,96 L818,96 Q824,96 824,90" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M840,90 L840,118" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
 

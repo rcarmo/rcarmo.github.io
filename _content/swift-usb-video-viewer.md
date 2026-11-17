@@ -10,7 +10,7 @@ tagline: Native macOS floating window for USB video capture dongles -- no HDMI s
 A small native macOS utility that previews live video from a USB capture device in a lightweight floating window. Built for the all-too-common workflow of poking at single-board computers with a $10 USB dongle instead of fighting with monitor inputs.
 
 ## How it works
-Uses AVFoundation to enumerate and capture from the first video device whose name contains `USB Video`. Renders the stream directly in a floating utility window with [Daisy](https://github.com/rcarmo/daisy)-style chrome: transparent titlebar, all-spaces behaviour, shadow, and movable window background. Window controls appear only on hover.
+Uses AVFoundation to capture a selected USB video source, defaulting to the first device whose name contains `USB Video`. Optional audio passthrough can follow the video device or use a manually selected source. Renders the stream directly in a floating utility window with [Daisy](https://github.com/rcarmo/daisy)-style chrome: transparent titlebar, all-spaces behaviour, shadow, and movable window background. Window controls appear only on hover.
 
 ## Features
 ### 📺 Floating utility window
@@ -18,6 +18,9 @@ Transparent titlebar, all-spaces, always-on-top -- stays out of the way until yo
 
 ### 🎛 Auto-source detection
 Defaults to the first `USB Video` device; right-click to restart or switch sources.
+
+### 🔊 Optional audio passthrough
+Play capture-device audio with volume, mute and source controls, including channels marked inactive by the device.
 
 ### 🃏 Test card fallback
 Shows a test card when no capture device is available.
@@ -30,7 +33,7 @@ Single `make` command builds the app bundle at `.build/USBVideoViewer.app`; icon
 - [Notes for April 20-26](https://taoofmac.com/space/notes/2026/04/26/2144) — 2026-04-26
 
 ## Diagram
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 114">
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 114">
   <style>
     /* Default: light mode (for rsvg-convert and non-media-query agents) */
     .bg { fill: transparent; }
@@ -75,17 +78,22 @@ Single `make` command builds the app bundle at `.build/USBVideoViewer.app`; icon
       <path d="M0,0 L8,4 L0,8z" fill="#3b82f6" stroke="none"/>
     </marker>
   </defs>
-  <rect width="480" height="114" class="bg" rx="8"/>
+  <rect width="720" height="114" class="bg" rx="8"/>
 
   <rect x="30" y="30" width="180" height="60" rx="8" class="box-rose"/>
   <text x="120" y="56" text-anchor="middle" class="label">HDMI Source</text>
-  <text x="120" y="74" text-anchor="middle" class="sub">/ console</text>
+  <text x="120" y="74" text-anchor="middle" class="sub">SBC / console</text>
 
   <rect x="270" y="30" width="180" height="60" rx="8" class="box-orange"/>
   <text x="360" y="56" text-anchor="middle" class="label">USB Dongle</text>
   <text x="360" y="74" text-anchor="middle" class="sub">$10 capture card</text>
 
+  <rect x="510" y="30" width="180" height="60" rx="8" class="box-green"/>
+  <text x="600" y="56" text-anchor="middle" class="label">macOS viewer</text>
+  <text x="600" y="74" text-anchor="middle" class="sub">AVFoundation · audio</text>
+
+  <path d="M450,60 L510,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
   <path d="M210,60 L270,60" fill="none" stroke="#5070a0" stroke-width="1.5" stroke-linecap="round" marker-end="url(#ah)"/>
 
-  <text x="240" y="110" text-anchor="middle" class="sub">all-spaces · resizable</text>
+  <text x="360" y="110" text-anchor="middle" class="sub">USB capture preview with optional audio on macOS</text>
 </svg>
