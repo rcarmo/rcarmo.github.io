@@ -1,0 +1,14 @@
+{
+  "title": "Loopback MCP server filing Apple Mail through Apple Events",
+  "nodes": [
+    { "id": "client", "label": "MCP client", "sub": "Bearer token · loopback", "tag": "input" },
+    { "id": "server", "label": "MailMCP app", "sub": "Search · list · file", "tag": "process" },
+    { "id": "scheduler", "label": "Mail scheduler", "sub": "Budgets · move journal", "tag": "backend" },
+    { "id": "mail", "label": "Apple Mail", "sub": "Apple Events", "tag": "output" }
+  ],
+  "edges": [
+    { "from": "client", "to": "server", "accent": true },
+    { "from": "server", "to": "scheduler" },
+    { "from": "scheduler", "to": "mail", "accent": true }
+  ]
+}
