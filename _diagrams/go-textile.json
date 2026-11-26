@@ -1,0 +1,14 @@
+{
+  "title": "Native Textile-to-HTML rendering in Go",
+  "nodes": [
+    { "id": "input", "label": "Textile markup", "sub": "Options · defaults", "tag": "input" },
+    { "id": "blocks", "label": "Block parser", "sub": "Lists · tables · code", "tag": "process" },
+    { "id": "inline", "label": "Inline parser", "sub": "Links · glyphs · notes", "tag": "backend" },
+    { "id": "html", "label": "HTML output", "sub": "HTML5 or XHTML", "tag": "output" }
+  ],
+  "edges": [
+    { "from": "input", "to": "blocks", "accent": true },
+    { "from": "blocks", "to": "inline" },
+    { "from": "inline", "to": "html", "accent": true }
+  ]
+}
