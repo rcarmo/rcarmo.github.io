@@ -4,6 +4,7 @@ repo: rcarmo/swift-mailmcp
 section: apple
 status: experimental
 created: 2026-11-21
+logo: assets/logos-opt/swift-mailmcp.png
 tagline: Swift MCP server that lets agents search and file Apple Mail messages, without sending mail.
 ---
 
@@ -36,8 +37,11 @@ Background destination checks, on-demand reconciliation and optional arrival bas
 ### Diagnostics
 Trace IDs in responses, macOS Unified Logging and explicit time budgets for reads and moves.
 
+### Desktop app
+The Dock icon or menu bar envelope opens a status window with the endpoint and masked token. Copy or replace the token there; closing the window leaves the server running.
+
 ### Local setup
-Streamable HTTP on loopback with a bearer token. Builds need a persistent signing identity and a one-time Mail Automation permission.
+Streamable HTTP on loopback with a bearer token. Builds need a persistent signing identity; `make authorize` requests Mail Automation permission, and `make start` and `make status` launch and check the app.
 
 ## Diagram
 <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 114">
