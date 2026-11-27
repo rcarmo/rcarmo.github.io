@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink"
+     width="1280" height="640" viewBox="0 0 1280 640" role="img" aria-label="mushi">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#f5f9ff"/>
+      <stop offset="100%" stop-color="#eaf1fb"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0%" stop-color="#2d6dff"/>
+      <stop offset="100%" stop-color="#1d4ed8"/>
+    </linearGradient>
+    <filter id="shadow" x="-20%" y="-20%" width="140%" height="140%">
+      <feDropShadow dx="0" dy="16" stdDeviation="24" flood-color="#8aa3c4" flood-opacity="0.18"/>
+    </filter>
+    <clipPath id="logoClip">
+      <rect x="104" y="160" width="320" height="320" rx="36"/>
+    </clipPath>
+  </defs>
+  <!-- Background -->
+  <rect width="1280" height="640" fill="url(#bg)"/>
+  <circle cx="1180" cy="100" r="240" fill="#dbeafe" opacity="0.7"/>
+  <circle cx="110" cy="590" r="200" fill="#eff6ff" opacity="0.85"/>
+  <!-- Card -->
+  <g filter="url(#shadow)">
+    <rect x="80" y="80" width="1120" height="480" rx="20" fill="#ffffff"/>
+    <rect x="80" y="80" width="1120" height="480" rx="20" fill="none" stroke="#d7e3f4"/>
+    <!-- Accent bar: straight, thick -->
+    <rect x="80" y="80" width="1120" height="24" fill="url(#accent)"/>
+    <!-- Repo roundrect — top right, auto-sized -->
+    <rect x="1020" y="118" width="160" height="44" rx="8" fill="#eff6ff" stroke="#dbeafe"/>
+    <text x="1100" y="147" text-anchor="middle" font-family="JetBrains Mono,ui-monospace,monospace" font-size="18" font-weight="700" fill="#1e3a8a">rcarmo/mushi</text>
+    <!-- Logo -->
+    <rect x="104" y="160" width="320" height="320" rx="36" fill="#eff6ff" stroke="#dbe5f1"/>
+    <image href="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHZpZXdCb3g9IjAgMCAxMDggMTA4IiByb2xlPSJpbWciIGFyaWEtbGFiZWw9Ik11c2hpIGZpcmVmbHkiPgogIDxyZWN0IHdpZHRoPSIxMDgiIGhlaWdodD0iMTA4IiByeD0iMjUiIGZpbGw9IiMxMTEzMTUiLz4KICA8ZyBzdHJva2U9IiNjNGVlOWQiIHN0cm9rZS13aWR0aD0iNCIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBzdHJva2UtbGluZWpvaW49InJvdW5kIj4KICAgIDxwYXRoIGQ9Ik00OCAyNyA0MSAyME02MCAyNyA2NyAyME0zOCA0OCAyOCA0M00zNyA2MEgyNU0zOSA3MiAyOSA4ME03MCA0OCA4MCA0M003MSA2MEg4M002OSA3MiA3OSA4MCIgZmlsbD0ibm9uZSIvPgogICAgPHBhdGggZD0iTTQ0IDM1YTEwIDEwIDAgMCAxIDIwIDB2OEg0NFoiIGZpbGw9IiMyNTM3MmIiLz4KICAgIDxwYXRoIGQ9Ik0zNyA1OGMwLTEwIDctMTcgMTctMTdzMTcgNyAxNyAxN3YxMGMwIDExLTcgMTktMTcgMTlzLTE3LTgtMTctMTlaIiBmaWxsPSIjMjUzNzJiIi8+CiAgICA8cGF0aCBkPSJNNTQgNDN2MjciIGZpbGw9Im5vbmUiLz4KICA8L2c+CiAgPHBhdGggZD0iTTQwIDcxaDI4Yy0xIDktNiAxNC0xNCAxNHMtMTMtNS0xNC0xNFoiIGZpbGw9IiNjNGVlOWQiLz4KPC9zdmc+Cg==" x="114" y="170" width="300" height="300" preserveAspectRatio="xMidYMid meet" clip-path="url(#logoClip)"/>
+    <!-- Kicker -->
+    <text x="468" y="200" font-family="Inter,system-ui,sans-serif" font-size="24" font-weight="700" letter-spacing="1.5" fill="#2d6dff">AGENTS</text>
+    <!-- Title -->
+    <text x="468" y="275" font-family="Inter,system-ui,sans-serif" font-size="60" font-weight="700" fill="#0f172a">mushi</text>
+    <!-- Description -->
+    <text x="468" y="342" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">Android coding agent with a</text>
+    <text x="468" y="390" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">local WebView, pi-durable and</text>
+    <text x="468" y="438" font-family="Inter,system-ui,sans-serif" font-size="34" fill="#334155">an…</text>
+    <!-- Site -->
+    <text x="1176" y="532" text-anchor="end" font-family="Inter,system-ui,sans-serif" font-size="22" font-weight="600" fill="#64748b">rcarmo.github.io</text>
+  </g>
+</svg>
